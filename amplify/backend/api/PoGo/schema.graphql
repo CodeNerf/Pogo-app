@@ -1,0 +1,17 @@
+type IssueFactorValues @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  canidateName: String
+  zipCode: String
+  state: String
+  politicalParty: String
+  immigrationIssueFactor: Int
+  reporductiveRightsIssueFactor: Int
+  housingIssueFactor: Int
+  drugPolicyIssueFactor: Int
+  policingIssueFactor: Int
+  economyIssueFactor: Int
+  climateIssueFactor: Int
+  gunPolicyIssueFactor: Int
+  heathcareIssueFactor: Int
+  educationIssueFactor: Int
+}
