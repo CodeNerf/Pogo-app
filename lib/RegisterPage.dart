@@ -74,7 +74,7 @@ Future login() async {
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.grey[200],
                       border: Border.all(color: Colors.white),
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -100,7 +100,7 @@ Future login() async {
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.grey[200],
                       border: Border.all(color: Colors.white),
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -133,7 +133,7 @@ Future login() async {
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.grey[200],
                       border: Border.all(color: Colors.white),
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -195,7 +195,7 @@ Future login() async {
                   child: const Text(
                     'Returning user? Login Here!',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: Color(0xFFF3D433),
                       fontWeight: FontWeight.bold,
                       
                     ),
