@@ -158,7 +158,7 @@ Future login() async {
                     ),
                   ),
                 ),
-                const SizedBox(height: 55),
+                const SizedBox(height: 75),
                 GestureDetector(
                   onTap: () async {
                     await Navigator.push(
@@ -173,6 +173,7 @@ Future login() async {
                     style: TextStyle(
                       color: Color(0xFFF3D433),
                       fontWeight: FontWeight.bold,
+                      
                     ),
                   ),
                 ),
