@@ -40,9 +40,8 @@ Future login() async {
                   ),
                 ),
                 //Register form
+                  //name textfield
            const SizedBox(height: 20),
-  
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
@@ -90,7 +89,7 @@ Future login() async {
 
 
                 const SizedBox(height: 20),
-                //email textfield
+                //password textfield
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
@@ -114,7 +113,7 @@ Future login() async {
 
 
               const SizedBox(height: 20),
-                //email textfield
+                //confirm password textfield
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
@@ -140,8 +139,7 @@ Future login() async {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
-                    //TODO: create login() backend function
-                    // onTap: login(),
+               
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
