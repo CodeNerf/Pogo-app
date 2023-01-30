@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'amplifyFunctions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _configureAmplify();
+    configureAmplify();
   }
 
   @override
