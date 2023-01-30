@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'LoginPage.dart';
+
+
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -10,12 +11,14 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-    String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
+  bool _obscureText = true;
+String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
 final formKey= GlobalKey<FormState>();
 final nameController = TextEditingController();
 final emailController = TextEditingController();
 final passwordController = TextEditingController();
 final confirmPassController = TextEditingController();
+
 
 Future login() async {
     //TODO: implement back-end function to login user after tapping login button
@@ -81,6 +84,8 @@ Future login() async {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
+                          
+                          
                         ),
                       ),
                     ),
@@ -105,7 +110,16 @@ Future login() async {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Password',
+                          suffixIcon: GestureDetector(
+                            onTap: (){
+                             setState(() {
+                               _obscureText= !_obscureText;
+                             });
+                            },
+                            child: Icon(_obscureText ?Icons.visibility :Icons.visibility_off),
+                            ),
                         ),
+                        obscureText: _obscureText,
                       ),
                     ),
                   ),
@@ -129,7 +143,16 @@ Future login() async {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Confirm Password',
+                          suffixIcon: GestureDetector(
+                            onTap: (){
+                             setState(() {
+                               _obscureText= !_obscureText;
+                             });
+                            },
+                            child: Icon(_obscureText ?Icons.visibility :Icons.visibility_off),
+                            ),
                         ),
+                        obscureText: _obscureText,
                       ),
                     ),
                   ),
