@@ -10,16 +10,157 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+    String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
+final formKey= GlobalKey<FormState>();
+final nameController = TextEditingController();
+final emailController = TextEditingController();
+final passwordController = TextEditingController();
+final confirmPassController = TextEditingController();
+
+Future login() async {
+    //TODO: implement back-end function to login user after tapping login button
+  }
+  @override
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: [   Transform.scale(
+                  scale: 0.7,
+                  child: Image(
+                    image: AssetImage(
+                      signUpPogoLogo,
+                    ),
+                  ),
+                ),
+                //Register form
+           const SizedBox(height: 20),
+  
+
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Name',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+
+                const SizedBox(height: 20),
+                //email textfield
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Email',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+
+                const SizedBox(height: 20),
+                //email textfield
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Password',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+
+              const SizedBox(height: 20),
+                //email textfield
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: confirmPassController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Confirm Password',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: InkWell(
+                    //TODO: create login() backend function
+                    // onTap: login(),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3D433),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                          child: Text(
+                            'Register',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          )),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 55),
                 GestureDetector(
                   onTap: () async {
                     await Navigator.push(
@@ -29,8 +170,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     );
                   },
-                  child: const Icon(
-                    Icons.arrow_back,
+                  child: const Text(
+                    'Returning user? Login Here!',
+                    style: TextStyle(
+                      color: Color(0xFFF3D433),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
