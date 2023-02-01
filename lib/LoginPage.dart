@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'RegisterPage.dart';
+import 'Onboarding/Issues/GunPolicy.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -15,12 +16,18 @@ class _LoginPageState extends State<LoginPage> {
 
   Future login() async {
     //TODO: implement back-end function to login user after tapping login button
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const GunPolicy(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[800],
+      backgroundColor: const Color(0xFFE1E1E1),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -88,7 +95,9 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
                     //TODO: create login() backend function
-                    // onTap: login(),
+                    onTap: () async {
+                      login();
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(

@@ -29,7 +29,7 @@ Future login() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color(0xFFE1E1E1),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -50,7 +50,7 @@ Future login() async {
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.grey[200],
                       border: Border.all(color: Colors.white),
                       borderRadius: BorderRadius.circular(12),
                     ),
