@@ -15,8 +15,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    configureAmplify()
-        .then((_) => (signUpUser("test@test.test", "T3stp@ssword")));
+    configureAmplify();
   }
 
   @override
