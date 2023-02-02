@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'LoginPage.dart';
+import 'Onboarding/Issues/GunPolicy.dart';
 
 
 
@@ -26,6 +27,12 @@ final addressController = TextEditingController();
 
 Future login() async {
     //TODO: implement back-end function to login user after tapping login button
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const GunPolicy(),
+      ),
+    );
   }
   @override
 
@@ -60,7 +67,7 @@ appBar: AppBar(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -81,7 +88,7 @@ appBar: AppBar(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -104,7 +111,7 @@ appBar: AppBar(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -130,7 +137,7 @@ appBar: AppBar(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -163,7 +170,7 @@ appBar: AppBar(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -194,7 +201,7 @@ appBar: AppBar(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -217,7 +224,7 @@ const SizedBox(height: 20),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Colors.white),
+                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -239,7 +246,9 @@ const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
-               
+               onTap: () async {
+                      login();
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
