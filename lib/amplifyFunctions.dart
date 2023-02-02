@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:flutter/material.dart';
 
 import '../amplifyconfiguration.dart';
+import './models/SignUpInfo.dart';
 
 Future<void> configureAmplify() async {
   try {
@@ -23,4 +27,21 @@ Future<bool> isUserSignedIn() async {
 Future<AuthUser> getCurrentUser() async {
   final user = await Amplify.Auth.getCurrentUser();
   return user;
+}
+
+bool isSignUpComplete =
+    false; //flag used to route away from signup, possibly better as return value
+//TODO pass signupinfo class as parameter to enable dynamic fields for sign up
+Future<void> signUpUser(String email, String password) async {
+  try {
+    final result = await Amplify.Auth.signUp(
+      username: email,
+      password: password,
+    );
+    isSignUpComplete = result.isSignUpComplete;
+
+    debugPrint("isSignUpComplete:  $isSignUpComplete");
+  } on AuthException catch (e) {
+    safePrint(e.message);
+  }
 }
