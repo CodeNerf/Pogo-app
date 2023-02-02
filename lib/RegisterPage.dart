@@ -15,10 +15,13 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscureText = true;
 String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
 final formKey= GlobalKey<FormState>();
-final nameController = TextEditingController();
+final fnameController = TextEditingController();
+final lnameController = TextEditingController();
 final emailController = TextEditingController();
 final passwordController = TextEditingController();
 final confirmPassController = TextEditingController();
+final phoneController = TextEditingController();
+final addressController = TextEditingController();
 
 
 Future login() async {
@@ -29,8 +32,14 @@ Future login() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE1E1E1),
+appBar: AppBar(
+        title: const Text("Register"),
+         centerTitle: true,
+                backgroundColor: Colors.grey[300]
+      ),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
+        
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -57,16 +66,36 @@ Future login() async {
                     child: Padding(
                       padding: EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: nameController,
+                        controller: fnameController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Name',
+                          hintText: 'First Name',
                         ),
                       ),
                     ),
                   ),
                 ),
-
+        const SizedBox(height: 20),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: lnameController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Last Name',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
 
                 const SizedBox(height: 20),
                 //email textfield
@@ -158,8 +187,55 @@ Future login() async {
                     ),
                   ),
                 ),
+                          const SizedBox(height: 20),
+                //password textfield
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: phoneController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Phone',
+                        ),
+                    
+                      ),
+                    ),
+                  ),
+                ),
+const SizedBox(height: 20),
+                //password textfield
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: addressController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Address',
+                        ),
+                    
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 30),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
@@ -175,14 +251,14 @@ Future login() async {
                             'Register',
                             style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
                               fontSize: 18,
+                                      fontWeight: FontWeight.bold,
                             ),
                           )),
                     ),
                   ),
                 ),
-                const SizedBox(height: 75),
+                const SizedBox(height: 15),
                 GestureDetector(
                   onTap: () async {
                     await Navigator.push(
@@ -193,14 +269,15 @@ Future login() async {
                     );
                   },
                   child: const Text(
-                    'Returning user? Login Here!',
+                    'Already have an account? Login here!',
                     style: TextStyle(
-                      color: Color(0xFFF3D433),
+                      color: Color.fromARGB(255, 0, 0, 0),
                       fontWeight: FontWeight.bold,
                       
                     ),
                   ),
                 ),
+                
               ],
             ),
           ),
