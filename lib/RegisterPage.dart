@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pogo/Onboarding/Demographics.dart';
 import 'LoginPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
 
@@ -30,7 +31,7 @@ Future login() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const GunPolicy(),
+        builder: (context) => const Demographics(),
       ),
     );
   }
