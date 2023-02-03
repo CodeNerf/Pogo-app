@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'amplifyFunctions.dart';
+import 'package:pogo/LandingPage.dart';
+import 'LoginPage.dart';
+import 'RegisterPage.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -20,10 +25,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: SizedBox(),
-      ),
+    return MaterialApp(
+      home: LandingPage(),
     );
   }
 }
+
+
