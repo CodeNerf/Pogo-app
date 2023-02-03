@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/canidateissues/{id}": {
+      "name": "/canidateissues/{id}",
+      "lambdaFunction": "CanidateIssueFactorValues",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}
