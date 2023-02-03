@@ -1,10 +1,10 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pogo/Onboarding/Demographics.dart';
 import 'LoginPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
-
-
+import 'amplifyFunctions.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -15,19 +15,17 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   bool _obscureText = true;
-String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
-final formKey= GlobalKey<FormState>();
-final fnameController = TextEditingController();
-final lnameController = TextEditingController();
-final emailController = TextEditingController();
-final passwordController = TextEditingController();
-final confirmPassController = TextEditingController();
-final phoneController = TextEditingController();
-final addressController = TextEditingController();
+  String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
+  final formKey = GlobalKey<FormState>();
+  final fnameController = TextEditingController();
+  final lnameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPassController = TextEditingController();
+  final phoneController = TextEditingController();
+  final addressController = TextEditingController();
 
-
-Future login() async {
-    //TODO: implement back-end function to login user after tapping login button
+  Future logIn() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -35,24 +33,33 @@ Future login() async {
       ),
     );
   }
-  @override
 
+  Future signUp() async {
+    final bool signUpSucess =
+        await signUpUser(emailController.text, passwordController.text);
+    if (signUpSucess) {
+      await Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const Demographics()));
+    }
+    //TODO add signup failed alert
+  }
+
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-appBar: AppBar(
-        title: const Text("Register"),
-         centerTitle: true,
-                backgroundColor: Colors.grey[300]
-      ),
+      appBar: AppBar(
+          title: const Text("Register"),
+          centerTitle: true,
+          backgroundColor: Colors.grey[300]),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
-        
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [   Transform.scale(
+              children: [
+                Transform.scale(
                   scale: 0.7,
                   child: Image(
                     image: AssetImage(
@@ -61,14 +68,15 @@ appBar: AppBar(
                   ),
                 ),
                 //Register form
-                  //name textfield
-           const SizedBox(height: 20),
+                //name textfield
+                const SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                      border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -83,13 +91,14 @@ appBar: AppBar(
                     ),
                   ),
                 ),
-        const SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                      border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -112,7 +121,8 @@ appBar: AppBar(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                      border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -122,14 +132,11 @@ appBar: AppBar(
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
-                          
-                          
                         ),
                       ),
                     ),
                   ),
                 ),
-
 
                 const SizedBox(height: 20),
                 //password textfield
@@ -138,7 +145,8 @@ appBar: AppBar(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                      border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -149,13 +157,15 @@ appBar: AppBar(
                           border: InputBorder.none,
                           hintText: 'Password',
                           suffixIcon: GestureDetector(
-                            onTap: (){
-                             setState(() {
-                               _obscureText= !_obscureText;
-                             });
+                            onTap: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
                             },
-                            child: Icon(_obscureText ?Icons.visibility :Icons.visibility_off),
-                            ),
+                            child: Icon(_obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          ),
                         ),
                         obscureText: _obscureText,
                       ),
@@ -163,15 +173,15 @@ appBar: AppBar(
                   ),
                 ),
 
-
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
                 //confirm password textfield
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                      border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -182,27 +192,31 @@ appBar: AppBar(
                           border: InputBorder.none,
                           hintText: 'Confirm Password',
                           suffixIcon: GestureDetector(
-                            onTap: (){
-                             setState(() {
-                               _obscureText= !_obscureText;
-                             });
+                            onTap: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
                             },
-                            child: Icon(_obscureText ?Icons.visibility :Icons.visibility_off),
-                            ),
+                            child: Icon(_obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          ),
                         ),
                         obscureText: _obscureText,
                       ),
                     ),
                   ),
                 ),
-                          const SizedBox(height: 20),
+                const SizedBox(height: 20),
+                //TODO: fix textfield comments
                 //password textfield
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                      border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -213,19 +227,19 @@ appBar: AppBar(
                           border: InputBorder.none,
                           hintText: 'Phone',
                         ),
-                    
                       ),
                     ),
                   ),
                 ),
-const SizedBox(height: 20),
+                const SizedBox(height: 20),
                 //password textfield
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                      border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -236,7 +250,6 @@ const SizedBox(height: 20),
                           border: InputBorder.none,
                           hintText: 'Address',
                         ),
-                    
                       ),
                     ),
                   ),
@@ -247,8 +260,8 @@ const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
-               onTap: () async {
-                      login();
+                    onTap: () async {
+                      signUp();
                     },
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -258,13 +271,13 @@ const SizedBox(height: 20),
                       ),
                       child: const Center(
                           child: Text(
-                            'Register',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                            ),
-                          )),
+                        'Register',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
                     ),
                   ),
                 ),
@@ -283,11 +296,9 @@ const SizedBox(height: 20),
                     style: TextStyle(
                       color: Color.fromARGB(255, 0, 0, 0),
                       fontWeight: FontWeight.bold,
-                      
                     ),
                   ),
                 ),
-                
               ],
             ),
           ),
