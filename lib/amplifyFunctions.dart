@@ -30,7 +30,7 @@ Future<AuthUser> getCurrentUser() async {
 }
 
 bool isSignUpComplete =
-    false; //flag used to route away from signup, possibly better as return value
+    false; //Flag used to route away from signup, possibly better as return value
 //TODO pass signupinfo class as parameter to enable dynamic fields for sign up
 Future<void> signUpUser(String email, String password) async {
   try {
@@ -41,6 +41,16 @@ Future<void> signUpUser(String email, String password) async {
     isSignUpComplete = result.isSignUpComplete;
 
     debugPrint("isSignUpComplete:  $isSignUpComplete");
+  } on AuthException catch (e) {
+    safePrint(e.message);
+  }
+}
+
+Future<void> signInUser(String email, String password) async {
+  try {
+    final result =
+        await Amplify.Auth.signIn(username: email, password: password);
+    safePrint(isUserSignedIn());
   } on AuthException catch (e) {
     safePrint(e.message);
   }
