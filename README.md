@@ -1,4 +1,4 @@
-# pogo
+# PoGo
 
 A new Flutter project.
 
