@@ -1,8 +1,10 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'amplifyFunctions.dart';
 import 'package:pogo/LandingPage.dart';
 import 'LoginPage.dart';
 import 'RegisterPage.dart';
+import 'dart:developer';
 
 void main() {
   runApp(const MyApp());
