@@ -15,6 +15,22 @@
       "auth": {
         "pogo401c517c": {},
         "PoGo": {}
+      },
+      "storage": {
+        "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev": {
+          "tableName": "IssueFactorValues-hbw7oj3qgnci5lxetlsm7kcjoe-dev",
+          "region": "us-east-1",
+          "arn": "arn:aws:dynamodb:us-east-1:163651705262:table/IssueFactorValues-hbw7oj3qgnci5lxetlsm7kcjoe-dev",
+          "streamArn": "arn:aws:dynamodb:us-east-1:163651705262:table/IssueFactorValues-hbw7oj3qgnci5lxetlsm7kcjoe-dev/stream/2023-01-28T22:26:30.419",
+          "partitionKeyName": "id",
+          "partitionKeyType": "S"
+        }
+      },
+      "function": {
+        "CanidateIssueFactorValues": {
+          "deploymentBucketName": "amplify-pogo-dev-94354-deployment",
+          "s3Key": "amplify-builds/CanidateIssueFactorValues-44624e45664f78367142-build.zip"
+        }
       }
     }
   }
