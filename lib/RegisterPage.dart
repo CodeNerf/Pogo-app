@@ -3,7 +3,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:pogo/Onboarding/Demographics.dart';
 import 'LoginPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
-
+import 'amplifyFunctions.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -26,7 +26,7 @@ final phoneController = TextEditingController();
 final addressController = TextEditingController();
 
 
-Future login() async {
+Future register() async {
     //TODO: implement back-end function to login user after tapping login button
     await Navigator.push(
       context,
@@ -45,7 +45,7 @@ appBar: AppBar(
          centerTitle: true,
                 backgroundColor: Colors.grey[300]
       ),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color(0xFFE1E1E1),
       body: SafeArea(
         
         child: Center(
@@ -248,7 +248,7 @@ const SizedBox(height: 20),
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
                onTap: () async {
-                      login();
+                      register();
                     },
                     child: Container(
                       padding: const EdgeInsets.all(20),
