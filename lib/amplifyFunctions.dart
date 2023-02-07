@@ -10,7 +10,7 @@ Future<void> configureAmplify() async {
   try {
     final auth = AmplifyAuthCognito();
     await Amplify.addPlugin(auth);
-
+    safePrint("Amplify Configured");
     // call Amplify.configure to use the initialized categories in your app
     await Amplify.configure(amplifyconfig);
   } on Exception catch (e) {
@@ -28,10 +28,10 @@ Future<AuthUser> getCurrentUser() async {
   return user;
 }
 
-bool isSignUpComplete =
-    false; //Flag used to route away from signup, possibly better as return value
+Future<bool> signUpUser(String email, String password) async {
+  bool isSignUpComplete =
+      false; //Flag used to route away from signup, possibly better as return value
 //TODO pass signupinfo class as parameter to enable dynamic fields for sign up
-Future<void> signUpUser(String email, String password) async {
   try {
     final result = await Amplify.Auth.signUp(
       username: email,
@@ -43,6 +43,7 @@ Future<void> signUpUser(String email, String password) async {
   } on AuthException catch (e) {
     safePrint(e.message);
   }
+  return isSignUpComplete;
 }
 
 Future<void> signInUser(String email, String password) async {

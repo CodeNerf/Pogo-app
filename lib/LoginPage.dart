@@ -4,6 +4,8 @@ import 'RegisterPage.dart';
 import 'Home.dart';
 import 'ForgotPasswordPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
+import 'amplifyFunctions.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -17,14 +19,17 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   Future login() async {
-    //TODO: implement back-end function to login user after tapping login button
-    //if user survey already completed, go to home page. else go to user survey
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const Home(),
-      ),
-    );
+    await signInUser(emailController.text, passwordController.text);
+    final bool signInSucess = await isUserSignedIn();
+    //TODO add else error
+    if (signInSucess) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const GunPolicy(),
+        ),
+      );
+    }
   }
 
   @override
@@ -138,13 +143,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: const Center(
                           child: Text(
-                            'Login',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )),
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
                     ),
                   ),
                 ),
