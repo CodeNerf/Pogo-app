@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'Policing.dart';
+import '../../Home.dart';
 //import 'homePage.dart';
 
 class ReproductiveRights extends StatefulWidget {
@@ -20,7 +21,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
   int backgroundColor = 0xFFE1E1E1;
   double alignRating = 0;
   double valueRating = 0;
-  //final Widget nextPage = const homePage();
+  final Widget nextPage = const Home();
   final Widget lastPage = const Policing();
   int ratingBarColor = 0xFFF3D433;
   String leftAlignText = 'Abortion + \nContraceptive Rights';
@@ -29,14 +30,12 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
   Future checkRatings() async {
     if (alignRating > 0 && valueRating > 0) {
       //TODO: SAVE RATING VALUES, SWITCH TO HOME PAGE
-      /*
       await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => nextPage,
         ),
       );
-       */
     }
   }
   Future changeNextButtonColor() async {

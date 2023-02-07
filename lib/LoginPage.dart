@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'RegisterPage.dart';
-import 'Onboarding/Issues/GunPolicy.dart';
+import 'Home.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const GunPolicy(),
+        builder: (context) => const Home(),
       ),
     );
   }

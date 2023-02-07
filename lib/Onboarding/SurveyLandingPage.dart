@@ -21,7 +21,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
        child: Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           
           child: Column(
 
@@ -35,11 +35,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                 
                 children: <Widget>[
               
-SizedBox(
-                    height: 50,
-                          width: double.infinity,
 
-                ),
                   Text(
                     "Personalize your search",
                     style: TextStyle(
