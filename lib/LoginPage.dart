@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'RegisterPage.dart';
+import 'Home.dart';
+import 'ForgotPasswordPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
 
@@ -94,7 +96,36 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
+
+                //forgot password
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ForgotPasswordPage(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Forgot Password',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
 
                 //login button
                 Padding(
@@ -124,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 75),
 
-                //not a member? register now
+                //register
                 GestureDetector(
                   onTap: () async {
                     await Navigator.push(
@@ -137,8 +168,9 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text(
                     ' Register',
                     style: TextStyle(
-                      color: Color(0xFFF3D433),
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
+                      fontSize: 15,
                     ),
                   ),
                 ),

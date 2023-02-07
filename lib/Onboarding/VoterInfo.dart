@@ -57,18 +57,7 @@ class _VoterInfoState extends State<VoterInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-       title: Transform.scale(
-                  scale: 0.30,
-                  child: Image(
-                    image: AssetImage(
-                      surveyPogoLogo,
-                    ),
-                  ),
-                ),
-         centerTitle: true,
-                backgroundColor: Colors.grey[300]
-      ),
+      
       body: Container(
       
  padding: const EdgeInsets.all(20.0),

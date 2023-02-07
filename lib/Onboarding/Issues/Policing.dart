@@ -104,9 +104,13 @@ class _PolicingState extends State<Policing> {
                 ),
                 child: Column(
                   children: [
-                    Image(
-                      image: AssetImage(
-                        issuesLogo,
+                    Container(
+                      height: 210,
+                      child: Image(
+                        image: AssetImage(
+                          issuesLogo,
+                        ),
+                        fit: BoxFit.fill,
                       ),
                     ),
                     Text(

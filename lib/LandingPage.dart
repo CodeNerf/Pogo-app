@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pogo/LoginPage.dart';
 import 'LoginPage.dart';
 import 'RegisterPage.dart';
 
@@ -68,7 +69,7 @@ class _LandingPageState extends State<LandingPage> {
                     minWidth: double.infinity,
                     height: 70,
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
                     },
                  color: Color.fromARGB(255, 0, 0, 0),
                     shape: RoundedRectangleBorder(
@@ -110,5 +111,6 @@ class _LandingPageState extends State<LandingPage> {
       ),
       );
   
-  }
-}
+  }}
+  
+  

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pogo/Onboarding/Issues/GunPolicy.dart';
+import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import '../LandingPage.dart';
 import '../LoginPage.dart';
 import '../RegisterPage.dart';
@@ -15,7 +16,9 @@ class Demographics extends StatefulWidget {
 class _DemographicsState extends State<Demographics> {
  String surveyPogoLogo = 'assets/Pogo_logo_horizontal.png';
   String agesdropdownvalue = '18-25 years old';   
-  
+  final Widget lastPage = const SurveyLandingPage();
+    String pogoLogo = 'assets/Pogo_logo_horizontal.png';
+
   // List of items in our dropdown menu
   var ages = [    
     '18-25 years old',
@@ -52,18 +55,7 @@ class _DemographicsState extends State<Demographics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-       title: Transform.scale(
-                  scale: 0.30,
-                  child: Image(
-                    image: AssetImage(
-                      surveyPogoLogo,
-                    ),
-                  ),
-                ),
-         centerTitle: true,
-                backgroundColor: Colors.grey[300]
-      ),
+      
       body: Container(
              
  padding: const EdgeInsets.all(20.0),
@@ -71,6 +63,44 @@ class _DemographicsState extends State<Demographics> {
         child: Column(
         
           children: [
+            Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      width: 1.0,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => lastPage,
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        Icons.arrow_back,
+                      ),
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        height: 40,
+                        child: Image(
+                          image: AssetImage(
+                            pogoLogo,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
              const SizedBox(height: 30),
   Align(
       alignment: Alignment.topLeft,
