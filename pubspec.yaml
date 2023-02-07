@@ -41,6 +41,11 @@ dependencies:
   # Adds page transition functionality to fade, slide, etc to another page
   page_transition: ^2.0.9
   flutter_rating_bar: ^4.0.1
+  validators: ^3.0.0
+  form_field_validator: ^1.1.0
+  progress_dialog_null_safe: ^1.0.7
+  shared_preferences: ^2.0.17
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -73,6 +78,7 @@ flutter:
     - assets/policingPogo.jpg
     - assets/reproductiveHealthPogo.jpg
     - assets/drugPolicyPogo.jpg
+    - assets/surveryLanding.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
