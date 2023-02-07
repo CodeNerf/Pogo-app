@@ -229,6 +229,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Padding(
                           padding: EdgeInsets.only(left: 20.0),
                           child: TextField(
+                            obscureText: true,
                             controller: passwordController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
