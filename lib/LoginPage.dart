@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const GunPolicy(),
+          builder: (context) => const Home(),
         ),
       );
     }
