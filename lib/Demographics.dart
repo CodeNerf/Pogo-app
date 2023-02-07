@@ -27,18 +27,7 @@ String? value;
         );
           
     return Scaffold(
-      appBar: AppBar(
-        title: Transform.scale(
-                  scale: 0.29,
-                  child: Image(
-                    image: AssetImage(
-                      surveyPogoLogo,
-                    ),
-                  ),
-                ),
-         centerTitle: true,
-                backgroundColor: Colors.grey[300]
-      ),
+     
       body: Center(
         child:Container(
           margin: EdgeInsets.all(16),

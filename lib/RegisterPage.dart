@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pogo/Onboarding/Demographics.dart';
+import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'LoginPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
 
@@ -21,17 +22,16 @@ final fnameController = TextEditingController();
 final lnameController = TextEditingController();
 final emailController = TextEditingController();
 final passwordController = TextEditingController();
-final confirmPassController = TextEditingController();
 final phoneController = TextEditingController();
 final addressController = TextEditingController();
-
+bool obscure=true;
 
 Future login() async {
     //TODO: implement back-end function to login user after tapping login button
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const Demographics(),
+        builder: (context) => const SurveyLandingPage(),
       ),
     );
   }
@@ -40,13 +40,9 @@ Future login() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-appBar: AppBar(
-        title: const Text("Register"),
-         centerTitle: true,
-                backgroundColor: Colors.grey[300]
-      ),
+
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      body: SafeArea(
+      body: Form (
         
         child: Center(
           child: SingleChildScrollView(
@@ -78,7 +74,9 @@ appBar: AppBar(
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'First Name',
+                        
                         ),
+                      
                       ),
                     ),
                   ),
@@ -163,38 +161,6 @@ appBar: AppBar(
                   ),
                 ),
 
-
-              const SizedBox(height: 20),
-                //confirm password textfield
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: confirmPassController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Confirm Password',
-                          suffixIcon: GestureDetector(
-                            onTap: (){
-                             setState(() {
-                               _obscureText= !_obscureText;
-                             });
-                            },
-                            child: Icon(_obscureText ?Icons.visibility :Icons.visibility_off),
-                            ),
-                        ),
-                        obscureText: _obscureText,
-                      ),
-                    ),
-                  ),
-                ),
                           const SizedBox(height: 20),
                 //password textfield
                 Padding(
