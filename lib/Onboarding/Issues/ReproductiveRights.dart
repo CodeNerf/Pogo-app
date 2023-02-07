@@ -105,15 +105,20 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                 ),
                 child: Column(
                   children: [
-                    Image(
-                      image: AssetImage(
-                        issuesLogo,
+                    Container(
+                      height: 210,
+                      width: 300,
+                      child: Image(
+                        image: AssetImage(
+                          issuesLogo,
+                        ),
+                        fit: BoxFit.fill,
                       ),
                     ),
                     Text(
                       issuesText,
                       style: const TextStyle(
-                        fontSize: 30,
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -161,12 +166,14 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                 children: [
                   Text(
                     leftAlignText,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 15,
                     ),
                   ),
                   Text(
                       rightAlignText,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 15,
                       )

@@ -1,5 +1,19 @@
 {
   "api": {
+    "CanidateIssueFactorValues": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "CanidateIssueFactorValues"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
     "PoGo": {
       "dependsOn": [],
       "output": {
@@ -51,6 +65,101 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
+    }
+  },
+  "function": {
+    "CanidateIssueFactorValues": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_CanidateIssueFactorValues_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "CanidateIssueFactorValues"
+        }
+      ]
+    },
+    "AMPLIFY_function_CanidateIssueFactorValues_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "CanidateIssueFactorValues"
+        }
+      ]
+    },
+    "AMPLIFY_storage_IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev_arn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev_partitionKeyName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev_partitionKeyType": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev_streamArn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev_tableName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "IssueFactorValueshbw7oj3qgnci5lxetlsm7kcjoedev": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB",
+      "serviceType": "imported"
     }
   }
 }
