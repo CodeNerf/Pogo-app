@@ -42,7 +42,7 @@ Future login() async {
     return Scaffold(
 
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      body: for (
+      body: Form (
         
         child: Center(
           child: SingleChildScrollView(
@@ -76,11 +76,7 @@ Future login() async {
                           hintText: 'First Name',
                         
                         ),
-                            validator: (value) {
-                            if (value.isEmpty) {
-                        return 'This field is required';
-                            }
-              },
+                      
                       ),
                     ),
                   ),
