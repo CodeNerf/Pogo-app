@@ -47,7 +47,7 @@ appBar: AppBar(
       ),
       backgroundColor: const Color(0xFFE1E1E1),
       body: SafeArea(
-        body: Form (
+        child: Form (
 
           child: Center(
             child: SingleChildScrollView(
