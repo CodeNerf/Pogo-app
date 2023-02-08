@@ -55,3 +55,21 @@ Future<void> signInUser(String email, String password) async {
     safePrint(e.message);
   }
 }
+
+Future<void> logoutUser() async {
+  try {
+    await Amplify.Auth.signOut();
+  } on AuthException catch (e) {
+    safePrint(e.message);
+  }
+}
+
+Future<bool> checkLoggedIn() async {
+  try {
+    await Amplify.Auth.getCurrentUser();
+    return true;
+  } on AuthException catch (e) {
+    return false;
+  }
+}
+

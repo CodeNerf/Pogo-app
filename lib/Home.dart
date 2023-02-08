@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'UserProfile.dart';
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -23,10 +24,7 @@ class _HomeState extends State<Home> {
       'Candidates',
       style: optionStyle,
     ),
-    Text(
-      'Profile',
-      style: optionStyle,
-    ),
+    UserProfile(),
   ];
 
   void _onItemTapped(int index) {
