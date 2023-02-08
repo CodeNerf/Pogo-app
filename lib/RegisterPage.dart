@@ -1,10 +1,8 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:pogo/Onboarding/Demographics.dart';
-import 'package:pogo/Onboarding/SurveyLandingPage.dart';
+import 'package:pogo/UserConfirmationPage.dart';
+import 'package:validators/validators.dart';
 import 'LoginPage.dart';
-import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -23,27 +21,85 @@ class _RegisterPageState extends State<RegisterPage> {
     final lnameController = TextEditingController();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
     final phoneController = TextEditingController();
     final addressController = TextEditingController();
     bool obscure = true;
-    Future register() async {
-      //TODO: implement back-end function to login user after tapping login button
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SurveyLandingPage(),
-        ),
-      );
-    }
+    bool obscureConfirm = true;
+    Icon eye = Icon(Icons.remove_red_eye);
+    Icon eyeConfirm = Icon(Icons.remove_red_eye);
+    String errorText = '';
+    double errorSizeBoxSize = 0;
 
-    Future signUp() async {
-      final bool signUpSucess =
-      await signUpUser(emailController.text, passwordController.text);
-      if (signUpSucess) {
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const SurveyLandingPage()));
+    Future signUp(context) async {
+      if (fnameController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your first name.';
+          errorSizeBoxSize = 10;
+        });
       }
-      //TODO add signup failed alert
+      else if(lnameController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your last name.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(emailController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your email.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(passwordController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter a password.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(confirmPasswordController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must confirm your password.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if (passwordController.text.compareTo(
+            confirmPasswordController.text) != 0) {
+          setState(() {
+            errorText = 'Passwords do not match.';
+            errorSizeBoxSize = 10;
+          });
+      }
+      else if(phoneController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your phone number.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(!isNumeric(phoneController.text) || phoneController.text.length != 10) {
+        setState(() {
+          errorText = 'Invalid phone number.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if (addressController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your address.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else {
+        final bool signUpSuccess = await signUpUser(
+            emailController.text, passwordController.text,
+            fnameController.text, lnameController.text,
+            phoneController.text, addressController.text);
+        if (signUpSuccess) {
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserConfirmationPage(email: emailController.text, password: passwordController.text))
+          );
+        }
+      }
     }
 
     //@override
@@ -63,17 +119,27 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    //LOGO
                     Transform.scale(
                     scale: 0.7,
-                    child: Image(
-                      image: AssetImage(
-                        signUpPogoLogo,
+                      child: Image(
+                        image: AssetImage(
+                          signUpPogoLogo,),
                       ),
                     ),
-                  ),
-                    //Register form
-                    //name textfield
-                    const SizedBox(height: 20),
+
+                    //ERROR TEXT
+                    Text(
+                      errorText,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
+                    SizedBox(height: errorSizeBoxSize),
+
+                    //FIRST NAME
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
@@ -90,13 +156,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'First Name',
-
                             ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
+
+                    //LAST NAME
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
@@ -118,9 +185,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 20),
-                    //email textfield
+
+                    //EMAIL
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
@@ -142,10 +209,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 20),
-                    /*
-                    //confirm password textfield
+
+                    //PASSWORD
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
@@ -155,68 +221,40 @@ class _RegisterPageState extends State<RegisterPage> {
                           Border.all(color: Color.fromARGB(255, 178, 169, 169)),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                      ),
-
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        //controller: confirmPassController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Confirm Password',
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                            child: Icon(_obscureText
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                          ),
-                        ),
-                      ),
-                    ),
-              ),
-                    const SizedBox(height: 20),
-                    //password textfield
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border: Border.all(
-                              color: Color.fromARGB(255, 178, 169, 169)),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
                         child: Padding(
                           padding: EdgeInsets.only(left: 20.0),
                           child: TextField(
+                            obscureText: obscure,
                             controller: passwordController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Password',
                               suffixIcon: GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    _obscureText = !_obscureText;
-                                  });
+                                  if(obscure) {
+                                    setState(() {
+                                      obscure = false;
+                                      eye = const Icon(Icons.remove_red_eye_outlined);
+                                    });
+                                  }
+                                  else {
+                                    setState(() {
+                                      obscure = true;
+                                      eye = const Icon(Icons.remove_red_eye);
+                                    });
+                                  }
                                 },
-                                child: Icon(
-                                    _obscureText ? Icons.visibility : Icons
-                                        .visibility_off),
+                                child: eye,
                               ),
                             ),
-                            obscureText: _obscureText,
+
                           ),
                         ),
+                        ),
                       ),
-                    ),
                     const SizedBox(height: 20),
 
-                     */
-                    //TODO: fix textfield comments
-                    //password
+                    //CONFIRM PASSWORD
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
@@ -229,44 +267,37 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Padding(
                           padding: EdgeInsets.only(left: 20.0),
                           child: TextField(
-                            obscureText: true,
-                            controller: passwordController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Password',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                   /*
-                    //confirm password
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          border:
-                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 20.0),
-                          child: TextField(
-                            controller: passwordController,
+                            obscureText: obscureConfirm,
+                            controller: confirmPasswordController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Confirm Password',
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  if(obscureConfirm) {
+                                    setState(() {
+                                      obscureConfirm = false;
+                                      eyeConfirm = const Icon(Icons.remove_red_eye_outlined);
+                                    });
+                                  }
+                                  else {
+                                    setState(() {
+                                      obscureConfirm = true;
+                                      eyeConfirm = const Icon(Icons.remove_red_eye);
+                                    });
+                                  }
+                                },
+                                child: eyeConfirm,
+                              ),
                             ),
+
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
 
-                    */
-                    //phone textfield
+                    //PHONE
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
@@ -289,7 +320,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    //password textfield
+
+                    //ADDRESS
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
@@ -311,13 +343,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 20),
+
+                    //REGISTER BUTTON
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: InkWell(
                         onTap: () async {
-                          signUp();
+                          signUp(context);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(20),
@@ -338,6 +371,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 15),
+
+                    //back to login
                     GestureDetector(
                       onTap: () async {
                         await Navigator.push(

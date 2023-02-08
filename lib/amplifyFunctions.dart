@@ -28,15 +28,23 @@ Future<AuthUser> getCurrentUser() async {
   return user;
 }
 
-Future<bool> signUpUser(String email, String password) async {
-  bool isSignUpComplete =
-      false; //Flag used to route away from signup, possibly better as return value
+Future<bool> signUpUser(String email, String password, String fname, String lname, String phoneNumber, String address) async {
+  bool isSignUpComplete = false; //Flag used to route away from signup, possibly better as return value
 //TODO pass signupinfo class as parameter to enable dynamic fields for sign up
   try {
+    String phone = '+1$phoneNumber';
+    final userAttributes = <CognitoUserAttributeKey, String> {
+      CognitoUserAttributeKey.givenName: fname,
+      CognitoUserAttributeKey.familyName: lname,
+      CognitoUserAttributeKey.phoneNumber: phone,
+      CognitoUserAttributeKey.address: address,
+    };
     final result = await Amplify.Auth.signUp(
       username: email,
       password: password,
+      options: CognitoSignUpOptions(userAttributes: userAttributes),
     );
+
     isSignUpComplete = result.isSignUpComplete;
 
     debugPrint("isSignUpComplete:  $isSignUpComplete");
@@ -73,3 +81,22 @@ Future<bool> checkLoggedIn() async {
   }
 }
 
+Future<bool> confirmUser(String email, String code) async {
+  try {
+    await Amplify.Auth.confirmSignUp(username: email, confirmationCode: code);
+    return true;
+  } on AuthException catch (e) {
+    return false;
+  }
+}
+
+Future<bool> resendConfirmationCode(String email) async {
+  try {
+    await Amplify.Auth.resendSignUpCode(username: email);
+    safePrint('Code was resent');
+    return true;
+  } catch (e) {
+    safePrint('Error resending code.');
+    return false;
+  }
+}

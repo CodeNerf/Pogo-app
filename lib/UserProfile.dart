@@ -5,6 +5,7 @@ import 'amplifyFunctions.dart';
 class UserProfile extends StatelessWidget {
   const UserProfile({Key? key}) : super(key: key);
 
+  //this is just for testing purposes, to be removed later
   Future logout(BuildContext context) async {
     logoutUser();
     if(await checkLoggedIn()) {
@@ -29,30 +30,31 @@ class UserProfile extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: InkWell(
-            onTap: () async {
-              logout(context);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3D433),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(
-                  child: Text(
-                    'Logout',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+              Text('USER PROFILE PAGE'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: InkWell(
+                  onTap: () async {
+                    logout(context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3D433),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  )),
-            ),
-          ),
-        ),
+                    child: const Center(
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        )),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

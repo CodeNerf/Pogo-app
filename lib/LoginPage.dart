@@ -5,7 +5,7 @@ import 'Home.dart';
 import 'ForgotPasswordPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
-
+//TODO: add more ways to login: google, instagram, etc..
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -18,17 +18,22 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  Future login() async {
+  Future login(context) async {
     await signInUser(emailController.text, passwordController.text);
-    final bool signInSucess = await isUserSignedIn();
+    final bool signInSuccess = await isUserSignedIn();
     //TODO add else error
-    if (signInSucess) {
+    if (signInSuccess) {
+      //TODO: check if logged in user has completed user survey:
+      //  if they have send to Home(), if not send to SurveyLandingPage()
       await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const Home(),
         ),
       );
+    }
+    else {
+      //output error that email/password is incorrect or doesn't exist
     }
   }
 
@@ -133,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: InkWell(
                     //TODO: create login() backend function
                     onTap: () async {
-                      login();
+                      login(context);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(20),
