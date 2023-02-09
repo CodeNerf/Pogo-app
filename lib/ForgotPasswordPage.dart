@@ -15,7 +15,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final emailController = TextEditingController();
   String errorText = '';
 
-  Future reset(context) async {
+  Future requestPasswordResetCode(context) async {
     if(emailController.text.isEmpty) {
       setState(() {
         errorText = 'Email cannot be blank.';
@@ -137,7 +137,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 child: InkWell(
                   //TODO: create login() backend function
                   onTap: () async {
-                    reset(context);
+                    requestPasswordResetCode(context);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(20),

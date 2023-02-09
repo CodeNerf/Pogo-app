@@ -19,7 +19,7 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
   bool obscure = true;
   Icon eye = Icon(Icons.remove_red_eye);
 
-  Future confirmReset(context) async {
+  Future confirmNewPassword(context) async {
     if(passwordController.text.isEmpty) {
       setState(() {
         errorText = 'Password cannot be blank.';
@@ -187,7 +187,7 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                 child: InkWell(
                   //TODO: create login() backend function
                   onTap: () async {
-                    confirmReset(context);
+                    confirmNewPassword(context);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(20),
