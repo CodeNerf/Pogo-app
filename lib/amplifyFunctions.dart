@@ -101,24 +101,24 @@ Future<bool> resendConfirmationCode(String email) async {
   }
 }
     
-bool isPasswordReset = false;
-Future<void> resetPassword(String username) async {
+Future<bool> resetPassword(String username) async {
   try {
-    final result = await Amplify.Auth.resetPassword(username: username);
-    isPasswordReset = result.isPasswordReset;
+    await Amplify.Auth.resetPassword(username: username);
+    return true;
   } on AmplifyException catch (e) {
     safePrint(e);
+    return false;
   }
 }
 
 //todo create model to reduce function parameters to 1
-Future<void> confirmResetPassword(
-    String username, String password, String code) async {
+Future<bool> confirmResetPassword(String username, String password, String code) async {
   try {
-    await Amplify.Auth.confirmResetPassword(
-        username: username, newPassword: password, confirmationCode: code);
+    await Amplify.Auth.confirmResetPassword(username: username, newPassword: password, confirmationCode: code);
+    return true;
   } on AmplifyException catch (e) {
     safePrint(e);
+    return false;
   }
 }
 
