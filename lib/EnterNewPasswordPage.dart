@@ -1,38 +1,47 @@
 import 'package:flutter/material.dart';
-import 'LoginPage.dart';
 import 'amplifyFunctions.dart';
-import 'EnterNewPasswordPage.dart';
+import 'ForgotPasswordPage.dart';
+import 'LoginPage.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+class EnterNewPasswordPage extends StatefulWidget {
+  final String email;
+  const EnterNewPasswordPage({Key? key, required this.email}) : super(key: key);
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  State<EnterNewPasswordPage> createState() => _EnterNewPasswordPageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
   String pogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final codeController = TextEditingController();
   String errorText = '';
+  bool obscure = true;
+  Icon eye = Icon(Icons.remove_red_eye);
 
-  Future requestPasswordResetCode(context) async {
-    if(emailController.text.isEmpty) {
+  Future confirmNewPassword(context) async {
+    if(passwordController.text.isEmpty) {
       setState(() {
-        errorText = 'Email cannot be blank.';
+        errorText = 'Password cannot be blank.';
+      });
+    }
+    else if(codeController.text.isEmpty) {
+      setState(() {
+        errorText = 'Code cannot be blank.';
       });
     }
     //send link to user email to reset password
-    else if(await resetPassword(emailController.text)) {
+    else if(await confirmResetPassword(widget.email, passwordController.text, codeController.text)) {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EnterNewPasswordPage(email: emailController.text),
+          builder: (context) => const LoginPage(),
         ),
       );
     }
     else {
       setState(() {
-        errorText = 'Could not send the password reset code. Please check that the email entered is correct.';
+        errorText = 'Could not reset password. Check to make sure all fields are correct and try again.';
       });
     }
   }
@@ -63,7 +72,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const LoginPage(),
+                            builder: (context) => const ForgotPasswordPage(),
                           ),
                         );
                       },
@@ -86,9 +95,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
               const SizedBox(height: 150),
 
-              //reset password instructions
+              //instructions
               const Text(
-                'Enter the Email associated with your account to receive a password reset code.',
+                'Enter a new password that is at least 8 characters long and contains at least 1 uppercase letter and 1 symbol. Then enter the password reset code that was sent to your email.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -108,7 +117,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
               const SizedBox(height: 15),
 
-              //email textfield
+              //password textfield
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
@@ -120,16 +129,57 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 20.0),
                     child: TextField(
-                      controller: emailController,
+                      controller: passwordController,
+                      obscureText: obscure,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Email',
+                        hintText: 'New Password',
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            if(obscure) {
+                              setState(() {
+                                obscure = false;
+                                eye = const Icon(Icons.remove_red_eye_outlined);
+                              });
+                            }
+                            else {
+                              setState(() {
+                                obscure = true;
+                                eye = const Icon(Icons.remove_red_eye);
+                              });
+                            }
+                          },
+                          child: eye,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
+
+              //code textfield
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 20.0),
+                    child: TextField(
+                      controller: codeController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Code',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
 
               //submit button
               Padding(
@@ -137,7 +187,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 child: InkWell(
                   //TODO: create login() backend function
                   onTap: () async {
-                    requestPasswordResetCode(context);
+                    confirmNewPassword(context);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(20),
@@ -147,7 +197,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                     child: const Center(
                         child: Text(
-                          'Submit',
+                          'Reset',
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
