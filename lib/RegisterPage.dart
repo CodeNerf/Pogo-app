@@ -14,7 +14,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool _obscureText = true;
     String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
     final formKey = GlobalKey<FormState>();
     final fnameController = TextEditingController();
@@ -32,6 +31,10 @@ class _RegisterPageState extends State<RegisterPage> {
     double errorSizeBoxSize = 0;
 
     Future signUp(context) async {
+      final bool signUpSuccess = await signUpUser(
+          emailController.text, passwordController.text,
+          fnameController.text, lnameController.text,
+          phoneController.text, addressController.text);
       if (fnameController.text.isEmpty) {
         setState(() {
           errorText = 'Must enter your first name.';
@@ -87,18 +90,18 @@ class _RegisterPageState extends State<RegisterPage> {
           errorSizeBoxSize = 10;
         });
       }
-      else {
-        final bool signUpSuccess = await signUpUser(
-            emailController.text, passwordController.text,
-            fnameController.text, lnameController.text,
-            phoneController.text, addressController.text);
-        if (signUpSuccess) {
+      else if(signUpSuccess) {
           await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => UserConfirmationPage(email: emailController.text, password: passwordController.text))
           );
-        }
+      }
+      else {
+        setState(() {
+          errorText = 'Could not register. Make sure all information entered is correct.';
+          errorSizeBoxSize = 10;
+        });
       }
     }
 
@@ -131,6 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     //ERROR TEXT
                     Text(
                       errorText,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -211,6 +215,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(height: 20),
 
                     //PASSWORD
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Text(
+                        'Password must be at least 8 characters and contain at least 1 symbol and uppercase letter.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(

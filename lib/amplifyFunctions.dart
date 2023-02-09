@@ -29,7 +29,7 @@ Future<AuthUser> getCurrentUser() async {
 }
 
 Future<bool> signUpUser(String email, String password, String fname, String lname, String phoneNumber, String address) async {
-  bool isSignUpComplete = false; //Flag used to route away from signup, possibly better as return value
+  //bool isSignUpComplete = false; //Flag used to route away from signup, possibly better as return value
 //TODO pass signupinfo class as parameter to enable dynamic fields for sign up
   try {
     String phone = '+1$phoneNumber';
@@ -45,13 +45,12 @@ Future<bool> signUpUser(String email, String password, String fname, String lnam
       options: CognitoSignUpOptions(userAttributes: userAttributes),
     );
 
-    isSignUpComplete = result.isSignUpComplete;
-
-    debugPrint("isSignUpComplete:  $isSignUpComplete");
+    return true;
+    //debugPrint("isSignUpComplete:  $isSignUpComplete");
   } on AuthException catch (e) {
     safePrint(e.message);
+    return false;
   }
-  return isSignUpComplete;
 }
 
 Future<void> signInUser(String email, String password) async {

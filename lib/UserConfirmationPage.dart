@@ -42,15 +42,19 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
 
   Future resendCode() async {
     if(await resendConfirmationCode(email)) {
-      errorText = 'A new code was sent to your email.';
-      errorSizeBoxSize = 10;
-      errorTextColor = Colors.green;
+      setState(() {
+        errorText = 'A new code was sent to your email.';
+        errorSizeBoxSize = 10;
+        errorTextColor = Colors.green;
+      });
     }
     else {
       //this shouldn't happen
-      errorText = 'Error occurred when requesting for a new code.';
-      errorSizeBoxSize = 10;
-      errorTextColor = Colors.red;
+      setState(() {
+        errorText = 'Error occurred when requesting for a new code.';
+        errorSizeBoxSize = 10;
+        errorTextColor = Colors.red;
+      });
     }
   }
 
@@ -63,32 +67,42 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(
-                image: AssetImage(
-                  pogoLogo,
+              Transform.scale(
+                scale: 0.7,
+                child: Image(
+                  image: AssetImage(
+                    pogoLogo,
+                  ),
                 ),
               ),
-              const SizedBox(height: 150),
+              const SizedBox(height: 100),
               //account confirmation instructions
-              const Text(
-                'Enter the code that was sent to your email to confirm your account.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.0),
+                child: const Text(
+                  'Enter the code that was sent to your email to confirm your account.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
 
               //ERROR TEXT
-              Text(
-                errorText,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: errorTextColor,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.0),
+                child: Text(
+                  errorText,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: errorTextColor,
+                  ),
                 ),
               ),
-              SizedBox(height: errorSizeBoxSize),
+              SizedBox(height: 10),
 
               //CODE
               Padding(
@@ -150,7 +164,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                   child: Container(
                     padding: const EdgeInsets.all(30),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF3D433),
+                      color: Colors.grey,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Center(
