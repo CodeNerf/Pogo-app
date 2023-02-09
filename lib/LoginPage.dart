@@ -17,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   String signInPogoLogo = 'assets/Pogo_logo_horizontal.png';
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool obscure = true;
+  Icon eye = Icon(Icons.remove_red_eye);
 
   Future login(context) async {
     await signInUser(emailController.text, passwordController.text);
@@ -92,10 +94,27 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.only(left: 20.0),
                       child: TextField(
                         controller: passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
+                        obscureText: obscure,
+                        decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Password',
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              if(obscure) {
+                                setState(() {
+                                  obscure = false;
+                                  eye = const Icon(Icons.remove_red_eye_outlined);
+                                });
+                              }
+                              else {
+                                setState(() {
+                                  obscure = true;
+                                  eye = const Icon(Icons.remove_red_eye);
+                                });
+                              }
+                            },
+                            child: eye,
+                          ),
                         ),
                       ),
                     ),
