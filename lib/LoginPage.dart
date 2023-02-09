@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'RegisterPage.dart';
+import 'Home.dart';
+import 'ForgotPasswordPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
+import 'amplifyFunctions.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -15,13 +19,17 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   Future login() async {
-    //TODO: implement back-end function to login user after tapping login button
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const GunPolicy(),
-      ),
-    );
+    await signInUser(emailController.text, passwordController.text);
+    final bool signInSucess = await isUserSignedIn();
+    //TODO add else error
+    if (signInSucess) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
+      );
+    }
   }
 
   @override
@@ -88,7 +96,36 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
+
+                //forgot password
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ForgotPasswordPage(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Forgot Password',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
 
                 //login button
                 Padding(
@@ -106,7 +143,39 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: const Center(
                           child: Text(
-                            'Login',
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 25),
+                //login button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: InkWell(
+                    //TODO: create login() backend function
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Home(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                          child: Text(
+                            'Continue as Guest',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -117,8 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 75),
-
-                //not a member? register now
+                //register
                 GestureDetector(
                   onTap: () async {
                     await Navigator.push(
@@ -131,8 +199,9 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text(
                     ' Register',
                     style: TextStyle(
-                      color: Color(0xFFF3D433),
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
+                      fontSize: 15,
                     ),
                   ),
                 ),

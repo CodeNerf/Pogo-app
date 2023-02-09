@@ -12,7 +12,7 @@ class DrugPolicy extends StatefulWidget {
 
 class _DrugPolicyState extends State<DrugPolicy> {
   String pogoLogo = 'assets/Pogo_logo_horizontal.png';
-  String issuesLogo = 'assets/drugPolicyPogo.jpg';
+  String issuesLogo = 'assets/marijuana.png';
   String issuesText = 'DRUG POLICY';
   String emptySquare = 'assets/yellowemptysquare.png';
   String yellowSquare = 'assets/yellowsquare.png';
@@ -104,9 +104,14 @@ class _DrugPolicyState extends State<DrugPolicy> {
                 ),
                 child: Column(
                   children: [
-                    Image(
-                      image: AssetImage(
-                        issuesLogo,
+                    Container(
+                      height: 210,
+                      width: 300,
+                      child: Image(
+                        image: AssetImage(
+                          issuesLogo,
+                        ),
+                        fit: BoxFit.fill,
                       ),
                     ),
                     Text(
