@@ -19,8 +19,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    String email = "nick@nick.nick";
-    String password = 'P@ssw0rd';
     configureAmplify();
   }
 
