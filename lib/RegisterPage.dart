@@ -1,8 +1,10 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:pogo/Onboarding/Demographics.dart';
+import 'package:pogo/UserConfirmationPage.dart';
+import 'package:validators/validators.dart';
 import 'LoginPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
+import 'amplifyFunctions.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -13,285 +15,386 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   bool _obscureText = true;
-  String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final formKey = GlobalKey<FormState>();
-  final fnameController = TextEditingController();
-  final lnameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPassController = TextEditingController();
-  final phoneController = TextEditingController();
-  final addressController = TextEditingController();
+    String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
+    final formKey = GlobalKey<FormState>();
+    final fnameController = TextEditingController();
+    final lnameController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    final phoneController = TextEditingController();
+    final addressController = TextEditingController();
+    bool obscure = true;
+    bool obscureConfirm = true;
+    Icon eye = Icon(Icons.remove_red_eye);
+    Icon eyeConfirm = Icon(Icons.remove_red_eye);
+    String errorText = '';
+    double errorSizeBoxSize = 0;
 
-  Future login() async {
-    //TODO: implement back-end function to login user after tapping login button
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const Demographics(),
-      ),
-    );
-  }
+    Future signUp(context) async {
+      if (fnameController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your first name.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(lnameController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your last name.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(emailController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your email.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(passwordController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter a password.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(confirmPasswordController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must confirm your password.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if (passwordController.text.compareTo(
+            confirmPasswordController.text) != 0) {
+          setState(() {
+            errorText = 'Passwords do not match.';
+            errorSizeBoxSize = 10;
+          });
+      }
+      else if(phoneController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your phone number.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(!isNumeric(phoneController.text) || phoneController.text.length != 10) {
+        setState(() {
+          errorText = 'Invalid phone number.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if (addressController.text.isEmpty) {
+        setState(() {
+          errorText = 'Must enter your address.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else {
+        final bool signUpSuccess = await signUpUser(
+            emailController.text, passwordController.text,
+            fnameController.text, lnameController.text,
+            phoneController.text, addressController.text);
+        if (signUpSuccess) {
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserConfirmationPage(email: emailController.text, password: passwordController.text))
+          );
+        }
+      }
+    }
 
-  @override
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: const Text("Register"),
-          centerTitle: true,
-          backgroundColor: Colors.grey[300]),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Transform.scale(
-                  scale: 0.7,
-                  child: Image(
-                    image: AssetImage(
-                      signUpPogoLogo,
-                    ),
-                  ),
-                ),
-                //Register form
-                //name textfield
-                const SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border:
-                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: fnameController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'First Name',
-                        ),
+    //@override
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+            title: const Text("Register"),
+            centerTitle: true,
+            backgroundColor: Colors.grey[300]
+        ),
+        backgroundColor: const Color(0xFFE1E1E1),
+        body: SafeArea(
+          child: Form(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //LOGO
+                    Transform.scale(
+                    scale: 0.7,
+                      child: Image(
+                        image: AssetImage(
+                          signUpPogoLogo,),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border:
-                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: lnameController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Last Name',
-                        ),
+
+                    //ERROR TEXT
+                    Text(
+                      errorText,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
                       ),
                     ),
-                  ),
-                ),
+                    SizedBox(height: errorSizeBoxSize),
 
-                const SizedBox(height: 20),
-                //email textfield
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border:
-                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Email',
+                    //FIRST NAME
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(
+                              color: Color.fromARGB(255, 178, 169, 169)),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-                //password textfield
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border:
-                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: passwordController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Password',
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                            child: Icon(_obscureText
-                                ? Icons.visibility
-                                : Icons.visibility_off),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: TextField(
+                            controller: fnameController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'First Name',
+                            ),
                           ),
                         ),
-                        obscureText: _obscureText,
                       ),
                     ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-                //confirm password textfield
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border:
-                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: confirmPassController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Confirm Password',
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                            child: Icon(_obscureText
-                                ? Icons.visibility
-                                : Icons.visibility_off),
+                    const SizedBox(height: 20),
+                    //LAST NAME
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(
+                              color: Color.fromARGB(255, 178, 169, 169)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: TextField(
+                            controller: lnameController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Last Name',
+                            ),
                           ),
                         ),
-                        obscureText: _obscureText,
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                //password textfield
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border:
-                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: phoneController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Phone',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                //password textfield
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border:
-                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0),
-                      child: TextField(
-                        controller: addressController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Address',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const SizedBox(height: 30),
+                    const SizedBox(height: 20),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: InkWell(
-                    onTap: () async {
-                      login();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3D433),
-                        borderRadius: BorderRadius.circular(12),
+                    //EMAIL
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(
+                              color: Color.fromARGB(255, 178, 169, 169)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: TextField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Email',
+                            ),
+                          ),
+                        ),
                       ),
-                      child: const Center(
-                          child: Text(
-                        'Register',
+                    ),
+                    const SizedBox(height: 20),
+
+                    //PASSWORD
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: TextField(
+                            obscureText: obscure,
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Password',
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  if(obscure) {
+                                    setState(() {
+                                      obscure = false;
+                                      eye = const Icon(Icons.remove_red_eye_outlined);
+                                    });
+                                  }
+                                  else {
+                                    setState(() {
+                                      obscure = true;
+                                      eye = const Icon(Icons.remove_red_eye);
+                                    });
+                                  }
+                                },
+                                child: eye,
+                              ),
+                            ),
+                          ),
+                        ),
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+
+                    //CONFIRM PASSWORD
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: TextField(
+                            obscureText: obscureConfirm,
+                            controller: confirmPasswordController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Confirm Password',
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  if(obscureConfirm) {
+                                    setState(() {
+                                      obscureConfirm = false;
+                                      eyeConfirm = const Icon(Icons.remove_red_eye_outlined);
+                                    });
+                                  }
+                                  else {
+                                    setState(() {
+                                      obscureConfirm = true;
+                                      eyeConfirm = const Icon(Icons.remove_red_eye);
+                                    });
+                                  }
+                                },
+                                child: eyeConfirm,
+                              ),
+                            ),
+
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    //PHONE
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border:
+                          Border.all(color: Color.fromARGB(255, 178, 169, 169)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: TextField(
+                            controller: phoneController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Phone',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    //ADDRESS
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(
+                              color: Color.fromARGB(255, 178, 169, 169)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                          child: TextField(
+                            controller: addressController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Address',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    //REGISTER BUTTON
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: InkWell(
+                        onTap: () async {
+                          signUp(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3D433),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Center(
+                              child: Text(
+                                'Register',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+
+                    //back to login
+                    GestureDetector(
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Already have an account? Login here!',
                         style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
+                          color: Color.fromARGB(255, 0, 0, 0),
                           fontWeight: FontWeight.bold,
+
                         ),
-                      )),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                GestureDetector(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(),
                       ),
-                    );
-                  },
-                  child: const Text(
-                    'Already have an account? Login here!',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontWeight: FontWeight.bold,
+
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
-}

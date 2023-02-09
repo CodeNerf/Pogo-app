@@ -104,9 +104,14 @@ class _EducationState extends State<Education> {
                 ),
                 child: Column(
                   children: [
-                    Image(
-                      image: AssetImage(
-                        issuesLogo,
+                    Container(
+                      height: 210,
+                      width: 300,
+                      child: Image(
+                        image: AssetImage(
+                          issuesLogo,
+                        ),
+                        fit: BoxFit.fill,
                       ),
                     ),
                     Text(
