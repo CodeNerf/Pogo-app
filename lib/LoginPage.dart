@@ -5,7 +5,7 @@ import 'Home.dart';
 import 'ForgotPasswordPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
-
+//TODO: add more ways to login: google, instagram, etc..
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -17,18 +17,25 @@ class _LoginPageState extends State<LoginPage> {
   String signInPogoLogo = 'assets/Pogo_logo_horizontal.png';
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool obscure = true;
+  Icon eye = Icon(Icons.remove_red_eye);
 
-  Future login() async {
+  Future login(context) async {
     await signInUser(emailController.text, passwordController.text);
-    final bool signInSucess = await isUserSignedIn();
+    final bool signInSuccess = await isUserSignedIn();
     //TODO add else error
-    if (signInSucess) {
+    if (signInSuccess) {
+      //TODO: check if logged in user has completed user survey:
+      //  if they have send to Home(), if not send to SurveyLandingPage()
       await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const Home(),
         ),
       );
+    }
+    else {
+      //output error that email/password is incorrect or doesn't exist
     }
   }
 
@@ -87,10 +94,27 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.only(left: 20.0),
                       child: TextField(
                         controller: passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
+                        obscureText: obscure,
+                        decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Password',
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              if(obscure) {
+                                setState(() {
+                                  obscure = false;
+                                  eye = const Icon(Icons.remove_red_eye_outlined);
+                                });
+                              }
+                              else {
+                                setState(() {
+                                  obscure = true;
+                                  eye = const Icon(Icons.remove_red_eye);
+                                });
+                              }
+                            },
+                            child: eye,
+                          ),
                         ),
                       ),
                     ),
@@ -133,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: InkWell(
                     //TODO: create login() backend function
                     onTap: () async {
-                      login();
+                      login(context);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -154,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                //login button
+                //guest button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'UserProfile.dart';
+import 'VoterGuide.dart';
+import 'CandidateInfo.dart';
+import 'CandidateUserMatching.dart';
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -11,22 +15,10 @@ class _HomeState extends State<Home> {
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Voter Guide',
-      style: optionStyle,
-    ),
-    Text(
-      'Match',
-      style: optionStyle,
-    ),
-    Text(
-      'Candidates',
-      style: optionStyle,
-    ),
-    Text(
-      'Profile',
-      style: optionStyle,
-    ),
+    VoterGuide(),
+    CandidateUserMatching(),
+    CandidateInfo(),
+    UserProfile(),
   ];
 
   void _onItemTapped(int index) {
