@@ -13,7 +13,6 @@
     },
     "categories": {
       "auth": {
-        "pogo401c517c": {},
         "PoGo": {}
       },
       "storage": {
@@ -31,6 +30,10 @@
           "deploymentBucketName": "amplify-pogo-dev-94354-deployment",
           "s3Key": "amplify-builds/CanidateIssueFactorValues-44624e45664f78367142-build.zip"
         }
+      },
+      "api": {
+        "PoGo": {},
+        "CanidateIssueFactorValues": {}
       }
     }
   }

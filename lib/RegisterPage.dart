@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pogo/UserConfirmationPage.dart';
 import 'package:validators/validators.dart';
 import 'LoginPage.dart';
+import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -14,7 +15,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   bool _obscureText = true;
-
     String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
     final formKey = GlobalKey<FormState>();
     final fnameController = TextEditingController();
@@ -162,7 +162,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-
                     //LAST NAME
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
@@ -247,7 +246,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: eye,
                               ),
                             ),
-
                           ),
                         ),
                         ),
@@ -344,7 +342,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-
                     //REGISTER BUTTON
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -390,6 +387,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                         ),
                       ),
+
                     ),
                   ],
                 ),
