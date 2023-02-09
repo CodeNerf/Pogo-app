@@ -28,10 +28,10 @@ Future<AuthUser> getCurrentUser() async {
   return user;
 }
 
+//TODO pass signupinfo class as parameter to enable dynamic fields for sign up
 Future<bool> signUpUser(String email, String password) async {
   bool isSignUpComplete =
       false; //Flag used to route away from signup, possibly better as return value
-//TODO pass signupinfo class as parameter to enable dynamic fields for sign up
   try {
     final result = await Amplify.Auth.signUp(
       username: email,
@@ -53,5 +53,35 @@ Future<void> signInUser(String email, String password) async {
     safePrint(isUserSignedIn());
   } on AuthException catch (e) {
     safePrint(e.message);
+  }
+}
+
+bool isPasswordReset = false;
+Future<void> resetPassword(String username) async {
+  try {
+    final result = await Amplify.Auth.resetPassword(username: username);
+    isPasswordReset = result.isPasswordReset;
+  } on AmplifyException catch (e) {
+    safePrint(e);
+  }
+}
+
+//todo create model to reduce function parameters to 1
+Future<void> confirmResetPassword(
+    String username, String password, String code) async {
+  try {
+    await Amplify.Auth.confirmResetPassword(
+        username: username, newPassword: password, confirmationCode: code);
+  } on AmplifyException catch (e) {
+    safePrint(e);
+  }
+}
+
+Future<void> updatePassword(String oldPassword, String newPassword) async {
+  try {
+    await Amplify.Auth.updatePassword(
+        oldPassword: oldPassword, newPassword: newPassword);
+  } on AmplifyException catch (e) {
+    safePrint(e);
   }
 }
