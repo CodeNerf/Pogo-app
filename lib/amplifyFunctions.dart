@@ -98,6 +98,8 @@ Future<bool> resendConfirmationCode(String email) async {
   } catch (e) {
     safePrint('Error resending code.');
     return false;
+  }
+}
     
 bool isPasswordReset = false;
 Future<void> resetPassword(String username) async {
