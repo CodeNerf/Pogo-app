@@ -23,6 +23,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     configureAmplify();
+    getElection();
+    //getPollingLocation('3802 S Dale Mabry Hwy, Tampa, FL 33611');
   }
 
   @override
