@@ -14,7 +14,7 @@ class Demographics extends StatefulWidget {
   State<Demographics> createState() => _DemographicsState();
 }
 class _DemographicsState extends State<Demographics> {
- String surveyPogoLogo = 'assets/Pogo_logo_horizontal.png';
+
   String agesdropdownvalue = '18-25 years old';   
   final Widget lastPage = const SurveyLandingPage();
     String pogoLogo = 'assets/Pogo_logo_horizontal.png';
@@ -74,31 +74,7 @@ class _DemographicsState extends State<Demographics> {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => lastPage,
-                          ),
-                        );
-                      },
-                      child: const Icon(
-                        Icons.arrow_back,
-                      ),
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: Image(
-                          image: AssetImage(
-                            pogoLogo,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  
                 ),
               ),
              const SizedBox(height: 30),
