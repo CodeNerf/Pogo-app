@@ -1,10 +1,15 @@
 
 import 'dart:developer';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
+
+
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'amplifyconfiguration.dart';
+import 'user.dart';
 
 Future<void> configureAmplify() async {
   try {
@@ -19,8 +24,18 @@ Future<void> configureAmplify() async {
 }
 
 Future<bool> isUserSignedIn() async {
+  try {
+    await Amplify.Auth.fetchAuthSession();
+    return true;
+  }
+  on AuthException catch (e) {
+    safePrint(e.message);
+    return false;
+  }
+  /*
   final result = await Amplify.Auth.fetchAuthSession();
   return result.isSignedIn;
+   */
 }
 
 Future<AuthUser> getCurrentUser() async {
@@ -30,7 +45,6 @@ Future<AuthUser> getCurrentUser() async {
 
 Future<bool> signUpUser(String email, String password, String fname, String lname, String phoneNumber, String address) async {
   //bool isSignUpComplete = false; //Flag used to route away from signup, possibly better as return value
-//TODO pass signupinfo class as parameter to enable dynamic fields for sign up
   try {
     String phone = '+1$phoneNumber';
     final userAttributes = <CognitoUserAttributeKey, String> {
@@ -38,6 +52,7 @@ Future<bool> signUpUser(String email, String password, String fname, String lnam
       CognitoUserAttributeKey.familyName: lname,
       CognitoUserAttributeKey.phoneNumber: phone,
       CognitoUserAttributeKey.address: address,
+      const CognitoUserAttributeKey.custom('survey'): '0',
     };
     final result = await Amplify.Auth.signUp(
       username: email,
@@ -53,12 +68,13 @@ Future<bool> signUpUser(String email, String password, String fname, String lnam
   }
 }
 
-Future<void> signInUser(String email, String password) async {
+Future<bool> signInUser(String email, String password) async {
   try {
     final result =
         await Amplify.Auth.signIn(username: email, password: password);
-    safePrint(isUserSignedIn());
+    return true;
   } on AuthException catch (e) {
+    return false;
     safePrint(e.message);
   }
 }
@@ -74,8 +90,10 @@ Future<void> logoutUser() async {
 Future<bool> checkLoggedIn() async {
   try {
     await Amplify.Auth.getCurrentUser();
+    safePrint("true");
     return true;
   } on AuthException catch (e) {
+    safePrint("false");
     return false;
   }
 }
@@ -127,5 +145,63 @@ Future<void> updatePassword(String oldPassword, String newPassword) async {
         oldPassword: oldPassword, newPassword: newPassword);
   } on AmplifyException catch (e) {
     safePrint(e);
+  }
+}
+
+Future<user> fetchCurrentUserAttributes() async {
+  user current = user.all("", "", "", "", "");
+  try {
+    final result = await Amplify.Auth.fetchUserAttributes();
+    current.address = result[1].value;
+    current.phone = result[4].value;
+    current.fname = result[6].value;
+    current.lname = result[7].value;
+    current.email = result[8].value;
+  } on AuthException catch (e) {
+    safePrint(e.message);
+  }
+  return current;
+}
+
+Future<bool> isUserConfirmed() async {
+  try {
+    final result = await Amplify.Auth.fetchUserAttributes();
+    if(result[2].value == 'true') {
+      return true;
+    }
+    return false;
+  } on AuthException catch (e) {
+    safePrint(e.message);
+  }
+  return false;
+}
+
+Future<bool> isSurveyCompleted() async {
+  try {
+    final result = await Amplify.Auth.fetchUserAttributes();
+    if(result[5].value == "0") {
+      safePrint('${result[7].userAttributeKey} + ${result[7].value}');
+      //not completed
+      return false;
+    }
+    //completed
+    return true;
+  } on AuthException catch (e) {
+    return false;
+    safePrint(e.message);
+  }
+}
+
+Future<bool> updateSurveyCompletion() async {
+  try {
+    final result = await Amplify.Auth.updateUserAttribute(
+      userAttributeKey: const CognitoUserAttributeKey.custom("survey"),
+      value: '1',
+    );
+    safePrint("Survey Completed");
+    return true;
+  } on AmplifyException catch (e) {
+    safePrint(e.message);
+    return false;
   }
 }

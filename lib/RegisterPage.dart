@@ -31,10 +31,6 @@ class _RegisterPageState extends State<RegisterPage> {
     double errorSizeBoxSize = 0;
 
     Future signUp(context) async {
-      final bool signUpSuccess = await signUpUser(
-          emailController.text, passwordController.text,
-          fnameController.text, lnameController.text,
-          phoneController.text, addressController.text);
       if (fnameController.text.isEmpty) {
         setState(() {
           errorText = 'Must enter your first name.';
@@ -78,9 +74,16 @@ class _RegisterPageState extends State<RegisterPage> {
           errorSizeBoxSize = 10;
         });
       }
-      else if(!isNumeric(phoneController.text) || phoneController.text.length != 10) {
+      else if(!isNumeric(phoneController.text)) {
+        //print(passwordController.text.length);
         setState(() {
           errorText = 'Invalid phone number.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(phoneController.text.length != 10) {
+        setState(() {
+          errorText = 'Invalid phone number length.';
           errorSizeBoxSize = 10;
         });
       }
@@ -90,18 +93,15 @@ class _RegisterPageState extends State<RegisterPage> {
           errorSizeBoxSize = 10;
         });
       }
-      else if(signUpSuccess) {
+      else if(await signUpUser(
+      emailController.text, passwordController.text,
+      fnameController.text, lnameController.text,
+      phoneController.text, addressController.text)) {
           await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => UserConfirmationPage(email: emailController.text, password: passwordController.text))
           );
-      }
-      else {
-        setState(() {
-          errorText = 'Could not register. Make sure all information entered is correct.';
-          errorSizeBoxSize = 10;
-        });
       }
     }
 
@@ -325,7 +325,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             controller: phoneController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Phone',
+                              hintText: 'Phone Number e.g 1234567890',
                             ),
                           ),
                         ),
