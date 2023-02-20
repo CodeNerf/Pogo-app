@@ -18,6 +18,10 @@ class Election {
       ocdDivisionId: json['ocdDivisionId'],
     );
   }
+  @override
+  String toString() {
+    return id + ' ' + name + ' ' + electionDay + ' ' + ocdDivisionId;
+  }
 }
 
 class PollingLocation {
