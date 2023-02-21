@@ -3,6 +3,7 @@ import 'UserProfile.dart';
 import 'VoterGuide.dart';
 import 'CandidateInfo.dart';
 import 'CandidateUserMatching.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -13,7 +14,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     VoterGuide(),
     CandidateUserMatching(),
@@ -27,7 +28,6 @@ class _HomeState extends State<Home> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +38,8 @@ class _HomeState extends State<Home> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: ImageIcon(
-                AssetImage('assets/briefcase.png'),
-                color: Colors.black,
+              AssetImage('assets/briefcase.png'),
+              color: Colors.black,
             ),
             label: 'Voter Guide',
           ),
