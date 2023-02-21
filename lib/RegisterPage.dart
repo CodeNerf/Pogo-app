@@ -31,6 +31,15 @@ class _RegisterPageState extends State<RegisterPage> {
     String errorText = '';
     double errorSizeBoxSize = 0;
 
+    // Regular expression for validating US addresses
+    final addressRegex = RegExp(
+    r'^\d+\s[A-z]+\s[A-z]+(\s[A-z]+)?,\s[A-z]{2}\s\d{5}$',
+    );
+    // Regular expression for validating email address
+    final emailRegex = RegExp(
+      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+    );
+
     Future signUp(context) async {
       if (fnameController.text.isEmpty) {
         setState(() {
@@ -49,7 +58,12 @@ class _RegisterPageState extends State<RegisterPage> {
           errorText = 'Must enter your email.';
           errorSizeBoxSize = 10;
         });
-      }
+      }else if(!emailRegex.hasMatch(emailController.text)) {
+    setState(() {
+      errorText = 'Invalid email address.';
+      errorSizeBoxSize = 10;
+    });
+  }
       else if(passwordController.text.isEmpty) {
         setState(() {
           errorText = 'Must enter a password.';
@@ -86,7 +100,12 @@ class _RegisterPageState extends State<RegisterPage> {
           errorText = 'Must enter your address.';
           errorSizeBoxSize = 10;
         });
-      }
+      }else if (!addressRegex.hasMatch(addressController.text)) {
+    setState(() {
+      errorText = 'Invalid address format.';
+      errorSizeBoxSize = 10;
+    });
+    } 
       else {
         final bool signUpSuccess = await signUpUser(
             emailController.text, passwordController.text,
@@ -102,15 +121,24 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     }
 
+    @override
+void dispose() {
+  // Clean up the controllers when the widget is removed from the widget tree.
+  fnameController.dispose();
+  lnameController.dispose();
+  emailController.dispose();
+  passwordController.dispose();
+  confirmPasswordController.dispose();
+  phoneController.dispose();
+  addressController.dispose();
+  super.dispose();
+}
+
     //@override
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        appBar: AppBar(
-            title: const Text("Register"),
-            centerTitle: true,
-            backgroundColor: Colors.grey[300]
-        ),
+       
         backgroundColor: const Color(0xFFE1E1E1),
         body: SafeArea(
           child: Form(
@@ -121,18 +149,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     //LOGO
                     Transform.scale(
-                    scale: 0.7,
+                    scale: 0.5,
                       child: Image(
                         image: AssetImage(
                           signUpPogoLogo,),
                       ),
+                      
                     ),
-
                     //ERROR TEXT
                     Text(
                       errorText,
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
                       ),
@@ -389,6 +417,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                     ),
+                                        const SizedBox(height: 20),
+
                   ],
                 ),
               ),
