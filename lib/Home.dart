@@ -1,6 +1,7 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/amplifyFunctions.dart';
+import 'UserIssuesFactors.dart';
 import 'UserProfile.dart';
 import 'VoterGuide.dart';
 import 'CandidateInfo.dart';
@@ -9,7 +10,8 @@ import 'user.dart';
 
 class Home extends StatefulWidget {
   final user currentUser;
-  const Home({Key? key, required this.currentUser}) : super(key: key);
+  final UserIssuesFactors currentUserFactors;
+  const Home({Key? key, required this.currentUser, required this.currentUserFactors}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -23,6 +25,7 @@ class _HomeState extends State<Home> {
   //TODO: implement user issues object
   //objects
   user currentUser = user.all('','','','','');
+  UserIssuesFactors currentUserFactors = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
   late List<Widget> _widgetOptions;
 
@@ -36,8 +39,9 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     currentUser = widget.currentUser;
+    currentUserFactors = widget.currentUserFactors;
     setState(() {
-      _widgetOptions = <Widget>[VoterGuide(), CandidateUserMatching(), CandidateInfo(), UserProfile(currentUser: currentUser)];
+      _widgetOptions = <Widget>[VoterGuide(), CandidateUserMatching(), CandidateInfo(), UserProfile(currentUser: currentUser, currentUserFactors: currentUserFactors,)];
     });
   }
 

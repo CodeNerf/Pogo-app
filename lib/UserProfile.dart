@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/LoginPage.dart';
+import 'package:pogo/UserIssuesFactors.dart';
+import 'Onboarding/SurveyLandingPage.dart';
 import 'amplifyFunctions.dart';
 import 'user.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
@@ -7,7 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserProfile extends StatefulWidget {
   final user currentUser;
-  const UserProfile({Key? key, required this.currentUser}) : super(key: key);
+  final UserIssuesFactors currentUserFactors;
+  const UserProfile({Key? key, required this.currentUser, required this.currentUserFactors}) : super(key: key);
 
   @override
   State<UserProfile> createState() => _UserProfileState();
@@ -19,6 +22,9 @@ class _UserProfileState extends State<UserProfile> {
   String email = "";
   String phone = "";
   String address = "";
+  String firstIssue = "";
+  String secondIssue = "";
+  String thirdIssue = "";
 
   @override
   void initState() {
@@ -196,13 +202,13 @@ class _UserProfileState extends State<UserProfile> {
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Image(
+                        image: AssetImage(
+                          firstIssue,
+                        ),
+                      ),
                     ),
                   ),
                   Container(
@@ -211,6 +217,30 @@ class _UserProfileState extends State<UserProfile> {
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Image(
+                        image: AssetImage(
+                          secondIssue,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Image(
+                        image: AssetImage(
+                          thirdIssue,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -315,30 +345,64 @@ class _UserProfileState extends State<UserProfile> {
 
 
           //logout button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 150.0),
-            child: InkWell(
-              onTap: () async {
-                logout(context);
-              },
-              child: Container(
-                //alignment: Alignment.center,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3D433),
-                  borderRadius: BorderRadius.circular(50),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 150.0),
+                child: InkWell(
+                  onTap: () async {
+                    logout(context);
+                  },
+                  child: Container(
+                    //alignment: Alignment.center,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3D433),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: const Center(
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        )),
+                  ),
                 ),
-                child: const Center(
-                    child: Text(
-                      'Logout',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    )),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 150.0),
+                child: InkWell(
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SurveyLandingPage(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    //alignment: Alignment.center,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3D433),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: const Center(
+                        child: Text(
+                          'Re-Take Survey',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        )),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

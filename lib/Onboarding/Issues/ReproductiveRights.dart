@@ -6,6 +6,7 @@ import '../../UserIssuesFactors.dart';
 import '../../HomeLoadingPage.dart';
 import '../../UserDemographics.dart';
 import 'Policing.dart';
+import 'package:pogo/dataModelManipulation.dart';
 
 class ReproductiveRights extends StatefulWidget {
   final UserIssuesFactors ratings;
@@ -72,6 +73,8 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
     //TODO: this is the final survey page, issues and demographics object values have to be pushed to database here
     if (alignRating > 0 && valueRating > 0) {
       if(await updateSurveyCompletion()) {
+        String email = await fetchCurrentUserEmail();
+        updateUserIssueFactorValues(widget.ratings, email);
         await Navigator.push(
           context,
           MaterialPageRoute(

@@ -1,7 +1,11 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:pogo/Onboarding/Demographics.dart';
 import 'package:pogo/UserDemographics.dart';
+import 'package:pogo/dataModelManipulation.dart';
 import '../UserIssuesFactors.dart';
+import '../amplifyFunctions.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
@@ -13,7 +17,20 @@ class SurveyLandingPage extends StatefulWidget {
   State<SurveyLandingPage> createState() => _SurveyLandingPageState();
 }
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
- 
+  late UserIssuesFactors currentUserFactors;
+
+  @override
+  void initState() {
+    getUserFactors();
+    super.initState();
+  }
+
+  void getUserFactors() async {
+    currentUserFactors = await fetchCurrentUserFactors(await fetchCurrentUserEmail());
+    setState(() {
+      widget.ratings = currentUserFactors;
+    });
+  }
  
   @override
   Widget build(BuildContext context) {
