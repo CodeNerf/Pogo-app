@@ -1,0 +1,452 @@
+{
+	"info": {
+		"_postman_id": "dc2a941c-ac8f-43d4-b417-6d9db7313f7a",
+		"name": "PoGo Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CandidateDemographics",
+			"item": [
+				{
+					"name": "Get All CandidateDemographics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/candidateDemographics",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateDemographics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get CandidateDemographics by CandidateId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/candidateDemographics/{{testCandidateId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateDemographics",
+								"{{testCandidateId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New CandidateDemographic",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let candidateId = pm.variables.replaceIn(\"{{$guid}}\");",
+									"",
+									"pm.environment.set(\"testCandidateId\",candidateId);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"candidateId\": \"{{testCandidateId}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"dateOfBirth\": \"{{$randomDatePast}}\",\n    \"racialIdentity\": \"{{$randomColor}}\",\n    \"gender\": \"{{$randomColor}}\",\n    \"politicalAffiliation\": \"{{$randomColor}}\",\n    \"zipCode\": \"{{$randomPhoneNumberExt}}\",\n    \"seatType\": \"{{$randomLoremWord}}\",\n    \"careerStartYear\": \"MM/DD/YYYY\",\n    \"phoneNumber\": \"{{$randomPhoneNumber}}\",\n    \"profileImageURL\": \"{{$randomAnimalsImage}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/candidateDemographics",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateDemographics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CandidateDemographics",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/candidateDemographics/{{testCandidateId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateDemographics",
+								"{{testCandidateId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "UserDemographics",
+			"item": [
+				{
+					"name": "Get UserDemographics by UserId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/userDemographics/{{testUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userDemographics",
+								"{{testUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All UserDemographics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/userDemographics",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userDemographics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New UserDemographics",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let userId = pm.variables.replaceIn(\"{{$randomEmail}}\");",
+									"",
+									"pm.environment.set(\"testUserId\",userId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{$randomEmail}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"dateOfBirth\": \"MM/DD/YYYY\",\n    \"racialIdentity\": \"{{$randomColor}}\",\n    \"gender\": \"{{$randomColor}}\",\n    \"politicalAffiliation\": \"{{$randomColor}}\",\n    \"zipCode\": \"{{$randomPhoneNumberExt}}\",\n    \"addressLine1\": \"{{$randomStreetAddress}}\",\n    \"voterRegistration\": {{$randomBoolean}},\n    \"phoneNumber\": \"{{$randomPhoneNumber}}\",\n    \"profileImageURL\": \"{{$randomAnimalsImage}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/userDemographics",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userDemographics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete UserDemographic",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/userDemographics/{{testUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userDemographics",
+								"{{testUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserIssueFactorValues",
+			"item": [
+				{
+					"name": "Get UserIssueFactorValues by UserId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/userissuefactorvalues/{{testUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userissuefactorvalues",
+								"{{testUserId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All UserIssueFactorValues",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/userissuefactorvalues",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userissuefactorvalues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New UserIssueFactorValue",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let userId = pm.variables.replaceIn(\"{{$randomEmail}}\");",
+									"",
+									"pm.environment.set(\"testUserId\",userId);",
+									"",
+									"let randomValues = Array.from({length: 20}, () => Math.floor((Math.random() * 5))+1);",
+									"pm.environment.set(\"var1\", randomValues[1]);",
+									"",
+									"for(let i = 0; i < randomValues.length; i++){",
+									"    pm.environment.set(\"testIssue\"+i, randomValues[i]);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{testUserId}}\",\n    \"reproductiveWeight\": {{testIssue1}},\n    \"policingScore\": {{testIssue2}},\n    \"housingScore\": {{testIssue3}},\n    \"reproductiveScore\": {{testIssue4}},\n    \"healthcareScore\": {{testIssue5}},\n    \"drugPolicyScore\": {{testIssue6}},\n    \"immigrationScore\": {{testIssue7}},\n    \"educationScore\": {{testIssue8}},\n    \"drugPolicyWeight\": {{testIssue9}},\n    \"policingWeight\": {{testIssue10}},\n    \"gunPolicyWeight\": {{testIssue11}},\n    \"climateWeight\": {{testIssue12}},\n    \"immigrationWeight\": {{testIssue13}},\n    \"housingWeight\": {{testIssue14}},\n    \"economyWeight\": {{testIssue15}},\n    \"economyScore\": {{testIssue16}},\n    \"climateScore\": {{testIssue17}},\n    \"healthcareWeight\": {{testIssue18}},\n    \"gunPolicyScore\": {{testIssue19}},\n    \"educationWeight\": {{testIssue0}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/userissuefactorvalues",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userissuefactorvalues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete UserIssueFactorValue",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/userissuefactorvalues/{{testUserId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userissuefactorvalues",
+								"{{testUserId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CandidateIssueFactorValues",
+			"item": [
+				{
+					"name": "Get CandidateIssueFactorValues by CandidateId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/candidateissuefactorvalues/{{testCandidateId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateissuefactorvalues",
+								"{{testCandidateId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All CandidateIssueFactorValues",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/candidateissuefactorvalues",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateissuefactorvalues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New CandidateIssueFactorValue",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let candidateId = pm.variables.replaceIn(\"{{$guid}}\");",
+									"",
+									"pm.environment.set(\"testCandidateId\",candidateId);",
+									"",
+									"let randomValues = Array.from({length: 20}, () => Math.floor((Math.random() * 5))+1);",
+									"pm.environment.set(\"var1\", randomValues[1]);",
+									"",
+									"for(let i = 0; i < randomValues.length; i++){",
+									"    pm.environment.set(\"testIssue\"+i, randomValues[i]);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"candidateId\": \"{{testCandidateId}}\",\n    \"reproductiveWeight\": {{testIssue1}},\n    \"policingScore\": {{testIssue2}},\n    \"housingScore\": {{testIssue3}},\n    \"reproductiveScore\": {{testIssue4}},\n    \"healthcareScore\": {{testIssue5}},\n    \"drugPolicyScore\": {{testIssue6}},\n    \"immigrationScore\": {{testIssue7}},\n    \"educationScore\": {{testIssue8}},\n    \"drugPolicyWeight\": {{testIssue9}},\n    \"policingWeight\": {{testIssue10}},\n    \"gunPolicyWeight\": {{testIssue11}},\n    \"climateWeight\": {{testIssue12}},\n    \"immigrationWeight\": {{testIssue13}},\n    \"housingWeight\": {{testIssue14}},\n    \"economyWeight\": {{testIssue15}},\n    \"economyScore\": {{testIssue16}},\n    \"climateScore\": {{testIssue17}},\n    \"healthcareWeight\": {{testIssue18}},\n    \"gunPolicyScore\": {{testIssue19}},\n    \"educationWeight\": {{testIssue0}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/candidateissuefactorvalues",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateissuefactorvalues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CandidateIssueFactorValue",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/candidateissuefactorvalues/{{testCandidateId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateissuefactorvalues",
+								"{{testCandidateId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
