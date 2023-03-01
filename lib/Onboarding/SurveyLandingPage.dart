@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:pogo/Onboarding/Demographics.dart';
-import 'package:pogo/RegisterPage.dart';
+import 'package:pogo/UserDemographics.dart';
+import '../UserIssuesFactors.dart';
 
 class SurveyLandingPage extends StatefulWidget {
-  const SurveyLandingPage({Key? key}) : super(key: key);
+  //check for survey completion, if completed then create ratings object with database values
+  UserDemographics answers = UserDemographics('', '', '', '', '', '', '');
+  UserIssuesFactors ratings = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  SurveyLandingPage({Key? key}) : super(key: key);
 
   @override
   State<SurveyLandingPage> createState() => _SurveyLandingPageState();
@@ -72,7 +75,7 @@ SizedBox(
                     minWidth: double.infinity,
                     height: 70,
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Demographics()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Demographics(ratings: widget.ratings, answers: widget.answers,)));
                     },
                  color: Color.fromARGB(255, 0, 0, 0),
                     shape: RoundedRectangleBorder(

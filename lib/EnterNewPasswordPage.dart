@@ -185,7 +185,6 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: InkWell(
-                  //TODO: create login() backend function
                   onTap: () async {
                     confirmNewPassword(context);
                   },

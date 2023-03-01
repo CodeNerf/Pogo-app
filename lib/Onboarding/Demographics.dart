@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:pogo/Onboarding/Issues/GunPolicy.dart';
-import 'package:pogo/Onboarding/SurveyLandingPage.dart';
-import '../LandingPage.dart';
-import '../LoginPage.dart';
-import '../RegisterPage.dart';
+import 'package:pogo/UserDemographics.dart';
 import 'VoterInfo.dart';
+import '../UserIssuesFactors.dart';
 
 class Demographics extends StatefulWidget {
-  const Demographics({Key? key}) : super(key: key);
+  final UserIssuesFactors ratings;
+  final UserDemographics answers;
+  const Demographics({Key? key, required this.ratings, required this.answers}) : super(key: key);
 
   @override
   State<Demographics> createState() => _DemographicsState();
@@ -18,7 +16,6 @@ class _DemographicsState extends State<Demographics> {
   String agesdropdownvalue = '18-25 years old';
   String racesdropdownvalue = 'Black';
   String gendersdropdownvalue = 'Female';
-
   final Widget lastPage = const SurveyLandingPage();
   String pogoLogo = 'assets/Pogo_logo_horizontal.png';
 
@@ -31,7 +28,11 @@ class _DemographicsState extends State<Demographics> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20.0),
         transformAlignment: Alignment.center,
@@ -172,26 +173,27 @@ Align(
 
   const SizedBox(height: 30),
 
-            MaterialButton(
+              MaterialButton(
 
-                    height: 50,
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => VoterInfo()));
-                    },
-                 color: Color.fromARGB(255, 0, 0, 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: Text(
-                      "Next",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+                      height: 50,
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => VoterInfo(ratings: widget.ratings, answers: widget.answers,)));
+                      },
+                   color: Color.fromARGB(255, 0, 0, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)
+                      ),
+                      child: Text(
+                        "Next",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-          ],
-          
+            ],
+
+          ),
         ),
       ),
     );

@@ -14,7 +14,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool _obscureText = true;
     String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
     final formKey = GlobalKey<FormState>();
     final fnameController = TextEditingController();
@@ -89,9 +88,16 @@ class _RegisterPageState extends State<RegisterPage> {
           errorSizeBoxSize = 10;
         });
       }
-      else if(!isNumeric(phoneController.text) || phoneController.text.length != 10) {
+      else if(!isNumeric(phoneController.text)) {
+        //print(passwordController.text.length);
         setState(() {
           errorText = 'Invalid phone number.';
+          errorSizeBoxSize = 10;
+        });
+      }
+      else if(phoneController.text.length != 10) {
+        setState(() {
+          errorText = 'Invalid phone number length.';
           errorSizeBoxSize = 10;
         });
       }
@@ -100,24 +106,16 @@ class _RegisterPageState extends State<RegisterPage> {
           errorText = 'Must enter your address.';
           errorSizeBoxSize = 10;
         });
-      }else if (!addressRegex.hasMatch(addressController.text)) {
-    setState(() {
-      errorText = 'Invalid address format.';
-      errorSizeBoxSize = 10;
-    });
-    } 
-      else {
-        final bool signUpSuccess = await signUpUser(
-            emailController.text, passwordController.text,
-            fnameController.text, lnameController.text,
-            phoneController.text, addressController.text);
-        if (signUpSuccess) {
+      }
+      else if(await signUpUser(
+      emailController.text, passwordController.text,
+      fnameController.text, lnameController.text,
+      phoneController.text, addressController.text)) {
           await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => UserConfirmationPage(email: emailController.text, password: passwordController.text))
           );
-        }
       }
     }
 
@@ -159,6 +157,7 @@ void dispose() {
                     //ERROR TEXT
                     Text(
                       errorText,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -239,6 +238,16 @@ void dispose() {
                     const SizedBox(height: 20),
 
                     //PASSWORD
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Text(
+                        'Password must be at least 8 characters and contain at least 1 symbol and uppercase letter.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.0),
                       child: Container(
@@ -339,7 +348,7 @@ void dispose() {
                             controller: phoneController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Phone',
+                              hintText: 'Phone Number e.g 1234567890',
                             ),
                           ),
                         ),

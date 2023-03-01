@@ -1,11 +1,18 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pogo/amplifyFunctions.dart';
+import '../../UserIssuesFactors.dart';
+import '../../HomeLoadingPage.dart';
+import '../../UserDemographics.dart';
 import 'Policing.dart';
-import '../../Home.dart';
-//import 'homePage.dart';
 
 class ReproductiveRights extends StatefulWidget {
-  const ReproductiveRights({Key? key}) : super(key: key);
+  final UserIssuesFactors ratings;
+  final UserDemographics answers;
+  late final Widget nextPage = const HomeLoadingPage();
+  late final Widget lastPage = Policing(ratings: ratings, answers: answers,);
+  ReproductiveRights({Key? key, required this.ratings, required this.answers}) : super(key: key);
 
   @override
   State<ReproductiveRights> createState() => _ReproductiveRightsState();
@@ -14,31 +21,41 @@ class ReproductiveRights extends StatefulWidget {
 class _ReproductiveRightsState extends State<ReproductiveRights> {
   String pogoLogo = 'assets/Pogo_logo_horizontal.png';
   String issuesLogo = 'assets/reproductiveHealthPogo.jpg';
-  String issuesText = 'REPRODUCTIVE HEALTH';
+  String issuesText = 'REPRODUCTIVE RIGHTS';
   String emptySquare = 'assets/yellowemptysquare.png';
   String yellowSquare = 'assets/yellowsquare.png';
   int nextButtonColor = 0xFF808080;
   int backgroundColor = 0xFFE1E1E1;
   double alignRating = 0;
   double valueRating = 0;
-  final Widget nextPage = const Home();
-  final Widget lastPage = const Policing();
-  int ratingBarColor = 0xFFF3D433;
+  Color ratingBarColor = Colors.black;
   String leftAlignText = 'Abortion + \nContraceptive Rights';
   String rightAlignText = 'Abortion + \nContraceptive Restrictions';
 
-  Future checkRatings() async {
-    if (alignRating > 0 && valueRating > 0) {
-      //TODO: SAVE RATING VALUES, SWITCH TO HOME PAGE
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => nextPage,
-        ),
-      );
-    }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      alignRating = widget.ratings.getReproductiveRightsAlign;
+      valueRating = widget.ratings.getReproductiveRightsCare;
+    });
+    updateButton();
   }
-  Future changeNextButtonColor() async {
+
+  Future updateAlignRating(double rating) async {
+    widget.ratings.setReproductiveRightsAlign = rating;
+    alignRating = rating;
+    updateButton();
+  }
+
+  Future updateValueRating(double rating) async {
+    widget.ratings.setReproductiveRightsCare = rating;
+    valueRating = rating;
+    updateButton();
+  }
+
+  Future updateButton() async {
     if (alignRating > 0 && valueRating > 0) {
       setState(() {
         nextButtonColor = 0xFFF3D433;
@@ -50,6 +67,24 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
       });
     }
   }
+
+  Future checkRatings(context) async {
+    //TODO: this is the final survey page, issues and demographics object values have to be pushed to database here
+    if (alignRating > 0 && valueRating > 0) {
+      if(await updateSurveyCompletion()) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => widget.nextPage,
+          ),
+        );
+      }
+      else {
+        safePrint("Could not update survey completion");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +111,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => lastPage,
+                            builder: (context) => widget.lastPage,
                           ),
                         );
                       },
@@ -135,7 +170,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
               ),
               const SizedBox(height: 10),
               RatingBar(
-                initialRating: 0,
+                initialRating: alignRating,
                 itemCount: 5,
                 direction: Axis.horizontal,
                 allowHalfRating: false,
@@ -143,22 +178,21 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                   full:
                   Icon(
                     Icons.square,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   empty:
                   Icon(
                     Icons.square_outlined,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   half:
                   Icon(
                     Icons.square_foot,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                 ),
                 onRatingUpdate: (rating) {
-                  alignRating = rating;
-                  changeNextButtonColor();
+                  updateAlignRating(rating);
                 },
               ),
               Row(
@@ -166,14 +200,12 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                 children: [
                   Text(
                     leftAlignText,
-                    textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 15,
                     ),
                   ),
                   Text(
                       rightAlignText,
-                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 15,
                       )
@@ -190,7 +222,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
               ),
               const SizedBox(height: 10),
               RatingBar(
-                initialRating: 0,
+                initialRating: valueRating,
                 itemCount: 5,
                 direction: Axis.horizontal,
                 allowHalfRating: false,
@@ -198,22 +230,21 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                   full:
                   Icon(
                     Icons.square,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   empty:
                   Icon(
                     Icons.square_outlined,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   half:
                   Icon(
                     Icons.square_foot,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                 ),
                 onRatingUpdate: (rating) {
-                  valueRating = rating;
-                  changeNextButtonColor();
+                  updateValueRating(rating);
                 },
               ),
               Row(
@@ -237,7 +268,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
               const SizedBox(height: 10),
               GestureDetector(
                 onTap: () async {
-                  checkRatings();
+                  checkRatings(context);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(10),
