@@ -49,3 +49,23 @@ class PollingLocation {
     return street + city + state + zip;
   }
 }
+
+class Candidate {
+  final name;
+  final party;
+  final date;
+
+  Candidate({
+    required this.name,
+    required this.party,
+    required this.date,
+  });
+
+  factory Candidate.fromJson(Map<String, dynamic> json, String date) {
+    return Candidate(
+      name: json['name'],
+      party: json['party'],
+      date: date,
+    );
+  }
+}
