@@ -5,6 +5,7 @@ import 'package:pogo/models/UserIssueFactorValues.dart'
 import 'amplifyFunctions.dart';
 import 'awsFunctions.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
+import 'dynamoModels/CandidateIssueFactorValues.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class UserProfile extends StatelessWidget {
       "gunPolicyWeight": 5,
       "climateWeight": 3,
       "immigrationWeight": 3,
-      "userId": "Iamfromflutter@gmail.com",
+      "candidateId": "Iamfromflutter",
       "housingWeight": 4,
       "economyWeight": 2,
       "economyScore": 2,
@@ -34,9 +35,9 @@ class UserProfile extends StatelessWidget {
       "gunPolicyScore": 5,
       "educationWeight": 2
     };
-    var uifv = UserIssueFactorValues.fromJson(m);
+    var uifv = CandidateIssueFactorValues.fromJson(m);
 
-    putUserIssueFactorValue(uifv);
+    print(getCandidateIssueFactorValues("Iamfromflutter"));
     logoutUser();
     if (await checkLoggedIn()) {
       //successfully logged out, send to login
