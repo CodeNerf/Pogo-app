@@ -1,17 +1,22 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
+import 'dynamoModels/UserIssueFactorValues.dart';
+import 'models/IssueFactorValues.dart' hide IssueFactorValues;
+import 'models/UserIssueFactorValues.dart' hide UserIssueFactorValues;
 
-import 'models/IssueFactorValues.dart';
-
-Future<void> putIssueFactorValue(IssueFactorValues issueFactorValues) async {
+Future<void> putUserIssueFactorValue(
+    UserIssueFactorValues userIssueFactorValues) async {
   var client = http.Client();
   try {
-    var response = await client.post(Uri.https('example.com', 'whatsit/create'),
-        body: {'name': 'doodle', 'color': 'blue'});
-    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    var uri = Uri.parse(decodedResponse['uri'] as String);
-    print(await client.get(uri));
+    var response = await client.put(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/userissuefactorvalues'),
+        headers: {
+          "content-type": "application/json",
+        },
+        body: jsonEncode(userIssueFactorValues.toJson()));
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    print(decodedResponse);
   } finally {
     client.close();
   }

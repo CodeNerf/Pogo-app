@@ -1,14 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/LoginPage.dart';
+import 'package:pogo/models/UserIssueFactorValues.dart'
+    hide UserIssueFactorValues;
 import 'amplifyFunctions.dart';
+import 'awsFunctions.dart';
+import 'dynamoModels/UserIssueFactorValues.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({Key? key}) : super(key: key);
 
   //this is just for testing purposes, to be removed later
   Future logout(BuildContext context) async {
+    var m = {
+      "reproductiveWeight": 4,
+      "policingScore": 2,
+      "housingScore": 2,
+      "reproductiveScore": 2,
+      "healthcareScore": 5,
+      "drugPolicyScore": 5,
+      "immigrationScore": 2,
+      "educationScore": 2,
+      "drugPolicyWeight": 1,
+      "policingWeight": 3,
+      "gunPolicyWeight": 5,
+      "climateWeight": 3,
+      "immigrationWeight": 3,
+      "userId": "Iamfromflutter@gmail.com",
+      "housingWeight": 4,
+      "economyWeight": 2,
+      "economyScore": 2,
+      "climateScore": 4,
+      "healthcareWeight": 4,
+      "gunPolicyScore": 5,
+      "educationWeight": 2
+    };
+    var uifv = UserIssueFactorValues.fromJson(m);
+
+    putUserIssueFactorValue(uifv);
     logoutUser();
-    if(await checkLoggedIn()) {
+    if (await checkLoggedIn()) {
       //successfully logged out, send to login
       await Navigator.push(
         context,
@@ -16,8 +46,7 @@ class UserProfile extends StatelessWidget {
           builder: (context) => const LoginPage(),
         ),
       );
-    }
-    else {
+    } else {
       //logout not working (this shouldn't ever happen)
     }
   }
@@ -45,13 +74,13 @@ class UserProfile extends StatelessWidget {
                     ),
                     child: const Center(
                         child: Text(
-                          'Logout',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    )),
                   ),
                 ),
               ),
