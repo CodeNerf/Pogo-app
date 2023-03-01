@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:pogo/Onboarding/Issues/GunPolicy.dart';
-import '../LandingPage.dart';
-import '../LoginPage.dart';
-import '../RegisterPage.dart';
+import '../UserIssuesFactors.dart';
+import '../UserDemographics.dart';
 
 class VoterInfo extends StatefulWidget {
-  const VoterInfo({Key? key}) : super(key: key);
+  final UserIssuesFactors ratings;
+  final UserDemographics answers;
+  const VoterInfo({Key? key, required this.ratings, required this.answers}) : super(key: key);
 
   @override
   State<VoterInfo> createState() => _VoterInfoState();
@@ -183,7 +183,7 @@ class _VoterInfoState extends State<VoterInfo> {
 
                     height: 50,
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => GunPolicy()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => GunPolicy(ratings: widget.ratings, answers: widget.answers,)));
                     },
                  color: Color.fromARGB(255, 0, 0, 0),
                     shape: RoundedRectangleBorder(

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'Healthcare.dart';
+import '../../UserIssuesFactors.dart';
+import '../../UserDemographics.dart';
 import 'Economy.dart';
+import 'Healthcare.dart';
 
 class Housing extends StatefulWidget {
-  const Housing({Key? key}) : super(key: key);
+  final UserIssuesFactors ratings;
+  final UserDemographics answers;
+  late final Widget nextPage = Economy(ratings: ratings, answers: answers,);
+  late final Widget lastPage = Healthcare(ratings: ratings, answers: answers,);
+  Housing({Key? key, required this.ratings, required this.answers}) : super(key: key);
 
   @override
   State<Housing> createState() => _HousingState();
@@ -20,24 +26,34 @@ class _HousingState extends State<Housing> {
   int backgroundColor = 0xFFE1E1E1;
   double alignRating = 0;
   double valueRating = 0;
-  final Widget nextPage = const Economy();
-  final Widget lastPage = const Healthcare();
-  int ratingBarColor = 0xFFF3D433;
+  Color ratingBarColor = Colors.black;
   String leftAlignText = 'Affordable Housing';
   String rightAlignText = 'Market Rate Housing';
 
-  Future checkRatings() async {
-    if (alignRating > 0 && valueRating > 0) {
-      //TODO: SAVE RATING VALUES
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => nextPage,
-        ),
-      );
-    }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      alignRating = widget.ratings.getHousingAlign;
+      valueRating = widget.ratings.getHousingCare;
+    });
+    updateButton();
   }
-  Future changeNextButtonColor() async {
+
+  Future updateAlignRating(double rating) async {
+    widget.ratings.setHousingAlign = rating;
+    alignRating = rating;
+    updateButton();
+  }
+
+  Future updateValueRating(double rating) async {
+    widget.ratings.setHousingCare = rating;
+    valueRating = rating;
+    updateButton();
+  }
+
+  Future updateButton() async {
     if (alignRating > 0 && valueRating > 0) {
       setState(() {
         nextButtonColor = 0xFFF3D433;
@@ -49,6 +65,18 @@ class _HousingState extends State<Housing> {
       });
     }
   }
+
+  Future checkRatings() async {
+    if (alignRating > 0 && valueRating > 0) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => widget.nextPage,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +103,7 @@ class _HousingState extends State<Housing> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => lastPage,
+                            builder: (context) => widget.lastPage,
                           ),
                         );
                       },
@@ -134,7 +162,7 @@ class _HousingState extends State<Housing> {
               ),
               const SizedBox(height: 10),
               RatingBar(
-                initialRating: 0,
+                initialRating: alignRating,
                 itemCount: 5,
                 direction: Axis.horizontal,
                 allowHalfRating: false,
@@ -142,22 +170,21 @@ class _HousingState extends State<Housing> {
                   full:
                   Icon(
                     Icons.square,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   empty:
                   Icon(
                     Icons.square_outlined,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   half:
                   Icon(
                     Icons.square_foot,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                 ),
                 onRatingUpdate: (rating) {
-                  alignRating = rating;
-                  changeNextButtonColor();
+                  updateAlignRating(rating);
                 },
               ),
               Row(
@@ -187,7 +214,7 @@ class _HousingState extends State<Housing> {
               ),
               const SizedBox(height: 10),
               RatingBar(
-                initialRating: 0,
+                initialRating: valueRating,
                 itemCount: 5,
                 direction: Axis.horizontal,
                 allowHalfRating: false,
@@ -195,22 +222,21 @@ class _HousingState extends State<Housing> {
                   full:
                   Icon(
                     Icons.square,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   empty:
                   Icon(
                     Icons.square_outlined,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   half:
                   Icon(
                     Icons.square_foot,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                 ),
                 onRatingUpdate: (rating) {
-                  valueRating = rating;
-                  changeNextButtonColor();
+                  updateValueRating(rating);
                 },
               ),
               Row(

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'GunPolicy.dart';
+import '../../UserIssuesFactors.dart';
+import '../../UserDemographics.dart';
 import 'Education.dart';
+import 'GunPolicy.dart';
 
 class Climate extends StatefulWidget {
-  const Climate({Key? key}) : super(key: key);
+  final UserIssuesFactors ratings;
+  final UserDemographics answers;
+  late final Widget nextPage = Education(ratings: ratings, answers: answers,);
+  late final Widget lastPage = GunPolicy(ratings: ratings, answers: answers,);
+  Climate({Key? key, required this.ratings, required this.answers}) : super(key: key);
 
   @override
   State<Climate> createState() => _ClimateState();
@@ -13,31 +19,41 @@ class Climate extends StatefulWidget {
 class _ClimateState extends State<Climate> {
   String pogoLogo = 'assets/Pogo_logo_horizontal.png';
   String issuesLogo = 'assets/climatePogo.jpg';
-  String issuesText = 'Climate Change';
+  String issuesText = 'CLIMATE CHANGE';
   String emptySquare = 'assets/yellowemptysquare.png';
   String yellowSquare = 'assets/yellowsquare.png';
   int nextButtonColor = 0xFF808080;
   int backgroundColor = 0xFFE1E1E1;
   double alignRating = 0;
   double valueRating = 0;
-  final Widget nextPage = const Education();
-  final Widget lastPage = const GunPolicy();
-  int ratingBarColor = 0xFFF3D433;
+  Color ratingBarColor = Colors.black;
   String leftAlignText = 'Acceptance';
   String rightAlignText = 'Doubt';
 
-  Future checkRatings() async {
-    if (alignRating > 0 && valueRating > 0) {
-      //TODO: SAVE RATING VALUES
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => nextPage,
-        ),
-      );
-    }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      alignRating = widget.ratings.getClimateAlign;
+      valueRating = widget.ratings.getClimateCare;
+    });
+    updateButton();
   }
-  Future changeNextButtonColor() async {
+
+  Future updateAlignRating(double rating) async {
+    widget.ratings.setClimateAlign = rating;
+    alignRating = rating;
+    updateButton();
+  }
+
+  Future updateValueRating(double rating) async {
+    widget.ratings.setClimateCare = rating;
+    valueRating = rating;
+    updateButton();
+  }
+
+  Future updateButton() async {
     if (alignRating > 0 && valueRating > 0) {
       setState(() {
         nextButtonColor = 0xFFF3D433;
@@ -49,6 +65,18 @@ class _ClimateState extends State<Climate> {
       });
     }
   }
+
+  Future checkRatings() async {
+    if (alignRating > 0 && valueRating > 0) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => widget.nextPage,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +103,7 @@ class _ClimateState extends State<Climate> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => lastPage,
+                            builder: (context) => widget.lastPage,
                           ),
                         );
                       },
@@ -134,7 +162,7 @@ class _ClimateState extends State<Climate> {
               ),
               const SizedBox(height: 10),
               RatingBar(
-                initialRating: 0,
+                initialRating: alignRating,
                 itemCount: 5,
                 direction: Axis.horizontal,
                 allowHalfRating: false,
@@ -142,22 +170,21 @@ class _ClimateState extends State<Climate> {
                   full:
                   Icon(
                     Icons.square,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   empty:
                   Icon(
                     Icons.square_outlined,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   half:
                   Icon(
                     Icons.square_foot,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                 ),
                 onRatingUpdate: (rating) {
-                  alignRating = rating;
-                  changeNextButtonColor();
+                  updateAlignRating(rating);
                 },
               ),
               Row(
@@ -187,7 +214,7 @@ class _ClimateState extends State<Climate> {
               ),
               const SizedBox(height: 10),
               RatingBar(
-                initialRating: 0,
+                initialRating: valueRating,
                 itemCount: 5,
                 direction: Axis.horizontal,
                 allowHalfRating: false,
@@ -195,22 +222,21 @@ class _ClimateState extends State<Climate> {
                   full:
                   Icon(
                     Icons.square,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   empty:
                   Icon(
                     Icons.square_outlined,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                   half:
                   Icon(
                     Icons.square_foot,
-                    color: Color(ratingBarColor),
+                    color: ratingBarColor,
                   ),
                 ),
                 onRatingUpdate: (rating) {
-                  valueRating = rating;
-                  changeNextButtonColor();
+                  updateValueRating(rating);
                 },
               ),
               Row(

@@ -1,7 +1,10 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:pogo/Onboarding/SurveyLandingPage.dart';
+import 'package:pogo/UserConfirmationPage.dart';
 import 'RegisterPage.dart';
-import 'Home.dart';
+import 'homeLoadingPage.dart';
 import 'ForgotPasswordPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
@@ -15,28 +18,83 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   String signInPogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  late final emailController = TextEditingController();
+  late final passwordController = TextEditingController();
   bool obscure = true;
   Icon eye = Icon(Icons.remove_red_eye);
+  String errorText = '';
 
   Future login(context) async {
-    await signInUser(emailController.text, passwordController.text);
-    final bool signInSuccess = await isUserSignedIn();
-    //TODO add else error
-    if (signInSuccess) {
-      //TODO: check if logged in user has completed user survey:
-      //  if they have send to Home(), if not send to SurveyLandingPage()
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Home(),
-        ),
-      );
+    if(await signInUser(emailController.text, passwordController.text)) {
+      safePrint("checking isUserSignedIn()");
+      if (await isUserSignedIn()) {
+        //check if survey is completed
+        safePrint("checking isSurveyCompleted()");
+        if(await isSurveyCompleted()) {
+          safePrint("SURVEY IS COMPLETE");
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HomeLoadingPage(),
+            ),
+          );
+        }
+        else {
+          safePrint("SURVEY IS NOT COMPLETE");
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SurveyLandingPage(),
+            ),
+          );
+        }
+        /* this checks if user is confirmed, not currently possible due to cognito settings
+        safePrint("checking isUserConfirmed()");
+        //check if user is confirmed
+        if(await isUserConfirmed()) {
+          safePrint("checking isSurveyCompleted()");
+          //check if survey is completed
+          if(await isSurveyCompleted()) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomeLoadingPage(),
+              ),
+            );
+          }
+          else {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SurveyLandingPage(),
+              ),
+            );
+          }
+        }
+        else {
+          if (await resendConfirmationCode(emailController.text)) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UserConfirmationPage(email: emailController.text, password: passwordController.text),
+              ),
+            );
+          }
+        }
+        */
+      }
+      else {
+        setState(() {
+          errorText = 'Could not log in.';
+        });
+      }
     }
     else {
-      //output error that email/password is incorrect or doesn't exist
+      setState(() {
+        errorText = 'Could not log in.';
+      });
     }
+
   }
 
   @override
@@ -49,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                //LOGO
                 Transform.scale(
                   scale: 0.7,
                   child: Image(
@@ -58,6 +117,18 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 50),
+
+                //ERROR TEXT
+                Text(
+                  errorText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 10),
                 //email textfield
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
@@ -155,7 +226,6 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
-                    //TODO: create login() backend function
                     onTap: () async {
                       login(context);
                     },
@@ -182,12 +252,11 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
-                    //TODO: create login() backend function
                     onTap: () async {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Home(),
+                          builder: (context) => const HomeLoadingPage(),
                         ),
                       );
                     },
