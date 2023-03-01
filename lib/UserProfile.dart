@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/LoginPage.dart';
 import 'package:pogo/UserIssuesFactors.dart';
@@ -6,6 +9,8 @@ import 'amplifyFunctions.dart';
 import 'user.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:math';
+import 'package:expandable/expandable.dart';
 
 class UserProfile extends StatefulWidget {
   final user currentUser;
@@ -25,7 +30,7 @@ class _UserProfileState extends State<UserProfile> {
   String firstIssue = "";
   String secondIssue = "";
   String thirdIssue = "";
-
+  List<double> ratings = [];
   @override
   void initState() {
     super.initState();
@@ -34,6 +39,65 @@ class _UserProfileState extends State<UserProfile> {
     email = widget.currentUser.email;
     phone = widget.currentUser.phone;
     address = widget.currentUser.address;
+    ratings.add(widget.currentUserFactors.climateCare);
+    ratings.add(widget.currentUserFactors.drugPolicyCare);
+    ratings.add(widget.currentUserFactors.economyCare);
+    ratings.add(widget.currentUserFactors.educationCare);
+    ratings.add(widget.currentUserFactors.gunPolicyCare);
+    ratings.add(widget.currentUserFactors.healthcareCare);
+    ratings.add(widget.currentUserFactors.housingCare);
+    ratings.add(widget.currentUserFactors.immigrationCare);
+    ratings.add(widget.currentUserFactors.policingCare);
+    ratings.add(widget.currentUserFactors.reproductiveRightsCare);
+    setTopIssues(ratings);
+  }
+
+  void setTopIssues(List<double> ratings) async {
+    List<String> topIssues = [];
+    var maxCare = ratings.cast<num>().reduce(max);
+    var indexMaxCare = ratings.indexOf(ratings.reduce(max));
+    for(int i = 0; i < 3; i++) {
+      switch(indexMaxCare) {
+        case 0:
+          topIssues.add('CLIMATE');
+          break;
+        case 1:
+          topIssues.add('DRUGPOLICY');
+          break;
+        case 2:
+          topIssues.add('ECONOMY');
+          break;
+        case 3:
+          topIssues.add('EDUCATION');
+          break;
+        case 4:
+          topIssues.add('GUNPOLICY');
+          break;
+        case 5:
+          topIssues.add('HEALTHCARE');
+          break;
+        case 6:
+          topIssues.add('HOUSING');
+          break;
+        case 7:
+          topIssues.add('IMMIGRATION');
+          break;
+        case 8:
+          topIssues.add('POLICING');
+          break;
+        case 9:
+        topIssues.add('REPRODUCTIVERIGHTS');
+          break;
+      }
+      ratings[indexMaxCare] = 0;
+      maxCare = ratings.cast<num>().reduce(max);
+      indexMaxCare = ratings.indexOf(ratings.reduce(max));
+    }
+    setState(() {
+      firstIssue = topIssues[0];
+      secondIssue = topIssues[1];
+      thirdIssue = topIssues[2];
+    });
   }
 
   //this is just for testing purposes, to be removed later
@@ -61,13 +125,14 @@ class _UserProfileState extends State<UserProfile> {
         children: [
           //hello name text
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(70, 10, 0, 10),
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
               child: Text(
-                  '$fname $lname',
+                  'Hello, $fname',
                 style: const TextStyle(
                   fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -75,9 +140,9 @@ class _UserProfileState extends State<UserProfile> {
 
           //profile picture
           Align(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(70,0,0,20),
+              padding: const EdgeInsets.fromLTRB(0,0,0,10),
               child: CircularProfileAvatar(
                 '',
                 radius: 40,
@@ -85,6 +150,16 @@ class _UserProfileState extends State<UserProfile> {
               ),
             ),
           ),
+
+          //expandable section
+          /*
+          ExpandablePanel(
+              header: Text('Personal Info'),
+              expanded: Text('Email: $email',),
+              collapsed: const Text(''),
+          ),
+
+           */
 
           //Personal info
           Container(
@@ -204,10 +279,8 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     child: FittedBox(
                       fit: BoxFit.fill,
-                      child: Image(
-                        image: AssetImage(
-                          firstIssue,
-                        ),
+                      child: Text(
+                        firstIssue,
                       ),
                     ),
                   ),
@@ -220,10 +293,8 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     child: FittedBox(
                       fit: BoxFit.fill,
-                      child: Image(
-                        image: AssetImage(
-                          secondIssue,
-                        ),
+                      child: Text(
+                        secondIssue,
                       ),
                     ),
                   ),
@@ -236,10 +307,8 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     child: FittedBox(
                       fit: BoxFit.fill,
-                      child: Image(
-                        image: AssetImage(
-                          thirdIssue,
-                        ),
+                      child: Text(
+                        thirdIssue,
                       ),
                     ),
                   ),
@@ -340,66 +409,57 @@ class _UserProfileState extends State<UserProfile> {
           ),
           const SizedBox(height: 20),
 
-
-
-
-
           //logout button
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 150.0),
-                child: InkWell(
-                  onTap: () async {
-                    logout(context);
-                  },
-                  child: Container(
-                    //alignment: Alignment.center,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3D433),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const Center(
-                        child: Text(
-                          'Logout',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+              InkWell(
+                onTap: () async {
+                  logout(context);
+                },
+                child: Container(
+                  //alignment: Alignment.center,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3D433),
+                    borderRadius: BorderRadius.circular(50),
                   ),
+                  child: const Center(
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 150.0),
-                child: InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SurveyLandingPage(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    //alignment: Alignment.center,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3D433),
-                      borderRadius: BorderRadius.circular(50),
+              InkWell(
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SurveyLandingPage(),
                     ),
-                    child: const Center(
-                        child: Text(
-                          'Re-Take Survey',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+                  );
+                },
+                child: Container(
+                  //alignment: Alignment.center,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3D433),
+                    borderRadius: BorderRadius.circular(50),
                   ),
+                  child: const Center(
+                      child: Text(
+                        'Re-Take Survey',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
                 ),
               ),
             ],

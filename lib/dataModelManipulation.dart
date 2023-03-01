@@ -85,6 +85,8 @@ Future<UserIssuesFactors> fetchCurrentUserFactors(String e) async {
       currentUserFactors.housingWeight!,
       currentUserFactors.immigrationScore!,
       currentUserFactors.immigrationWeight!,
+      currentUserFactors.policingScore!,
+      currentUserFactors.policingWeight!,
       currentUserFactors.reproductiveScore!,
       currentUserFactors.reproductiveWeight!
   );

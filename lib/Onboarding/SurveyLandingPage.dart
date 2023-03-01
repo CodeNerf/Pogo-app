@@ -10,7 +10,7 @@ import '../amplifyFunctions.dart';
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
   UserDemographics answers = UserDemographics('', '', '', '', '', '', '');
-  UserIssuesFactors ratings = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  UserIssuesFactors ratings = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   SurveyLandingPage({Key? key}) : super(key: key);
 
   @override

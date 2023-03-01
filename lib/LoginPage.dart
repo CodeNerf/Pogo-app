@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/UserConfirmationPage.dart';
+import 'package:pogo/UserIssuesFactors.dart';
+import 'package:pogo/user.dart';
+import 'Home.dart';
 import 'RegisterPage.dart';
 import 'homeLoadingPage.dart';
 import 'ForgotPasswordPage.dart';
@@ -99,6 +102,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    user guest = user.all("Guest", "", "", "", "");
+    UserIssuesFactors guestFactors = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
     return Scaffold(
       backgroundColor: const Color(0xFFE1E1E1),
       body: SafeArea(
@@ -248,6 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
+
                 //guest button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -256,7 +263,7 @@ class _LoginPageState extends State<LoginPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomeLoadingPage(),
+                          builder: (context) => Home(currentUser: guest, currentUserFactors: guestFactors,),
                         ),
                       );
                     },

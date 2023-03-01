@@ -5,7 +5,7 @@ import 'UserIssuesFactors.dart';
 import 'UserProfile.dart';
 import 'VoterGuide.dart';
 import 'CandidateInfo.dart';
-import 'CandidateUserMatching.dart';
+import 'Podium.dart';
 import 'user.dart';
 
 class Home extends StatefulWidget {
@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
   //TODO: implement user issues object
   //objects
   user currentUser = user.all('','','','','');
-  UserIssuesFactors currentUserFactors = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  UserIssuesFactors currentUserFactors = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
   late List<Widget> _widgetOptions;
 

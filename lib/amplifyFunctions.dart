@@ -10,17 +10,19 @@ import 'package:flutter/material.dart';
 import 'amplifyconfiguration.dart';
 import 'user.dart';
 
-Future<void> configureAmplify() async {
+Future<bool> configureAmplify() async {
   try {
     final auth = AmplifyAuthCognito();
     await Amplify.addPlugin(auth);
     final dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
     await Amplify.addPlugin(dataStorePlugin);
     safePrint("Amplify Configured");
+    return true;
     // call Amplify.configure to use the initialized categories in your app
     await Amplify.configure(amplifyconfig);
   } on Exception catch (e) {
     safePrint('An error occurred configuring Amplify: $e');
+    return false;
   }
 }
 
