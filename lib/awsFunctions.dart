@@ -28,12 +28,11 @@ Future<UserIssueFactorValues> getUserIssueFactorValues(String userId) async {
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/userissuefactorvalues'),
+            '/userissuefactorvalues/$userId'),
         headers: {
           "content-type": "application/json",
         });
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    print(decodedResponse);
     return UserIssueFactorValues.fromJson(decodedResponse);
   } finally {
     client.close();
@@ -59,12 +58,12 @@ Future<void> putCandidateIssueFactorValues(
 }
 
 Future<CandidateIssueFactorValues> getCandidateIssueFactorValues(
-    String candidateIssueFactorValuesId) async {
+    String candidateId) async {
   var client = http.Client();
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/candidateissuefactorvalues'),
+            '/candidateissuefactorvalues/$candidateId'),
         headers: {
           "content-type": "application/json",
         });
