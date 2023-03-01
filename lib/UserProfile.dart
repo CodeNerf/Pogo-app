@@ -33,7 +33,7 @@ class _UserProfileState extends State<UserProfile> {
   //this is just for testing purposes, to be removed later
   Future logout(context) async {
     logoutUser();
-    if(await checkLoggedIn()) {
+    if (await checkLoggedIn()) {
       //successfully logged out, send to login
       await Navigator.push(
         context,
@@ -41,8 +41,7 @@ class _UserProfileState extends State<UserProfile> {
           builder: (context) => const LoginPage(),
         ),
       );
-    }
-    else {
+    } else {
       //logout not working (this shouldn't ever happen)
     }
   }
