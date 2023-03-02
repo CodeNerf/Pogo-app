@@ -68,6 +68,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_web_browser (0.17.1):
     - Flutter
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - ObjectMapper (4.2.0)
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -75,6 +78,9 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - sqflite (0.0.2):
+    - Flutter
+    - FMDB (>= 2.7.5)
   - SQLite.swift (0.13.2):
     - SQLite.swift/standard (= 0.13.2)
   - SQLite.swift/standard (0.13.2)
@@ -94,6 +100,7 @@ DEPENDENCIES:
   - flutter_web_browser (from `.symlinks/plugins/flutter_web_browser/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -107,6 +114,7 @@ SPEC REPOS:
     - AWSCore
     - AWSMobileClient
     - AWSPluginsCore
+    - FMDB
     - ObjectMapper
     - SQLite.swift
     - Starscream
@@ -132,6 +140,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
@@ -152,9 +162,11 @@ SPEC CHECKSUMS:
   AWSPluginsCore: 93f813579479fa4c5bfff58817df89e0e10f9f3b
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_web_browser: 7bccaafbb0c5b8862afe7bcd158f15557109f61f
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   path_provider_foundation: 37748e03f12783f9de2cb2c4eadfaa25fe6d4852
   shared_preferences_foundation: 297b3ebca31b34ec92be11acd7fb0ba932c822ca
+  sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SQLite.swift: 4fc2be46c36392e3b87afe6fe7f1801c1daa07ef
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwiftFormat: 16f04fcde066f40004f51e26bc95bc14dc377d6f
