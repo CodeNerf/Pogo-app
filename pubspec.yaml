@@ -56,6 +56,7 @@ dependencies:
   swipeable_card_stack: ^0.0.5
   expandable: ^5.0.1
   dcdg: ^4.1.0
+  flutter_typeahead: ^4.3.7
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -95,6 +96,9 @@ flutter:
     - assets/briefcase.png
     - assets/marijuana.png
     - assets/candidateplaceholder.png
+    - assets/placeholderCandidatePic.png
+    - assets/democratLogo.png
+    - assets/podiumPageBackgroundImage.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

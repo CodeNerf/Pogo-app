@@ -17,9 +17,8 @@ Future<bool> configureAmplify() async {
     final dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
     await Amplify.addPlugin(dataStorePlugin);
     safePrint("Amplify Configured");
-    return true;
-    // call Amplify.configure to use the initialized categories in your app
     await Amplify.configure(amplifyconfig);
+    return true;
   } on Exception catch (e) {
     safePrint('An error occurred configuring Amplify: $e');
     return false;
