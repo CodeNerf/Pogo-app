@@ -1,5 +1,4 @@
 import 'package:pogo/dynamoModels/Demographics.dart';
-import 'package:pogo/dynamoModels/IssueFactorValues.dart';
 import 'package:pogo/models/IssueFactorValues.dart' hide IssueFactorValues;
 import 'package:pogo/Onboarding/Demographics.dart' hide Demographics;
 
@@ -46,7 +45,7 @@ class UserDemographics extends Demographics {
         politicalAffiliation: json['politicalAffiliation']);
   }
 
-  Map<String, dynamic> toJson(Map json) {
+  Map<String, dynamic> toJson() {
     return {
       'userId': userId,
       'phoneNumber': phoneNumber,

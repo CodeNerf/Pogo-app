@@ -40,7 +40,7 @@ class CandidateDemographics extends Demographics {
         politicalAffiliation: json['politicalAffiliation']);
   }
 
-  Map<String, dynamic> toJson(Map json) {
+  Map<String, dynamic> toJson() {
     return {
       'candidateId': candidateId,
       'seatType': seatType,
