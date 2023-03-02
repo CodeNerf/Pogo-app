@@ -109,7 +109,7 @@ class _CandidateUserMatchingState extends State<CandidateUserMatching> {
     return Card(
       //card properties
       color: const Color(0xFFD9D9D9),
-      margin: const EdgeInsets.fromLTRB(60, 0, 60, 50),
+      margin: const EdgeInsets.fromLTRB(60, 10, 60, 50),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -336,20 +336,15 @@ class _CandidateUserMatchingState extends State<CandidateUserMatching> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/podiumPageBackgroundImage.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              //local, state, federal bar
-              Row(
+    return SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //local, state, federal bar
+            Expanded(
+              flex: 1,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -421,84 +416,100 @@ class _CandidateUserMatchingState extends State<CandidateUserMatching> {
                   ),
                 ],
               ),
-              //search bar
-              Padding(
-                padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD9D9D9),
-                    border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: TypeAheadField(
-                      textFieldConfiguration: TextFieldConfiguration(
-                        controller: searchController,
-                          decoration: const InputDecoration(
-                            labelText: 'Search Candidates',
-                            labelStyle: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontWeight: FontWeight.w700,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                      ),
-                      suggestionsCallback: (query) async {
-                        return candidateSearchOptions(query);
-                      },
-                      itemBuilder: (context, suggestion) {
-                        return ListTile(
-                          title: Text(suggestion),
-                        );
-                      },
-                      noItemsFoundBuilder: (context) =>
-                      const Text(
-                        'No Candidates Found',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      transitionBuilder: (context, suggestionsBox, controller) {
-                        return suggestionsBox;
-                      },
-                      onSuggestionSelected: (suggestion) {
-                        searchController.text = suggestion;
-                      },
-                    ),
+            ),
+            Expanded(
+              flex: 13,
+              //podium background
+              child: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/podiumPageBackgroundImage.png'),
+                    fit: BoxFit.fill,
                   ),
                 ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //search bar
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD9D9D9),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: TypeAheadField(
+                            textFieldConfiguration: TextFieldConfiguration(
+                              controller: searchController,
+                              decoration: const InputDecoration(
+                                labelText: 'Search Candidates',
+                                labelStyle: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                            suggestionsCallback: (query) async {
+                              return candidateSearchOptions(query);
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(
+                                title: Text(suggestion),
+                              );
+                            },
+                            noItemsFoundBuilder: (context) =>
+                            const Text(
+                              'No Candidates Found',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            transitionBuilder: (context, suggestionsBox, controller) {
+                              return suggestionsBox;
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              searchController.text = suggestion;
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    //candidate cards
+                    SwipeableCardsSection(
+                      cardController: _cardController,
+                      context: context,
+                      items: [
+                        newCard(),
+                        newCard(),
+                        newCard(),
+                      ],
+                      onCardSwiped: (dir, index, widget) {
+                        _cardController.addItem(newCard());
+                        if(dir == Direction.left) {
+                          //skip candidate
+                        }
+                        else {
+                          //add candidate to ballot
+                        }
+                      },
+                      //
+                      enableSwipeUp: false,
+                      enableSwipeDown: false,
+                    ),
+                  ],
+                ),
               ),
-
-              //candidate cards
-              SwipeableCardsSection(
-                cardController: _cardController,
-                context: context,
-                items: [
-                  newCard(),
-                  newCard(),
-                  newCard(),
-                ],
-                onCardSwiped: (dir, index, widget) {
-                  _cardController.addItem(newCard());
-                  if(dir == Direction.left) {
-                    //skip candidate
-                  }
-                  else {
-                    //add candidate to ballot
-                  }
-                },
-                //
-                enableSwipeUp: false,
-                enableSwipeDown: false,
-              ),
-            ],
-          ),
-      ),
+            ),
+          ],
+        ),
     );
   }
 }
