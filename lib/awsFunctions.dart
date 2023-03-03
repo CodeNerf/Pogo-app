@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:pogo/dynamoModels/CandidateDemographics.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
 import 'models/IssueFactorValues.dart' hide IssueFactorValues;
@@ -69,6 +71,74 @@ Future<CandidateIssueFactorValues> getCandidateIssueFactorValues(
         });
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     return CandidateIssueFactorValues.fromJson(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> putUserDemographics(UserDemographics userDemographics) async {
+  var client = http.Client();
+  try {
+    var response = await client.put(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/userDemographics'),
+        headers: {
+          "content-type": "application/json",
+        },
+        body: jsonEncode(userDemographics.toJson()));
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    print(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<UserDemographics> getUserDemographics(String userId) async {
+  var client = http.Client();
+  try {
+    var response = await client.get(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/userDemographics/$userId'),
+        headers: {
+          "content-type": "application/json",
+        });
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    return UserDemographics.fromJson(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> putCandidateDemographics(
+    CandidateDemographics candidateDemographics) async {
+  var client = http.Client();
+  try {
+    var response = await client.put(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/candidateDemographics'),
+        headers: {
+          "content-type": "application/json",
+        },
+        body: jsonEncode(candidateDemographics.toJson()));
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    print(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<CandidateDemographics> getCandidateDemographics(
+    String candidateId) async {
+  var client = http.Client();
+  try {
+    var response = await client.get(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/candidateDemographics/$candidateId'),
+        headers: {
+          "content-type": "application/json",
+        });
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    return CandidateDemographics.fromJson(decodedResponse);
   } finally {
     client.close();
   }

@@ -64,7 +64,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"candidateId\": \"{{testCandidateId}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"dateOfBirth\": \"{{$randomDatePast}}\",\n    \"racialIdentity\": \"{{$randomColor}}\",\n    \"gender\": \"{{$randomColor}}\",\n    \"politicalAffiliation\": \"{{$randomColor}}\",\n    \"zipCode\": \"{{$randomPhoneNumberExt}}\",\n    \"seatType\": \"{{$randomLoremWord}}\",\n    \"careerStartYear\": \"MM/DD/YYYY\",\n    \"phoneNumber\": \"{{$randomPhoneNumber}}\",\n    \"profileImageURL\": \"{{$randomAnimalsImage}}\"\n}",
+							"raw": "{\n    \"candidateId\": \"{{testCandidateId}}\",\n    \"seatType\": \"{{$randomLoremWord}}\",\n    \"electionType\": \"{{$randomLoremWord}}\",\n    \"careerStartDate\": \"MM/DD/YYYY\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"dateOfBirth\": \"{{$randomDatePast}}\",\n    \"zipCode\": \"{{$randomPhoneNumberExt}}\",\n    \"profileImageURL\": \"{{$randomAnimalsImage}}\",\n    \"racialIdentity\": \"{{$randomColor}}\",\n    \"gender\": \"{{$randomColor}}\",\n    \"politicalAffiliation\": \"{{$randomColor}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -181,7 +181,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": \"{{$randomEmail}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"dateOfBirth\": \"MM/DD/YYYY\",\n    \"racialIdentity\": \"{{$randomColor}}\",\n    \"gender\": \"{{$randomColor}}\",\n    \"politicalAffiliation\": \"{{$randomColor}}\",\n    \"zipCode\": \"{{$randomPhoneNumberExt}}\",\n    \"addressLine1\": \"{{$randomStreetAddress}}\",\n    \"voterRegistration\": {{$randomBoolean}},\n    \"phoneNumber\": \"{{$randomPhoneNumber}}\",\n    \"profileImageURL\": \"{{$randomAnimalsImage}}\"\n}",
+							"raw": "{\n    \"userId\": \"{{$randomEmail}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"dateOfBirth\": \"MM/DD/YYYY\",\n    \"racialIdentity\": \"{{$randomColor}}\",\n    \"gender\": \"{{$randomColor}}\",\n    \"politicalAffiliation\": \"{{$randomColor}}\",\n    \"zipCode\": \"{{$randomPhoneNumberExt}}\",\n    \"addressLine1\": \"{{$randomStreetAddress}}\",\n    \"pollingLocation\": \"{{$randomStreetAddress}}\",\n    \"voterRegistrationStatus\": {{$randomBoolean}},\n    \"registrationState\": \"{{$randomAbbreviation}}\",\n    \"phoneNumber\": \"{{$randomPhoneNumber}}\",\n    \"profileImageURL\": \"{{$randomAnimalsImage}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

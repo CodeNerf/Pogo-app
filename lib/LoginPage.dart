@@ -8,6 +8,7 @@ import 'homeLoadingPage.dart';
 import 'ForgotPasswordPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
+
 //TODO: add more ways to login: google, instagram, etc..
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -25,12 +26,12 @@ class _LoginPageState extends State<LoginPage> {
   String errorText = '';
 
   Future login(context) async {
-    if(await signInUser(emailController.text, passwordController.text)) {
+    if (await signInUser(emailController.text, passwordController.text)) {
       safePrint("checking isUserSignedIn()");
       if (await isUserSignedIn()) {
         //check if survey is completed
         safePrint("checking isSurveyCompleted()");
-        if(await isSurveyCompleted()) {
+        if (await isSurveyCompleted()) {
           safePrint("SURVEY IS COMPLETE");
           await Navigator.push(
             context,
@@ -38,8 +39,7 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) => const HomeLoadingPage(),
             ),
           );
-        }
-        else {
+        } else {
           safePrint("SURVEY IS NOT COMPLETE");
           await Navigator.push(
             context,
@@ -82,19 +82,16 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
         */
-      }
-      else {
+      } else {
         setState(() {
           errorText = 'Could not log in.';
         });
       }
-    }
-    else {
+    } else {
       setState(() {
         errorText = 'Could not log in.';
       });
     }
-
   }
 
   @override
@@ -171,13 +168,13 @@ class _LoginPageState extends State<LoginPage> {
                           hintText: 'Password',
                           suffixIcon: GestureDetector(
                             onTap: () {
-                              if(obscure) {
+                              if (obscure) {
                                 setState(() {
                                   obscure = false;
-                                  eye = const Icon(Icons.remove_red_eye_outlined);
+                                  eye =
+                                      const Icon(Icons.remove_red_eye_outlined);
                                 });
-                              }
-                              else {
+                              } else {
                                 setState(() {
                                   obscure = true;
                                   eye = const Icon(Icons.remove_red_eye);
@@ -268,13 +265,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: const Center(
                           child: Text(
-                            'Continue as Guest',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )),
+                        'Continue as Guest',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
                     ),
                   ),
                 ),

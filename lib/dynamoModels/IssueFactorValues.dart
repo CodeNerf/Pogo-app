@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 class IssueFactorValues {
   int climateScore;
   int climateWeight;
@@ -22,7 +20,6 @@ class IssueFactorValues {
   int reproductiveScore;
   int reproductiveWeight;
 
-  // Constructor
   IssueFactorValues(
       {required this.climateScore,
       required this.climateWeight,

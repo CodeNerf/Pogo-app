@@ -52,32 +52,11 @@ export const handler = async (event, context) => {
         break;
       case "PUT /userissuefactorvalues":
         let requestJSON = JSON.parse(event.body);
+  
         await dynamo.send(
           new PutCommand({
             TableName: tableName,
-            Item: {
-              userId: requestJSON.userId,
-              climateScore: requestJSON.climateScore,
-              climateWeight: requestJSON.climateWeight,
-              drugPolicyScore: requestJSON.drugPolicyScore,
-              drugPolicyWeight: requestJSON.drugPolicyWeight,
-              economyScore: requestJSON.economyScore,
-              economyWeight: requestJSON.economyScore,
-              educationScore: requestJSON.educationScore,
-              educationWeight: requestJSON.educationWeight,
-              gunPolicyScore: requestJSON.gunPolicyScore,
-              gunPolicyWeight: requestJSON.gunPolicyWeight,  
-              healthcareScore: requestJSON.healthcareScore,
-              healthcareWeight: requestJSON.healthcareWeight,
-              housingScore: requestJSON.housingScore,
-              housingWeight: requestJSON.housingWeight,  
-              immigrationScore: requestJSON.immigrationScore,
-              immigrationWeight: requestJSON.immigrationWeight,
-              policingScore: requestJSON.policingScore,
-              policingWeight: requestJSON.policingWeight,
-              reproductiveScore: requestJSON.reproductiveScore,
-              reproductiveWeight: requestJSON.reproductiveWeight
-            },
+            Item: requestJSON,
           })
         );
         body = `Put userissuefactorvalue ${requestJSON.userId}`;
