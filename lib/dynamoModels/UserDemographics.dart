@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:pogo/dynamoModels/Demographics.dart';
 import 'package:pogo/models/IssueFactorValues.dart' hide IssueFactorValues;
 import 'package:pogo/Onboarding/Demographics.dart' hide Demographics;
@@ -8,7 +10,7 @@ class UserDemographics extends Demographics {
   final String registrationState;
   final String addressLine1;
   final String pollingLocation;
-  final String voterRegistrationStatus;
+  final bool voterRegistrationStatus;
 
   UserDemographics(
       {required this.userId,
