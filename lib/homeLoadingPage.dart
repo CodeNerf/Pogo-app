@@ -1,6 +1,8 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/UserIssuesFactors.dart';
 import 'package:pogo/amplifyFunctions.dart';
+import 'package:pogo/dataModelManipulation.dart';
 import 'Home.dart';
 import 'user.dart';
 
@@ -14,6 +16,8 @@ class HomeLoadingPage extends StatefulWidget {
 class _HomeLoadingPageState extends State<HomeLoadingPage> {
   //TODO: implement user issues object
   late user currentUser;
+  late UserIssuesFactors currentUserFactors;
+
   @override
   void initState() {
     initializeObjects();
@@ -22,12 +26,14 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
 
   void initializeObjects() async {
     currentUser = await fetchCurrentUserAttributes();
-    setObjectStates(currentUser);
+    currentUserFactors = await fetchCurrentUserFactors(currentUser.email);
+    setObjectStates(currentUser, currentUserFactors);
   }
 
-  void setObjectStates(user u) {
+  void setObjectStates(user u, UserIssuesFactors uif) {
     setState(() {
       currentUser = u;
+      currentUserFactors = uif;
     });
     goHome();
   }
@@ -36,7 +42,7 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Home(currentUser: currentUser),
+        builder: (context) => Home(currentUser: currentUser, currentUserFactors: currentUserFactors,),
       ),
     );
   }

@@ -53,6 +53,10 @@ dependencies:
   google_fonts: ^4.0.3
   circular_profile_avatar: ^2.0.5
   font_awesome_flutter: ^10.4.0
+  swipeable_card_stack: ^0.0.5
+  expandable: ^5.0.1
+  dcdg: ^4.1.0
+  flutter_typeahead: ^4.3.7
   url_launcher: ^6.1.9
   flutter_web_browser: ^0.17.1
 
@@ -93,6 +97,10 @@ flutter:
     - assets/speech.png
     - assets/briefcase.png
     - assets/marijuana.png
+    - assets/candidateplaceholder.png
+    - assets/placeholderCandidatePic.png
+    - assets/democratLogo.png
+    - assets/podiumPageBackgroundImage.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

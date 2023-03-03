@@ -1,17 +1,41 @@
 type IssueFactorValues @model @auth(rules: [{allow: public}]) {
   id: ID!
-  canidateName: String
+  candidateName: String
   zipCode: String
   state: String
   politicalParty: String
   immigrationIssueFactor: Int
-  reporductiveRightsIssueFactor: Int
+  reproductiveRightsIssueFactor: Int
   housingIssueFactor: Int
   drugPolicyIssueFactor: Int
   policingIssueFactor: Int
   economyIssueFactor: Int
   climateIssueFactor: Int
   gunPolicyIssueFactor: Int
-  heathcareIssueFactor: Int
+  healthcareIssueFactor: Int
   educationIssueFactor: Int
+}
+
+type UserIssueFactorValues @model @auth(rules: [{allow: public}]) {
+  userId: ID!
+  climateScore: Float
+  climateWeight: Float
+  drugPolicyScore: Float
+  drugPolicyWeight: Float
+  economyScore: Float
+  economyWeight: Float
+  educationScore: Float
+  educationWeight: Float
+  gunPolicyScore: Float
+  gunPolicyWeight: Float
+  healthcareScore: Float
+  healthcareWeight: Float
+  housingScore: Float
+  housingWeight: Float
+  immigrationScore: Float
+  immigrationWeight: Float
+  policingScore: Float
+  policingWeight: Float
+  reproductiveScore: Float
+  reproductiveWeight: Float
 }

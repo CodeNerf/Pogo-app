@@ -21,14 +21,16 @@
 
 import 'package:amplify_core/amplify_core.dart';
 import 'IssueFactorValues.dart';
+import 'UserIssueFactorValues.dart';
 
 export 'IssueFactorValues.dart';
+export 'UserIssueFactorValues.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "8f18ef21455002f0a514cfbde92cf7e2";
+  String version = "7ac64d86da7b2d898a09fb7c215ebe0a";
   @override
-  List<ModelSchema> modelSchemas = [IssueFactorValues.schema];
+  List<ModelSchema> modelSchemas = [IssueFactorValues.schema, UserIssueFactorValues.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -39,6 +41,8 @@ class ModelProvider implements ModelProviderInterface {
     switch(modelName) {
       case "IssueFactorValues":
         return IssueFactorValues.classType;
+      case "UserIssueFactorValues":
+        return UserIssueFactorValues.classType;
       default:
         throw Exception("Failed to find model in model provider for model name: " + modelName);
     }

@@ -38,6 +38,7 @@ class UserIssuesFactors {
       this.healthcareAlign, this.healthcareCare,
       this.housingAlign, this.housingCare,
       this.immigrationAlign, this.immigrationCare,
+      this.policingAlign, this.policingCare,
       this.reproductiveRightsAlign, this.reproductiveRightsCare
       );
 

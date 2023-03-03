@@ -2,21 +2,25 @@
 import 'dart:developer';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
+import 'models/ModelProvider.dart'; //temp
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'amplifyconfiguration.dart';
 import 'user.dart';
 
-Future<void> configureAmplify() async {
+Future<bool> configureAmplify() async {
   try {
     final auth = AmplifyAuthCognito();
     await Amplify.addPlugin(auth);
+    final dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+    await Amplify.addPlugin(dataStorePlugin);
     safePrint("Amplify Configured");
-    // call Amplify.configure to use the initialized categories in your app
     await Amplify.configure(amplifyconfig);
+    return true;
   } on Exception catch (e) {
     safePrint('An error occurred configuring Amplify: $e');
+    return false;
   }
 }
 
@@ -158,6 +162,17 @@ Future<user> fetchCurrentUserAttributes() async {
     safePrint(e.message);
   }
   return current;
+}
+
+Future<String> fetchCurrentUserEmail() async {
+  user current = user.all("", "", "", "", "");
+  try {
+    final result = await Amplify.Auth.fetchUserAttributes();
+    return result[8].value;
+  } on AuthException catch (e) {
+    safePrint(e.message);
+  }
+  return '';
 }
 
 Future<bool> isUserConfirmed() async {

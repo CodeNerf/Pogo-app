@@ -1,5 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/firstLoadingPage.dart';
 import 'amplifyFunctions.dart';
 import 'package:pogo/LandingPage.dart';
 import 'LoginPage.dart';
@@ -22,13 +23,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    configureAmplify();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LandingPage(),
+      home: firstLoadingPage(),
     );
   }
 }

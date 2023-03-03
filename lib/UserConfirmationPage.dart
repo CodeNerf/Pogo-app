@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'amplifyFunctions.dart';
+import 'dataModelManipulation.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 
 class UserConfirmationPage extends StatefulWidget {
@@ -23,6 +24,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
   Future confirm(context) async {
     if(await confirmUser(email, codeController.text)) {
       await signInUser(email, password);
+      await initialUserIssueFactorValues(email);
       if (await checkLoggedIn()) {
         await Navigator.push(
             context,

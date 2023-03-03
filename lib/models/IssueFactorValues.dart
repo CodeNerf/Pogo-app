@@ -28,19 +28,19 @@ import 'package:flutter/foundation.dart';
 class IssueFactorValues extends Model {
   static const classType = const _IssueFactorValuesModelType();
   final String id;
-  final String? _canidateName;
+  final String? _candidateName;
   final String? _zipCode;
   final String? _state;
   final String? _politicalParty;
   final int? _immigrationIssueFactor;
-  final int? _reporductiveRightsIssueFactor;
+  final int? _reproductiveRightsIssueFactor;
   final int? _housingIssueFactor;
   final int? _drugPolicyIssueFactor;
   final int? _policingIssueFactor;
   final int? _economyIssueFactor;
   final int? _climateIssueFactor;
   final int? _gunPolicyIssueFactor;
-  final int? _heathcareIssueFactor;
+  final int? _healthcareIssueFactor;
   final int? _educationIssueFactor;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
@@ -58,8 +58,8 @@ class IssueFactorValues extends Model {
       );
   }
   
-  String? get canidateName {
-    return _canidateName;
+  String? get candidateName {
+    return _candidateName;
   }
   
   String? get zipCode {
@@ -78,8 +78,8 @@ class IssueFactorValues extends Model {
     return _immigrationIssueFactor;
   }
   
-  int? get reporductiveRightsIssueFactor {
-    return _reporductiveRightsIssueFactor;
+  int? get reproductiveRightsIssueFactor {
+    return _reproductiveRightsIssueFactor;
   }
   
   int? get housingIssueFactor {
@@ -106,8 +106,8 @@ class IssueFactorValues extends Model {
     return _gunPolicyIssueFactor;
   }
   
-  int? get heathcareIssueFactor {
-    return _heathcareIssueFactor;
+  int? get healthcareIssueFactor {
+    return _healthcareIssueFactor;
   }
   
   int? get educationIssueFactor {
@@ -122,24 +122,24 @@ class IssueFactorValues extends Model {
     return _updatedAt;
   }
   
-  const IssueFactorValues._internal({required this.id, canidateName, zipCode, state, politicalParty, immigrationIssueFactor, reporductiveRightsIssueFactor, housingIssueFactor, drugPolicyIssueFactor, policingIssueFactor, economyIssueFactor, climateIssueFactor, gunPolicyIssueFactor, heathcareIssueFactor, educationIssueFactor, createdAt, updatedAt}): _canidateName = canidateName, _zipCode = zipCode, _state = state, _politicalParty = politicalParty, _immigrationIssueFactor = immigrationIssueFactor, _reporductiveRightsIssueFactor = reporductiveRightsIssueFactor, _housingIssueFactor = housingIssueFactor, _drugPolicyIssueFactor = drugPolicyIssueFactor, _policingIssueFactor = policingIssueFactor, _economyIssueFactor = economyIssueFactor, _climateIssueFactor = climateIssueFactor, _gunPolicyIssueFactor = gunPolicyIssueFactor, _heathcareIssueFactor = heathcareIssueFactor, _educationIssueFactor = educationIssueFactor, _createdAt = createdAt, _updatedAt = updatedAt;
+  const IssueFactorValues._internal({required this.id, candidateName, zipCode, state, politicalParty, immigrationIssueFactor, reproductiveRightsIssueFactor, housingIssueFactor, drugPolicyIssueFactor, policingIssueFactor, economyIssueFactor, climateIssueFactor, gunPolicyIssueFactor, healthcareIssueFactor, educationIssueFactor, createdAt, updatedAt}): _candidateName = candidateName, _zipCode = zipCode, _state = state, _politicalParty = politicalParty, _immigrationIssueFactor = immigrationIssueFactor, _reproductiveRightsIssueFactor = reproductiveRightsIssueFactor, _housingIssueFactor = housingIssueFactor, _drugPolicyIssueFactor = drugPolicyIssueFactor, _policingIssueFactor = policingIssueFactor, _economyIssueFactor = economyIssueFactor, _climateIssueFactor = climateIssueFactor, _gunPolicyIssueFactor = gunPolicyIssueFactor, _healthcareIssueFactor = healthcareIssueFactor, _educationIssueFactor = educationIssueFactor, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory IssueFactorValues({String? id, String? canidateName, String? zipCode, String? state, String? politicalParty, int? immigrationIssueFactor, int? reporductiveRightsIssueFactor, int? housingIssueFactor, int? drugPolicyIssueFactor, int? policingIssueFactor, int? economyIssueFactor, int? climateIssueFactor, int? gunPolicyIssueFactor, int? heathcareIssueFactor, int? educationIssueFactor}) {
+  factory IssueFactorValues({String? id, String? candidateName, String? zipCode, String? state, String? politicalParty, int? immigrationIssueFactor, int? reproductiveRightsIssueFactor, int? housingIssueFactor, int? drugPolicyIssueFactor, int? policingIssueFactor, int? economyIssueFactor, int? climateIssueFactor, int? gunPolicyIssueFactor, int? healthcareIssueFactor, int? educationIssueFactor}) {
     return IssueFactorValues._internal(
       id: id == null ? UUID.getUUID() : id,
-      canidateName: canidateName,
+      candidateName: candidateName,
       zipCode: zipCode,
       state: state,
       politicalParty: politicalParty,
       immigrationIssueFactor: immigrationIssueFactor,
-      reporductiveRightsIssueFactor: reporductiveRightsIssueFactor,
+      reproductiveRightsIssueFactor: reproductiveRightsIssueFactor,
       housingIssueFactor: housingIssueFactor,
       drugPolicyIssueFactor: drugPolicyIssueFactor,
       policingIssueFactor: policingIssueFactor,
       economyIssueFactor: economyIssueFactor,
       climateIssueFactor: climateIssueFactor,
       gunPolicyIssueFactor: gunPolicyIssueFactor,
-      heathcareIssueFactor: heathcareIssueFactor,
+      healthcareIssueFactor: healthcareIssueFactor,
       educationIssueFactor: educationIssueFactor);
   }
   
@@ -152,19 +152,19 @@ class IssueFactorValues extends Model {
     if (identical(other, this)) return true;
     return other is IssueFactorValues &&
       id == other.id &&
-      _canidateName == other._canidateName &&
+      _candidateName == other._candidateName &&
       _zipCode == other._zipCode &&
       _state == other._state &&
       _politicalParty == other._politicalParty &&
       _immigrationIssueFactor == other._immigrationIssueFactor &&
-      _reporductiveRightsIssueFactor == other._reporductiveRightsIssueFactor &&
+      _reproductiveRightsIssueFactor == other._reproductiveRightsIssueFactor &&
       _housingIssueFactor == other._housingIssueFactor &&
       _drugPolicyIssueFactor == other._drugPolicyIssueFactor &&
       _policingIssueFactor == other._policingIssueFactor &&
       _economyIssueFactor == other._economyIssueFactor &&
       _climateIssueFactor == other._climateIssueFactor &&
       _gunPolicyIssueFactor == other._gunPolicyIssueFactor &&
-      _heathcareIssueFactor == other._heathcareIssueFactor &&
+      _healthcareIssueFactor == other._healthcareIssueFactor &&
       _educationIssueFactor == other._educationIssueFactor;
   }
   
@@ -177,19 +177,19 @@ class IssueFactorValues extends Model {
     
     buffer.write("IssueFactorValues {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("canidateName=" + "$_canidateName" + ", ");
+    buffer.write("candidateName=" + "$_candidateName" + ", ");
     buffer.write("zipCode=" + "$_zipCode" + ", ");
     buffer.write("state=" + "$_state" + ", ");
     buffer.write("politicalParty=" + "$_politicalParty" + ", ");
     buffer.write("immigrationIssueFactor=" + (_immigrationIssueFactor != null ? _immigrationIssueFactor!.toString() : "null") + ", ");
-    buffer.write("reporductiveRightsIssueFactor=" + (_reporductiveRightsIssueFactor != null ? _reporductiveRightsIssueFactor!.toString() : "null") + ", ");
+    buffer.write("reproductiveRightsIssueFactor=" + (_reproductiveRightsIssueFactor != null ? _reproductiveRightsIssueFactor!.toString() : "null") + ", ");
     buffer.write("housingIssueFactor=" + (_housingIssueFactor != null ? _housingIssueFactor!.toString() : "null") + ", ");
     buffer.write("drugPolicyIssueFactor=" + (_drugPolicyIssueFactor != null ? _drugPolicyIssueFactor!.toString() : "null") + ", ");
     buffer.write("policingIssueFactor=" + (_policingIssueFactor != null ? _policingIssueFactor!.toString() : "null") + ", ");
     buffer.write("economyIssueFactor=" + (_economyIssueFactor != null ? _economyIssueFactor!.toString() : "null") + ", ");
     buffer.write("climateIssueFactor=" + (_climateIssueFactor != null ? _climateIssueFactor!.toString() : "null") + ", ");
     buffer.write("gunPolicyIssueFactor=" + (_gunPolicyIssueFactor != null ? _gunPolicyIssueFactor!.toString() : "null") + ", ");
-    buffer.write("heathcareIssueFactor=" + (_heathcareIssueFactor != null ? _heathcareIssueFactor!.toString() : "null") + ", ");
+    buffer.write("healthcareIssueFactor=" + (_healthcareIssueFactor != null ? _healthcareIssueFactor!.toString() : "null") + ", ");
     buffer.write("educationIssueFactor=" + (_educationIssueFactor != null ? _educationIssueFactor!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
@@ -198,67 +198,67 @@ class IssueFactorValues extends Model {
     return buffer.toString();
   }
   
-  IssueFactorValues copyWith({String? canidateName, String? zipCode, String? state, String? politicalParty, int? immigrationIssueFactor, int? reporductiveRightsIssueFactor, int? housingIssueFactor, int? drugPolicyIssueFactor, int? policingIssueFactor, int? economyIssueFactor, int? climateIssueFactor, int? gunPolicyIssueFactor, int? heathcareIssueFactor, int? educationIssueFactor}) {
+  IssueFactorValues copyWith({String? candidateName, String? zipCode, String? state, String? politicalParty, int? immigrationIssueFactor, int? reproductiveRightsIssueFactor, int? housingIssueFactor, int? drugPolicyIssueFactor, int? policingIssueFactor, int? economyIssueFactor, int? climateIssueFactor, int? gunPolicyIssueFactor, int? healthcareIssueFactor, int? educationIssueFactor}) {
     return IssueFactorValues._internal(
       id: id,
-      canidateName: canidateName ?? this.canidateName,
+      candidateName: candidateName ?? this.candidateName,
       zipCode: zipCode ?? this.zipCode,
       state: state ?? this.state,
       politicalParty: politicalParty ?? this.politicalParty,
       immigrationIssueFactor: immigrationIssueFactor ?? this.immigrationIssueFactor,
-      reporductiveRightsIssueFactor: reporductiveRightsIssueFactor ?? this.reporductiveRightsIssueFactor,
+      reproductiveRightsIssueFactor: reproductiveRightsIssueFactor ?? this.reproductiveRightsIssueFactor,
       housingIssueFactor: housingIssueFactor ?? this.housingIssueFactor,
       drugPolicyIssueFactor: drugPolicyIssueFactor ?? this.drugPolicyIssueFactor,
       policingIssueFactor: policingIssueFactor ?? this.policingIssueFactor,
       economyIssueFactor: economyIssueFactor ?? this.economyIssueFactor,
       climateIssueFactor: climateIssueFactor ?? this.climateIssueFactor,
       gunPolicyIssueFactor: gunPolicyIssueFactor ?? this.gunPolicyIssueFactor,
-      heathcareIssueFactor: heathcareIssueFactor ?? this.heathcareIssueFactor,
+      healthcareIssueFactor: healthcareIssueFactor ?? this.healthcareIssueFactor,
       educationIssueFactor: educationIssueFactor ?? this.educationIssueFactor);
   }
   
   IssueFactorValues.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _canidateName = json['canidateName'],
+      _candidateName = json['candidateName'],
       _zipCode = json['zipCode'],
       _state = json['state'],
       _politicalParty = json['politicalParty'],
       _immigrationIssueFactor = (json['immigrationIssueFactor'] as num?)?.toInt(),
-      _reporductiveRightsIssueFactor = (json['reporductiveRightsIssueFactor'] as num?)?.toInt(),
+      _reproductiveRightsIssueFactor = (json['reproductiveRightsIssueFactor'] as num?)?.toInt(),
       _housingIssueFactor = (json['housingIssueFactor'] as num?)?.toInt(),
       _drugPolicyIssueFactor = (json['drugPolicyIssueFactor'] as num?)?.toInt(),
       _policingIssueFactor = (json['policingIssueFactor'] as num?)?.toInt(),
       _economyIssueFactor = (json['economyIssueFactor'] as num?)?.toInt(),
       _climateIssueFactor = (json['climateIssueFactor'] as num?)?.toInt(),
       _gunPolicyIssueFactor = (json['gunPolicyIssueFactor'] as num?)?.toInt(),
-      _heathcareIssueFactor = (json['heathcareIssueFactor'] as num?)?.toInt(),
+      _healthcareIssueFactor = (json['healthcareIssueFactor'] as num?)?.toInt(),
       _educationIssueFactor = (json['educationIssueFactor'] as num?)?.toInt(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'canidateName': _canidateName, 'zipCode': _zipCode, 'state': _state, 'politicalParty': _politicalParty, 'immigrationIssueFactor': _immigrationIssueFactor, 'reporductiveRightsIssueFactor': _reporductiveRightsIssueFactor, 'housingIssueFactor': _housingIssueFactor, 'drugPolicyIssueFactor': _drugPolicyIssueFactor, 'policingIssueFactor': _policingIssueFactor, 'economyIssueFactor': _economyIssueFactor, 'climateIssueFactor': _climateIssueFactor, 'gunPolicyIssueFactor': _gunPolicyIssueFactor, 'heathcareIssueFactor': _heathcareIssueFactor, 'educationIssueFactor': _educationIssueFactor, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'candidateName': _candidateName, 'zipCode': _zipCode, 'state': _state, 'politicalParty': _politicalParty, 'immigrationIssueFactor': _immigrationIssueFactor, 'reproductiveRightsIssueFactor': _reproductiveRightsIssueFactor, 'housingIssueFactor': _housingIssueFactor, 'drugPolicyIssueFactor': _drugPolicyIssueFactor, 'policingIssueFactor': _policingIssueFactor, 'economyIssueFactor': _economyIssueFactor, 'climateIssueFactor': _climateIssueFactor, 'gunPolicyIssueFactor': _gunPolicyIssueFactor, 'healthcareIssueFactor': _healthcareIssueFactor, 'educationIssueFactor': _educationIssueFactor, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
-    'id': id, 'canidateName': _canidateName, 'zipCode': _zipCode, 'state': _state, 'politicalParty': _politicalParty, 'immigrationIssueFactor': _immigrationIssueFactor, 'reporductiveRightsIssueFactor': _reporductiveRightsIssueFactor, 'housingIssueFactor': _housingIssueFactor, 'drugPolicyIssueFactor': _drugPolicyIssueFactor, 'policingIssueFactor': _policingIssueFactor, 'economyIssueFactor': _economyIssueFactor, 'climateIssueFactor': _climateIssueFactor, 'gunPolicyIssueFactor': _gunPolicyIssueFactor, 'heathcareIssueFactor': _heathcareIssueFactor, 'educationIssueFactor': _educationIssueFactor, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+    'id': id, 'candidateName': _candidateName, 'zipCode': _zipCode, 'state': _state, 'politicalParty': _politicalParty, 'immigrationIssueFactor': _immigrationIssueFactor, 'reproductiveRightsIssueFactor': _reproductiveRightsIssueFactor, 'housingIssueFactor': _housingIssueFactor, 'drugPolicyIssueFactor': _drugPolicyIssueFactor, 'policingIssueFactor': _policingIssueFactor, 'economyIssueFactor': _economyIssueFactor, 'climateIssueFactor': _climateIssueFactor, 'gunPolicyIssueFactor': _gunPolicyIssueFactor, 'healthcareIssueFactor': _healthcareIssueFactor, 'educationIssueFactor': _educationIssueFactor, 'createdAt': _createdAt, 'updatedAt': _updatedAt
   };
 
   static final QueryModelIdentifier<IssueFactorValuesModelIdentifier> MODEL_IDENTIFIER = QueryModelIdentifier<IssueFactorValuesModelIdentifier>();
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField CANIDATENAME = QueryField(fieldName: "canidateName");
+  static final QueryField CANDIDATENAME = QueryField(fieldName: "candidateName");
   static final QueryField ZIPCODE = QueryField(fieldName: "zipCode");
   static final QueryField STATE = QueryField(fieldName: "state");
   static final QueryField POLITICALPARTY = QueryField(fieldName: "politicalParty");
   static final QueryField IMMIGRATIONISSUEFACTOR = QueryField(fieldName: "immigrationIssueFactor");
-  static final QueryField REPORDUCTIVERIGHTSISSUEFACTOR = QueryField(fieldName: "reporductiveRightsIssueFactor");
+  static final QueryField REPRODUCTIVERIGHTSISSUEFACTOR = QueryField(fieldName: "reproductiveRightsIssueFactor");
   static final QueryField HOUSINGISSUEFACTOR = QueryField(fieldName: "housingIssueFactor");
   static final QueryField DRUGPOLICYISSUEFACTOR = QueryField(fieldName: "drugPolicyIssueFactor");
   static final QueryField POLICINGISSUEFACTOR = QueryField(fieldName: "policingIssueFactor");
   static final QueryField ECONOMYISSUEFACTOR = QueryField(fieldName: "economyIssueFactor");
   static final QueryField CLIMATEISSUEFACTOR = QueryField(fieldName: "climateIssueFactor");
   static final QueryField GUNPOLICYISSUEFACTOR = QueryField(fieldName: "gunPolicyIssueFactor");
-  static final QueryField HEATHCAREISSUEFACTOR = QueryField(fieldName: "heathcareIssueFactor");
+  static final QueryField HEALTHCAREISSUEFACTOR = QueryField(fieldName: "healthcareIssueFactor");
   static final QueryField EDUCATIONISSUEFACTOR = QueryField(fieldName: "educationIssueFactor");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "IssueFactorValues";
@@ -278,7 +278,7 @@ class IssueFactorValues extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: IssueFactorValues.CANIDATENAME,
+      key: IssueFactorValues.CANDIDATENAME,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -308,7 +308,7 @@ class IssueFactorValues extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: IssueFactorValues.REPORDUCTIVERIGHTSISSUEFACTOR,
+      key: IssueFactorValues.REPRODUCTIVERIGHTSISSUEFACTOR,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));
@@ -350,7 +350,7 @@ class IssueFactorValues extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: IssueFactorValues.HEATHCAREISSUEFACTOR,
+      key: IssueFactorValues.HEALTHCAREISSUEFACTOR,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));
