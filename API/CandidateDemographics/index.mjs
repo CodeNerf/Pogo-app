@@ -56,19 +56,7 @@ export const handler = async (event, context) => {
         await dynamo.send(
           new PutCommand({
             TableName: tableName,
-            Item: {
-              candidateId: requestJSON.candidateId,
-              firstName: requestJSON.firstName,
-              lastName: requestJSON.lastName,
-              dateOfBirth: requestJSON.dateOfBirth,
-              racialIdentity: requestJSON.racialIdentity,
-              gender: requestJSON.gender,
-              politicalAffiliation: requestJSON.politicalAffiliation,
-              zipCode: requestJSON.zipCode,
-              seatType: requestJSON.seatType,
-              careerStartYear: requestJSON.careerStartYear,
-              profileImageURL: requestJSON.profileImageURL
-            },
+            Item: requestJSON,
           })
         );
         body = `Put candidateDemographic ${requestJSON.candidateId}`;
