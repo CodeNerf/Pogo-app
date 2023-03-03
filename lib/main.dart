@@ -6,7 +6,7 @@ import 'package:pogo/LandingPage.dart';
 import 'LoginPage.dart';
 import 'RegisterPage.dart';
 import 'LandingPage.dart';
-
+import 'googleFunctions/CivicFunctions.dart';
 
 void main() {
   runApp(const MyApp());
