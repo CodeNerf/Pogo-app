@@ -11,7 +11,7 @@
 				{
 					"name": "Get All CandidateDemographics",
 					"request": {
-						"method": "PUT",
+						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "{{baseURL}}/candidateDemographics",
