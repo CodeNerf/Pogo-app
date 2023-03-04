@@ -143,3 +143,24 @@ Future<CandidateDemographics> getCandidateDemographics(
     client.close();
   }
 }
+
+Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
+  var client = http.Client();
+  var candidateDemographicsList = <CandidateDemographics>[];
+  try {
+    var response = await client.get(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/candidateDemographics'),
+        headers: {
+          "content-type": "application/json",
+        });
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    for (var candidateDemographics in decodedResponse) {
+      candidateDemographicsList
+          .add(CandidateDemographics.fromJson(candidateDemographics));
+    }
+    return candidateDemographicsList;
+  } finally {
+    client.close();
+  }
+}
