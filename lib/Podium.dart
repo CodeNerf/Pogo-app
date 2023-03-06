@@ -175,6 +175,13 @@ class _PodiumState extends State<Podium> {
     );
   }
 
+  void addCandidate(CandidateDemographics stack) {
+    String candidateId = stack.candidateId;
+    String candidateProfilePic = stack.profileImageURL;
+    String seatType = stack.seatType;
+    //TODO: send the candidate profile pic to the correct string list in the ballot object
+  }
+
   Widget newCard({required CandidateDemographics candidate}) {
     return Card(
       //card properties
@@ -391,6 +398,7 @@ class _PodiumState extends State<Podium> {
               Expanded(
                 flex: 13,
                 //podium background
+                //TODO: add x icon to left of page and + icon to right of page
                 child: Container(
                   decoration: const BoxDecoration(
                     color: Color(0xFFF9F9F9),
@@ -470,7 +478,7 @@ class _PodiumState extends State<Podium> {
                             }
                           }
                           if(dir == Direction.right) {
-                            //TODO: add candidate to local ballot
+                            addCandidate(stack[stackIterator]);
                             stack.removeAt(stackIterator);
                             stackLength--;
                           }
