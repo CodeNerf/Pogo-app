@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:amplify_core/amplify_core.dart';
-import 'APIKey.dart';
+//import 'APIKey.dart';
 import 'package:http/http.dart' as http;
 import 'CivicModels.dart';
 
 Future<List<Election>> getElection() async {
-  final queryParams = {'key': googleAPIKey};
+  final queryParams = {'key': "theKey"};
   final url =
       Uri.https("www.googleapis.com", "/civicinfo/v2/elections", queryParams);
   final response = await http.get(url);
@@ -25,7 +25,7 @@ Future<List<Election>> getElection() async {
 
 Future<List<PollingLocation>> getPollingLocation(String address) async {
   final queryParams = {
-    'key': googleAPIKey,
+    'key': "theKey",
     'address': address,
     'electionId':
         '2000', //TODO remove test election when we find a working address
@@ -51,7 +51,7 @@ Future<List<PollingLocation>> getPollingLocation(String address) async {
 
 Future<List<Candidate>> getCandidates(String Address, String electionId) async {
   final queryParams = {
-    'key': googleAPIKey,
+    'key': "theKey",
     'address': Address,
     'electionId': electionId,
   };

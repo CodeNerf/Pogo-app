@@ -1,24 +1,22 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:pogo/Onboarding/Demographics.dart';
-import 'package:pogo/UserDemographics.dart';
-import 'package:pogo/dataModelManipulation.dart';
-import '../UserIssuesFactors.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/awsFunctions.dart';
+import '../dynamoModels/UserIssueFactorValues.dart';
 import '../amplifyFunctions.dart';
+import 'Demographics.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
-  UserDemographics answers = UserDemographics('', '', '', '', '', '', '');
-  UserIssuesFactors ratings = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  UserDemographics answers = UserDemographics(userId: '', phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: '', lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
+  UserIssueFactorValues ratings = UserIssueFactorValues(userId: '', climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
   SurveyLandingPage({Key? key}) : super(key: key);
 
   @override
   State<SurveyLandingPage> createState() => _SurveyLandingPageState();
 }
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
-  late UserIssuesFactors currentUserFactors;
-
+  late UserIssueFactorValues currentUserFactors;
+  late UserDemographics currentAnswers;
   @override
   void initState() {
     getUserFactors();
@@ -26,22 +24,25 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
   }
 
   void getUserFactors() async {
-    currentUserFactors = await fetchCurrentUserFactors(await fetchCurrentUserEmail());
+    String userid = await fetchCurrentUserEmail();
+    currentUserFactors = await getUserIssueFactorValues(userid);
+    currentAnswers = await getUserDemographics(userid);
     setState(() {
       widget.ratings = currentUserFactors;
+      widget.answers = currentAnswers;
     });
   }
  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         
        child: Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           
           child: Column(
 
@@ -56,7 +57,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                 children: <Widget>[
               
 
-                  Text(
+                  const Text(
                     "Personalize your search",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -65,7 +66,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                     ),
                     
                   ),
-SizedBox(
+const SizedBox(
                     height: 140,
                 ),
                   Align(
@@ -92,13 +93,13 @@ SizedBox(
                     minWidth: double.infinity,
                     height: 70,
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Demographics(ratings: widget.ratings, answers: widget.answers,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Demographics(ratings: widget.ratings, answers: widget.answers, )));
                     },
-                 color: Color.fromARGB(255, 0, 0, 0),
+                 color: const Color.fromARGB(255, 0, 0, 0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)
                     ),
-                    child: Text(
+                    child: const Text(
                       "Continue",
                       style: TextStyle(
                         fontSize: 18,

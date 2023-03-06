@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../UserIssuesFactors.dart';
-import '../../UserDemographics.dart';
+import '../../dynamoModels/UserIssueFactorValues.dart';
+import '../../dynamoModels/UserDemographics.dart';
 import 'Immigration.dart';
 import 'Housing.dart';
 
 class Economy extends StatefulWidget {
-  final UserIssuesFactors ratings;
+  final UserIssueFactorValues ratings;
   final UserDemographics answers;
   late final Widget nextPage = Immigration(ratings: ratings, answers: answers,);
   late final Widget lastPage = Housing(ratings: ratings, answers: answers,);
@@ -35,20 +35,20 @@ class _EconomyState extends State<Economy> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.getEconomyAlign;
-      valueRating = widget.ratings.getEconomyCare;
+      alignRating = widget.ratings.economyScore;
+      valueRating = widget.ratings.economyWeight;
     });
     updateButton();
   }
 
   Future updateAlignRating(double rating) async {
-    widget.ratings.setEconomyAlign = rating;
+    widget.ratings.economyScore = rating;
     alignRating = rating;
     updateButton();
   }
 
   Future updateValueRating(double rating) async {
-    widget.ratings.setEconomyCare = rating;
+    widget.ratings.economyWeight = rating;
     valueRating = rating;
     updateButton();
   }

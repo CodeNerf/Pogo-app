@@ -2,14 +2,14 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pogo/amplifyFunctions.dart';
-import '../../UserIssuesFactors.dart';
 import '../../HomeLoadingPage.dart';
-import '../../UserDemographics.dart';
+import '../../dynamoModels/UserDemographics.dart';
+import '../../awsFunctions.dart';
+import '../../dynamoModels/UserIssueFactorValues.dart';
 import 'Policing.dart';
-import 'package:pogo/dataModelManipulation.dart';
 
 class ReproductiveRights extends StatefulWidget {
-  final UserIssuesFactors ratings;
+  final UserIssueFactorValues ratings;
   final UserDemographics answers;
   late final Widget nextPage = const HomeLoadingPage();
   late final Widget lastPage = Policing(ratings: ratings, answers: answers,);
@@ -38,20 +38,20 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.getReproductiveRightsAlign;
-      valueRating = widget.ratings.getReproductiveRightsCare;
+      alignRating = widget.ratings.reproductiveScore;
+      valueRating = widget.ratings.reproductiveWeight;
     });
     updateButton();
   }
 
   Future updateAlignRating(double rating) async {
-    widget.ratings.setReproductiveRightsAlign = rating;
+    widget.ratings.reproductiveScore = rating;
     alignRating = rating;
     updateButton();
   }
 
   Future updateValueRating(double rating) async {
-    widget.ratings.setReproductiveRightsCare = rating;
+    widget.ratings.reproductiveWeight = rating;
     valueRating = rating;
     updateButton();
   }
@@ -74,7 +74,8 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
     if (alignRating > 0 && valueRating > 0) {
       if(await updateSurveyCompletion()) {
         String email = await fetchCurrentUserEmail();
-        updateUserIssueFactorValues(widget.ratings, email);
+        //demographics
+        putUserIssueFactorValues(widget.ratings);
         await Navigator.push(
           context,
           MaterialPageRoute(

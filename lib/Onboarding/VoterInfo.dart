@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/Onboarding/Issues/GunPolicy.dart';
-import '../UserIssuesFactors.dart';
-import '../UserDemographics.dart';
+import '../dynamoModels/UserDemographics.dart';
+import '../dynamoModels/UserIssueFactorValues.dart';
 
 class VoterInfo extends StatefulWidget {
-  final UserIssuesFactors ratings;
+  final UserIssueFactorValues ratings;
   final UserDemographics answers;
   const VoterInfo({Key? key, required this.ratings, required this.answers}) : super(key: key);
 
   @override
   State<VoterInfo> createState() => _VoterInfoState();
 }
+
 class _VoterInfoState extends State<VoterInfo> {
+  late UserDemographics answers;
  String votedropdownvalue = '';
   List<String> vote = ['Yes', 'No', 'Not sure'];
 
@@ -23,6 +25,24 @@ class _VoterInfoState extends State<VoterInfo> {
 
   String statedropdownvalue = '';
   List<String> state = ['Yes', 'No'];
+
+ @override
+ void initState() {
+   super.initState();
+   setState(() {
+     answers = widget.answers;
+   });
+ }
+
+ void goNextPage() {
+   if(votedropdownvalue == 'Yes') {
+     widget.answers.voterRegistrationStatus = true;
+   }
+   widget.answers.politicalAffiliation = partiesdropdownvalue;
+   //TODO: add party user votes for String to db in case this is needed in matching algorithm
+   //TODO: add user lives in registered state bool to db in case this value is needed in future
+   Navigator.push(context, MaterialPageRoute(builder: (context) => GunPolicy(ratings: widget.ratings, answers: widget.answers,)));
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +203,7 @@ class _VoterInfoState extends State<VoterInfo> {
 
                     height: 50,
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => GunPolicy(ratings: widget.ratings, answers: widget.answers,)));
+                      goNextPage();
                     },
                  color: Color.fromARGB(255, 0, 0, 0),
                     shape: RoundedRectangleBorder(

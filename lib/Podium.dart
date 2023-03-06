@@ -1,32 +1,35 @@
 
+import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+import 'dynamoModels/CandidateDemographics.dart';
 import 'amplifyFunctions.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
-class CandidateUserMatching extends StatefulWidget {
-  const CandidateUserMatching({Key? key}) : super(key: key);
+class Podium extends StatefulWidget {
+  List<CandidateDemographics> candidateStack;
+  final Function(List<CandidateDemographics>) updateStack;
+  Podium({Key? key, required this.candidateStack, required this.updateStack}) : super(key: key);
 
   @override
-  State<CandidateUserMatching> createState() => _CandidateUserMatchingState();
+  State<Podium> createState() => _PodiumState();
 }
 
-class _CandidateUserMatchingState extends State<CandidateUserMatching> {
+class _PodiumState extends State<Podium> {
   //search values
   late final searchController = TextEditingController();
 
   //card values
-  String candidateLogo = 'assets/placeholderCandidatePic.png';
-  String candidateName = 'ERIC ADAMS';
-  String candidateCurrentPosition = 'Mayor of NYC';
-  String candidateRunningForPosition = 'Mayor of NYC';
-  String partyLogo = 'assets/democratLogo.png';
-  String candidateNumber = '20';
-  String candidateState = 'NY';
+  late List<CandidateDemographics> stack;
+  late int stackLength;
   String candidateIssueFirst = 'Issue 1';
   String candidateIssueSecond = 'Issue 2';
-  SwipeableCardSectionController _cardController = SwipeableCardSectionController();
+  final SwipeableCardSectionController _cardController = SwipeableCardSectionController();
+  int count = 3;
+  int stackIterator = 0;
+  int numberOfIssues = 10;
 
   //local,state,federal bar values
   final List<bool> _selections = List.generate(3, (_)=>false );
@@ -36,35 +39,21 @@ class _CandidateUserMatchingState extends State<CandidateUserMatching> {
   Color state = const Color(0xFF808080);
   Color federal = const Color(0xFF808080);
 
-  //list of valid candidates
-  static const List<String> candidateList = <String>[
-    'Eric Adams',
-  "Oliver Hernandez",
-  "Natalie Lowe",
-  "Lucas Patterson",
-  "Eva Watkins",
-  "Gavin Spencer",
-  "Leah Webster",
-  "Anthony Ortiz",
-  "Isabella Dunn",
-  "Seth Foster",
-  "Sadie Caldwell",
-  "Maxwell Perry",
-  "Charlotte Nguyen",
-  "Jacob Bishop",
-  "Ava Ramsey",
-  "Ethan Barrett",
-  "Madelyn Vega",
-  "Nicholas Baldwin",
-  "Penelope Wallace",
-  "William Guzman",
-  "Avery Doyle",
-  "Carter Ramirez",
-  "Harper Davis",
-  "Alexander Cohen",
-  "Lila Richardson",
-  "Benjamin Berry",
-  ];
+  //list of valid candidates' names
+  static List<String> candidateList = <String>[];
+
+  @override
+  void initState() {
+    setState(() {
+      stack = widget.candidateStack;
+      stackLength = stack.length;
+      candidateList = [];
+    });
+    for(int i = 0; i < stackLength; i++) {
+      candidateList.add('${stack[i].firstName} ${stack[i].lastName}');
+    }
+    super.initState();
+  }
 
   //suggests candidates when typing in search bar
   Future<List<String>> candidateSearchOptions(String query) async {
@@ -72,6 +61,21 @@ class _CandidateUserMatchingState extends State<CandidateUserMatching> {
     matches.addAll(candidateList);
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;
+  }
+
+  //card banner color
+  Color candidateColor(String party) {
+    switch (party) {
+      case 'Democrat':
+        return const Color(0xFF3456CF);
+      case 'Republican':
+        return const Color(0xFFDE0100);
+      case 'Libertarian':
+        return const Color(0xFFFFD100);
+      case 'Green':
+        return const Color(0xFF508C1B);
+    }
+    return const Color(0xFFF9F9F9);
   }
 
   void updateStack(int check) async {
@@ -101,141 +105,97 @@ class _CandidateUserMatchingState extends State<CandidateUserMatching> {
     }
   }
 
-  void loadCandidate() async {
-
+  List<Widget> initialCards() {
+    List<Widget> initial = [];
+    if(stackLength == 1) {
+      initial.add(newCard(candidate: stack[0]));
+    }
+    else if(stackLength == 2) {
+      initial.add(newCard(candidate: stack[0]));
+      initial.add(newCard(candidate: stack[1]));
+    }
+    else if(stackLength == 0) {
+      return initial;
+    }
+    else {
+      initial.add(newCard(candidate: stack[0]));
+      initial.add(newCard(candidate: stack[1]));
+      initial.add(newCard(candidate: stack[2]));
+    }
+    return initial;
   }
 
-  Widget newCard() {
+  List<Widget> getRatingCircles() {
+    List<Widget> circles = [];
+    circles.add(ratingCircles('Education\n', 5));
+    circles.add(ratingCircles('Climate\n', 3));
+    circles.add(ratingCircles('Drug Policy\n', 4));
+    circles.add(ratingCircles('Economy\n', 1));
+    circles.add(ratingCircles('Healthcare\n', 2));
+    circles.add(ratingCircles('Immigration\n', 4));
+    circles.add(ratingCircles('Policing\n', 3));
+    circles.add(ratingCircles('Reproductive \nHealth', 5));
+    circles.add(ratingCircles('Gun Control\n', 1));
+    circles.add(ratingCircles('Housing\n', 2));
+    return circles;
+  }
+
+  //returns the candidate's experience
+  String candidateExperience(String careerStart) {
+    //TODO: careerStart must be stored in database in the format yyyy-mm-dd
+    String experience = '';
+    String newCareerStart = careerStart.replaceAll('/', '');
+    newCareerStart = newCareerStart.substring(newCareerStart.length - 4) + newCareerStart.substring(0, newCareerStart.length - 4);
+    DateTime start = DateTime.parse(newCareerStart);
+    DateTime currentDate = DateTime.now();
+    int days = currentDate.difference(start).inDays;
+    if(days > 364) {
+      int years = days ~/ 365;
+      //years
+      experience = '$years years experience';
+    }
+    else if(days > 29) {
+      //months
+      int months = days ~/ 30;
+      experience = '$months months experience';
+    }
+    else {
+      experience = '$days days experience';
+    }
+    return experience;
+  }
+
+  Widget newCard({required CandidateDemographics candidate}) {
     return Card(
       //card properties
-      color: const Color(0xFFD9D9D9),
-      margin: const EdgeInsets.fromLTRB(60, 10, 60, 50),
+      color: const Color(0xFFF9F9F9),
+      margin: const EdgeInsets.fromLTRB(60, 10, 60, 60),
       clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: 10,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: const BorderSide(
-          color: Color(0xFF2B49B4),
-          width: 4,
-        ),
+        borderRadius: BorderRadius.circular(40),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           //candidate picture
           Expanded(
-            flex: 26,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: CircularProfileAvatar(
-                '',
-                radius: 40,
-                borderWidth: 3,
-                borderColor: const Color(0xFF5F5D5D),
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                    child: Image(image: AssetImage(candidateLogo),)
-                ),
-              ),
-            ),
-          ),
-
-          //candidate name
-          Expanded(
-            flex: 10,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Text(
-                  candidateName,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Helvetica',
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ),
-
-          //candidate position
-          Expanded(
-            flex: 9,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Text(
-                candidateCurrentPosition,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Helvetica',
-                  fontSize: 15,
-                ),
-              ),
-            ),
-          ),
-
-          //party logo, number, state
-          Expanded(
-            flex: 10,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            flex: 40,
+            child: Container(
+              color: candidateColor(candidate.politicalAffiliation),
+              width: double.infinity,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //party logo
-                  Container(
-                    width: 30,
-                    height: 30,
+                  CircularProfileAvatar(
+                    '',
+                    radius: 60,
+                    elevation: 5,
                     child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Image(
-                        image: AssetImage(
-                          partyLogo,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  //number
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        candidateNumber,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Helvetica',
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  //state
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        candidateState,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Helvetica',
-                          fontSize: 15,
-                        ),
-                      ),
+                      fit: BoxFit.cover,
+                        child: Image(
+                          image: NetworkImage(candidate.profileImageURL),
+                          ),
                     ),
                   ),
                 ],
@@ -243,86 +203,77 @@ class _CandidateUserMatchingState extends State<CandidateUserMatching> {
             ),
           ),
 
-          //position running for text
-          const Expanded(
-            flex: 10,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Text(
-                'Position running for:',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Helvetica',
-                  fontSize: 14,
-                ),
+          //candidate name
+          Expanded(
+            flex: 7,
+            child: Text(
+                "${candidate.firstName} ${candidate.lastName}",
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
               ),
             ),
           ),
 
-          //position candidate is running for
+          //candidate position, state
+          //TODO: add state to db, pull state here
           Expanded(
-            flex: 10,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Text(
-                candidateRunningForPosition,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Helvetica',
-                  fontSize: 15,
-                ),
+            flex: 7,
+            child: Text(
+              '${candidate.seatType}  •  Michigan',
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 17,
+                color: Color(0xFF57636C),
               ),
+            ),
+          ),
+
+          //party, experience
+          Expanded(
+            flex: 7,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                //party
+                Text(
+                  candidate.politicalAffiliation,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                  ),
+                ),
+                //party
+                Text(
+                  candidateExperience(candidate.careerStartDate),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                  ),
+                ),
+              ],
             ),
           ),
 
           //candidate top issues
           Expanded(
-            flex: 25,
+            flex: 35,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              padding: const EdgeInsets.only(top: 5),
+              child: Column(
                 children: [
-                  Container(
-                    width: 70,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        candidateIssueFirst,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Helvetica',
-                          fontSize: 15,
-                        ),
-                      ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: getRatingCircles(),
                     ),
                   ),
-                  Container(
-                    width: 70,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        candidateIssueSecond,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Helvetica',
-                          fontSize: 15,
-                        ),
-                      ),
+                  const Text(
+                    'Left: 0 | Right: 5',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -336,180 +287,230 @@ class _CandidateUserMatchingState extends State<CandidateUserMatching> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            //local, state, federal bar
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      updateStack(0);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width/3,
-                      decoration: BoxDecoration(
-                        color: local,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: const Center(
-                          child: Text(
-                            'Local',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      updateStack(1);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width/3,
-                      decoration: BoxDecoration(
-                        color: state,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: const Center(
-                          child: Text(
-                            'State',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      updateStack(2);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width/3,
-                      decoration: BoxDecoration(
-                        color: federal,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: const Center(
-                          child: Text(
-                            'Federal',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 13,
-              //podium background
-              child: Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/podiumPageBackgroundImage.png'),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return WillPopScope(
+      onWillPop: () async {
+        widget.updateStack;
+        return true;
+      },
+      child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //local, state, federal bar
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    //search bar
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+                    GestureDetector(
+                      onTap: () async {
+                        updateStack(0);
+                      },
                       child: Container(
+                        padding: const EdgeInsets.all(8),
+                        width: MediaQuery.of(context).size.width/3,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFD9D9D9),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
+                          color: local,
+                          border: Border.all(color: Colors.black),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: TypeAheadField(
-                            textFieldConfiguration: TextFieldConfiguration(
-                              controller: searchController,
-                              decoration: const InputDecoration(
-                                labelText: 'Search Candidates',
-                                labelStyle: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                            suggestionsCallback: (query) async {
-                              return candidateSearchOptions(query);
-                            },
-                            itemBuilder: (context, suggestion) {
-                              return ListTile(
-                                title: Text(suggestion),
-                              );
-                            },
-                            noItemsFoundBuilder: (context) =>
-                            const Text(
-                              'No Candidates Found',
+                        child: const Center(
+                            child: Text(
+                              'Local',
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
-                            ),
-                            transitionBuilder: (context, suggestionsBox, controller) {
-                              return suggestionsBox;
-                            },
-                            onSuggestionSelected: (suggestion) {
-                              searchController.text = suggestion;
-                            },
-                          ),
-                        ),
+                            )),
                       ),
                     ),
-                    //candidate cards
-                    SwipeableCardsSection(
-                      cardController: _cardController,
-                      context: context,
-                      items: [
-                        newCard(),
-                        newCard(),
-                        newCard(),
-                      ],
-                      onCardSwiped: (dir, index, widget) {
-                        _cardController.addItem(newCard());
-                        if(dir == Direction.left) {
-                          //skip candidate
-                        }
-                        else {
-                          //add candidate to ballot
-                        }
+                    GestureDetector(
+                      onTap: () async {
+                        updateStack(1);
                       },
-                      //
-                      enableSwipeUp: false,
-                      enableSwipeDown: false,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        width: MediaQuery.of(context).size.width/3,
+                        decoration: BoxDecoration(
+                          color: state,
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: const Center(
+                            child: Text(
+                              'State',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            )),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        updateStack(2);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        width: MediaQuery.of(context).size.width/3,
+                        decoration: BoxDecoration(
+                          color: federal,
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: const Center(
+                            child: Text(
+                              'Federal',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            )),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                flex: 13,
+                //podium background
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF9F9F9),
+                    image: DecorationImage(
+                      image: AssetImage('assets/podiumPageBackgroundImage.png'),
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //search bar
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD9D9D9),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: TypeAheadField(
+                              textFieldConfiguration: TextFieldConfiguration(
+                                controller: searchController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Search',
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                              suggestionsCallback: (query) async {
+                                return candidateSearchOptions(query);
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  title: Text(suggestion),
+                                );
+                              },
+                              noItemsFoundBuilder: (context) =>
+                              const Text(
+                                'No Candidates Found',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              transitionBuilder: (context, suggestionsBox, controller) {
+                                return suggestionsBox;
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                searchController.text = suggestion;
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      //candidate cards
+                      SwipeableCardsSection(
+                        cardController: _cardController,
+                        context: context,
+                        items: initialCards(),
+                        onCardSwiped: (dir, index, widget) {
+                          //safePrint("count = $count | stackIterable = $stackIterator | ${stack[stackIterator].firstName}");
+                          if(count < stackLength) {
+                            _cardController.addItem(newCard(candidate: stack[count]));
+                            if(count == stackLength-1) {
+                              count = 0;
+                            }
+                            else {
+                              count++;
+                            }
+                          }
+                          if(dir == Direction.left) {
+                            //skip candidate, move to end of stack
+                          }
+                          else {
+                            //TODO: add candidate to ballot
+                            stack.removeAt(stackIterator);
+                            setState(() {
+                              stackLength--;
+                            });
+                          }
+                          if(stackIterator == stackLength-1) {
+                            stackIterator = 0;
+                          }
+                          else {
+                            stackIterator++;
+                          }
+                        },
+                        //
+                        enableSwipeUp: false,
+                        enableSwipeDown: false,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+      ),
+    );
+  }
+
+  Widget ratingCircles(String name, double rating) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: CircularPercentIndicator(
+        radius: 25,
+        lineWidth: 6,
+        progressColor: const Color(0xFFF3D433),
+        backgroundColor: const Color(0xFF8B9DDE),
+        footer: Text(
+          name,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
         ),
+        //TODO: change all values underneath to db values
+        percent: rating/5,
+        center: Text(
+          '$rating',
+          style: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
     );
   }
 }

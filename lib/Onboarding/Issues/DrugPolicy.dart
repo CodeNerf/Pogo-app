@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../UserIssuesFactors.dart';
-import '../../UserDemographics.dart';
+import '../../dynamoModels/UserIssueFactorValues.dart';
+import '../../dynamoModels/UserDemographics.dart';
 import 'Healthcare.dart';
 import 'Education.dart';
 
 class DrugPolicy extends StatefulWidget {
-  final UserIssuesFactors ratings;
+  final UserIssueFactorValues ratings;
   final UserDemographics answers;
   late final Widget nextPage = Healthcare(ratings: ratings, answers: answers,);
   late final Widget lastPage = Education(ratings: ratings, answers: answers,);
@@ -35,20 +35,20 @@ class _DrugPolicyState extends State<DrugPolicy> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.getDrugPolicyAlign;
-      valueRating = widget.ratings.getDrugPolicyCare;
+      alignRating = widget.ratings.drugPolicyScore;
+      valueRating = widget.ratings.drugPolicyWeight;
     });
     updateButton();
   }
 
   Future updateAlignRating(double rating) async {
-    widget.ratings.setDrugPolicyAlign = rating;
+    widget.ratings.drugPolicyScore = rating;
     alignRating = rating;
     updateButton();
   }
 
   Future updateValueRating(double rating) async {
-    widget.ratings.setDrugPolicyCare = rating;
+    widget.ratings.drugPolicyWeight = rating;
     valueRating = rating;
     updateButton();
   }

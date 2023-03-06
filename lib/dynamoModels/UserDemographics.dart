@@ -10,7 +10,7 @@ class UserDemographics extends Demographics {
   final String registrationState;
   final String addressLine1;
   final String pollingLocation;
-  final bool voterRegistrationStatus;
+  late final bool voterRegistrationStatus;
 
   UserDemographics(
       {required this.userId,

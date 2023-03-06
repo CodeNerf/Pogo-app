@@ -1,5 +1,6 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'UserIssuesFactors.dart';
 import 'UserProfile.dart';
@@ -11,7 +12,8 @@ import 'user.dart';
 class Home extends StatefulWidget {
   final user currentUser;
   final UserIssuesFactors currentUserFactors;
-  const Home({Key? key, required this.currentUser, required this.currentUserFactors}) : super(key: key);
+  final List<CandidateDemographics> candidateStack;
+  const Home({Key? key, required this.currentUser, required this.currentUserFactors, required this.candidateStack}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -26,9 +28,14 @@ class _HomeState extends State<Home> {
   //objects
   user currentUser = user.all('','','','','');
   UserIssuesFactors currentUserFactors = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
+  List<CandidateDemographics> candidateStack = [];
   late List<Widget> _widgetOptions;
 
+  updateStack(List<CandidateDemographics> stack) {
+    setState(() {
+      candidateStack = stack;
+    });
+  }
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -40,8 +47,9 @@ class _HomeState extends State<Home> {
     super.initState();
     currentUser = widget.currentUser;
     currentUserFactors = widget.currentUserFactors;
+    candidateStack = widget.candidateStack;
     setState(() {
-      _widgetOptions = <Widget>[VoterGuide(), CandidateUserMatching(), CandidateInfo(), UserProfile(currentUser: currentUser, currentUserFactors: currentUserFactors,)];
+      _widgetOptions = <Widget>[VoterGuide(), Podium(candidateStack: candidateStack, updateStack: updateStack,), CandidateInfo(), UserProfile(currentUser: currentUser, currentUserFactors: currentUserFactors,)];
     });
   }
 
@@ -90,7 +98,7 @@ class _HomeState extends State<Home> {
               icon: ImageIcon(
                 AssetImage('assets/speech.png'),
               ),
-              label: 'Match',
+              label: 'Podium',
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(

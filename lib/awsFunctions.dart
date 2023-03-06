@@ -1,18 +1,17 @@
 import 'dart:convert';
+import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pogo/dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
-import 'models/IssueFactorValues.dart' hide IssueFactorValues;
-import 'models/UserIssueFactorValues.dart' hide UserIssueFactorValues;
 
 Future<void> putUserIssueFactorValues(
     UserIssueFactorValues userIssueFactorValues) async {
   var client = http.Client();
   try {
     var response = await client.put(
-        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com', 
             '/userissuefactorvalues'),
         headers: {
           "content-type": "application/json",
@@ -159,6 +158,7 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
       candidateDemographicsList
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
+    safePrint("candidates pulled");
     return candidateDemographicsList;
   } finally {
     client.close();

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../UserIssuesFactors.dart';
-import '../../UserDemographics.dart';
+import '../../dynamoModels/UserIssueFactorValues.dart';
+import '../../dynamoModels/UserDemographics.dart';
 import 'Housing.dart';
 import 'DrugPolicy.dart';
 
 class Healthcare extends StatefulWidget {
-  final UserIssuesFactors ratings;
+  final UserIssueFactorValues ratings;
   final UserDemographics answers;
   late final Widget nextPage = Housing(ratings: ratings, answers: answers,);
   late final Widget lastPage = DrugPolicy(ratings: ratings, answers: answers,);
@@ -35,20 +35,20 @@ class _HealthcareState extends State<Healthcare> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.getHealthcareAlign;
-      valueRating = widget.ratings.getHealthcareCare;
+      alignRating = widget.ratings.healthcareScore;
+      valueRating = widget.ratings.healthcareWeight;
     });
     updateButton();
   }
 
   Future updateAlignRating(double rating) async {
-    widget.ratings.setHealthcareAlign = rating;
+    widget.ratings.healthcareScore = rating;
     alignRating = rating;
     updateButton();
   }
 
   Future updateValueRating(double rating) async {
-    widget.ratings.setHealthcareCare = rating;
+    widget.ratings.healthcareWeight = rating;
     valueRating = rating;
     updateButton();
   }

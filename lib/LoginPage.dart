@@ -260,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Home(currentUser: guest, currentUserFactors: guestFactors,),
+                          builder: (context) => Home(currentUser: guest, currentUserFactors: guestFactors, candidateStack: [],),
                         ),
                       );
                     },

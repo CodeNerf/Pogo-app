@@ -59,6 +59,7 @@ dependencies:
   flutter_typeahead: ^4.3.7
   url_launcher: ^6.1.9
   flutter_web_browser: ^0.17.1
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to

@@ -1,24 +1,24 @@
 class IssueFactorValues {
-  int climateScore;
-  int climateWeight;
-  int drugPolicyScore;
-  int drugPolicyWeight;
-  int economyScore;
-  int economyWeight;
-  int educationScore;
-  int educationWeight;
-  int gunPolicyScore;
-  int gunPolicyWeight;
-  int healthcareScore;
-  int healthcareWeight;
-  int housingScore;
-  int housingWeight;
-  int immigrationScore;
-  int immigrationWeight;
-  int policingScore;
-  int policingWeight;
-  int reproductiveScore;
-  int reproductiveWeight;
+  double climateScore;
+  double climateWeight;
+  double drugPolicyScore;
+  double drugPolicyWeight;
+  double economyScore;
+  double economyWeight;
+  double educationScore;
+  double educationWeight;
+  double gunPolicyScore;
+  double gunPolicyWeight;
+  double healthcareScore;
+  double healthcareWeight;
+  double housingScore;
+  double housingWeight;
+  double immigrationScore;
+  double immigrationWeight;
+  double policingScore;
+  double policingWeight;
+  double reproductiveScore;
+  double reproductiveWeight;
 
   IssueFactorValues(
       {required this.climateScore,
@@ -41,4 +41,6 @@ class IssueFactorValues {
       required this.policingWeight,
       required this.reproductiveScore,
       required this.reproductiveWeight});
+
+
 }
