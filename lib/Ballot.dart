@@ -1,32 +1,32 @@
 class Ballot {
-  List<String> mayorListIds = [];
-  List<String> cityClerkIds = [];
-  List<String> townCityCouncilIds = [];
-  List<String> countyCommissionerIds = [];
-  List<String> countyBoardOfSupervisorsIds = [];
-  List<String> countySheriffIds = [];
-  List<String> trialCourtJudgesIds = [];
-  List<String> countyRegisterOfDeedsIds = [];
-  List<String> schoolBoardIds = [];
-  List<String> prosecutorsIds = [];
-  List<String> coronersIds = [];
-  List<String> planningZoningCommissionersIds = [];
-  List<String> publicWorksCommissionersIds = [];
+  List<String> mayorListPicURLs = [];
+  List<String> cityClerkPicURLs = [];
+  List<String> townCityCouncilPicURLs = [];
+  List<String> countyCommissionerPicURLs = [];
+  List<String> countyBoardOfSupervisorsPicURLs = [];
+  List<String> countySheriffPicURLs = [];
+  List<String> trialCourtJudgesPicURLs = [];
+  List<String> countyRegisterOfDeedsPicURLs = [];
+  List<String> schoolBoardPicURLs = [];
+  List<String> prosecutorsPicURLs = [];
+  List<String> coronersPicURLs = [];
+  List<String> planningZoningCommissionersPicURLs = [];
+  List<String> publicWorksCommissionersPicURLs = [];
 
   Ballot(
-      this.mayorListIds,
-      this.cityClerkIds,
-      this.townCityCouncilIds,
-      this.countyCommissionerIds,
-      this.countyBoardOfSupervisorsIds,
-      this.countySheriffIds,
-      this.trialCourtJudgesIds,
-      this.countyRegisterOfDeedsIds,
-      this.schoolBoardIds,
-      this.prosecutorsIds,
-      this.coronersIds,
-      this.planningZoningCommissionersIds,
-      this.publicWorksCommissionersIds);
+      this.mayorListPicURLs,
+      this.cityClerkPicURLs,
+      this.townCityCouncilPicURLs,
+      this.countyCommissionerPicURLs,
+      this.countyBoardOfSupervisorsPicURLs,
+      this.countySheriffPicURLs,
+      this.trialCourtJudgesPicURLs,
+      this.countyRegisterOfDeedsPicURLs,
+      this.schoolBoardPicURLs,
+      this.prosecutorsPicURLs,
+      this.coronersPicURLs,
+      this.planningZoningCommissionersPicURLs,
+      this.publicWorksCommissionersPicURLs);
 
-
+  Ballot.empty();
 }

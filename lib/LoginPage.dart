@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/UserConfirmationPage.dart';
 import 'package:pogo/user.dart';
+import 'Ballot.dart';
 import 'Home.dart';
 import 'RegisterPage.dart';
 import 'dynamoModels/UserDemographics.dart';
@@ -28,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
   String errorText = '';
   UserIssueFactorValues guestFactors = UserIssueFactorValues(userId: '', climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
   UserDemographics guestDemographics = UserDemographics(userId: '', phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: '', lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
+  Ballot guestBallot = Ballot.empty();
+
   Future login(context) async {
     if (await signInUser(emailController.text, passwordController.text)) {
       safePrint("checking isUserSignedIn()");
@@ -259,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Home(currentUserFactors: guestFactors, candidateStack: [], currentUserDemographics: guestDemographics,),
+                          builder: (context) => Home(currentUserFactors: guestFactors, candidateStack: [], currentUserDemographics: guestDemographics, userBallot: guestBallot,),
                         ),
                       );
                     },

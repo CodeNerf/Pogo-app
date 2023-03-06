@@ -2,6 +2,7 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+import 'Ballot.dart';
 import 'CandidateProfile.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'amplifyFunctions.dart';
@@ -12,7 +13,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 class Podium extends StatefulWidget {
   List<CandidateDemographics> candidateStack;
   final Function(List<CandidateDemographics>) updateStack;
-  Podium({Key? key, required this.candidateStack, required this.updateStack}) : super(key: key);
+  final Function(Ballot) updateBallot;
+  Ballot userBallot;
+  Podium({Key? key, required this.candidateStack, required this.userBallot, required this.updateStack, required this.updateBallot}) : super(key: key);
 
   @override
   State<Podium> createState() => _PodiumState();
@@ -176,10 +179,12 @@ class _PodiumState extends State<Podium> {
   }
 
   void addCandidate(CandidateDemographics stack) {
-    String candidateId = stack.candidateId;
     String candidateProfilePic = stack.profileImageURL;
-    String seatType = stack.seatType;
     //TODO: send the candidate profile pic to the correct string list in the ballot object
+
+
+
+    widget.updateBallot(widget.userBallot);
   }
 
   Widget newCard({required CandidateDemographics candidate}) {

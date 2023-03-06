@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'Ballot.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'UserProfile.dart';
@@ -16,7 +17,8 @@ class Home extends StatefulWidget {
   final UserDemographics currentUserDemographics;
   final UserIssueFactorValues currentUserFactors;
   final List<CandidateDemographics> candidateStack;
-  const Home({Key? key, required this.currentUserFactors, required this.candidateStack, required this.currentUserDemographics}) : super(key: key);
+  final Ballot userBallot;
+  const Home({Key? key, required this.currentUserFactors, required this.candidateStack, required this.currentUserDemographics, required this.userBallot}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -30,6 +32,7 @@ class _HomeState extends State<Home> {
   //TODO: implement user issues object
   //objects
   user currentUser = user.all('','','','','');
+  late Ballot userBallot;
   late UserIssueFactorValues currentUserFactors;
   late List<CandidateDemographics> candidateStack;
   late UserDemographics currentUserDemographics;
@@ -40,6 +43,13 @@ class _HomeState extends State<Home> {
       candidateStack = stack;
     });
   }
+
+  updateBallot(Ballot b) {
+    setState(() {
+      userBallot = b;
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -52,8 +62,9 @@ class _HomeState extends State<Home> {
     currentUserFactors = widget.currentUserFactors;
     candidateStack = widget.candidateStack;
     currentUserDemographics = widget.currentUserDemographics;
+    userBallot = widget.userBallot;
     setState(() {
-      _widgetOptions = <Widget>[VoterGuide(), Podium(candidateStack: candidateStack, updateStack: updateStack,), CandidateInfo(), UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,)];
+      _widgetOptions = <Widget>[VoterGuide(), Podium(candidateStack: candidateStack, updateStack: updateStack, userBallot: userBallot, updateBallot: updateBallot,), CandidateInfo(), UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,)];
     });
   }
 
