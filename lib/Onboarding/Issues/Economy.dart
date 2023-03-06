@@ -35,8 +35,8 @@ class _EconomyState extends State<Economy> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.economyScore;
-      valueRating = widget.ratings.economyWeight;
+      alignRating = widget.ratings.economyScore.toDouble();
+      valueRating = widget.ratings.economyWeight.toDouble();
     });
     updateButton();
   }

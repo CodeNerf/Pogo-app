@@ -35,8 +35,8 @@ class _HousingState extends State<Housing> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.housingScore;
-      valueRating = widget.ratings.housingWeight;
+      alignRating = widget.ratings.housingScore.toDouble();
+      valueRating = widget.ratings.housingWeight.toDouble();
     });
     updateButton();
   }

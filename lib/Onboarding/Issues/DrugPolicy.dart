@@ -35,8 +35,8 @@ class _DrugPolicyState extends State<DrugPolicy> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.drugPolicyScore;
-      valueRating = widget.ratings.drugPolicyWeight;
+      alignRating = widget.ratings.drugPolicyScore.toDouble();
+      valueRating = widget.ratings.drugPolicyWeight.toDouble();
     });
     updateButton();
   }

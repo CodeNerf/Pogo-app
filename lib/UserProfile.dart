@@ -26,7 +26,7 @@ class _UserProfileState extends State<UserProfile> {
   String firstIssue = "";
   String secondIssue = "";
   String thirdIssue = "";
-  List<double> ratings = [];
+  List<num> ratings = [];
   @override
   void initState() {
     super.initState();
@@ -48,9 +48,9 @@ class _UserProfileState extends State<UserProfile> {
     setTopIssues(ratings);
   }
 
-  void setTopIssues(List<double> ratings) async {
+  void setTopIssues(List<num> ratings) async {
     List<String> topIssues = [];
-    var maxCare = ratings.cast<num>().reduce(max);
+    var maxCare = ratings.reduce(max);
     var indexMaxCare = ratings.indexOf(ratings.reduce(max));
     for(int i = 0; i < 3; i++) {
       switch(indexMaxCare) {
@@ -86,7 +86,7 @@ class _UserProfileState extends State<UserProfile> {
           break;
       }
       ratings[indexMaxCare] = 0;
-      maxCare = ratings.cast<num>().reduce(max);
+      maxCare = ratings.reduce(max);
       indexMaxCare = ratings.indexOf(ratings.reduce(max));
     }
     setState(() {

@@ -35,8 +35,8 @@ class _EducationState extends State<Education> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.educationScore;
-      valueRating = widget.ratings.educationWeight;
+      alignRating = widget.ratings.educationScore.toDouble();
+      valueRating = widget.ratings.educationWeight.toDouble();
     });
     updateButton();
   }

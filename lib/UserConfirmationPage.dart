@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/awsFunctions.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'amplifyFunctions.dart';
-import 'dataModelManipulation.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 
@@ -27,7 +27,10 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
     if(await confirmUser(email, codeController.text)) {
       await signInUser(email, password);
       UserIssueFactorValues newValues = UserIssueFactorValues(userId: email, climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
+      UserDemographics newDemographics = UserDemographics(userId: email, phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: '', lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
       await putUserIssueFactorValues(newValues);
+      await putUserDemographics(newDemographics);
+      //TODO: putUserDemographics is not working for some reason, i've tried 100 things. putUserIssueFactorValues works fine and they are both the same
       if (await checkLoggedIn()) {
         await Navigator.push(
             context,
@@ -35,6 +38,13 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                 builder: (context) => SurveyLandingPage())
         );
       }
+    }
+    else if(await isUserConfirmed()) {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SurveyLandingPage())
+      );
     }
     else {
       setState(() {

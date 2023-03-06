@@ -15,7 +15,7 @@ class VoterInfo extends StatefulWidget {
 class _VoterInfoState extends State<VoterInfo> {
   late UserDemographics answers;
  String votedropdownvalue = '';
-  List<String> vote = ['Yes', 'No', 'Not sure'];
+  List<String> vote = ['Yes', 'No'];
 
   String partiesdropdownvalue = '';
   List<String> parties = ['Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'];
@@ -31,6 +31,16 @@ class _VoterInfoState extends State<VoterInfo> {
    super.initState();
    setState(() {
      answers = widget.answers;
+     if(answers.voterRegistrationStatus) {
+       votedropdownvalue = 'Yes';
+     }
+     else {
+       votedropdownvalue = 'No';
+     }
+     partiesdropdownvalue = answers.politicalAffiliation;
+     //TODO: need party user votes with in db and if they live in state they are registered in
+     votePartydropdownvalue = answers.politicalAffiliation;
+     //statedropdownvalue = answers.registeredState;
    });
  }
 

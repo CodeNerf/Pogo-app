@@ -6,11 +6,11 @@ import 'package:pogo/Onboarding/Demographics.dart' hide Demographics;
 
 class UserDemographics extends Demographics {
   final String userId;
-  final String phoneNumber;
-  final String registrationState;
-  final String addressLine1;
-  final String pollingLocation;
-  late final bool voterRegistrationStatus;
+  String phoneNumber;
+  String registrationState;
+  String addressLine1;
+  String pollingLocation;
+  bool voterRegistrationStatus;
 
   UserDemographics(
       {required this.userId,

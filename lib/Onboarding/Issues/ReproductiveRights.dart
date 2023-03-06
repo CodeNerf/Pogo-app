@@ -38,8 +38,8 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.reproductiveScore;
-      valueRating = widget.ratings.reproductiveWeight;
+      alignRating = widget.ratings.reproductiveScore.toDouble();
+      valueRating = widget.ratings.reproductiveWeight.toDouble();
     });
     updateButton();
   }

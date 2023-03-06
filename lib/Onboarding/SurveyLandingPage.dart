@@ -17,6 +17,7 @@ class SurveyLandingPage extends StatefulWidget {
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
   late UserIssueFactorValues currentUserFactors;
   late UserDemographics currentAnswers;
+  bool _buttonVisible = false;
   @override
   void initState() {
     getUserFactors();
@@ -30,6 +31,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
     setState(() {
       widget.ratings = currentUserFactors;
       widget.answers = currentAnswers;
+      _buttonVisible = true;
     });
   }
  
@@ -88,22 +90,24 @@ const SizedBox(
               
               Column(
                 children: <Widget>[
-                  // the login button
-                  MaterialButton(
-                    minWidth: double.infinity,
-                    height: 70,
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Demographics(ratings: widget.ratings, answers: widget.answers, )));
-                    },
+                  Visibility(
+                    visible: _buttonVisible,
+                    child: MaterialButton(
+                      minWidth: double.infinity,
+                      height: 70,
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Demographics(ratings: widget.ratings, answers: widget.answers, )));
+                      },
                  color: const Color.fromARGB(255, 0, 0, 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: const Text(
-                      "Continue",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)
+                      ),
+                      child: const Text(
+                        "Continue",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

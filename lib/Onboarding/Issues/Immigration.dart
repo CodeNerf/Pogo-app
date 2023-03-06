@@ -35,8 +35,8 @@ class _ImmigrationState extends State<Immigration> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.immigrationScore;
-      valueRating = widget.ratings.immigrationWeight;
+      alignRating = widget.ratings.immigrationScore.toDouble();
+      valueRating = widget.ratings.immigrationWeight.toDouble();
     });
     updateButton();
   }

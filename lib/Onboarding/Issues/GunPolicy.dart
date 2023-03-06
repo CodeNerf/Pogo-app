@@ -35,8 +35,8 @@ class _GunPolicyState extends State<GunPolicy> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.gunPolicyScore;
-      valueRating = widget.ratings.gunPolicyWeight;
+      alignRating = widget.ratings.gunPolicyScore.toDouble();
+      valueRating = widget.ratings.gunPolicyWeight.toDouble();
     });
     updateButton();
   }

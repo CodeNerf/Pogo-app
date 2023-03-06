@@ -35,8 +35,8 @@ class _ClimateState extends State<Climate> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.climateScore;
-      valueRating = widget.ratings.climateWeight;
+      alignRating = widget.ratings.climateScore.toDouble();
+      valueRating = widget.ratings.climateWeight.toDouble();
     });
     updateButton();
   }

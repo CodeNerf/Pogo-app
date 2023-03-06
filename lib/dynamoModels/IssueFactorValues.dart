@@ -1,24 +1,24 @@
 class IssueFactorValues {
-  double climateScore;
-  double climateWeight;
-  double drugPolicyScore;
-  double drugPolicyWeight;
-  double economyScore;
-  double economyWeight;
-  double educationScore;
-  double educationWeight;
-  double gunPolicyScore;
-  double gunPolicyWeight;
-  double healthcareScore;
-  double healthcareWeight;
-  double housingScore;
-  double housingWeight;
-  double immigrationScore;
-  double immigrationWeight;
-  double policingScore;
-  double policingWeight;
-  double reproductiveScore;
-  double reproductiveWeight;
+  num climateScore;
+  num climateWeight;
+  num drugPolicyScore;
+  num drugPolicyWeight;
+  num economyScore;
+  num economyWeight;
+  num educationScore;
+  num educationWeight;
+  num gunPolicyScore;
+  num gunPolicyWeight;
+  num healthcareScore;
+  num healthcareWeight;
+  num housingScore;
+  num housingWeight;
+  num immigrationScore;
+  num immigrationWeight;
+  num policingScore;
+  num policingWeight;
+  num reproductiveScore;
+  num reproductiveWeight;
 
   IssueFactorValues(
       {required this.climateScore,

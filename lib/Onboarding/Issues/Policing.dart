@@ -35,8 +35,8 @@ class _PolicingState extends State<Policing> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.policingScore;
-      valueRating = widget.ratings.policingWeight;
+      alignRating = widget.ratings.policingScore.toDouble();
+      valueRating = widget.ratings.policingWeight.toDouble();
     });
     updateButton();
   }

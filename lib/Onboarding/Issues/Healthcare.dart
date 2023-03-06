@@ -35,8 +35,8 @@ class _HealthcareState extends State<Healthcare> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.healthcareScore;
-      valueRating = widget.ratings.healthcareWeight;
+      alignRating = widget.ratings.healthcareScore.toDouble();
+      valueRating = widget.ratings.healthcareWeight.toDouble();
     });
     updateButton();
   }

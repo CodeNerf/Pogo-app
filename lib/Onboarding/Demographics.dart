@@ -17,9 +17,8 @@ class Demographics extends StatefulWidget {
 class _DemographicsState extends State<Demographics> {
   late UserDemographics answers;
   String agesdropdownvalue = '18-25 years old';
-  String racesdropdownvalue = 'Black';
-  String gendersdropdownvalue = 'Female';
-  final Widget lastPage = SurveyLandingPage();
+  late String racesdropdownvalue = '';
+  late String gendersdropdownvalue = '';
   String pogoLogo = 'assets/Pogo_logo_horizontal.png';
 
   @override
@@ -27,6 +26,8 @@ class _DemographicsState extends State<Demographics> {
     super.initState();
     setState(() {
       answers = widget.answers;
+      racesdropdownvalue = answers.racialIdentity;
+      gendersdropdownvalue = answers.gender;
     });
   }
 
@@ -39,6 +40,7 @@ class _DemographicsState extends State<Demographics> {
   ];
 
   List<String> racesList = [
+    '',
     'Black',
     'White',
     'Asian',
@@ -48,6 +50,7 @@ class _DemographicsState extends State<Demographics> {
   ];
 
   List<String> gendersList = [
+    '',
     'Female',
     'Male',
     'Non-binary',
