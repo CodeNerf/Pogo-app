@@ -96,7 +96,7 @@ class _HomeState extends State<Home> {
               icon: ImageIcon(
                 AssetImage('assets/vote.png'),
               ),
-              label: 'Candidates',
+              label: 'Ballot',
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(
