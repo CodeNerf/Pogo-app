@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/HomeLoadingPage.dart';
 import 'package:pogo/LandingPage.dart';
+import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/amplifyFunctions.dart';
 
 class firstLoadingPage extends StatefulWidget {
@@ -27,12 +28,23 @@ class _firstLoadingPageState extends State<firstLoadingPage> {
 
   void loginCheck(context) async {
     if(await checkLoggedIn()) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeLoadingPage(),
-        ),
-      );
+      if(await isSurveyCompleted()) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeLoadingPage(),
+          ),
+        );
+      }
+      else {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SurveyLandingPage(),
+          ),
+        );
+      }
+
     }
     else {
       await Navigator.push(

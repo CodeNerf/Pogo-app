@@ -514,7 +514,6 @@ class _PodiumState extends State<Podium> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        //TODO: change all values underneath to db values
         percent: rating/5,
         center: Text(
           '$rating',

@@ -1,5 +1,5 @@
 import 'package:pogo/dynamoModels/IssueFactorValues.dart';
-import 'package:pogo/models/IssueFactorValues.dart' hide IssueFactorValues;
+//import 'package:pogo/models/IssueFactorValues.dart' hide IssueFactorValues;
 
 class UserIssueFactorValues extends IssueFactorValues {
   final String userId;

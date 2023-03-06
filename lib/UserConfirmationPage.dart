@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pogo/awsFunctions.dart';
 import 'amplifyFunctions.dart';
 import 'dataModelManipulation.dart';
 import 'Onboarding/SurveyLandingPage.dart';
+import 'dynamoModels/UserIssueFactorValues.dart';
 
 class UserConfirmationPage extends StatefulWidget {
   final String email;
@@ -24,7 +26,8 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
   Future confirm(context) async {
     if(await confirmUser(email, codeController.text)) {
       await signInUser(email, password);
-      await initialUserIssueFactorValues(email);
+      UserIssueFactorValues newValues = UserIssueFactorValues(userId: email, climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
+      await putUserIssueFactorValues(newValues);
       if (await checkLoggedIn()) {
         await Navigator.push(
             context,

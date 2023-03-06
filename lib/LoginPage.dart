@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/UserConfirmationPage.dart';
-import 'package:pogo/UserIssuesFactors.dart';
+//import 'package:pogo/models/ModelProvider.dart';
 import 'package:pogo/user.dart';
 import 'Home.dart';
 import 'RegisterPage.dart';
 import 'homeLoadingPage.dart';
 import 'ForgotPasswordPage.dart';
-import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
+import 'dynamoModels/UserIssueFactorValues.dart';
 
 //TODO: add more ways to login: google, instagram, etc..
 class LoginPage extends StatefulWidget {
@@ -27,6 +27,8 @@ class _LoginPageState extends State<LoginPage> {
   bool obscure = true;
   Icon eye = Icon(Icons.remove_red_eye);
   String errorText = '';
+  user guest = user.all("Guest", "", "", "", "");
+  UserIssueFactorValues guestFactors = UserIssueFactorValues(userId: '', climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
 
   Future login(context) async {
     if (await signInUser(emailController.text, passwordController.text)) {
@@ -101,9 +103,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    user guest = user.all("Guest", "", "", "", "");
-    UserIssuesFactors guestFactors = UserIssuesFactors(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
     return Scaffold(
       backgroundColor: const Color(0xFFE1E1E1),
       body: SafeArea(

@@ -351,6 +351,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 20),
 
                   //ADDRESS
+                  //TODO: separate fields for address: street, zipcode, city, etc
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 25.0),
                     child: Container(
