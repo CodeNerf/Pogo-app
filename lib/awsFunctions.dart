@@ -11,7 +11,7 @@ Future<void> putUserIssueFactorValues(
   var client = http.Client();
   try {
     var response = await client.put(
-        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com', 
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
             '/userissuefactorvalues'),
         headers: {
           "content-type": "application/json",
@@ -25,7 +25,7 @@ Future<void> putUserIssueFactorValues(
 }
 
 Future<UserIssueFactorValues> getUserIssueFactorValues(String userId) async {
-var client = http.Client();
+  var client = http.Client();
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
@@ -80,15 +80,14 @@ Future<void> putUserDemographics(UserDemographics userDemographics) async {
   try {
     var response = await client.put(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/userdemographics'),
+            '/userDemographics'),
         headers: {
           "content-type": "application/json",
         },
         body: jsonEncode(userDemographics.toJson()));
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     print(decodedResponse);
-  }
-  finally {
+  } finally {
     client.close();
   }
 }
@@ -98,7 +97,7 @@ Future<UserDemographics> getUserDemographics(String userId) async {
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/userdemographics/$userId'),
+            '/userDemographics/$userId'),
         headers: {
           "content-type": "application/json",
         });

@@ -31,12 +31,14 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
 
   void initializeObjects() async {
     currentUser = await fetchCurrentUserAttributes();
+    // Need to push associated user factors to the database before running this function.
     currentUserFactors = await getUserIssueFactorValues(currentUser.email);
     candidateStack = await getAllCandidateDemographics();
     setObjectStates(currentUser, currentUserFactors, candidateStack);
   }
 
-  void setObjectStates(user u, UserIssueFactorValues uifv, List<CandidateDemographics> s) {
+  void setObjectStates(
+      user u, UserIssueFactorValues uifv, List<CandidateDemographics> s) {
     setState(() {
       currentUser = u;
       currentUserFactors = uifv;
@@ -44,12 +46,16 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     });
     goHome();
   }
-  
+
   void goHome() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Home(currentUser: currentUser, currentUserFactors: currentUserFactors, candidateStack: candidateStack,),
+        builder: (context) => Home(
+          currentUser: currentUser,
+          currentUserFactors: currentUserFactors,
+          candidateStack: candidateStack,
+        ),
       ),
     );
   }
@@ -78,5 +84,3 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     );
   }
 }
-
-

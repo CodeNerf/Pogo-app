@@ -12,8 +12,12 @@ class ReproductiveRights extends StatefulWidget {
   final UserIssueFactorValues ratings;
   final UserDemographics answers;
   late final Widget nextPage = const HomeLoadingPage();
-  late final Widget lastPage = Policing(ratings: ratings, answers: answers,);
-  ReproductiveRights({Key? key, required this.ratings, required this.answers}) : super(key: key);
+  late final Widget lastPage = Policing(
+    ratings: ratings,
+    answers: answers,
+  );
+  ReproductiveRights({Key? key, required this.ratings, required this.answers})
+      : super(key: key);
 
   @override
   State<ReproductiveRights> createState() => _ReproductiveRightsState();
@@ -32,7 +36,6 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
   Color ratingBarColor = Colors.black;
   String leftAlignText = 'Abortion + \nContraceptive Rights';
   String rightAlignText = 'Abortion + \nContraceptive Restrictions';
-
 
   @override
   void initState() {
@@ -61,8 +64,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
       setState(() {
         nextButtonColor = 0xFFF3D433;
       });
-    }
-    else {
+    } else {
       setState(() {
         nextButtonColor = 0xFF808080;
       });
@@ -72,7 +74,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
   Future checkRatings(context) async {
     //TODO: this is the final survey page, issues and demographics object values have to be pushed to database here
     if (alignRating > 0 && valueRating > 0) {
-      if(await updateSurveyCompletion()) {
+      if (await updateSurveyCompletion()) {
         String email = await fetchCurrentUserEmail();
         //demographics
         putUserIssueFactorValues(widget.ratings);
@@ -82,8 +84,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
             builder: (context) => widget.nextPage,
           ),
         );
-      }
-      else {
+      } else {
         safePrint("Could not update survey completion");
       }
     }
@@ -179,18 +180,15 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                 direction: Axis.horizontal,
                 allowHalfRating: false,
                 ratingWidget: RatingWidget(
-                  full:
-                  Icon(
+                  full: Icon(
                     Icons.square,
                     color: ratingBarColor,
                   ),
-                  empty:
-                  Icon(
+                  empty: Icon(
                     Icons.square_outlined,
                     color: ratingBarColor,
                   ),
-                  half:
-                  Icon(
+                  half: Icon(
                     Icons.square_foot,
                     color: ratingBarColor,
                   ),
@@ -208,12 +206,10 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                       fontSize: 15,
                     ),
                   ),
-                  Text(
-                      rightAlignText,
+                  Text(rightAlignText,
                       style: const TextStyle(
                         fontSize: 15,
-                      )
-                  ),
+                      )),
                 ],
               ),
               //Value
@@ -231,18 +227,15 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                 direction: Axis.horizontal,
                 allowHalfRating: false,
                 ratingWidget: RatingWidget(
-                  full:
-                  Icon(
+                  full: Icon(
                     Icons.square,
                     color: ratingBarColor,
                   ),
-                  empty:
-                  Icon(
+                  empty: Icon(
                     Icons.square_outlined,
                     color: ratingBarColor,
                   ),
-                  half:
-                  Icon(
+                  half: Icon(
                     Icons.square_foot,
                     color: ratingBarColor,
                   ),
@@ -260,12 +253,10 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
                       fontSize: 15,
                     ),
                   ),
-                  Text(
-                      'A lot',
+                  Text('A lot',
                       style: TextStyle(
                         fontSize: 15,
-                      )
-                  ),
+                      )),
                 ],
               ),
               //Next question button
