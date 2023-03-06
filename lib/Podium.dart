@@ -2,6 +2,7 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+import 'Onboarding/CandidateProfile.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'amplifyFunctions.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
@@ -165,6 +166,15 @@ class _PodiumState extends State<Podium> {
     return experience;
   }
 
+  void goToCandidateProfile(context, CandidateDemographics candidate) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CandidateProfile(candidate: candidate),
+      ),
+    );
+  }
+
   Widget newCard({required CandidateDemographics candidate}) {
     return Card(
       //card properties
@@ -175,112 +185,117 @@ class _PodiumState extends State<Podium> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(40),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          //candidate picture
-          Expanded(
-            flex: 40,
-            child: Container(
-              color: candidateColor(candidate.politicalAffiliation),
-              width: double.infinity,
+      child: InkWell(
+        onTap: () async {
+          goToCandidateProfile(context, candidate);
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //candidate picture
+            Expanded(
+              flex: 40,
+              child: Container(
+                color: candidateColor(candidate.politicalAffiliation),
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProfileAvatar(
+                      '',
+                      radius: 60,
+                      elevation: 5,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                          child: Image(
+                            image: NetworkImage(candidate.profileImageURL),
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //candidate name
+            Expanded(
+              flex: 7,
+              child: Text(
+                  "${candidate.firstName} ${candidate.lastName}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+
+            //candidate position, state
+            //TODO: add state to db, pull state here
+            Expanded(
+              flex: 7,
+              child: Text(
+                '${candidate.seatType}  •  Michigan',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 17,
+                  color: Color(0xFF57636C),
+                ),
+              ),
+            ),
+
+            //party, experience
+            Expanded(
+              flex: 7,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  CircularProfileAvatar(
-                    '',
-                    radius: 60,
-                    elevation: 5,
-                    child: FittedBox(
-                      fit: BoxFit.cover,
-                        child: Image(
-                          image: NetworkImage(candidate.profileImageURL),
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          //candidate name
-          Expanded(
-            flex: 7,
-            child: Text(
-                "${candidate.firstName} ${candidate.lastName}",
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-              ),
-            ),
-          ),
-
-          //candidate position, state
-          //TODO: add state to db, pull state here
-          Expanded(
-            flex: 7,
-            child: Text(
-              '${candidate.seatType}  •  Michigan',
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 17,
-                color: Color(0xFF57636C),
-              ),
-            ),
-          ),
-
-          //party, experience
-          Expanded(
-            flex: 7,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                //party
-                Text(
-                  candidate.politicalAffiliation,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                  ),
-                ),
-                //party
-                Text(
-                  candidateExperience(candidate.careerStartDate),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          //candidate top issues
-          Expanded(
-            flex: 35,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: Column(
-                children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: getRatingCircles(),
-                    ),
-                  ),
-                  const Text(
-                    'Left: 0 | Right: 5',
-                    style: TextStyle(
-                      fontSize: 14,
+                  //party
+                  Text(
+                    candidate.politicalAffiliation,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
+                  ),
+                  //party
+                  Text(
+                    candidateExperience(candidate.careerStartDate),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+
+            //candidate top issues
+            Expanded(
+              flex: 35,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Column(
+                  children: [
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: getRatingCircles(),
+                      ),
+                    ),
+                    const Text(
+                      'Left: 0 | Right: 5',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -444,7 +459,7 @@ class _PodiumState extends State<Podium> {
                         context: context,
                         items: initialCards(),
                         onCardSwiped: (dir, index, widget) {
-                          //safePrint("count = $count | stackIterable = $stackIterator | ${stack[stackIterator].firstName}");
+                          safePrint("count = $count | stackIterable = $stackIterator | ${stack[stackIterator].firstName}");
                           if(count < stackLength) {
                             _cardController.addItem(newCard(candidate: stack[count]));
                             if(count == stackLength-1) {
@@ -454,15 +469,13 @@ class _PodiumState extends State<Podium> {
                               count++;
                             }
                           }
-                          if(dir == Direction.left) {
-                            //skip candidate, move to end of stack
+                          if(dir == Direction.right) {
+                            //TODO: add candidate to local ballot
+                            stack.removeAt(stackIterator);
+                            stackLength--;
                           }
                           else {
-                            //TODO: add candidate to ballot
-                            stack.removeAt(stackIterator);
-                            setState(() {
-                              stackLength--;
-                            });
+                            //skip candidate, move to end of stack
                           }
                           if(stackIterator == stackLength-1) {
                             stackIterator = 0;
