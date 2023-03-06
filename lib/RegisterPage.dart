@@ -1,10 +1,12 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/UserConfirmationPage.dart';
+import 'package:pogo/awsFunctions.dart';
 import 'package:validators/validators.dart';
 import 'LoginPage.dart';
 import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
+import 'dynamoModels/UserDemographics.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -105,6 +107,8 @@ class _RegisterPageState extends State<RegisterPage> {
         lnameController.text,
         phoneController.text,
         addressController.text)) {
+      UserDemographics userDemographics = UserDemographics(userId: emailController.text, phoneNumber: phoneController.text, registrationState: '', addressLine1: addressController.text, pollingLocation: '', voterRegistrationStatus: false, firstName: fnameController.text, lastName: lnameController.text, dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
+      putUserDemographics(userDemographics);
       await Navigator.push(
           context,
           MaterialPageRoute(

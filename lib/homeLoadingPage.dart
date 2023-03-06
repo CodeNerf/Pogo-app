@@ -1,12 +1,8 @@
-import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
-//import 'package:pogo/UserIssuesFactors.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
-//import 'package:pogo/dataModelManipulation.dart';
 import 'Home.dart';
 import 'user.dart';
-//import 'CandidateDemographics.dart';
 import 'awsFunctions.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
@@ -21,6 +17,7 @@ class HomeLoadingPage extends StatefulWidget {
 class _HomeLoadingPageState extends State<HomeLoadingPage> {
   //TODO: implement user issues object
   late user currentUser;
+  late UserDemographics currentUserDemographics;
   late UserIssueFactorValues currentUserFactors;
   late List<CandidateDemographics> candidateStack;
   @override
@@ -31,18 +28,18 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
 
   void initializeObjects() async {
     currentUser = await fetchCurrentUserAttributes();
+    currentUserDemographics = await getUserDemographics(currentUser.email);
     // Need to push associated user factors to the database before running this function.
     currentUserFactors = await getUserIssueFactorValues(currentUser.email);
     candidateStack = await getAllCandidateDemographics();
-    setObjectStates(currentUser, currentUserFactors, candidateStack);
+    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics);
   }
 
-  void setObjectStates(
-      user u, UserIssueFactorValues uifv, List<CandidateDemographics> s) {
+  void setObjectStates(UserIssueFactorValues uifv, List<CandidateDemographics> s, UserDemographics ud) {
     setState(() {
-      currentUser = u;
       currentUserFactors = uifv;
       candidateStack = s;
+      currentUserDemographics = ud;
     });
     goHome();
   }
@@ -52,9 +49,9 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
       context,
       MaterialPageRoute(
         builder: (context) => Home(
-          currentUser: currentUser,
           currentUserFactors: currentUserFactors,
           candidateStack: candidateStack,
+          currentUserDemographics: currentUserDemographics,
         ),
       ),
     );

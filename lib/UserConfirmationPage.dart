@@ -67,7 +67,6 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
           politicalAffiliation: '');
       await putUserIssueFactorValues(newValues);
       await putUserDemographics(newDemographics);
-      //TODO: putUserDemographics is not working for some reason, i've tried 100 things. putUserIssueFactorValues works fine and they are both the same
       if (await checkLoggedIn()) {
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => SurveyLandingPage()));

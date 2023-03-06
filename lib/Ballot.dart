@@ -27,4 +27,6 @@ class Ballot {
       this.coronersIds,
       this.planningZoningCommissionersIds,
       this.publicWorksCommissionersIds);
+
+
 }

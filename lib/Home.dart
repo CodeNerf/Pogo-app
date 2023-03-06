@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'UserProfile.dart';
@@ -10,10 +13,10 @@ import 'dynamoModels/UserIssueFactorValues.dart';
 import 'user.dart';
 
 class Home extends StatefulWidget {
-  final user currentUser;
+  final UserDemographics currentUserDemographics;
   final UserIssueFactorValues currentUserFactors;
   final List<CandidateDemographics> candidateStack;
-  const Home({Key? key, required this.currentUser, required this.currentUserFactors, required this.candidateStack}) : super(key: key);
+  const Home({Key? key, required this.currentUserFactors, required this.candidateStack, required this.currentUserDemographics}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -27,8 +30,9 @@ class _HomeState extends State<Home> {
   //TODO: implement user issues object
   //objects
   user currentUser = user.all('','','','','');
-  UserIssueFactorValues currentUserFactors = UserIssueFactorValues(userId: '', climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
-  List<CandidateDemographics> candidateStack = [];
+  late UserIssueFactorValues currentUserFactors;
+  late List<CandidateDemographics> candidateStack;
+  late UserDemographics currentUserDemographics;
   late List<Widget> _widgetOptions;
 
   updateStack(List<CandidateDemographics> stack) {
@@ -45,11 +49,11 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    currentUser = widget.currentUser;
     currentUserFactors = widget.currentUserFactors;
     candidateStack = widget.candidateStack;
+    currentUserDemographics = widget.currentUserDemographics;
     setState(() {
-      _widgetOptions = <Widget>[VoterGuide(), Podium(candidateStack: candidateStack, updateStack: updateStack,), CandidateInfo(), UserProfile(currentUser: currentUser, currentUserFactors: currentUserFactors,)];
+      _widgetOptions = <Widget>[VoterGuide(), Podium(candidateStack: candidateStack, updateStack: updateStack,), CandidateInfo(), UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,)];
     });
   }
 
