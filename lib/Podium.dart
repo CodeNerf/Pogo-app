@@ -201,21 +201,7 @@ class _PodiumState extends State<Podium> {
   //returns the candidate's experience
   String candidateExperience(String careerStart) {
     String experience = '';
-    //DateTime format: yyyy-mm-dd
-    //temp functionality until date format is changed in db
-    List<String> dates = careerStart.split('/');
-    if(dates[1].length == 1) {
-      dates[1] = '0${dates[1]}';
-    }
-    if(dates[0].length == 1) {
-      dates[0] = '0${dates[0]}';
-    }
-    String newCareerStart = '${dates[2]}-${dates[0]}-${dates[1]}';
-
-
-
-
-    DateTime start = DateTime.parse(newCareerStart);
+    DateTime start = DateTime.parse(careerStart);
     DateTime currentDate = DateTime.now();
     int days = currentDate.difference(start).inDays;
     if(days > 364) {
