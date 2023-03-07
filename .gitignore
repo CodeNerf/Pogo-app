@@ -43,6 +43,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+
+#google API key
+/lib/googleFunctions/APIKey.dart
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -64,6 +68,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-
-#google API key
-/lib/googleFunctions/APIKey.dart
