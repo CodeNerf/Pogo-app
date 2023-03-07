@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pogo/HomeLoadingPage.dart';
 import 'package:pogo/LandingPage.dart';
 import 'package:pogo/amplifyFunctions.dart';
+import 'package:pogo/awsFunctions.dart';
+import 'package:pogo/models/userBallots.dart';
 
 class firstLoadingPage extends StatefulWidget {
   const firstLoadingPage({Key? key}) : super(key: key);
@@ -11,7 +13,6 @@ class firstLoadingPage extends StatefulWidget {
 }
 
 class _firstLoadingPageState extends State<firstLoadingPage> {
-
   @override
   void initState() {
     super.initState();
@@ -20,21 +21,25 @@ class _firstLoadingPageState extends State<firstLoadingPage> {
 
   void configure(context) async {
     bool check = await configureAmplify();
-    if(check) {
+    if (check) {
       loginCheck(context);
     }
+    // signInUser('nick@nick.nick', 'Passw0rd')
+    // putUserNationalBallot(UserNationalBallot(
+    //     userId: "userId",
+    //     presidential: "presidential",
+    //     congressional: "congressional"));
   }
 
   void loginCheck(context) async {
-    if(await checkLoggedIn()) {
+    if (await checkLoggedIn()) {
       await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const HomeLoadingPage(),
         ),
       );
-    }
-    else {
+    } else {
       await Navigator.push(
         context,
         MaterialPageRoute(

@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pogo/dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/models/userBallots.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
 import 'models/IssueFactorValues.dart' hide IssueFactorValues;
@@ -160,6 +162,102 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
     return candidateDemographicsList;
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> putUserNationalBallot(UserNationalBallot userBallot) async {
+  final client = http.Client();
+  try {
+    final response = await client.put(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/UserNationalBallots'),
+        headers: {"content-type": "application/json"},
+        body: jsonEncode(userBallot.toJson()));
+
+    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<UserNationalBallot> getUserNationalBallot(String userId) async {
+  final client = http.Client();
+  try {
+    final response = await client.get(
+      Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+          '/UserNationalBallots/$userId'),
+      headers: {"content-type": "application/json"},
+    );
+    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint(decodedResponse);
+    return UserNationalBallot.fromJson(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> putUserStateBallot(UserStateBallot userBallot) async {
+  final client = http.Client();
+  try {
+    final response = await client.put(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/UserStateBallots'),
+        headers: {"content-type": "application/json"},
+        body: jsonEncode(userBallot.toJson()));
+
+    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<UserStateBallot> getUserStateBallot(String userId) async {
+  final client = http.Client();
+  try {
+    final response = await client.get(
+      Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+          '/UserStateBallots/$userId'),
+      headers: {"content-type": "application/json"},
+    );
+    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint(decodedResponse);
+    return UserStateBallot.fromJson(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> putUserLocalBallot(UserLocalBallot userBallot) async {
+  final client = http.Client();
+  try {
+    final response = await client.put(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/UserLocalBallots'),
+        headers: {"content-type": "application/json"},
+        body: jsonEncode(userBallot.toJson()));
+
+    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<UserLocalBallot> getUserLocalBallot(String userId) async {
+  final client = http.Client();
+  try {
+    final response = await client.get(
+      Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+          '/UserLocalBallots/$userId'),
+      headers: {"content-type": "application/json"},
+    );
+    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint(decodedResponse);
+    return UserLocalBallot.fromJson(decodedResponse);
   } finally {
     client.close();
   }
