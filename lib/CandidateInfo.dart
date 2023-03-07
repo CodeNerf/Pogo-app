@@ -31,7 +31,7 @@ class _CandidateInfoState extends State<CandidateInfo> {
             child: [
               SizedBox(height: 6),
               Container(
-                height: 500, 
+                height: 330, 
                 child: ListView(
                   physics: BouncingScrollPhysics(), 
                   shrinkWrap: true,
