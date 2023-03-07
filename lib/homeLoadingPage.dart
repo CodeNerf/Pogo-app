@@ -1,10 +1,12 @@
-import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pogo/UserIssuesFactors.dart';
 import 'package:pogo/amplifyFunctions.dart';
-import 'package:pogo/dataModelManipulation.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'Ballot.dart';
 import 'Home.dart';
 import 'user.dart';
+import 'awsFunctions.dart';
+import 'dynamoModels/CandidateDemographics.dart';
+import 'dynamoModels/UserIssueFactorValues.dart';
 
 class HomeLoadingPage extends StatefulWidget {
   const HomeLoadingPage({Key? key}) : super(key: key);
@@ -14,10 +16,11 @@ class HomeLoadingPage extends StatefulWidget {
 }
 
 class _HomeLoadingPageState extends State<HomeLoadingPage> {
-  //TODO: implement user issues object
+  late Ballot userBallot;
   late user currentUser;
-  late UserIssuesFactors currentUserFactors;
-
+  late UserDemographics currentUserDemographics;
+  late UserIssueFactorValues currentUserFactors;
+  late List<CandidateDemographics> candidateStack;
   @override
   void initState() {
     initializeObjects();
@@ -25,24 +28,35 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
   }
 
   void initializeObjects() async {
+    userBallot = Ballot.empty(); //TODO: initialize userBallot with database ballot
     currentUser = await fetchCurrentUserAttributes();
-    currentUserFactors = await fetchCurrentUserFactors(currentUser.email);
-    setObjectStates(currentUser, currentUserFactors);
+    currentUserDemographics = await getUserDemographics(currentUser.email);
+    // Need to push associated user factors to the database before running this function.
+    currentUserFactors = await getUserIssueFactorValues(currentUser.email);
+    candidateStack = await getAllCandidateDemographics();
+    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics, userBallot);
   }
 
-  void setObjectStates(user u, UserIssuesFactors uif) {
+  void setObjectStates(UserIssueFactorValues uifv, List<CandidateDemographics> s, UserDemographics ud, Ballot ub) {
     setState(() {
-      currentUser = u;
-      currentUserFactors = uif;
+      currentUserFactors = uifv;
+      candidateStack = s;
+      currentUserDemographics = ud;
+      userBallot = ub;
     });
     goHome();
   }
-  
+
   void goHome() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Home(currentUser: currentUser, currentUserFactors: currentUserFactors,),
+        builder: (context) => Home(
+          currentUserFactors: currentUserFactors,
+          candidateStack: candidateStack,
+          currentUserDemographics: currentUserDemographics,
+          userBallot: userBallot,
+        ),
       ),
     );
   }
@@ -71,5 +85,3 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     );
   }
 }
-
-

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/Onboarding/SurveyLandingPage.dart';
-import 'package:pogo/UserDemographics.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'VoterInfo.dart';
-import '../UserIssuesFactors.dart';
-import 'SurveyLandingPage.dart';
+import '../dynamoModels/UserIssueFactorValues.dart';
 
 class Demographics extends StatefulWidget {
-  final UserIssuesFactors ratings;
+  final UserIssueFactorValues ratings;
   final UserDemographics answers;
   const Demographics({Key? key, required this.ratings, required this.answers})
       : super(key: key);
@@ -16,11 +15,21 @@ class Demographics extends StatefulWidget {
 }
 
 class _DemographicsState extends State<Demographics> {
+  late UserDemographics answers;
   String agesdropdownvalue = '18-25 years old';
-  String racesdropdownvalue = 'Black';
-  String gendersdropdownvalue = 'Female';
-  final Widget lastPage = SurveyLandingPage();
+  late String racesdropdownvalue = '';
+  late String gendersdropdownvalue = '';
   String pogoLogo = 'assets/Pogo_logo_horizontal.png';
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      answers = widget.answers;
+      racesdropdownvalue = answers.racialIdentity;
+      gendersdropdownvalue = answers.gender;
+    });
+  }
 
   // List of items for each dropdown menu
   List<String> agesList = [
@@ -31,6 +40,7 @@ class _DemographicsState extends State<Demographics> {
   ];
 
   List<String> racesList = [
+    '',
     'Black',
     'White',
     'Asian',
@@ -40,12 +50,27 @@ class _DemographicsState extends State<Demographics> {
   ];
 
   List<String> gendersList = [
+    '',
     'Female',
     'Male',
     'Non-binary',
     'Gender Non-conforming',
     'Other',
   ];
+
+  void nextPage() async {
+    widget.answers.racialIdentity = racesdropdownvalue;
+    widget.answers.gender = gendersdropdownvalue;
+    //TODO: the age dropdown needs to be turned into a date picker for bday
+    //widget.answers.dateOfBirth = dateOfBirthStringHere;
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => VoterInfo(
+              ratings: widget.ratings,
+              answers: widget.answers,
+            )));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,13 +218,7 @@ class _DemographicsState extends State<Demographics> {
               MaterialButton(
                 height: 50,
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => VoterInfo(
-                                ratings: widget.ratings,
-                                answers: widget.answers,
-                              )));
+                  nextPage();
                 },
                 color: Color.fromARGB(255, 0, 0, 0),
                 shape: RoundedRectangleBorder(

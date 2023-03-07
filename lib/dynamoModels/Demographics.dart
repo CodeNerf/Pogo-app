@@ -18,4 +18,5 @@ class Demographics {
       required this.gender,
       required this.racialIdentity,
       required this.politicalAffiliation});
+
 }

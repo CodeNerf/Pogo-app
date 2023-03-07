@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../UserIssuesFactors.dart';
-import '../../UserDemographics.dart';
+import '../../dynamoModels/UserIssueFactorValues.dart';
+import '../../dynamoModels/UserDemographics.dart';
 import 'Education.dart';
 import 'GunPolicy.dart';
 
 class Climate extends StatefulWidget {
-  final UserIssuesFactors ratings;
+  final UserIssueFactorValues ratings;
   final UserDemographics answers;
   late final Widget nextPage = Education(ratings: ratings, answers: answers,);
   late final Widget lastPage = GunPolicy(ratings: ratings, answers: answers,);
@@ -35,20 +35,20 @@ class _ClimateState extends State<Climate> {
   void initState() {
     super.initState();
     setState(() {
-      alignRating = widget.ratings.getClimateAlign;
-      valueRating = widget.ratings.getClimateCare;
+      alignRating = widget.ratings.climateScore.toDouble();
+      valueRating = widget.ratings.climateWeight.toDouble();
     });
     updateButton();
   }
 
   Future updateAlignRating(double rating) async {
-    widget.ratings.setClimateAlign = rating;
+    widget.ratings.climateScore = rating;
     alignRating = rating;
     updateButton();
   }
 
   Future updateValueRating(double rating) async {
-    widget.ratings.setClimateCare = rating;
+    widget.ratings.climateWeight = rating;
     valueRating = rating;
     updateButton();
   }

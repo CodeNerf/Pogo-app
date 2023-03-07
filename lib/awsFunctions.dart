@@ -1,11 +1,10 @@
 import 'dart:convert';
+import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pogo/dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
-import 'models/IssueFactorValues.dart' hide IssueFactorValues;
-import 'models/UserIssueFactorValues.dart' hide UserIssueFactorValues;
 
 Future<void> putUserIssueFactorValues(
     UserIssueFactorValues userIssueFactorValues) async {
@@ -159,6 +158,7 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
       candidateDemographicsList
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
+    safePrint("candidates pulled");
     return candidateDemographicsList;
   } finally {
     client.close();

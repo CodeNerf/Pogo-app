@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pogo/awsFunctions.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'amplifyFunctions.dart';
-import 'dataModelManipulation.dart';
 import 'Onboarding/SurveyLandingPage.dart';
+import 'dynamoModels/UserIssueFactorValues.dart';
 
 class UserConfirmationPage extends StatefulWidget {
   final String email;
   final String password;
-  const UserConfirmationPage({Key? key, required this.email, required this.password}) : super(key: key);
+  const UserConfirmationPage(
+      {Key? key, required this.email, required this.password})
+      : super(key: key);
 
   @override
   State<UserConfirmationPage> createState() => _UserConfirmationPage();
@@ -22,20 +26,58 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
   Color errorTextColor = Colors.green;
 
   Future confirm(context) async {
-    if(await confirmUser(email, codeController.text)) {
+    if (await confirmUser(email, codeController.text)) {
       await signInUser(email, password);
-      await initialUserIssueFactorValues(email);
+      UserIssueFactorValues newValues = UserIssueFactorValues(
+          userId: email,
+          climateScore: 0,
+          climateWeight: 0,
+          drugPolicyScore: 0,
+          drugPolicyWeight: 0,
+          economyScore: 0,
+          economyWeight: 0,
+          educationScore: 0,
+          educationWeight: 0,
+          gunPolicyScore: 0,
+          gunPolicyWeight: 0,
+          healthcareScore: 0,
+          healthcareWeight: 0,
+          housingScore: 0,
+          housingWeight: 0,
+          immigrationScore: 0,
+          immigrationWeight: 0,
+          policingScore: 0,
+          policingWeight: 0,
+          reproductiveScore: 0,
+          reproductiveWeight: 0);
+      UserDemographics newDemographics = UserDemographics(
+          userId: email,
+          phoneNumber: '',
+          registrationState: '',
+          addressLine1: '',
+          pollingLocation: '',
+          voterRegistrationStatus: false,
+          firstName: '',
+          lastName: '',
+          dateOfBirth: '',
+          zipCode: '',
+          profileImageURL: '',
+          gender: '',
+          racialIdentity: '',
+          politicalAffiliation: '');
+      await putUserIssueFactorValues(newValues);
+      await putUserDemographics(newDemographics);
       if (await checkLoggedIn()) {
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SurveyLandingPage())
-        );
+        await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SurveyLandingPage()));
       }
-    }
-    else {
+    } else if (await isUserConfirmed()) {
+      await Navigator.push(context,
+          MaterialPageRoute(builder: (context) => SurveyLandingPage()));
+    } else {
       setState(() {
-        errorText = 'Account could not be confirmed. Check if the code entered was correct or request for a new code to be sent.';
+        errorText =
+            'Account could not be confirmed. Check if the code entered was correct or request for a new code to be sent.';
         errorSizeBoxSize = 10;
         errorTextColor = Colors.red;
       });
@@ -43,14 +85,13 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
   }
 
   Future resendCode() async {
-    if(await resendConfirmationCode(email)) {
+    if (await resendConfirmationCode(email)) {
       setState(() {
         errorText = 'A new code was sent to your email.';
         errorSizeBoxSize = 10;
         errorTextColor = Colors.green;
       });
-    }
-    else {
+    } else {
       //this shouldn't happen
       setState(() {
         errorText = 'Error occurred when requesting for a new code.';
@@ -148,13 +189,13 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                       ),
                       child: const Center(
                           child: Text(
-                            'Submit',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )),
+                        'Submit',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
                     ),
                   ),
                 ),
@@ -175,13 +216,13 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                       ),
                       child: const Center(
                           child: Text(
-                            'Request New Code',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          )),
+                        'Request New Code',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
                     ),
                   ),
                 ),
