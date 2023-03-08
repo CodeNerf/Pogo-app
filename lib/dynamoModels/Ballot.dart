@@ -1,7 +1,7 @@
 class Ballot {
-  List<String> localCandidateIds = List.filled(35, '');
-  //List<String> stateCandidateIds = List.filled(35, '');
-  //List<String> federalCandidateIds = List.filled(35, '');
+  List<String> localCandidateIds = [];
+  //List<String> stateCandidateIds = [];
+  //List<String> federalCandidateIds = [];
 
   Ballot.candidateIds({required this.localCandidateIds /*, required this.stateCandidateIds, required this.federalCandidateIds */});
 
