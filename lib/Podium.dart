@@ -1,7 +1,4 @@
-
-import 'dart:ffi';
 import 'dart:math';
-
 import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,19 +7,18 @@ import 'dynamoModels/Ballot.dart';
 import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
 import 'CandidateProfile.dart';
 import 'awsFunctions.dart';
+import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateDemographics.dart';
-import 'amplifyFunctions.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class Podium extends StatefulWidget {
   List<CandidateDemographics> candidateStack;
-  final Function(List<CandidateDemographics>) updateStack;
-  final Function(Ballot) updateBallot;
+  final Function(CandidateDemographics, List<CandidateDemographics>) updateBallot;
   Ballot userBallot;
   List<CandidateIssueFactorValues> candidateStackFactors;
-  Podium({Key? key, required this.candidateStack, required this.candidateStackFactors, required this.userBallot, required this.updateStack, required this.updateBallot}) : super(key: key);
+  Podium({Key? key, required this.candidateStack, required this.candidateStackFactors, required this.userBallot, required this.updateBallot}) : super(key: key);
 
   @override
   State<Podium> createState() => _PodiumState();
@@ -121,19 +117,19 @@ class _PodiumState extends State<Podium> {
   List<Widget> initialCards() {
     List<Widget> initial = [];
     if(stackLength == 1) {
-      initial.add(newCard(candidate: stack[0]));
+      initial.add(newCard(stack[0]));
     }
     else if(stackLength == 2) {
-      initial.add(newCard(candidate: stack[0]));
-      initial.add(newCard(candidate: stack[1]));
+      initial.add(newCard(stack[0]));
+      initial.add(newCard(stack[1]));
     }
     else if(stackLength == 0) {
       return initial;
     }
     else {
-      initial.add(newCard(candidate: stack[0]));
-      initial.add(newCard(candidate: stack[1]));
-      initial.add(newCard(candidate: stack[2]));
+      initial.add(newCard(stack[0]));
+      initial.add(newCard(stack[1]));
+      initial.add(newCard(stack[2]));
     }
     return initial;
   }
@@ -229,16 +225,12 @@ class _PodiumState extends State<Podium> {
     );
   }
 
-  void addCandidate(CandidateDemographics stack) {
-    String candidateProfilePic = stack.profileImageURL;
-    //TODO: send the candidate profile pic to the correct string list in the ballot object
-
-
-
-    widget.updateBallot(widget.userBallot);
+  void addCandidate(CandidateDemographics candidate) {
+    stack.remove(candidate);
+    widget.updateBallot(candidate, stack);
   }
 
-  Widget newCard({required CandidateDemographics candidate}) {
+  Widget newCard(CandidateDemographics candidate) {
     return Card(
       //card properties
       color: const Color(0xFFF9F9F9),
@@ -358,7 +350,6 @@ class _PodiumState extends State<Podium> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        widget.updateStack;
         return true;
       },
       child: SafeArea(
@@ -513,33 +504,117 @@ class _PodiumState extends State<Podium> {
                         cardController: _cardController,
                         context: context,
                         items: initialCards(),
+                        cardWidthMiddleMul: 0.9,
+                        cardHeightMiddleMul: 0.6,
+                        cardWidthBottomMul: 0.9,
+                        cardHeightBottomMul: 0.6,
                         onCardSwiped: (dir, index, widget) {
-                          safePrint("count = $count | stackIterable = $stackIterator | ${stack[stackIterator].firstName}");
-                          if(count < stackLength) {
-                            _cardController.addItem(newCard(candidate: stack[count]));
-                            if(count == stackLength-1) {
-                              count = 0;
+                          if(stackLength > 3  && stack.isNotEmpty) {
+                            if(count < stackLength) {
+                              _cardController.addItem(newCard(stack[count]));
+                            }
+                            if(dir == Direction.right) {
+                              addCandidate(stack[stackIterator]);
+                              stackLength--;
+                              print(stackLength);
                             }
                             else {
-                              count++;
+                              if (count < stackLength) {
+                                if (count == stackLength - 1) {
+                                  count = 0;
+                                }
+                                else {
+                                  count++;
+                                }
+                              }
+                              else {
+                                count = 0;
+                              }
+                              if (stackIterator >= stackLength - 1) {
+                                stackIterator = 0;
+                              }
+                              else {
+                                stackIterator++;
+                              }
                             }
                           }
-                          if(dir == Direction.right) {
-                            addCandidate(stack[stackIterator]);
-                            stack.removeAt(stackIterator);
-                            stackLength--;
+                          else if(stack.isNotEmpty && stackLength == 3){
+                            int temp = stackIterator;
+                            if(dir == Direction.right) {
+                              stackLength = 2;
+                              addCandidate(stack[temp]);
+                            }
+                            else {
+                              if(count == 2) {
+                                count = 0;
+                                if(stackIterator == 2) {
+                                  stackIterator = 0;
+                                  _cardController.addItem(newCard(stack[2]));
+                                }
+                                else {
+                                  stackIterator = 2;
+                                  _cardController.addItem(newCard(stack[0]));
+                                }
+                              }
+                              else if(count == 1) {
+                                count = 2;
+                                if(stackIterator == 1) {
+                                  stackIterator = 2;
+                                  _cardController.addItem(newCard(stack[1]));
+                                }
+                                else {
+                                  stackIterator = 1;
+                                  _cardController.addItem(newCard(stack[2]));
+                                }
+                              }
+                              else if(count == 0) {
+                                count = 1;
+                                if(stackIterator == 0) {
+                                  stackIterator = 1;
+                                  _cardController.addItem(newCard(stack[0]));
+                                }
+                                else {
+                                  stackIterator = 0;
+                                  _cardController.addItem(newCard(stack[1]));
+                                }
+                              }
+                              else {
+                                count = 1;
+                                stackIterator = 1;
+                                _cardController.addItem(newCard(stack[0]));
+                              }
+                            }
                           }
-                          else {
-                            //skip candidate, move to end of stack
+                          else if(stack.isNotEmpty && stackLength == 2){
+                            if(widget != null) {
+                              if(dir == Direction.right) {
+                                stackLength = 1;
+                                addCandidate(stack[stackIterator]);
+                              }
+                              else {
+                                if(stackIterator == 0) {
+                                  stackIterator = 1;
+                                  _cardController.addItem(newCard(stack[0]));
+                                }
+                                else {
+                                  stackIterator = 0;
+                                  _cardController.addItem(newCard(stack[1]));
+                                }
+                              }
+                            }
                           }
-                          if(stackIterator == stackLength-1) {
-                            stackIterator = 0;
-                          }
-                          else {
-                            stackIterator++;
+                          else if(stack.isNotEmpty && stackLength == 1){
+                            if(widget != null) {
+                              if(dir == Direction.left) {
+                                _cardController.addItem(newCard(stack[0]));
+                              }
+                              else {
+                                stackLength = 0;
+                                addCandidate(stack[0]);
+                              }
+                            }
                           }
                         },
-                        //
                         enableSwipeUp: false,
                         enableSwipeDown: false,
                       ),
