@@ -56,7 +56,7 @@ List<bool> _isChecked = [false, false, false, false];
         Positioned(
           top: 20.0,
           left: 20.0,
-          child: Text("[DIsplay Name]",style: TextStyle(fontSize: 22.0,
+          child: Text("[Display Name]",style: TextStyle(fontSize: 22.0,
               fontWeight: FontWeight.bold, color: Colors.white),),
         ),
           Row(

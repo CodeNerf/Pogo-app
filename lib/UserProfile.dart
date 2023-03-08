@@ -8,11 +8,12 @@ import 'dynamoModels/UserIssueFactorValues.dart';
 import 'user.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'dart:math';
+import 'EditPersonalInfoPage.dart';
 
 class UserProfile extends StatefulWidget {
   final UserIssueFactorValues currentUserFactors;
-  final UserDemographics currentUserDemographics;
-  const UserProfile({Key? key, required this.currentUserFactors, required this.currentUserDemographics}) : super(key: key);
+  UserDemographics currentUserDemographics;
+ UserProfile({Key? key, required this.currentUserFactors, required this.currentUserDemographics}) : super(key: key);
 
   @override
   State<UserProfile> createState() => _UserProfileState();
@@ -23,6 +24,7 @@ class _UserProfileState extends State<UserProfile> {
   String secondIssue = "";
   String thirdIssue = "";
   List<num> ratings = [];
+  
   @override
   void initState() {
     super.initState();
@@ -176,55 +178,83 @@ class _UserProfileState extends State<UserProfile> {
             ),
           ),
 
-          //Personal info
           Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+  width: MediaQuery.of(context).size.width,
+  decoration: BoxDecoration(
+    color: Colors.grey[200],
+    borderRadius: BorderRadius.circular(12),
+  ),
+  child: Padding(
+    padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+       
+
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    const Text(
+      'Personal Info',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),
+    ),
+ IconButton(
+    icon: const Icon(Icons.edit),
+    onPressed: () async {
+      UserDemographics updatedUserDemographics = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EditPersonalInfoPage(userDemographics: widget.currentUserDemographics)),
+      );
+      if (updatedUserDemographics != null) {
+        setState(() {
+          widget.currentUserDemographics = updatedUserDemographics;
+        });
+      }
+    },
+  )
+  ],
+),
+
+        const SizedBox(height: 10),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Personal Info',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                  Text(
+                    'Email: ${widget.currentUserDemographics.userId}',
+                    style: const TextStyle(
+                      fontSize: 18,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15,0,0,0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Email: ${widget.currentUserDemographics.userId}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                        Text(
-                          'Phone: ${widget.currentUserDemographics.phoneNumber}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                        Text(
-                          'Address: ${widget.currentUserDemographics.addressLine1}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const SizedBox(height: 5),
+                  Text(
+  'Phone: ${widget.currentUserDemographics is UserDemographics ? widget.currentUserDemographics.phoneNumber : "N/A"}',
+  style: const TextStyle(
+    fontSize: 18,
+  ),
+),
+const SizedBox(height: 5),
+Text(
+  'Address: ${widget.currentUserDemographics is UserDemographics ? widget.currentUserDemographics.addressLine1 : "N/A"}',
+  style: const TextStyle(
+    fontSize: 18,
+  ),
+),
                 ],
               ),
             ),
-          ),
+          ],
+        ),
+      ],
+    ),
+  ),
+),
           const SizedBox(height: 20),
 
           //survey results
@@ -486,3 +516,4 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 }
+
