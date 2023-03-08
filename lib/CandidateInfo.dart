@@ -9,7 +9,8 @@ class CandidateInfo extends StatefulWidget {
   Ballot userBallot;
   List<CandidateDemographics> candidateStack;
   List<CandidateDemographics> ballotStack;
-  CandidateInfo({Key? key, required this.userBallot, required this.candidateStack, required this.ballotStack}) : super(key: key);
+  final Function(String) removeFromBallot;
+  CandidateInfo({Key? key, required this.userBallot, required this.candidateStack, required this.ballotStack, required this.removeFromBallot}) : super(key: key);
 
   @override
   _CandidateInfoState createState() => _CandidateInfoState();
@@ -114,8 +115,8 @@ class _CandidateInfoState extends State<CandidateInfo> {
     }
   }
 
-  void removeCandidate() async {
-
+  void removeCandidate(String candidatePic) {
+    widget.removeFromBallot(candidatePic);
   }
 
   @override
@@ -241,171 +242,122 @@ class _CandidateInfoState extends State<CandidateInfo> {
       ),
     );
   }
-}
 
-Widget buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
-  return SizedBox(
-    width: 400,
-    child: Container(
-      margin: EdgeInsets.only(bottom: 6.0),
+  Widget buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
+    return SizedBox(
+      width: 400,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF3D433),
-  
-           borderRadius: BorderRadius.circular(10.0),
+        margin: EdgeInsets.only(bottom: 6.0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF3D433),
+
+            borderRadius: BorderRadius.circular(10.0),
             border: Border.all(
               color: Colors.black,
               width: 2,
             ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        title,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        icon: Icon(Icons.add_circle),
-                        onPressed: () {
-                          updateCircleCount(circleCount + 1);
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 1),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List.generate(
-                        circleCount,
-                        (index) => Padding(
-                          padding: EdgeInsets.only(right: 10.0),
-                          child: buildCircleCandidate(() {
-                            updateCircleCount(circleCount - 1);
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          title,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {
+                            updateCircleCount(circleCount + 1);
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 1),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: List.generate(
+                          circleCount,
+                              (index) => Padding(
+                            padding: EdgeInsets.only(right: 10.0),
+                            child: buildCircleCandidate(() {
+                              updateCircleCount(circleCount - 1);
                             },() {
                               updateCircleCount(circleCount - 1);
                             },
-                            candidatePics[index],
-                            context,
+                              candidatePics[index],
+                              context,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 4),
-                ],
+                    SizedBox(height: 4),
+                  ],
+                ),
               ),
-            ),
-            
-          ],
+
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget buildCircleCandidate(VoidCallback onDelete, Null Function() param1, String candidatePic, context) {
-  return GestureDetector(
-    onLongPress: () {
-      //var context;
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Delete saved Candidate'),
-            content: Text('Are you sure you want to delete this saved Candidate?'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Delete'),
-                onPressed: () {
-                  onDelete();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    },
-    onTap: () {
-
-    },
-    child: CircularProfileAvatar(
-      '',
-      radius: 40,
-      elevation: 5,
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: Image(
-          image: NetworkImage(candidatePic),
+  Widget buildCircleCandidate(VoidCallback onDelete, Null Function() param1, String candidatePic, context) {
+    return GestureDetector(
+      onLongPress: () {
+        //var context;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Delete saved Candidate'),
+              content: Text('Are you sure you want to delete this saved Candidate?'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text('Delete'),
+                  onPressed: () {
+                    onDelete();
+                    Navigator.of(context).pop();
+                    removeCandidate(candidatePic);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: CircularProfileAvatar(
+        '',
+        radius: 40,
+        elevation: 5,
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: Image(
+            image: NetworkImage(candidatePic),
+          ),
         ),
       ),
-    ),
-  );
-}
-
-
-Widget buildCircle(VoidCallback onDelete, Null Function() param1) {
-  return GestureDetector(
-    onLongPress: () {
-      var context;
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Delete saved Candidate'),
-            content: Text('Are you sure you want to delete this saved Candidate?'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Delete'),
-                onPressed: () {
-                  onDelete();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    },
-    child: Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.grey[200],
-        border: Border.all(color: Colors.black, width: 2),
-      ),
-      child: Icon(
-        Icons.add,
-        color: Colors.black,
-        size: 20,
-      ),
-    ),
-  );
+    );
+  }
 }
 
 Widget buildExpandableButton({

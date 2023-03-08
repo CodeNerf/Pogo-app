@@ -6,6 +6,7 @@ import 'UserProfile.dart';
 import 'VoterGuide.dart';
 import 'CandidateInfo.dart';
 import 'Podium.dart';
+import 'dynamoModels/CandidateIssueFactorValues.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 import 'user.dart';
 
@@ -14,7 +15,8 @@ class Home extends StatefulWidget {
   final UserIssueFactorValues currentUserFactors;
   final List<CandidateDemographics> candidateStack;
   final Ballot userBallot;
-  const Home({Key? key, required this.currentUserFactors, required this.candidateStack, required this.currentUserDemographics, required this.userBallot}) : super(key: key);
+  final List<CandidateIssueFactorValues> candidateStackFactors;
+  const Home({Key? key, required this.currentUserFactors, required this.candidateStack, required this.currentUserDemographics, required this.userBallot, required this.candidateStackFactors}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -34,18 +36,21 @@ class _HomeState extends State<Home> {
   late List<CandidateDemographics> candidateStack;
   late UserDemographics currentUserDemographics;
   late List<Widget> _widgetOptions;
+  late List<CandidateIssueFactorValues> candidateStackFactors;
 
-  updateStack(List<CandidateDemographics> stack) {
+  updateBallot(CandidateDemographics candidate, List<CandidateDemographics> podiumStack) {
+    userBallot.localCandidateIds.add(candidate.candidateId);
+    ballotStack.add(candidate);
     setState(() {
-      candidateStack = stack;
+      candidateStack = podiumStack;
     });
   }
 
-  updateBallot(Ballot b, CandidateDemographics candidate) {
-    setState(() {
-      userBallot = b;
-    });
-    ballotStack.add(candidate);
+  removeFromBallot(String candidatePic) {
+    CandidateDemographics candidate = ballotStack.firstWhere((element) => element.profileImageURL == candidatePic);
+    userBallot.localCandidateIds.remove(candidate.candidateId);
+    ballotStack.remove(candidate);
+    candidateStack.add(candidate);
   }
 
   void _onItemTapped(int index) {
@@ -57,12 +62,13 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    candidateStackFactors = widget.candidateStackFactors;
     currentUserFactors = widget.currentUserFactors;
     candidateStack = widget.candidateStack;
     currentUserDemographics = widget.currentUserDemographics;
     userBallot = widget.userBallot;
     setState(() {
-      _widgetOptions = <Widget>[VoterGuide(), Podium(candidateStack: candidateStack, updateStack: updateStack, userBallot: userBallot, updateBallot: updateBallot), CandidateInfo(userBallot: userBallot, candidateStack: candidateStack, ballotStack: ballotStack), UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,)];
+      _widgetOptions = <Widget>[VoterGuide(), Podium(candidateStack: candidateStack, userBallot: userBallot, updateBallot: updateBallot, candidateStackFactors: candidateStackFactors), CandidateInfo(userBallot: userBallot, candidateStack: candidateStack, ballotStack: ballotStack, removeFromBallot: removeFromBallot,), UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,)];
     });
   }
 

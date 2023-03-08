@@ -261,7 +261,7 @@ class _LoginPageState extends State<LoginPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Home(currentUserFactors: guestFactors, candidateStack: [], currentUserDemographics: guestDemographics, userBallot: guestBallot,),
+                          builder: (context) => Home(currentUserFactors: guestFactors, candidateStack: const [], currentUserDemographics: guestDemographics, userBallot: guestBallot, candidateStackFactors: const [],),
                         ),
                       );
                     },
