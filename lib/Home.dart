@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
-import 'Ballot.dart';
+import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'UserProfile.dart';

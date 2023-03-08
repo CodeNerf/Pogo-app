@@ -2,7 +2,7 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
-import 'Ballot.dart';
+import 'dynamoModels/Ballot.dart';
 import 'CandidateProfile.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'amplifyFunctions.dart';
