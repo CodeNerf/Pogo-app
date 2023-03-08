@@ -32,6 +32,8 @@ class _CandidateInfoState extends State<CandidateInfo> {
               SizedBox(height: 6),
               Container(
                 height: 330, 
+                child: Scrollbar(
+    isAlwaysShown: true,
                 child: ListView(
                   physics: BouncingScrollPhysics(), 
                   shrinkWrap: true,
@@ -102,7 +104,7 @@ class _CandidateInfoState extends State<CandidateInfo> {
           });
         }, 12),  
                   ],
-                ),
+                )),
               ),
             ],
           ),
