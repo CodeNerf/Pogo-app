@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pogo/LoginPage.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'Onboarding/SurveyLandingPage.dart';
@@ -134,6 +135,19 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
+  Widget profilePic() {
+    if(widget.currentUserDemographics.profileImageURL != '') {
+      String pic = 'http://${widget.currentUserDemographics.profileImageURL}';
+      return Image(
+        image: NetworkImage(pic),
+      );
+    }
+    else {
+      return const Icon(FontAwesomeIcons.person);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -169,9 +183,7 @@ class _UserProfileState extends State<UserProfile> {
                   radius: 40,
                   child: FittedBox(
                   fit: BoxFit.cover,
-                  child: Image(
-                    image: NetworkImage(widget.currentUserDemographics.profileImageURL),
-                  ),
+                  child: profilePic(),
                 ),
                 ),
               ),
