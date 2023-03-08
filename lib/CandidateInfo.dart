@@ -9,83 +9,139 @@ class CandidateInfo extends StatefulWidget {
 }
 
 class _CandidateInfoState extends State<CandidateInfo> {
-   bool _expandedLocal = false;
+  bool _expandedLocal = false;
   bool _expandedGlobal = false;
   bool _expandedOther = false;
-List<int> circleCounts = [3, 3, 3]; 
+  List<int> circleCounts = List.filled(13, 1);
 
-@override
-Widget build(BuildContext context) {
-  return Center(
-    child: ListView(
-      children: [
-        SizedBox(height: 10),
-        buildExpandableButton(
-          onPressed: () {
-            setState(() {
-              _expandedLocal = !_expandedLocal;
-            });
-          },
-          expanded: _expandedLocal,
-          title: 'LOCAL',
-          child: [
-            Column(
-              children: [
-                SizedBox(height: 6),
-                buildRow('Mayor', circleCounts[0], (count) {
-                  setState(() {
-                    circleCounts[0] = count;
-                  });
-                }, 0), 
-                buildRow('Governor', circleCounts[1], (count) {
-                  setState(() {
-                    circleCounts[1] = count;
-                  });
-                }, 1),
-                buildRow('Senator', circleCounts[2], (count) {
-                  setState(() {
-                    circleCounts[2] = count;
-                  });
-                }, 2), 
-              ],
-            ),
-          ],
-        ),
-        SizedBox(height: 10), 
-        buildExpandableButton(
-          onPressed: () {
-            setState(() {
-              _expandedGlobal = !_expandedGlobal;
-            });
-          },
-          expanded: _expandedGlobal,
-          title: 'STATE',
-          child: [
-            SizedBox(height: 10),
-          ],
-        ),
-        SizedBox(height: 10),
-        buildExpandableButton(
-          onPressed: () {
-            setState(() {
-              _expandedOther = !_expandedOther;
-            });
-          },
-          expanded: _expandedOther,
-          title: 'FEDEREL',
-          child: [
-        
-            SizedBox(height: 10),
-          ],
-        ),
-      ],
-    ),
-  );
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ListView(
+        children: [
+          SizedBox(height: 10),
+          buildExpandableButton(
+            onPressed: () {
+              setState(() {
+                _expandedLocal = !_expandedLocal;
+              });
+            },
+            expanded: _expandedLocal,
+            title: 'LOCAL',
+            child: [
+              SizedBox(height: 6),
+              Container(
+                height: 330, 
+                child: ListView(
+                  physics: BouncingScrollPhysics(), 
+                  shrinkWrap: true,
+                  children: [
+                    buildRow('Mayor', circleCounts[0], (count) {
+                      setState(() {
+                        circleCounts[0] = count;
+                      });
+                    }, 0), 
+                    buildRow('City Clerk', circleCounts[1], (count) {
+                      setState(() {
+                        circleCounts[1] = count;
+                      });
+                    }, 1),
+                    buildRow('Town/City Council', circleCounts[2], (count) {
+                      setState(() {
+                        circleCounts[2] = count;
+                      });
+                    }, 2), 
+                    buildRow('County Sheriff', circleCounts[3], (count) {
+          setState(() {
+            circleCounts[3] = count;
+          });
+        }, 4),
+        buildRow('Trial Court Judges', circleCounts[4], (count) {
+          setState(() {
+            circleCounts[4] = count;
+          });
+        }, 4), 
+        buildRow('County Register of Deeds', circleCounts[5], (count) {
+          setState(() {
+            circleCounts[5] = count;
+          });
+        }, 5), 
+        buildRow('School Board', circleCounts[6], (count) {
+          setState(() {
+            circleCounts[6] = count;
+          });
+        }, 6),
+        buildRow('Prosecuters', circleCounts[7], (count) {
+          setState(() {
+            circleCounts[7] = count;
+          });
+        }, 7), 
+        buildRow('Coroners', circleCounts[8], (count) {
+          setState(() {
+            circleCounts[8] = count;
+          });
+        }, 8), 
+        buildRow('Planning/Zoning Commissions', circleCounts[9], (count) {
+          setState(() {
+            circleCounts[9] = count;
+          });
+        }, 9), 
+        buildRow('Public Works Commissions', circleCounts[10], (count) {
+          setState(() {
+            circleCounts[10] = count;
+          });
+        }, 10),
+        buildRow('Commissioner of Revenue', circleCounts[11], (count) {
+          setState(() {
+            circleCounts[11] = count;
+          });
+        }, 11),  
+        buildRow('County Commissioner', circleCounts[1], (count) {
+          setState(() {
+            circleCounts[12] = count;
+          });
+        }, 12),  
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10), 
+          buildExpandableButton(
+            onPressed: () {
+              setState(() {
+                _expandedGlobal = !_expandedGlobal;
+              });
+            },
+            expanded: _expandedGlobal,
+            title: 'STATE',
+            child: [
+              SizedBox(height: 10),
+            ],
+          ),
+          SizedBox(height: 10),
+          buildExpandableButton(
+            onPressed: () {
+              setState(() {
+                _expandedOther = !_expandedOther;
+              });
+            },
+            expanded: _expandedOther,
+            title: 'FEDERAL',
+            child: [
+              SizedBox(height: 10),
+            ],
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
 }
 
 Widget buildRow(String title, int circleCount, Function(int) updateCircleCount, int rowIndex) {
   return SizedBox(
-    width: 500,
+    width: 400,
     child: Container(
       margin: EdgeInsets.only(bottom: 6.0),
       child: Container(
@@ -111,7 +167,7 @@ Widget buildRow(String title, int circleCount, Function(int) updateCircleCount, 
                       Text(
                         title,
                         textAlign: TextAlign.left,
-                        style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
                       IconButton(
@@ -122,7 +178,7 @@ Widget buildRow(String title, int circleCount, Function(int) updateCircleCount, 
                       ),
                     ],
                   ),
-                  SizedBox(height: 6),
+                  SizedBox(height: 1),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -140,7 +196,7 @@ Widget buildRow(String title, int circleCount, Function(int) updateCircleCount, 
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 4),
                 ],
               ),
             ),
@@ -152,9 +208,11 @@ Widget buildRow(String title, int circleCount, Function(int) updateCircleCount, 
   );
 }
 
+
 Widget buildCircle(VoidCallback onDelete, Null Function() param1) {
   return GestureDetector(
     onLongPress: () {
+      var context;
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -250,4 +308,7 @@ Widget buildExpandableButton({
     ),
   );
 }
-}
+
+
+
+
