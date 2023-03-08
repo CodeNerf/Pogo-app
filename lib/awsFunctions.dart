@@ -177,7 +177,8 @@ Future<void> putUserNationalBallot(UserNationalBallot userBallot) async {
         body: jsonEncode(userBallot.toJson()));
 
     final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    safePrint(decodedResponse);
+    safePrint(
+        "aws response: $decodedResponse ${response.statusCode} ${response.reasonPhrase}");
   } finally {
     client.close();
   }

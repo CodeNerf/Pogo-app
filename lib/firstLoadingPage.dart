@@ -24,11 +24,11 @@ class _firstLoadingPageState extends State<firstLoadingPage> {
     if (check) {
       loginCheck(context);
     }
-    // signInUser('nick@nick.nick', 'Passw0rd')
-    // putUserNationalBallot(UserNationalBallot(
-    //     userId: "userId",
-    //     presidential: "presidential",
-    //     congressional: "congressional"));
+    signInUser('nich@nich.nich', 'P@ssw0rd');
+    putUserNationalBallot(UserNationalBallot(
+        userId: "userId",
+        presidential: "presidential",
+        congressional: "congressional"));
   }
 
   void loginCheck(context) async {
