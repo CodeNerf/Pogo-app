@@ -503,6 +503,10 @@ class _PodiumState extends State<Podium> {
                         cardController: _cardController,
                         context: context,
                         items: initialCards(),
+                        cardWidthMiddleMul: 0.9,
+                        cardHeightMiddleMul: 0.6,
+                        cardWidthBottomMul: 0.9,
+                        cardHeightBottomMul: 0.6,
                         onCardSwiped: (dir, index, widget) {
                           if(stackLength > 3  && stack.isNotEmpty) {
                             if(count < stackLength) {
