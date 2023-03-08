@@ -77,6 +77,7 @@ class _ReproductiveRightsState extends State<ReproductiveRights> {
       if (await updateSurveyCompletion()) {
         String email = await fetchCurrentUserEmail();
         //demographics
+        putUserDemographics(widget.answers);
         putUserIssueFactorValues(widget.ratings);
         await Navigator.push(
           context,

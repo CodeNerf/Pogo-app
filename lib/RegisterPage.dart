@@ -107,8 +107,22 @@ class _RegisterPageState extends State<RegisterPage> {
         lnameController.text,
         phoneController.text,
         addressController.text)) {
-      UserDemographics userDemographics = UserDemographics(userId: emailController.text, phoneNumber: phoneController.text, registrationState: '', addressLine1: addressController.text, pollingLocation: '', voterRegistrationStatus: false, firstName: fnameController.text, lastName: lnameController.text, dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
-      putUserDemographics(userDemographics);
+      UserDemographics userDemographics = UserDemographics(
+          userId: emailController.text,
+          phoneNumber: phoneController.text,
+          registrationState: '',
+          addressLine1: addressController.text,
+          pollingLocation: '',
+          voterRegistrationStatus: false,
+          firstName: fnameController.text,
+          lastName: lnameController.text,
+          dateOfBirth: '',
+          zipCode: '',
+          profileImageURL: '',
+          gender: '',
+          racialIdentity: '',
+          politicalAffiliation: '');
+      await putUserDemographics(userDemographics);
       await Navigator.push(
           context,
           MaterialPageRoute(
