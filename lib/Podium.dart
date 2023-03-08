@@ -3,6 +3,7 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dynamoModels/Ballot.dart';
 import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
 import 'CandidateProfile.dart';
 import 'awsFunctions.dart';
