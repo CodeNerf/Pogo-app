@@ -50,23 +50,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
           policingWeight: 0,
           reproductiveScore: 0,
           reproductiveWeight: 0);
-      UserDemographics newDemographics = UserDemographics(
-          userId: email,
-          phoneNumber: '',
-          registrationState: '',
-          addressLine1: '',
-          pollingLocation: '',
-          voterRegistrationStatus: false,
-          firstName: '',
-          lastName: '',
-          dateOfBirth: '',
-          zipCode: '',
-          profileImageURL: '',
-          gender: '',
-          racialIdentity: '',
-          politicalAffiliation: '');
       await putUserIssueFactorValues(newValues);
-      await putUserDemographics(newDemographics);
       if (await checkLoggedIn()) {
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => SurveyLandingPage()));
