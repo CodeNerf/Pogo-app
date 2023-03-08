@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
-import 'Ballot.dart';
+import 'dynamoModels/Ballot.dart';
 import 'Home.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
 import 'user.dart';
