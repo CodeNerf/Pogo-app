@@ -62,10 +62,11 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
   }
 
   void getUserFactors() async {
-    String userid = await fetchCurrentUserEmail();
+    // String userid = await fetchCurrentUserEmail();
+    var currentUser = await fetchCurrentUserAttributes();
     // Need to push associated user factors to the database before running this function.
-    currentUserFactors = await getUserIssueFactorValues(userid);
-    currentAnswers = await getUserDemographics(userid);
+    currentUserFactors = await getUserIssueFactorValues(currentUser.email);
+    currentAnswers = await getUserDemographics(currentUser.email);
     setState(() {
       widget.ratings = currentUserFactors;
       widget.answers = currentAnswers;
