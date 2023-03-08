@@ -164,3 +164,25 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
     client.close();
   }
 }
+
+Future<List<CandidateIssueFactorValues>> getAllCandidateIssueFactorValues() async {
+  var client = http.Client();
+  var candidateFactorsList = <CandidateIssueFactorValues>[];
+  try {
+    var response = await client.get(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/candidateissuefactorvalues'),
+        headers: {
+          "content-type": "application/json",
+        });
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    for (var candidateissuefactorvalues in decodedResponse) {
+      candidateFactorsList
+          .add(CandidateIssueFactorValues.fromJson(candidateissuefactorvalues));
+    }
+    safePrint("candidates pulled");
+    return candidateFactorsList;
+  } finally {
+    client.close();
+  }
+}

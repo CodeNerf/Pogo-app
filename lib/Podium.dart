@@ -1,9 +1,15 @@
 
+import 'dart:ffi';
+import 'dart:math';
+
 import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
 import 'Ballot.dart';
 import 'CandidateProfile.dart';
+import 'awsFunctions.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'amplifyFunctions.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
@@ -15,7 +21,8 @@ class Podium extends StatefulWidget {
   final Function(List<CandidateDemographics>) updateStack;
   final Function(Ballot) updateBallot;
   Ballot userBallot;
-  Podium({Key? key, required this.candidateStack, required this.userBallot, required this.updateStack, required this.updateBallot}) : super(key: key);
+  List<CandidateIssueFactorValues> candidateStackFactors;
+  Podium({Key? key, required this.candidateStack, required this.candidateStackFactors, required this.userBallot, required this.updateStack, required this.updateBallot}) : super(key: key);
 
   @override
   State<Podium> createState() => _PodiumState();
@@ -27,6 +34,7 @@ class _PodiumState extends State<Podium> {
 
   //card values
   late List<CandidateDemographics> stack;
+  late List<CandidateIssueFactorValues> stackFactors;
   late int stackLength;
   String candidateIssueFirst = 'Issue 1';
   String candidateIssueSecond = 'Issue 2';
@@ -49,6 +57,7 @@ class _PodiumState extends State<Podium> {
   @override
   void initState() {
     setState(() {
+      stackFactors = widget.candidateStackFactors;
       stack = widget.candidateStack;
       stackLength = stack.length;
       candidateList = [];
@@ -129,28 +138,70 @@ class _PodiumState extends State<Podium> {
     return initial;
   }
 
-  List<Widget> getRatingCircles() {
+  List<Widget> getRatingCircles(String candidateId) {
+    CandidateIssueFactorValues current = stackFactors.firstWhere((element) => element.candidateId == candidateId);
+    List<num> candidateWeights = [current.climateWeight, current.drugPolicyWeight, current.economyWeight, current.educationWeight, current.gunPolicyWeight, current.healthcareWeight, current.housingWeight, current.immigrationWeight, current.policingWeight, current.reproductiveWeight];
+    List<dynamic> topIssues = [];
+    num maxWeight = candidateWeights.reduce(max);
+    int indexMaxWeight = candidateWeights.indexOf(maxWeight);
+    for(int i = 0; i < 3; i++) {
+      switch (indexMaxWeight) {
+        case 0:
+          topIssues.add('CLIMATE\n');
+          topIssues.add(current.climateScore.toDouble());
+          break;
+        case 1:
+          topIssues.add('DRUG\nPOLICY');
+          topIssues.add(current.drugPolicyScore.toDouble());
+          break;
+        case 2:
+          topIssues.add('ECONOMY\n');
+          topIssues.add(current.economyScore.toDouble());
+          break;
+        case 3:
+          topIssues.add('EDUCATION\n');
+          topIssues.add(current.educationScore.toDouble());
+          break;
+        case 4:
+          topIssues.add('GUN\nPOLICY');
+          topIssues.add(current.gunPolicyScore.toDouble());
+          break;
+        case 5:
+          topIssues.add('HEALTHCARE\n');
+          topIssues.add(current.healthcareScore.toDouble());
+          break;
+        case 6:
+          topIssues.add('HOUSING\n');
+          topIssues.add(current.housingScore.toDouble());
+          break;
+        case 7:
+          topIssues.add('IMMIGRATION\n');
+          topIssues.add(current.immigrationScore.toDouble());
+          break;
+        case 8:
+          topIssues.add('POLICING\n');
+          topIssues.add(current.policingScore.toDouble());
+          break;
+        case 9:
+          topIssues.add('REPRODUCTIVE\nRIGHTS');
+          topIssues.add(current.reproductiveScore.toDouble());
+          break;
+      }
+      candidateWeights[indexMaxWeight] = 0;
+      maxWeight = candidateWeights.reduce(max);
+      indexMaxWeight = candidateWeights.indexOf(maxWeight);
+    }
     List<Widget> circles = [];
-    circles.add(ratingCircles('Education\n', 5));
-    circles.add(ratingCircles('Climate\n', 3));
-    circles.add(ratingCircles('Drug Policy\n', 4));
-    circles.add(ratingCircles('Economy\n', 1));
-    circles.add(ratingCircles('Healthcare\n', 2));
-    circles.add(ratingCircles('Immigration\n', 4));
-    circles.add(ratingCircles('Policing\n', 3));
-    circles.add(ratingCircles('Reproductive \nHealth', 5));
-    circles.add(ratingCircles('Gun Control\n', 1));
-    circles.add(ratingCircles('Housing\n', 2));
+    circles.add(ratingCircles('${topIssues[0]}\n', topIssues[1]));
+    circles.add(ratingCircles('${topIssues[2]}\n', topIssues[3]));
+    circles.add(ratingCircles('${topIssues[4]}\n', topIssues[5]));
     return circles;
   }
 
   //returns the candidate's experience
   String candidateExperience(String careerStart) {
-    //TODO: careerStart must be stored in database in the format yyyy-mm-dd
     String experience = '';
-    String newCareerStart = careerStart.replaceAll('/', '');
-    newCareerStart = newCareerStart.substring(newCareerStart.length - 4) + newCareerStart.substring(0, newCareerStart.length - 4);
-    DateTime start = DateTime.parse(newCareerStart);
+    DateTime start = DateTime.parse(careerStart);
     DateTime currentDate = DateTime.now();
     int days = currentDate.difference(start).inDays;
     if(days > 364) {
@@ -258,26 +309,31 @@ class _PodiumState extends State<Podium> {
             //party, experience
             Expanded(
               flex: 7,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  //party
-                  Text(
-                    candidate.politicalAffiliation,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    //party
+                    Text(
+                      candidate.politicalAffiliation,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  //party
-                  Text(
-                    candidateExperience(candidate.careerStartDate),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
+                    const SizedBox(width: 10),
+                    //party
+                    Text(
+                      candidateExperience(candidate.careerStartDate),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 
@@ -286,23 +342,9 @@ class _PodiumState extends State<Podium> {
               flex: 35,
               child: Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Column(
-                  children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: getRatingCircles(),
-                      ),
-                    ),
-                    const Text(
-                      'Left: 0 | Right: 5',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: getRatingCircles(candidate.candidateId),
                 ),
               ),
             ),
@@ -501,6 +543,19 @@ class _PodiumState extends State<Podium> {
                         enableSwipeUp: false,
                         enableSwipeDown: false,
                       ),
+                      //alert
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            showAlert(context);
+                          },
+                          child: const Icon(
+                            CupertinoIcons.exclamationmark_circle_fill,
+                            size: 30,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -512,30 +567,40 @@ class _PodiumState extends State<Podium> {
   }
 
   Widget ratingCircles(String name, double rating) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: CircularPercentIndicator(
-        radius: 25,
-        lineWidth: 6,
-        progressColor: const Color(0xFFF3D433),
-        backgroundColor: const Color(0xFF8B9DDE),
-        footer: Text(
-          name,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        percent: rating/5,
-        center: Text(
-          '$rating',
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-          ),
+    return CircularPercentIndicator(
+      radius: 25,
+      lineWidth: 6,
+      progressColor: const Color(0xFFF3D433),
+      backgroundColor: const Color(0xFF8B9DDE),
+      footer: Text(
+        name,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
         ),
       ),
+      percent: rating/5,
+      center: Text(
+        '$rating',
+        style: const TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  showAlert(BuildContext context) {
+    AlertDialog alert = const AlertDialog(
+      content: Text('Swipe left to skip the current candidate. Swipe right to add the candidate to your ballot.\nEach candidate displays their ratings on the 3 political issues that are most important to them. A low rating means that the candidate leans more to the left on that issue. A high rating means that the candidate leans more to the right on that issue.'),
+    );
+    showDialog(
+      barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        }
     );
   }
 }
