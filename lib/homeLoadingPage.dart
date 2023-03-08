@@ -28,16 +28,19 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
   }
 
   void initializeObjects() async {
-    userBallot = Ballot.empty(); //TODO: initialize userBallot with database ballot
+    userBallot =
+        Ballot.empty(); //TODO: initialize userBallot with database ballot
     currentUser = await fetchCurrentUserAttributes();
     currentUserDemographics = await getUserDemographics(currentUser.email);
     // Need to push associated user factors to the database before running this function.
     currentUserFactors = await getUserIssueFactorValues(currentUser.email);
     candidateStack = await getAllCandidateDemographics();
-    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics, userBallot);
+    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics,
+        userBallot);
   }
 
-  void setObjectStates(UserIssueFactorValues uifv, List<CandidateDemographics> s, UserDemographics ud, Ballot ub) {
+  void setObjectStates(UserIssueFactorValues uifv,
+      List<CandidateDemographics> s, UserDemographics ud, Ballot ub) {
     setState(() {
       currentUserFactors = uifv;
       candidateStack = s;
