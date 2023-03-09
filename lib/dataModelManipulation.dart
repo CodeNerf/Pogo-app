@@ -31,7 +31,8 @@ Future<void> initialUserIssueFactorValues(String e) async {
   await Amplify.DataStore.save(newUserIssueFactorValues);
 }
 
-Future<void> updateUserIssueFactorValues(UserIssuesFactors issues, String e) async {
+Future<void> updateUserIssueFactorValues(
+    UserIssuesFactors issues, String e) async {
   final currentUserIssueFactorValues = await Amplify.DataStore.query(
     UserIssueFactorValues.classType,
     where: UserIssueFactorValues.USERID.eq(e),
@@ -57,16 +58,14 @@ Future<void> updateUserIssueFactorValues(UserIssuesFactors issues, String e) asy
       policingScore: issues.policingAlign,
       policingWeight: issues.policingCare,
       reproductiveScore: issues.reproductiveRightsAlign,
-      reproductiveWeight: issues.reproductiveRightsCare
-  );
+      reproductiveWeight: issues.reproductiveRightsCare);
   await Amplify.DataStore.save(updatedUserIssueFactorValues);
 }
 
 Future<UserIssuesFactors> fetchCurrentUserFactors(String e) async {
   final getUserFactors = await Amplify.DataStore.query(
       UserIssueFactorValues.classType,
-      where: UserIssueFactorValues.USERID.eq(e)
-  );
+      where: UserIssueFactorValues.USERID.eq(e));
   final currentUserFactors = getUserFactors.first;
   UserIssuesFactors current = UserIssuesFactors(
       currentUserFactors.climateScore!,
@@ -88,7 +87,6 @@ Future<UserIssuesFactors> fetchCurrentUserFactors(String e) async {
       currentUserFactors.policingScore!,
       currentUserFactors.policingWeight!,
       currentUserFactors.reproductiveScore!,
-      currentUserFactors.reproductiveWeight!
-  );
+      currentUserFactors.reproductiveWeight!);
   return current;
 }

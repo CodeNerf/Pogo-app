@@ -3,6 +3,8 @@ import 'package:pogo/HomeLoadingPage.dart';
 import 'package:pogo/LandingPage.dart';
 import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/amplifyFunctions.dart';
+import 'package:pogo/awsFunctions.dart';
+import 'package:pogo/models/userBallots.dart';
 
 class firstLoadingPage extends StatefulWidget {
   const firstLoadingPage({Key? key}) : super(key: key);
@@ -12,16 +14,16 @@ class firstLoadingPage extends StatefulWidget {
 }
 
 class _firstLoadingPageState extends State<firstLoadingPage> {
-
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     configure(context);
+    getUserBallot("nik");
   }
 
   void configure(context) async {
     bool check = await configureAmplify();
-    if(check) {
+    if (check) {
       loginCheck(context);
     }
   }
@@ -44,7 +46,6 @@ class _firstLoadingPageState extends State<firstLoadingPage> {
           ),
         );
       }
-
     }
     else {
       await Navigator.push(

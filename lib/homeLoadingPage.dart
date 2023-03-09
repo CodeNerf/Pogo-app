@@ -29,9 +29,9 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     super.initState();
   }
 
+
   void initializeObjects() async {
-    userBallot =
-        Ballot.empty(); //TODO: initialize userBallot with database ballot
+    userBallot = Ballot.empty(); //TODO: initialize userBallot with database ballot
     currentUser = await fetchCurrentUserAttributes();
     currentUserDemographics = await getUserDemographics(currentUser.email);
     // Need to push associated user factors to the database before running this function.
