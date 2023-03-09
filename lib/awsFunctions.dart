@@ -6,8 +6,6 @@ import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'package:pogo/models/userBallots.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
-import 'models/IssueFactorValues.dart' hide IssueFactorValues;
-import 'models/UserIssueFactorValues.dart' hide UserIssueFactorValues;
 
 Future<void> putUserIssueFactorValues(
     UserIssueFactorValues userIssueFactorValues) async {
@@ -162,6 +160,7 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
       candidateDemographicsList
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
+    safePrint("candidates pulled");
     return candidateDemographicsList;
   } finally {
     client.close();
@@ -296,6 +295,28 @@ Future<List<String>> getUserBallot(String userId) async {
     final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     safePrint("decoded ballot: ${decodedResponse['localBallot']}");
     return decodedResponse['localBallot'].cast<String>();
+  } finally {
+    client.close();
+  }
+
+Future<List<CandidateIssueFactorValues>> getAllCandidateIssueFactorValues() async {
+  var client = http.Client();
+  var candidateFactorsList = <CandidateIssueFactorValues>[];
+  try {
+    var response = await client.get(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/candidateissuefactorvalues'),
+        headers: {
+          "content-type": "application/json",
+        });
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    for (var candidateissuefactorvalues in decodedResponse) {
+      candidateFactorsList
+          .add(CandidateIssueFactorValues.fromJson(candidateissuefactorvalues));
+    }
+    safePrint("candidates pulled");
+    return candidateFactorsList;
+
   } finally {
     client.close();
   }

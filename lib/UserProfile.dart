@@ -1,60 +1,47 @@
-import 'dart:ffi';
-
-import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/LoginPage.dart';
-import 'package:pogo/UserIssuesFactors.dart';
+import 'package:pogo/awsFunctions.dart';
 import 'Onboarding/SurveyLandingPage.dart';
+import 'dynamoModels/UserDemographics.dart';
 import 'amplifyFunctions.dart';
+import 'dynamoModels/UserIssueFactorValues.dart';
 import 'user.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math';
-import 'package:expandable/expandable.dart';
 
 class UserProfile extends StatefulWidget {
-  final user currentUser;
-  final UserIssuesFactors currentUserFactors;
-  const UserProfile({Key? key, required this.currentUser, required this.currentUserFactors}) : super(key: key);
+  final UserIssueFactorValues currentUserFactors;
+  final UserDemographics currentUserDemographics;
+  const UserProfile({Key? key, required this.currentUserFactors, required this.currentUserDemographics}) : super(key: key);
 
   @override
   State<UserProfile> createState() => _UserProfileState();
 }
 
 class _UserProfileState extends State<UserProfile> {
-  String fname = "";
-  String lname = "";
-  String email = "";
-  String phone = "";
-  String address = "";
   String firstIssue = "";
   String secondIssue = "";
   String thirdIssue = "";
-  List<double> ratings = [];
+  List<num> ratings = [];
   @override
   void initState() {
     super.initState();
-    fname = widget.currentUser.fname;
-    lname = widget.currentUser.lname;
-    email = widget.currentUser.email;
-    phone = widget.currentUser.phone;
-    address = widget.currentUser.address;
-    ratings.add(widget.currentUserFactors.climateCare);
-    ratings.add(widget.currentUserFactors.drugPolicyCare);
-    ratings.add(widget.currentUserFactors.economyCare);
-    ratings.add(widget.currentUserFactors.educationCare);
-    ratings.add(widget.currentUserFactors.gunPolicyCare);
-    ratings.add(widget.currentUserFactors.healthcareCare);
-    ratings.add(widget.currentUserFactors.housingCare);
-    ratings.add(widget.currentUserFactors.immigrationCare);
-    ratings.add(widget.currentUserFactors.policingCare);
-    ratings.add(widget.currentUserFactors.reproductiveRightsCare);
+    ratings.add(widget.currentUserFactors.climateWeight);
+    ratings.add(widget.currentUserFactors.drugPolicyWeight);
+    ratings.add(widget.currentUserFactors.economyWeight);
+    ratings.add(widget.currentUserFactors.educationWeight);
+    ratings.add(widget.currentUserFactors.gunPolicyWeight);
+    ratings.add(widget.currentUserFactors.healthcareWeight);
+    ratings.add(widget.currentUserFactors.housingWeight);
+    ratings.add(widget.currentUserFactors.immigrationWeight);
+    ratings.add(widget.currentUserFactors.policingWeight);
+    ratings.add(widget.currentUserFactors.reproductiveWeight);
     setTopIssues(ratings);
   }
 
-  void setTopIssues(List<double> ratings) async {
+  void setTopIssues(List<num> ratings) async {
     List<String> topIssues = [];
-    var maxCare = ratings.cast<num>().reduce(max);
+    var maxCare = ratings.reduce(max);
     var indexMaxCare = ratings.indexOf(ratings.reduce(max));
     for(int i = 0; i < 3; i++) {
       switch(indexMaxCare) {
@@ -90,7 +77,7 @@ class _UserProfileState extends State<UserProfile> {
           break;
       }
       ratings[indexMaxCare] = 0;
-      maxCare = ratings.cast<num>().reduce(max);
+      maxCare = ratings.reduce(max);
       indexMaxCare = ratings.indexOf(ratings.reduce(max));
     }
     setState(() {
@@ -116,6 +103,35 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
+  //change profile pic
+  Future<void> changeProfilePic() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Change Profile Picture'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('This is a demo alert dialog.'),
+                Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -128,7 +144,7 @@ class _UserProfileState extends State<UserProfile> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
               child: Text(
-                  'Hello, $fname',
+                  'Hello, ${widget.currentUserDemographics.firstName}',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -142,23 +158,23 @@ class _UserProfileState extends State<UserProfile> {
             alignment: Alignment.center,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0,0,0,10),
-              child: CircularProfileAvatar(
-                '',
-                radius: 40,
-                child: const FlutterLogo(),
+              child: GestureDetector(
+                onTap: () {
+                  changeProfilePic();
+                },
+                child: CircularProfileAvatar(
+                  '',
+                  radius: 40,
+                  child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Image(
+                    image: NetworkImage(widget.currentUserDemographics.profileImageURL),
+                  ),
+                ),
+                ),
               ),
             ),
           ),
-
-          //expandable section
-          /*
-          ExpandablePanel(
-              header: Text('Personal Info'),
-              expanded: Text('Email: $email',),
-              collapsed: const Text(''),
-          ),
-
-           */
 
           //Personal info
           Container(
@@ -185,19 +201,19 @@ class _UserProfileState extends State<UserProfile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Email: $email',
+                          'Email: ${widget.currentUserDemographics.userId}',
                           style: const TextStyle(
                             fontSize: 18,
                           ),
                         ),
                         Text(
-                          'Phone: $phone',
+                          'Phone: ${widget.currentUserDemographics.phoneNumber}',
                           style: const TextStyle(
                             fontSize: 18,
                           ),
                         ),
                         Text(
-                          'Address: $address',
+                          'Address: ${widget.currentUserDemographics.addressLine1}',
                           style: const TextStyle(
                             fontSize: 18,
                           ),
@@ -319,6 +335,7 @@ class _UserProfileState extends State<UserProfile> {
 
 
           //share ballot social media
+          /*
           Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
@@ -408,6 +425,7 @@ class _UserProfileState extends State<UserProfile> {
           ),
           const SizedBox(height: 20),
 
+           */
           //logout button
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

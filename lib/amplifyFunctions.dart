@@ -4,7 +4,6 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'models/ModelProvider.dart'; //temp
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:flutter/material.dart';
 import 'amplifyconfiguration.dart';
 import 'user.dart';
 
@@ -155,14 +154,34 @@ Future<user> fetchCurrentUserAttributes() async {
   user current = user.all("", "", "", "", "");
   try {
     final result = await Amplify.Auth.fetchUserAttributes();
-    current.address = result[1].value;
-    current.phone = result[4].value;
-    current.fname = result[6].value;
-    current.lname = result[7].value;
-    current.email = result[8].value;
+    current = routeAttribute(result);
   } on AuthException catch (e) {
     safePrint(e.message);
   }
+  return current;
+}
+
+user routeAttribute(List<AuthUserAttribute> result) {
+  user current = user.all("", "", "", "", "");
+  result.forEach((element) {
+    switch (element.userAttributeKey.toString()) {
+      case 'address':
+        current.address = element.value;
+        break;
+      case 'phone_number':
+        current.phone = element.value;
+        break;
+      case 'given_name':
+        current.fname = element.value;
+        break;
+      case 'family_name':
+        current.lname = element.value;
+        break;
+      case 'email':
+        current.email = element.value;
+        break;
+    }
+  });
   return current;
 }
 
