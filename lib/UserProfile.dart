@@ -191,44 +191,42 @@ class _UserProfileState extends State<UserProfile> {
           ),
 
           Container(
-  width: MediaQuery.of(context).size.width,
-  decoration: BoxDecoration(
-    color: Colors.grey[200],
-    borderRadius: BorderRadius.circular(12),
-  ),
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(12),
+            ),
   child: Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       
-
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    const Text(
-      'Personal Info',
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 20,
-      ),
-    ),
- IconButton(
-    icon: const Icon(Icons.edit),
-    onPressed: () async {
-      UserDemographics updatedUserDemographics = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => EditPersonalInfoPage(userDemographics: widget.currentUserDemographics)),
-      );
-      if (updatedUserDemographics != null) {
-        setState(() {
-          widget.currentUserDemographics = updatedUserDemographics;
-        });
-      }
-    },
-  )
-  ],
-),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Personal Info',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+         IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () async {
+              UserDemographics updatedUserDemographics = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditPersonalInfoPage(userDemographics: widget.currentUserDemographics)),
+              );
+              if (updatedUserDemographics != null) {
+                setState(() {
+                  widget.currentUserDemographics = updatedUserDemographics;
+                });
+              }
+            },
+          )
+          ],
+        ),
 
         const SizedBox(height: 10),
         Row(
@@ -246,18 +244,18 @@ Row(
                   ),
                   const SizedBox(height: 5),
                   Text(
-  'Phone: ${widget.currentUserDemographics is UserDemographics ? widget.currentUserDemographics.phoneNumber : "N/A"}',
-  style: const TextStyle(
-    fontSize: 18,
-  ),
-),
-const SizedBox(height: 5),
-Text(
-  'Address: ${widget.currentUserDemographics is UserDemographics ? widget.currentUserDemographics.addressLine1 : "N/A"}',
-  style: const TextStyle(
-    fontSize: 18,
-  ),
-),
+                    'Phone: ${widget.currentUserDemographics is UserDemographics ? widget.currentUserDemographics.phoneNumber : "N/A"}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    'Address: ${widget.currentUserDemographics is UserDemographics ? widget.currentUserDemographics.addressLine1 : "N/A"}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
                 ],
               ),
             ),

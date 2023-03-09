@@ -18,7 +18,8 @@ class Podium extends StatefulWidget {
   final Function(CandidateDemographics, List<CandidateDemographics>) updateBallot;
   Ballot userBallot;
   List<CandidateIssueFactorValues> candidateStackFactors;
-  Podium({Key? key, required this.candidateStack, required this.candidateStackFactors, required this.userBallot, required this.updateBallot}) : super(key: key);
+  final Function() unFilterPodiumCandidates;
+  Podium({Key? key, required this.candidateStack, required this.candidateStackFactors, required this.userBallot, required this.updateBallot, required this.unFilterPodiumCandidates}) : super(key: key);
 
   @override
   State<Podium> createState() => _PodiumState();
@@ -516,7 +517,6 @@ class _PodiumState extends State<Podium> {
                             if(dir == Direction.right) {
                               addCandidate(stack[stackIterator]);
                               stackLength--;
-                              print(stackLength);
                             }
                             else {
                               if (count < stackLength) {
@@ -621,14 +621,33 @@ class _PodiumState extends State<Podium> {
                       //alert
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: GestureDetector(
-                          onTap: () {
-                            showAlert(context);
-                          },
-                          child: const Icon(
-                            CupertinoIcons.exclamationmark_circle_fill,
-                            size: 30,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showAlert(context);
+                              },
+                              child: const Icon(
+                                CupertinoIcons.exclamationmark_circle_fill,
+                                size: 30,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                print(stackLength);
+                                await widget.unFilterPodiumCandidates();
+                                setState(() {
+                                  stack = widget.candidateStack;
+                                  stackLength = stack.length;
+                                });
+                                print(stackLength);
+                              },
+                              child: const Text(
+                                'Remove Filter'
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

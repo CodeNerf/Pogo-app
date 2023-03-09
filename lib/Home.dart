@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pogo/CandidateProfile.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'UserProfile.dart';
 import 'VoterGuide.dart';
-import 'CandidateInfo.dart';
+import 'BallotPage.dart';
 import 'Podium.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
@@ -37,6 +38,8 @@ class _HomeState extends State<Home> {
   late UserDemographics currentUserDemographics;
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> candidateStackFactors;
+  CandidateDemographics candidate = CandidateDemographics(candidateId: '', seatType: '', electionType: '', careerStartDate: '', firstName: '', lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
+  List<CandidateDemographics> filteredCandidateStack = [];
 
   updateBallot(CandidateDemographics candidate, List<CandidateDemographics> podiumStack) {
     userBallot.localCandidateIds.add(candidate.candidateId);
@@ -50,13 +53,61 @@ class _HomeState extends State<Home> {
     CandidateDemographics candidate = ballotStack.firstWhere((element) => element.profileImageURL == candidatePic);
     userBallot.localCandidateIds.remove(candidate.candidateId);
     ballotStack.remove(candidate);
-    candidateStack.add(candidate);
+    if(filteredCandidateStack.isNotEmpty) {
+      if(candidate.seatType != candidateStack[0].seatType) {
+        filteredCandidateStack.add(candidate);
+      }
+      else {
+        candidateStack.add(candidate);
+      }
+    }
+    else {
+      candidateStack.add(candidate);
+    }
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void loadCandidateProfile(){
+
+  }
+
+  void filterPodiumCandidates(String category) async {
+    if(filteredCandidateStack.isNotEmpty) {
+      await unFilterPodiumCandidates();
+    }
+    int i = 0;
+    while(i < candidateStack.length) {
+      if(candidateStack[i].seatType != category) {
+        filteredCandidateStack.add(candidateStack[i]);
+        candidateStack.remove(candidateStack[i]);
+      }
+      else {
+        i++;
+      }
+    }
+    setState(() {
+      _selectedIndex = 1;
+      candidateStack = candidateStack;
+      filteredCandidateStack = filteredCandidateStack;
+    });
+  }
+
+  Future<void> unFilterPodiumCandidates() async {
+    while(filteredCandidateStack.isNotEmpty) {
+      candidateStack.add(filteredCandidateStack[0]);
+      filteredCandidateStack.remove(filteredCandidateStack[0]);
+    }
+    setState(() {
+      _selectedIndex = 1;
+      candidateStack = candidateStack;
+      filteredCandidateStack = filteredCandidateStack;
+    });
+    candidateStack.shuffle();
   }
 
   @override
@@ -68,7 +119,13 @@ class _HomeState extends State<Home> {
     currentUserDemographics = widget.currentUserDemographics;
     userBallot = widget.userBallot;
     setState(() {
-      _widgetOptions = <Widget>[VoterGuide(), Podium(candidateStack: candidateStack, userBallot: userBallot, updateBallot: updateBallot, candidateStackFactors: candidateStackFactors), CandidateInfo(userBallot: userBallot, candidateStack: candidateStack, ballotStack: ballotStack, removeFromBallot: removeFromBallot,), UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,)];
+      _widgetOptions = <Widget>[
+        VoterGuide(),
+        Podium(candidateStack: candidateStack, userBallot: userBallot, updateBallot: updateBallot, candidateStackFactors: candidateStackFactors, unFilterPodiumCandidates: unFilterPodiumCandidates,),
+        BallotPage(userBallot: userBallot, candidateStack: candidateStack, ballotStack: ballotStack, removeFromBallot: removeFromBallot, loadCustomCandidatesInPodium: filterPodiumCandidates,),
+        UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,),
+        CandidateProfile(candidate: candidate),
+      ];
     });
   }
 

@@ -5,35 +5,35 @@ import 'package:pogo/dynamoModels/CandidateDemographics.dart';
 import 'amplifyFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 
-class CandidateInfo extends StatefulWidget {
+class BallotPage extends StatefulWidget {
   Ballot userBallot;
   List<CandidateDemographics> candidateStack;
   List<CandidateDemographics> ballotStack;
   final Function(String) removeFromBallot;
-  CandidateInfo({Key? key, required this.userBallot, required this.candidateStack, required this.ballotStack, required this.removeFromBallot}) : super(key: key);
+  final Function(String) loadCustomCandidatesInPodium;
+  BallotPage({Key? key, required this.userBallot, required this.candidateStack, required this.ballotStack, required this.removeFromBallot, required this.loadCustomCandidatesInPodium}) : super(key: key);
 
   @override
-  _CandidateInfoState createState() => _CandidateInfoState();
+  _BallotPageState createState() => _BallotPageState();
 }
 
-class _CandidateInfoState extends State<CandidateInfo> {
+class _BallotPageState extends State<BallotPage> {
   bool _expandedLocal = false;
   bool _expandedGlobal = false;
   bool _expandedOther = false;
-  //List<int> circleCounts = List.filled(13, 1);
-  int mayor = 0;
-  int cityClerk = 0;
-  int cityCouncil = 0;
-  int countySheriff = 0;
-  int trialCourtJudge = 0;
-  int countyRegisterOfDeeds = 0;
-  int schoolBoard = 0;
-  int prosecutors = 0;
-  int coroners = 0;
-  int planningZoningCommission = 0;
-  int publicWorksCommission = 0;
-  int commissionerOfRevenue = 0;
-  int countyCommissioners = 0;
+  int mayor = 1;
+  int cityClerk = 1;
+  int cityCouncil = 1;
+  int countySheriff = 1;
+  int trialCourtJudge = 1;
+  int countyRegisterOfDeeds = 1;
+  int schoolBoard = 1;
+  int prosecutors = 1;
+  int coroners = 1;
+  int planningZoningCommission = 1;
+  int publicWorksCommission = 1;
+  int commissionerOfRevenue = 1;
+  int countyCommissioners = 1;
   List<String> mayorPics = [];
   List<String> cityClerkPics = [];
   List<String> cityCouncilPics = [];
@@ -113,9 +113,63 @@ class _CandidateInfoState extends State<CandidateInfo> {
         }
       }
     }
+    mayorPics.add('');
+    cityClerkPics.add('');
+    cityCouncilPics.add('');
+    countySheriffPics.add('');
+    trialCourtJudgePics.add('');
+    countyRegisterOfDeedsPics.add('');
+    schoolBoardPics.add('');
+    prosecutorsPics.add('');
+    coronersPics.add('');
+    planningZoningCommissionPics.add('');
+    publicWorksCommissionPics.add('');
+    commissionerOfRevenuePics.add('');
+    countyCommissionersPics.add('');
   }
 
-  void removeCandidate(String candidatePic) {
+  void removeCandidate(String candidatePic, String title) {
+    switch (title) {
+      case 'Mayor':
+        mayorPics.remove(candidatePic);
+        break;
+      case 'City Clerk':
+        cityClerkPics.remove(candidatePic);
+        break;
+      case 'City Council':
+        cityCouncilPics.remove(candidatePic);
+        break;
+      case 'County Sheriff':
+        countySheriffPics.remove(candidatePic);
+        break;
+      case 'Trial Court Judge':
+        trialCourtJudgePics.remove(candidatePic);
+        break;
+      case 'County Register of Deeds':
+        countyRegisterOfDeedsPics.remove(candidatePic);
+        break;
+      case 'School Board':
+        schoolBoardPics.remove(candidatePic);
+        break;
+      case 'Prosecutor':
+        prosecutorsPics.remove(candidatePic);
+        break;
+      case 'Coroner':
+        coronersPics.remove(candidatePic);
+        break;
+      case 'Planning/Zoning Commission':
+        planningZoningCommissionPics.remove(candidatePic);
+        break;
+      case 'Public Works Commission':
+        publicWorksCommissionPics.remove(candidatePic);
+        break;
+      case 'Commissioner of Revenue':
+        commissionerOfRevenuePics.remove(candidatePic);
+        break;
+      case 'County Commissioner':
+        countyCommissionersPics.remove(candidatePic);
+        break;
+    }
     widget.removeFromBallot(candidatePic);
   }
 
@@ -137,10 +191,8 @@ class _CandidateInfoState extends State<CandidateInfo> {
               SizedBox(height: 6),
               Container(
                 height: 330, 
-                child: Scrollbar(
-    isAlwaysShown: true,
                 child: ListView(
-                  physics: BouncingScrollPhysics(), 
+                  physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                   children: [
                     buildRow(context, 'Mayor', mayor, mayorPics, (count) {
@@ -163,7 +215,7 @@ class _CandidateInfoState extends State<CandidateInfo> {
                         countySheriff = count;
                       });
                     }, 4),
-                    buildRow(context, 'Trial Court Judges', trialCourtJudge, trialCourtJudgePics, (count) {
+                    buildRow(context, 'Trial Court Judge', trialCourtJudge, trialCourtJudgePics, (count) {
                       setState(() {
                         trialCourtJudge = count;
                       });
@@ -178,12 +230,12 @@ class _CandidateInfoState extends State<CandidateInfo> {
                         schoolBoard = count;
                       });
                     }, 7),
-                    buildRow(context, 'Prosecutors', prosecutors, prosecutorsPics, (count) {
+                    buildRow(context, 'Prosecutor', prosecutors, prosecutorsPics, (count) {
                       setState(() {
                         prosecutors = count;
                       });
                     }, 8),
-                    buildRow(context, 'Coroners', coroners, coronersPics, (count) {
+                    buildRow(context, 'Coroner', coroners, coronersPics, (count) {
                       setState(() {
                         coroners = count;
                       });
@@ -209,7 +261,7 @@ class _CandidateInfoState extends State<CandidateInfo> {
                       });
                     }, 13),
                   ],
-                )),
+                ),
               ),
             ],
           ),
@@ -247,14 +299,13 @@ class _CandidateInfoState extends State<CandidateInfo> {
 
   Widget buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
     return SizedBox(
-      width: 400,
+      width: MediaQuery.of(context).size.width,
       child: Container(
         margin: EdgeInsets.only(bottom: 6.0),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
           decoration: BoxDecoration(
             color: const Color(0xFFF3D433),
-
             borderRadius: BorderRadius.circular(10.0),
             border: Border.all(
               color: Colors.black,
@@ -270,29 +321,25 @@ class _CandidateInfoState extends State<CandidateInfo> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          title,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: Icon(Icons.add_circle),
-                          onPressed: () {
-                            updateCircleCount(circleCount + 1);
-                          },
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5.0),
+                          child: Text(
+                            title,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 1),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: List.generate(
                           circleCount,
                               (index) => Padding(
-                            padding: EdgeInsets.only(right: 10.0),
+                            padding: const EdgeInsets.only(right: 10.0),
                             child: buildCircleCandidate(() {
                               updateCircleCount(circleCount - 1);
                             },() {
@@ -300,6 +347,7 @@ class _CandidateInfoState extends State<CandidateInfo> {
                             },
                               candidatePics[index],
                               context,
+                              title,
                             ),
                           ),
                         ),
@@ -309,7 +357,6 @@ class _CandidateInfoState extends State<CandidateInfo> {
                   ],
                 ),
               ),
-
             ],
           ),
         ),
@@ -317,48 +364,71 @@ class _CandidateInfoState extends State<CandidateInfo> {
     );
   }
 
-  Widget buildCircleCandidate(VoidCallback onDelete, Null Function() param1, String candidatePic, context) {
-    return GestureDetector(
-      onLongPress: () {
-        //var context;
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Delete saved Candidate'),
-              content: Text('Are you sure you want to delete this saved Candidate?'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Cancel'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text('Delete'),
-                  onPressed: () {
-                    onDelete();
-                    Navigator.of(context).pop();
-                    removeCandidate(candidatePic);
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-      child: CircularProfileAvatar(
-        '',
-        radius: 40,
-        elevation: 5,
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: Image(
-            image: NetworkImage(candidatePic),
+  Widget buildCircleCandidate(VoidCallback onDelete, Null Function() param1, String candidatePic, context, String title) {
+    if(candidatePic != '') {
+      CandidateDemographics candidate = widget.ballotStack.firstWhere((element) => element.profileImageURL == candidatePic);
+      return GestureDetector(
+        onLongPress: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Remove ${candidate.firstName} ${candidate.lastName} from Ballot'),
+                content: const Text('Are you sure you want to remove them from your ballot?'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Remove'),
+                    onPressed: () {
+                      onDelete();
+                      Navigator.of(context).pop();
+                      removeCandidate(candidatePic, title);
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: CircularProfileAvatar(
+          '',
+          radius: 40,
+          elevation: 5,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: Image(
+              image: NetworkImage(candidatePic),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
+    else {
+      return GestureDetector(
+        onTap: () {
+          widget.loadCustomCandidatesInPodium(title);
+        },
+        child: Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.grey[200],
+            border: Border.all(color: Colors.black, width: 2),
+          ),
+          child: const Icon(
+            Icons.add,
+            color: Colors.black,
+            size: 20,
+          ),
+        ),
+      );
+    }
   }
 }
 

@@ -23,6 +23,7 @@ class CandidateDemographics extends Demographics {
       required super.racialIdentity,
       required super.politicalAffiliation});
 
+
   //factory constructor
   factory CandidateDemographics.fromJson(Map json) {
     return CandidateDemographics(
