@@ -24,11 +24,7 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     super.initState();
   }
 
-  void initializeObjects() async {
-    currentUser = await fetchCurrentUserAttributes();
-    currentUserFactors = await fetchCurrentUserFactors(currentUser.email);
-    setObjectStates(currentUser, currentUserFactors);
-  }
+  void initializeObjects() async {}
 
   void setObjectStates(user u, UserIssuesFactors uif) {
     setState(() {
@@ -37,12 +33,15 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     });
     goHome();
   }
-  
+
   void goHome() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Home(currentUser: currentUser, currentUserFactors: currentUserFactors,),
+        builder: (context) => Home(
+          currentUser: currentUser,
+          currentUserFactors: currentUserFactors,
+        ),
       ),
     );
   }
@@ -71,5 +70,3 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     );
   }
 }
-
-

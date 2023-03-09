@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -13,7 +12,8 @@ Future<bool> configureAmplify() async {
   try {
     final auth = AmplifyAuthCognito();
     await Amplify.addPlugin(auth);
-    final dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+    final dataStorePlugin =
+        AmplifyDataStore(modelProvider: ModelProvider.instance);
     await Amplify.addPlugin(dataStorePlugin);
     safePrint("Amplify Configured");
     await Amplify.configure(amplifyconfig);
@@ -28,8 +28,7 @@ Future<bool> isUserSignedIn() async {
   try {
     await Amplify.Auth.fetchAuthSession();
     return true;
-  }
-  on AuthException catch (e) {
+  } on AuthException catch (e) {
     safePrint(e.message);
     return false;
   }
@@ -44,11 +43,12 @@ Future<AuthUser> getCurrentUser() async {
   return user;
 }
 
-Future<bool> signUpUser(String email, String password, String fname, String lname, String phoneNumber, String address) async {
+Future<bool> signUpUser(String email, String password, String fname,
+    String lname, String phoneNumber, String address) async {
   //bool isSignUpComplete = false; //Flag used to route away from signup, possibly better as return value
   try {
     String phone = '+1$phoneNumber';
-    final userAttributes = <CognitoUserAttributeKey, String> {
+    final userAttributes = <CognitoUserAttributeKey, String>{
       CognitoUserAttributeKey.givenName: fname,
       CognitoUserAttributeKey.familyName: lname,
       CognitoUserAttributeKey.phoneNumber: phone,
@@ -75,8 +75,8 @@ Future<bool> signInUser(String email, String password) async {
         await Amplify.Auth.signIn(username: email, password: password);
     return true;
   } on AuthException catch (e) {
-    return false;
     safePrint(e.message);
+    return false;
   }
 }
 
@@ -118,7 +118,7 @@ Future<bool> resendConfirmationCode(String email) async {
     return false;
   }
 }
-    
+
 Future<bool> resetPassword(String username) async {
   try {
     await Amplify.Auth.resetPassword(username: username);
@@ -130,9 +130,11 @@ Future<bool> resetPassword(String username) async {
 }
 
 //todo create model to reduce function parameters to 1
-Future<bool> confirmResetPassword(String username, String password, String code) async {
+Future<bool> confirmResetPassword(
+    String username, String password, String code) async {
   try {
-    await Amplify.Auth.confirmResetPassword(username: username, newPassword: password, confirmationCode: code);
+    await Amplify.Auth.confirmResetPassword(
+        username: username, newPassword: password, confirmationCode: code);
     return true;
   } on AmplifyException catch (e) {
     safePrint(e);
@@ -178,7 +180,7 @@ Future<String> fetchCurrentUserEmail() async {
 Future<bool> isUserConfirmed() async {
   try {
     final result = await Amplify.Auth.fetchUserAttributes();
-    if(result[2].value == 'true') {
+    if (result[2].value == 'true') {
       return true;
     }
     return false;
@@ -191,7 +193,7 @@ Future<bool> isUserConfirmed() async {
 Future<bool> isSurveyCompleted() async {
   try {
     final result = await Amplify.Auth.fetchUserAttributes();
-    if(result[5].value == "0") {
+    if (result[5].value == "0") {
       safePrint('${result[7].userAttributeKey} + ${result[7].value}');
       //not completed
       return false;

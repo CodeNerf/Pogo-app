@@ -140,6 +140,7 @@ Future<CandidateDemographics> getCandidateDemographics(
           "content-type": "application/json",
         });
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint(decodedResponse);
     return CandidateDemographics.fromJson(decodedResponse);
   } finally {
     client.close();
@@ -259,6 +260,42 @@ Future<UserLocalBallot> getUserLocalBallot(String userId) async {
     final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     safePrint(decodedResponse);
     return UserLocalBallot.fromJson(decodedResponse);
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> putUserBallot(String userId, List<String> localBallot,
+    List<String> stateBallot, List<String> nationalBallot) async {
+  final client = http.Client();
+  try {
+    final response = await client.put(
+        Uri.https(
+            'i4tti59faj.execute-api.us-east-1.amazonaws.com', '/userBallot'),
+        headers: {"content-type": "application/json"},
+        body: jsonEncode({
+          'userId': userId,
+          'localBallot': localBallot,
+          'stateBallot': stateBallot,
+          'nationalBallot': nationalBallot,
+        }));
+    safePrint("AWS response: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+  } finally {
+    client.close();
+  }
+}
+
+Future<List<String>> getUserBallot(String userId) async {
+  final client = http.Client();
+  try {
+    final response = await client.get(
+      Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+          '/userBallot/$userId'),
+      headers: {"content-type": "application/json"},
+    );
+    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint("decoded ballot: ${decodedResponse['localBallot']}");
+    return decodedResponse['localBallot'].cast<String>();
   } finally {
     client.close();
   }

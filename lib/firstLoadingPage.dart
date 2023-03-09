@@ -14,9 +14,10 @@ class firstLoadingPage extends StatefulWidget {
 
 class _firstLoadingPageState extends State<firstLoadingPage> {
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     configure(context);
+    getUserBallot("nik");
   }
 
   void configure(context) async {
@@ -24,11 +25,6 @@ class _firstLoadingPageState extends State<firstLoadingPage> {
     if (check) {
       loginCheck(context);
     }
-    signInUser('nich@nich.nich', 'P@ssw0rd');
-    putUserNationalBallot(UserNationalBallot(
-        userId: "userId",
-        presidential: "presidential",
-        congressional: "congressional"));
   }
 
   void loginCheck(context) async {
