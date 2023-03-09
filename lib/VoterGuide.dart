@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'amplifyFunctions.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VoterGuide extends StatefulWidget {
-  const VoterGuide({Key? key}) : super(key: key);
+  final UserDemographics user;
+  const VoterGuide({Key? key, required this.user}) : super(key: key);
   @override
   _VoterGuideState createState() => _VoterGuideState();
 }
@@ -56,7 +57,7 @@ List<bool> _isChecked = [false, false, false, false];
         Positioned(
           top: 20.0,
           left: 20.0,
-          child: Text("[DIsplay Name]",style: TextStyle(fontSize: 22.0,
+          child: Text('${widget.user.firstName} ${widget.user.lastName}',style: TextStyle(fontSize: 22.0,
               fontWeight: FontWeight.bold, color: Colors.white),),
         ),
           Row(
