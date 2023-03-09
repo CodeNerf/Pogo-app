@@ -14,7 +14,7 @@ class firstLoadingPage extends StatefulWidget {
 
 class _firstLoadingPageState extends State<firstLoadingPage> {
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     configure(context);
   }
