@@ -292,9 +292,12 @@ Future<List<String>> getUserBallot(String userId) async {
           '/userBallot/$userId'),
       headers: {"content-type": "application/json"},
     );
-    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    safePrint("decoded ballot: ${decodedResponse['localBallot']}");
-    return decodedResponse['localBallot'].cast<String>();
+    if (response.body.isNotEmpty) {
+      final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      safePrint("decoded ballot: ${decodedResponse['localBallot']}");
+      return decodedResponse['localBallot'].cast<String>();
+    }
+    return [];
   } finally {
     client.close();
   }
@@ -303,34 +306,41 @@ Future<List<String>> getUserBallot(String userId) async {
 Future<void> updateUserBallot(String userId, String candidateId) async {
   final allCandidates =
       await getAllCandidateDemographics(); //get a list of all available candidate (current one is mutated throughout executuion)
-  var userBallot = await getUserBallot(userId); //get the current user ballot
-  safePrint("initial ballot $userBallot");
-  safePrint("all candidates: $allCandidates");
-  final candidateObject = allCandidates.firstWhere((candidate) =>
-      candidate.candidateId ==
-      candidateId); //Find the candidate object belonging to the candidate the user wants to add
-  safePrint("candidateObject: $candidateObject");
-  final candidateSeat =
-      candidateObject.seatType; //seat of candidate user wants to add
-  safePrint("candidate seat: $candidateSeat");
-  var candidateToReplace;
-  userBallot.forEach((candidateId) {
-    final candidateObject = allCandidates
-        .firstWhere((candidate) => candidate.candidateId == candidateId);
-    safePrint("found candidate: $candidateObject");
-    //find current candidate object by comparing each candidate's seat type with the one the user wants to update
-    if (candidateObject.seatType == candidateSeat) {
-      candidateToReplace = candidateObject.candidateId;
-      safePrint("candidate found $candidateToReplace");
+  List<String> userBallot =
+      await getUserBallot(userId); //get the current user ballot
+  //check if list is empty or does not exist
+  if (userBallot.isEmpty) {
+    putUserBallot(userId, [candidateId], [''], ['']);
+    safePrint("first addition");
+  } else {
+    safePrint("initial ballot $userBallot");
+    safePrint("all candidates: $allCandidates");
+    final candidateObject = allCandidates.firstWhere((candidate) =>
+        candidate.candidateId ==
+        candidateId); //Find the candidate object belonging to the candidate the user wants to add
+    safePrint("candidateObject: $candidateObject");
+    final candidateSeat =
+        candidateObject.seatType; //seat of candidate user wants to add
+    safePrint("candidate seat: $candidateSeat");
+    var candidateToReplace;
+    userBallot.forEach((candidateId) {
+      final candidateObject = allCandidates
+          .firstWhere((candidate) => candidate.candidateId == candidateId);
+      safePrint("found candidate: $candidateObject");
+      //find current candidate object by comparing each candidate's seat type with the one the user wants to update
+      if (candidateObject.seatType == candidateSeat) {
+        candidateToReplace = candidateObject.candidateId;
+        safePrint("candidate found $candidateToReplace");
+      }
+    });
+    if (candidateToReplace != null) {
+      userBallot.removeWhere((candidateId) =>
+          candidateId == candidateToReplace); //remove the candidate
     }
-  });
-  if (candidateToReplace != null) {
-    userBallot.removeWhere((candidateId) =>
-        candidateId == candidateToReplace); //remove the candidate
+    userBallot.add(candidateId);
+    safePrint("final ballot $userBallot");
+    putUserBallot(userId, userBallot, [''], ['']);
   }
-  userBallot.add(candidateId);
-  safePrint("final ballot $userBallot");
-  putUserBallot(userId, userBallot, [''], ['']);
 }
 
 Future<List<CandidateIssueFactorValues>>
