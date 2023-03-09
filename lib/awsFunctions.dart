@@ -308,6 +308,7 @@ Future<void> updateUserBallot(String userId, String candidateId) async {
       await getAllCandidateDemographics(); //get a list of all available candidate (current one is mutated throughout executuion)
   List<String> userBallot =
       await getUserBallot(userId); //get the current user ballot
+  //check if list is empty or does not exist
   if (userBallot.isEmpty) {
     putUserBallot(userId, [candidateId], [''], ['']);
     safePrint("first addition");

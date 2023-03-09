@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
@@ -239,9 +240,9 @@ class _PodiumState extends State<Podium> {
     widget.loadCandidateProfile(name);
   }
 
-  void addCandidate(CandidateDemographics candidate) {
+  void addCandidate(CandidateDemographics candidate) async {
     stack.remove(candidate);
-    updateUserBallot("bevama9805@luxeic.com", candidate.candidateId);
+    updateUserBallot(await fetchCurrentUserEmail(), candidate.candidateId);
     widget.updateBallot(candidate, stack);
   }
 
