@@ -18,7 +18,6 @@ class _firstLoadingPageState extends State<firstLoadingPage> {
   void initState() async {
     super.initState();
     configure(context);
-    getUserBallot("nik");
   }
 
   void configure(context) async {
