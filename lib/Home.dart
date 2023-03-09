@@ -38,7 +38,6 @@ class _HomeState extends State<Home> {
   late UserDemographics currentUserDemographics;
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> candidateStackFactors;
-  CandidateDemographics candidate = CandidateDemographics(candidateId: '', seatType: '', electionType: '', careerStartDate: '', firstName: '', lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
   List<CandidateDemographics> filteredCandidateStack = [];
 
   updateBallot(CandidateDemographics candidate, List<CandidateDemographics> podiumStack) {
@@ -72,8 +71,16 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void loadCandidateProfile(){
-
+  Future<void> loadCandidateProfile(String fullName) async {
+    List<String> splitName = fullName.split(' ');
+    CandidateDemographics searchCandidate = candidateStack.firstWhere((element) => element.firstName == splitName[0] && element.lastName == splitName[1]);
+    CandidateIssueFactorValues searchCandidateValues = candidateStackFactors.firstWhere((element) => element.candidateId == searchCandidate.candidateId);
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CandidateProfile(candidate: searchCandidate, candidateValues: searchCandidateValues),
+      ),
+    );
   }
 
   void filterPodiumCandidates(String category) async {
@@ -120,11 +127,10 @@ class _HomeState extends State<Home> {
     userBallot = widget.userBallot;
     setState(() {
       _widgetOptions = <Widget>[
-        VoterGuide(),
-        Podium(candidateStack: candidateStack, userBallot: userBallot, updateBallot: updateBallot, candidateStackFactors: candidateStackFactors, unFilterPodiumCandidates: unFilterPodiumCandidates,),
+        VoterGuide(user: currentUserDemographics,),
+        Podium(candidateStack: candidateStack, userBallot: userBallot, updateBallot: updateBallot, candidateStackFactors: candidateStackFactors, unFilterPodiumCandidates: unFilterPodiumCandidates, loadCandidateProfile: loadCandidateProfile,),
         BallotPage(userBallot: userBallot, candidateStack: candidateStack, ballotStack: ballotStack, removeFromBallot: removeFromBallot, loadCustomCandidatesInPodium: filterPodiumCandidates,),
         UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,),
-        CandidateProfile(candidate: candidate),
       ];
     });
   }

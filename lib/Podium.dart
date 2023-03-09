@@ -1,13 +1,9 @@
 import 'dart:math';
-import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dynamoModels/Ballot.dart';
 import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
-import 'CandidateProfile.dart';
-import 'awsFunctions.dart';
-import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -19,7 +15,8 @@ class Podium extends StatefulWidget {
   Ballot userBallot;
   List<CandidateIssueFactorValues> candidateStackFactors;
   final Function() unFilterPodiumCandidates;
-  Podium({Key? key, required this.candidateStack, required this.candidateStackFactors, required this.userBallot, required this.updateBallot, required this.unFilterPodiumCandidates}) : super(key: key);
+  final Function(String) loadCandidateProfile;
+  Podium({Key? key, required this.candidateStack, required this.candidateStackFactors, required this.userBallot, required this.updateBallot, required this.unFilterPodiumCandidates, required this.loadCandidateProfile}) : super(key: key);
 
   @override
   State<Podium> createState() => _PodiumState();
@@ -49,7 +46,8 @@ class _PodiumState extends State<Podium> {
   Color federal = const Color(0xFF808080);
 
   //list of valid candidates' names
-  static List<String> candidateList = <String>[];
+  //static List<String> candidateList = <String>[];
+  static List<String> candidateList = [];
 
   @override
   void initState() {
@@ -59,15 +57,19 @@ class _PodiumState extends State<Podium> {
       stackLength = stack.length;
       candidateList = [];
     });
+    initializeSearchResults();
+    super.initState();
+  }
+
+  void initializeSearchResults() {
     for(int i = 0; i < stackLength; i++) {
       candidateList.add('${stack[i].firstName} ${stack[i].lastName}');
     }
-    super.initState();
   }
 
   //suggests candidates when typing in search bar
   Future<List<String>> candidateSearchOptions(String query) async {
-    List<String> matches = <String>[];
+    List<String> matches = [];
     matches.addAll(candidateList);
     matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
     return matches;
@@ -217,13 +219,8 @@ class _PodiumState extends State<Podium> {
     return experience;
   }
 
-  void goToCandidateProfile(context, CandidateDemographics candidate) async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CandidateProfile(candidate: candidate),
-      ),
-    );
+  void goToCandidateProfile(String name) async {
+    widget.loadCandidateProfile(name);
   }
 
   void addCandidate(CandidateDemographics candidate) {
@@ -243,7 +240,7 @@ class _PodiumState extends State<Podium> {
       ),
       child: InkWell(
         onTap: () async {
-          goToCandidateProfile(context, candidate);
+          goToCandidateProfile('${candidate.firstName} ${candidate.lastName}');
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -494,7 +491,7 @@ class _PodiumState extends State<Podium> {
                                 return suggestionsBox;
                               },
                               onSuggestionSelected: (suggestion) {
-                                searchController.text = suggestion;
+                                goToCandidateProfile(suggestion);
                               },
                             ),
                           ),
@@ -629,20 +626,36 @@ class _PodiumState extends State<Podium> {
                                 showAlert(context);
                               },
                               child: const Icon(
-                                CupertinoIcons.exclamationmark_circle_fill,
-                                size: 30,
+                                CupertinoIcons.question_circle,
+                                size: 25,
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () async {
-                                await widget.unFilterPodiumCandidates();
-                                setState(() {
-                                  stack = widget.candidateStack;
-                                  stackLength = stack.length;
-                                });
-                              },
-                              child: const Text(
-                                'Remove Filter'
+                            Material(
+                              color: const Color(0xFFF3D433),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: InkWell(
+                                splashColor: const Color(0xFF000000),
+                                splashFactory: InkRipple.splashFactory,
+                                borderRadius: BorderRadius.circular(10),
+                                onTap: () async {
+                                  await widget.unFilterPodiumCandidates();
+                                  setState(() {
+                                    stack = widget.candidateStack;
+                                    stackLength = stack.length;
+                                  });
+                                  initializeSearchResults();
+                                },
+                                child: const Text(
+                                  'Remove Filter',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -685,7 +698,7 @@ class _PodiumState extends State<Podium> {
 
   showAlert(BuildContext context) {
     AlertDialog alert = const AlertDialog(
-      content: Text('Swipe left to skip the current candidate. Swipe right to add the candidate to your ballot.\nEach candidate displays their ratings on the 3 political issues that are most important to them. A low rating means that the candidate leans more to the left on that issue. A high rating means that the candidate leans more to the right on that issue.'),
+      content: Text('Swipe left to skip the current candidate.\nSwipe right to add the candidate to your ballot.\n\nEach candidate displays their ratings on the 3 political issues that are most important to them. A low rating means that the candidate leans more to the left on that issue. A high rating means that the candidate leans more to the right on that issue.\n\nThe candidates can be filtered by their position through clicking an empty circle in the ballot.'),
     );
     showDialog(
       barrierDismissible: true,
