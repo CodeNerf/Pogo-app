@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
 import 'dynamoModels/CandidateDemographics.dart';
@@ -11,12 +12,21 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 class Podium extends StatefulWidget {
   List<CandidateDemographics> candidateStack;
-  final Function(CandidateDemographics, List<CandidateDemographics>) updateBallot;
+  final Function(CandidateDemographics, List<CandidateDemographics>)
+      updateBallot;
   Ballot userBallot;
   List<CandidateIssueFactorValues> candidateStackFactors;
   final Function() unFilterPodiumCandidates;
   final Function(String) loadCandidateProfile;
-  Podium({Key? key, required this.candidateStack, required this.candidateStackFactors, required this.userBallot, required this.updateBallot, required this.unFilterPodiumCandidates, required this.loadCandidateProfile}) : super(key: key);
+  Podium(
+      {Key? key,
+      required this.candidateStack,
+      required this.candidateStackFactors,
+      required this.userBallot,
+      required this.updateBallot,
+      required this.unFilterPodiumCandidates,
+      required this.loadCandidateProfile})
+      : super(key: key);
 
   @override
   State<Podium> createState() => _PodiumState();
@@ -32,13 +42,14 @@ class _PodiumState extends State<Podium> {
   late int stackLength;
   String candidateIssueFirst = 'Issue 1';
   String candidateIssueSecond = 'Issue 2';
-  final SwipeableCardSectionController _cardController = SwipeableCardSectionController();
+  final SwipeableCardSectionController _cardController =
+      SwipeableCardSectionController();
   int count = 3;
   int stackIterator = 0;
   int numberOfIssues = 10;
 
   //local,state,federal bar values
-  final List<bool> _selections = List.generate(3, (_)=>false );
+  final List<bool> _selections = List.generate(3, (_) => false);
   Color full = const Color(0xFFF3D433);
   Color empty = const Color(0xFF808080);
   Color local = const Color(0xFFF3D433);
@@ -62,7 +73,7 @@ class _PodiumState extends State<Podium> {
   }
 
   void initializeSearchResults() {
-    for(int i = 0; i < stackLength; i++) {
+    for (int i = 0; i < stackLength; i++) {
       candidateList.add('${stack[i].firstName} ${stack[i].lastName}');
     }
   }
@@ -91,23 +102,21 @@ class _PodiumState extends State<Podium> {
   }
 
   void updateStack(int check) async {
-    if(check == 0) {
+    if (check == 0) {
       setState(() {
         state = empty;
         federal = empty;
         local = full;
       });
       //pull local candidate stack
-    }
-    else if(check == 1) {
+    } else if (check == 1) {
       setState(() {
         local = empty;
         federal = empty;
         state = full;
       });
       //pull state candidate stack
-    }
-    else {
+    } else {
       setState(() {
         local = empty;
         state = empty;
@@ -119,17 +128,14 @@ class _PodiumState extends State<Podium> {
 
   List<Widget> initialCards() {
     List<Widget> initial = [];
-    if(stackLength == 1) {
+    if (stackLength == 1) {
       initial.add(newCard(stack[0]));
-    }
-    else if(stackLength == 2) {
+    } else if (stackLength == 2) {
       initial.add(newCard(stack[0]));
       initial.add(newCard(stack[1]));
-    }
-    else if(stackLength == 0) {
+    } else if (stackLength == 0) {
       return initial;
-    }
-    else {
+    } else {
       initial.add(newCard(stack[0]));
       initial.add(newCard(stack[1]));
       initial.add(newCard(stack[2]));
@@ -138,12 +144,24 @@ class _PodiumState extends State<Podium> {
   }
 
   List<Widget> getRatingCircles(String candidateId) {
-    CandidateIssueFactorValues current = stackFactors.firstWhere((element) => element.candidateId == candidateId);
-    List<num> candidateWeights = [current.climateWeight, current.drugPolicyWeight, current.economyWeight, current.educationWeight, current.gunPolicyWeight, current.healthcareWeight, current.housingWeight, current.immigrationWeight, current.policingWeight, current.reproductiveWeight];
+    CandidateIssueFactorValues current = stackFactors
+        .firstWhere((element) => element.candidateId == candidateId);
+    List<num> candidateWeights = [
+      current.climateWeight,
+      current.drugPolicyWeight,
+      current.economyWeight,
+      current.educationWeight,
+      current.gunPolicyWeight,
+      current.healthcareWeight,
+      current.housingWeight,
+      current.immigrationWeight,
+      current.policingWeight,
+      current.reproductiveWeight
+    ];
     List<dynamic> topIssues = [];
     num maxWeight = candidateWeights.reduce(max);
     int indexMaxWeight = candidateWeights.indexOf(maxWeight);
-    for(int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
       switch (indexMaxWeight) {
         case 0:
           topIssues.add('CLIMATE\n');
@@ -203,17 +221,15 @@ class _PodiumState extends State<Podium> {
     DateTime start = DateTime.parse(careerStart);
     DateTime currentDate = DateTime.now();
     int days = currentDate.difference(start).inDays;
-    if(days > 364) {
+    if (days > 364) {
       int years = days ~/ 365;
       //years
       experience = '$years years experience';
-    }
-    else if(days > 29) {
+    } else if (days > 29) {
       //months
       int months = days ~/ 30;
       experience = '$months months experience';
-    }
-    else {
+    } else {
       experience = '$days days experience';
     }
     return experience;
@@ -225,6 +241,7 @@ class _PodiumState extends State<Podium> {
 
   void addCandidate(CandidateDemographics candidate) {
     stack.remove(candidate);
+    updateUserBallot("bevama9805@luxeic.com", candidate.candidateId);
     widget.updateBallot(candidate, stack);
   }
 
@@ -260,9 +277,9 @@ class _PodiumState extends State<Podium> {
                       elevation: 5,
                       child: FittedBox(
                         fit: BoxFit.cover,
-                          child: Image(
-                            image: NetworkImage(candidate.profileImageURL),
-                            ),
+                        child: Image(
+                          image: NetworkImage(candidate.profileImageURL),
+                        ),
                       ),
                     ),
                   ],
@@ -274,7 +291,7 @@ class _PodiumState extends State<Podium> {
             Expanded(
               flex: 7,
               child: Text(
-                  "${candidate.firstName} ${candidate.lastName}",
+                "${candidate.firstName} ${candidate.lastName}",
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
@@ -351,322 +368,307 @@ class _PodiumState extends State<Podium> {
         return true;
       },
       child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              //local, state, federal bar
-              Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.min,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //local, state, federal bar
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      updateStack(0);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      width: MediaQuery.of(context).size.width / 3,
+                      decoration: BoxDecoration(
+                        color: local,
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: const Center(
+                          child: Text(
+                        'Local',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      updateStack(1);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      width: MediaQuery.of(context).size.width / 3,
+                      decoration: BoxDecoration(
+                        color: state,
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: const Center(
+                          child: Text(
+                        'State',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      updateStack(2);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      width: MediaQuery.of(context).size.width / 3,
+                      decoration: BoxDecoration(
+                        color: federal,
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: const Center(
+                          child: Text(
+                        'Federal',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 13,
+              //podium background
+              //TODO: add x icon to left of page and + icon to right of page
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF9F9F9),
+                  image: DecorationImage(
+                    image: AssetImage('assets/podiumPageBackgroundImage.png'),
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () async {
-                        updateStack(0);
-                      },
+                    //search bar
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
                       child: Container(
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width/3,
                         decoration: BoxDecoration(
-                          color: local,
-                          border: Border.all(color: Colors.black),
+                          color: const Color(0xFFD9D9D9),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Center(
-                            child: Text(
-                              'Local',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: TypeAheadField(
+                            textFieldConfiguration: TextFieldConfiguration(
+                              controller: searchController,
+                              decoration: const InputDecoration(
+                                labelText: 'Search',
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                border: InputBorder.none,
                               ),
-                            )),
+                            ),
+                            suggestionsCallback: (query) async {
+                              return candidateSearchOptions(query);
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(
+                                title: Text(suggestion),
+                              );
+                            },
+                            noItemsFoundBuilder: (context) => const Text(
+                              'No Candidates Found',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            transitionBuilder:
+                                (context, suggestionsBox, controller) {
+                              return suggestionsBox;
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              goToCandidateProfile(suggestion);
+                            },
+                          ),
+                        ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () async {
-                        updateStack(1);
+                    //candidate cards
+                    SwipeableCardsSection(
+                      cardController: _cardController,
+                      context: context,
+                      items: initialCards(),
+                      cardWidthMiddleMul: 0.9,
+                      cardHeightMiddleMul: 0.6,
+                      cardWidthBottomMul: 0.9,
+                      cardHeightBottomMul: 0.6,
+                      onCardSwiped: (dir, index, widget) {
+                        if (stackLength > 3 && stack.isNotEmpty) {
+                          //if the three buffer cards are not yet reached
+                          if (count < stackLength) {
+                            _cardController.addItem(newCard(stack[count]));
+                          }
+                          if (dir == Direction.right) {
+                            addCandidate(stack[stackIterator]);
+                            stackLength--;
+                          } else {
+                            if (count < stackLength) {
+                              if (count == stackLength - 1) {
+                                count = 0;
+                              } else {
+                                count++;
+                              }
+                            } else {
+                              count = 0;
+                            }
+                            if (stackIterator >= stackLength - 1) {
+                              stackIterator = 0;
+                            } else {
+                              stackIterator++;
+                            }
+                          }
+                        } else if (stack.isNotEmpty && stackLength == 3) {
+                          //edge of buffer
+                          int temp = stackIterator;
+                          if (dir == Direction.right) {
+                            stackLength = 2;
+                            addCandidate(stack[temp]);
+                          } else {
+                            if (count == 2) {
+                              count = 0;
+                              if (stackIterator == 2) {
+                                stackIterator = 0;
+                                _cardController.addItem(newCard(stack[2]));
+                              } else {
+                                stackIterator = 2;
+                                _cardController.addItem(newCard(stack[0]));
+                              }
+                            } else if (count == 1) {
+                              count = 2;
+                              if (stackIterator == 1) {
+                                stackIterator = 2;
+                                _cardController.addItem(newCard(stack[1]));
+                              } else {
+                                stackIterator = 1;
+                                _cardController.addItem(newCard(stack[2]));
+                              }
+                            } else if (count == 0) {
+                              count = 1;
+                              if (stackIterator == 0) {
+                                stackIterator = 1;
+                                _cardController.addItem(newCard(stack[0]));
+                              } else {
+                                stackIterator = 0;
+                                _cardController.addItem(newCard(stack[1]));
+                              }
+                            } else {
+                              count = 1;
+                              stackIterator = 1;
+                              _cardController.addItem(newCard(stack[0]));
+                            }
+                          }
+                        } else if (stack.isNotEmpty && stackLength == 2) {
+                          if (widget != null) {
+                            if (dir == Direction.right) {
+                              stackLength = 1;
+                              addCandidate(stack[stackIterator]);
+                            } else {
+                              if (stackIterator == 0) {
+                                stackIterator = 1;
+                                _cardController.addItem(newCard(stack[0]));
+                              } else {
+                                stackIterator = 0;
+                                _cardController.addItem(newCard(stack[1]));
+                              }
+                            }
+                          }
+                        } else if (stack.isNotEmpty && stackLength == 1) {
+                          if (widget != null) {
+                            if (dir == Direction.left) {
+                              _cardController.addItem(newCard(stack[0]));
+                            } else {
+                              stackLength = 0;
+                              addCandidate(stack[0]);
+                            }
+                          }
+                        }
                       },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width/3,
-                        decoration: BoxDecoration(
-                          color: state,
-                          border: Border.all(color: Colors.black),
-                        ),
-                        child: const Center(
-                            child: Text(
-                              'State',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            )),
-                      ),
+                      enableSwipeUp: false,
+                      enableSwipeDown: false,
                     ),
-                    GestureDetector(
-                      onTap: () async {
-                        updateStack(2);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        width: MediaQuery.of(context).size.width/3,
-                        decoration: BoxDecoration(
-                          color: federal,
-                          border: Border.all(color: Colors.black),
-                        ),
-                        child: const Center(
-                            child: Text(
-                              'Federal',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                    //alert
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              showAlert(context);
+                            },
+                            child: const Icon(
+                              CupertinoIcons.question_circle,
+                              size: 25,
+                            ),
+                          ),
+                          Material(
+                            color: const Color(0xFFF3D433),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: InkWell(
+                              splashColor: const Color(0xFF000000),
+                              splashFactory: InkRipple.splashFactory,
+                              borderRadius: BorderRadius.circular(10),
+                              onTap: () async {
+                                await widget.unFilterPodiumCandidates();
+                                setState(() {
+                                  stack = widget.candidateStack;
+                                  stackLength = stack.length;
+                                });
+                                initializeSearchResults();
+                              },
+                              child: const Text(
+                                'Remove Filter',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
                               ),
-                            )),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-              Expanded(
-                flex: 13,
-                //podium background
-                //TODO: add x icon to left of page and + icon to right of page
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF9F9F9),
-                    image: DecorationImage(
-                      image: AssetImage('assets/podiumPageBackgroundImage.png'),
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      //search bar
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: TypeAheadField(
-                              textFieldConfiguration: TextFieldConfiguration(
-                                controller: searchController,
-                                decoration: const InputDecoration(
-                                  labelText: 'Search',
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                              suggestionsCallback: (query) async {
-                                return candidateSearchOptions(query);
-                              },
-                              itemBuilder: (context, suggestion) {
-                                return ListTile(
-                                  title: Text(suggestion),
-                                );
-                              },
-                              noItemsFoundBuilder: (context) =>
-                              const Text(
-                                'No Candidates Found',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              transitionBuilder: (context, suggestionsBox, controller) {
-                                return suggestionsBox;
-                              },
-                              onSuggestionSelected: (suggestion) {
-                                goToCandidateProfile(suggestion);
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      //candidate cards
-                      SwipeableCardsSection(
-                        cardController: _cardController,
-                        context: context,
-                        items: initialCards(),
-                        cardWidthMiddleMul: 0.9,
-                        cardHeightMiddleMul: 0.6,
-                        cardWidthBottomMul: 0.9,
-                        cardHeightBottomMul: 0.6,
-                        onCardSwiped: (dir, index, widget) {
-                          if(stackLength > 3  && stack.isNotEmpty) {
-                            if(count < stackLength) {
-                              _cardController.addItem(newCard(stack[count]));
-                            }
-                            if(dir == Direction.right) {
-                              addCandidate(stack[stackIterator]);
-                              stackLength--;
-                            }
-                            else {
-                              if (count < stackLength) {
-                                if (count == stackLength - 1) {
-                                  count = 0;
-                                }
-                                else {
-                                  count++;
-                                }
-                              }
-                              else {
-                                count = 0;
-                              }
-                              if (stackIterator >= stackLength - 1) {
-                                stackIterator = 0;
-                              }
-                              else {
-                                stackIterator++;
-                              }
-                            }
-                          }
-                          else if(stack.isNotEmpty && stackLength == 3){
-                            int temp = stackIterator;
-                            if(dir == Direction.right) {
-                              stackLength = 2;
-                              addCandidate(stack[temp]);
-                            }
-                            else {
-                              if(count == 2) {
-                                count = 0;
-                                if(stackIterator == 2) {
-                                  stackIterator = 0;
-                                  _cardController.addItem(newCard(stack[2]));
-                                }
-                                else {
-                                  stackIterator = 2;
-                                  _cardController.addItem(newCard(stack[0]));
-                                }
-                              }
-                              else if(count == 1) {
-                                count = 2;
-                                if(stackIterator == 1) {
-                                  stackIterator = 2;
-                                  _cardController.addItem(newCard(stack[1]));
-                                }
-                                else {
-                                  stackIterator = 1;
-                                  _cardController.addItem(newCard(stack[2]));
-                                }
-                              }
-                              else if(count == 0) {
-                                count = 1;
-                                if(stackIterator == 0) {
-                                  stackIterator = 1;
-                                  _cardController.addItem(newCard(stack[0]));
-                                }
-                                else {
-                                  stackIterator = 0;
-                                  _cardController.addItem(newCard(stack[1]));
-                                }
-                              }
-                              else {
-                                count = 1;
-                                stackIterator = 1;
-                                _cardController.addItem(newCard(stack[0]));
-                              }
-                            }
-                          }
-                          else if(stack.isNotEmpty && stackLength == 2){
-                            if(widget != null) {
-                              if(dir == Direction.right) {
-                                stackLength = 1;
-                                addCandidate(stack[stackIterator]);
-                              }
-                              else {
-                                if(stackIterator == 0) {
-                                  stackIterator = 1;
-                                  _cardController.addItem(newCard(stack[0]));
-                                }
-                                else {
-                                  stackIterator = 0;
-                                  _cardController.addItem(newCard(stack[1]));
-                                }
-                              }
-                            }
-                          }
-                          else if(stack.isNotEmpty && stackLength == 1){
-                            if(widget != null) {
-                              if(dir == Direction.left) {
-                                _cardController.addItem(newCard(stack[0]));
-                              }
-                              else {
-                                stackLength = 0;
-                                addCandidate(stack[0]);
-                              }
-                            }
-                          }
-                        },
-                        enableSwipeUp: false,
-                        enableSwipeDown: false,
-                      ),
-                      //alert
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                showAlert(context);
-                              },
-                              child: const Icon(
-                                CupertinoIcons.question_circle,
-                                size: 25,
-                              ),
-                            ),
-                            Material(
-                              color: const Color(0xFFF3D433),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: InkWell(
-                                splashColor: const Color(0xFF000000),
-                                splashFactory: InkRipple.splashFactory,
-                                borderRadius: BorderRadius.circular(10),
-                                onTap: () async {
-                                  await widget.unFilterPodiumCandidates();
-                                  setState(() {
-                                    stack = widget.candidateStack;
-                                    stackLength = stack.length;
-                                  });
-                                  initializeSearchResults();
-                                },
-                                child: const Text(
-                                  'Remove Filter',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -685,7 +687,7 @@ class _PodiumState extends State<Podium> {
           fontWeight: FontWeight.w500,
         ),
       ),
-      percent: rating/5,
+      percent: rating / 5,
       center: Text(
         '$rating',
         style: const TextStyle(
@@ -698,14 +700,14 @@ class _PodiumState extends State<Podium> {
 
   showAlert(BuildContext context) {
     AlertDialog alert = const AlertDialog(
-      content: Text('Swipe left to skip the current candidate.\nSwipe right to add the candidate to your ballot.\n\nEach candidate displays their ratings on the 3 political issues that are most important to them. A low rating means that the candidate leans more to the left on that issue. A high rating means that the candidate leans more to the right on that issue.\n\nThe candidates can be filtered by their position through clicking an empty circle in the ballot.'),
+      content: Text(
+          'Swipe left to skip the current candidate.\nSwipe right to add the candidate to your ballot.\n\nEach candidate displays their ratings on the 3 political issues that are most important to them. A low rating means that the candidate leans more to the left on that issue. A high rating means that the candidate leans more to the right on that issue.\n\nThe candidates can be filtered by their position through clicking an empty circle in the ballot.'),
     );
     showDialog(
-      barrierDismissible: true,
+        barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
           return alert;
-        }
-    );
+        });
   }
 }
