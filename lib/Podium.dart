@@ -635,13 +635,11 @@ class _PodiumState extends State<Podium> {
                             ),
                             GestureDetector(
                               onTap: () async {
-                                print(stackLength);
                                 await widget.unFilterPodiumCandidates();
                                 setState(() {
                                   stack = widget.candidateStack;
                                   stackLength = stack.length;
                                 });
-                                print(stackLength);
                               },
                               child: const Text(
                                 'Remove Filter'
