@@ -29,19 +29,25 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     super.initState();
   }
 
-
   void initializeObjects() async {
-    userBallot = Ballot.empty(); //TODO: initialize userBallot with database ballot
+    userBallot =
+        Ballot.empty(); //TODO: initialize userBallot with database ballot
     currentUser = await fetchCurrentUserAttributes();
     currentUserDemographics = await getUserDemographics(currentUser.email);
     // Need to push associated user factors to the database before running this function.
     currentUserFactors = await getUserIssueFactorValues(currentUser.email);
     candidateStack = await getAllCandidateDemographics();
     candidateStackFactors = await getAllCandidateIssueFactorValues();
-    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics, userBallot, candidateStackFactors);
+    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics,
+        userBallot, candidateStackFactors);
   }
 
-  void setObjectStates(UserIssueFactorValues uifv, List<CandidateDemographics> s, UserDemographics ud, Ballot ub, List<CandidateIssueFactorValues> cifv) {
+  void setObjectStates(
+      UserIssueFactorValues uifv,
+      List<CandidateDemographics> s,
+      UserDemographics ud,
+      Ballot ub,
+      List<CandidateIssueFactorValues> cifv) {
     setState(() {
       candidateStackFactors = cifv;
       currentUserFactors = uifv;

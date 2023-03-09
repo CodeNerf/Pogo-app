@@ -3,6 +3,7 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pogo/dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/googleFunctions/CivicModels.dart';
 import 'package:pogo/models/userBallots.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
@@ -160,7 +161,6 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
       candidateDemographicsList
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
-    safePrint("candidates pulled");
     return candidateDemographicsList;
   } finally {
     client.close();
@@ -298,8 +298,43 @@ Future<List<String>> getUserBallot(String userId) async {
   } finally {
     client.close();
   }
+}
 
-Future<List<CandidateIssueFactorValues>> getAllCandidateIssueFactorValues() async {
+Future<void> updateUserBallot(String userId, String candidateId) async {
+  final allCandidates =
+      await getAllCandidateDemographics(); //get a list of all available candidate (current one is mutated throughout executuion)
+  var userBallot = await getUserBallot(userId); //get the current user ballot
+  safePrint("initial ballot $userBallot");
+  safePrint("all candidates: $allCandidates");
+  final candidateObject = allCandidates.firstWhere((candidate) =>
+      candidate.candidateId ==
+      candidateId); //Find the candidate object belonging to the candidate the user wants to add
+  safePrint("candidateObject: $candidateObject");
+  final candidateSeat =
+      candidateObject.seatType; //seat of candidate user wants to add
+  safePrint("candidate seat: $candidateSeat");
+  var candidateToReplace;
+  userBallot.forEach((candidateId) {
+    final candidateObject = allCandidates
+        .firstWhere((candidate) => candidate.candidateId == candidateId);
+    safePrint("found candidate: $candidateObject");
+    //find current candidate object by comparing each candidate's seat type with the one the user wants to update
+    if (candidateObject.seatType == candidateSeat) {
+      candidateToReplace = candidateObject.candidateId;
+      safePrint("candidate found $candidateToReplace");
+    }
+  });
+  if (candidateToReplace != null) {
+    userBallot.removeWhere((candidateId) =>
+        candidateId == candidateToReplace); //remove the candidate
+  }
+  userBallot.add(candidateId);
+  safePrint("final ballot $userBallot");
+  putUserBallot(userId, userBallot, [''], ['']);
+}
+
+Future<List<CandidateIssueFactorValues>>
+    getAllCandidateIssueFactorValues() async {
   var client = http.Client();
   var candidateFactorsList = <CandidateIssueFactorValues>[];
   try {
@@ -316,7 +351,6 @@ Future<List<CandidateIssueFactorValues>> getAllCandidateIssueFactorValues() asyn
     }
     safePrint("candidates pulled");
     return candidateFactorsList;
-
   } finally {
     client.close();
   }
