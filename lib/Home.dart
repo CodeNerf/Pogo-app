@@ -127,7 +127,7 @@ class _HomeState extends State<Home> {
     userBallot = widget.userBallot;
     setState(() {
       _widgetOptions = <Widget>[
-        VoterGuide(user: currentUserDemographics,),
+      VoterGuide(currentUserDemographics: currentUserDemographics,),
         Podium(candidateStack: candidateStack, userBallot: userBallot, updateBallot: updateBallot, candidateStackFactors: candidateStackFactors, unFilterPodiumCandidates: unFilterPodiumCandidates, loadCandidateProfile: loadCandidateProfile,),
         BallotPage(userBallot: userBallot, candidateStack: candidateStack, ballotStack: ballotStack, removeFromBallot: removeFromBallot, loadCustomCandidatesInPodium: filterPodiumCandidates,),
         UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,),
