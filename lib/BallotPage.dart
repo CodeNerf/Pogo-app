@@ -64,7 +64,7 @@ class _BallotPageState extends State<BallotPage> {
             mayor++;
             mayorPics.add(current.profileImageURL);
             break;
-          case 'City Clerk':
+          case 'Clerk':
             cityClerk++;
             cityClerkPics.add(current.profileImageURL);
             break;
@@ -72,15 +72,15 @@ class _BallotPageState extends State<BallotPage> {
             cityCouncil++;
             cityCouncilPics.add(current.profileImageURL);
             break;
-          case 'County Commissioner':
+          case 'Commissioner':
             countyCommissioners++;
             countyCommissionersPics.add(current.profileImageURL);
             break;
-          case 'County Sheriff':
+          case 'Sheriff':
             countySheriff++;
             countySheriffPics.add(current.profileImageURL);
             break;
-          case 'Trial Court Judge':
+          case 'Judge':
             trialCourtJudge++;
             trialCourtJudgePics.add(current.profileImageURL);
             break;
