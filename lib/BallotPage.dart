@@ -133,16 +133,16 @@ class _BallotPageState extends State<BallotPage> {
       case 'Mayor':
         mayorPics.remove(candidatePic);
         break;
-      case 'City Clerk':
+      case 'Clerk':
         cityClerkPics.remove(candidatePic);
         break;
       case 'City Council':
         cityCouncilPics.remove(candidatePic);
         break;
-      case 'County Sheriff':
+      case 'Sheriff':
         countySheriffPics.remove(candidatePic);
         break;
-      case 'Trial Court Judge':
+      case 'Judge':
         trialCourtJudgePics.remove(candidatePic);
         break;
       case 'County Register of Deeds':
@@ -166,7 +166,7 @@ class _BallotPageState extends State<BallotPage> {
       case 'Commissioner of Revenue':
         commissionerOfRevenuePics.remove(candidatePic);
         break;
-      case 'County Commissioner':
+      case 'Commissioner':
         countyCommissionersPics.remove(candidatePic);
         break;
     }
@@ -200,7 +200,7 @@ class _BallotPageState extends State<BallotPage> {
                         mayor = count;
                       });
                     }, 0),
-                    buildRow(context, 'City Clerk', cityClerk, cityClerkPics, (count) {
+                    buildRow(context, 'Clerk', cityClerk, cityClerkPics, (count) {
                       setState(() {
                         cityClerk = count;
                       });
@@ -210,12 +210,12 @@ class _BallotPageState extends State<BallotPage> {
                         cityCouncil = count;
                       });
                     }, 2),
-                    buildRow(context, 'County Sheriff', countySheriff, countySheriffPics, (count) {
+                    buildRow(context, 'Sheriff', countySheriff, countySheriffPics, (count) {
                       setState(() {
                         countySheriff = count;
                       });
                     }, 4),
-                    buildRow(context, 'Trial Court Judge', trialCourtJudge, trialCourtJudgePics, (count) {
+                    buildRow(context, 'Judge', trialCourtJudge, trialCourtJudgePics, (count) {
                       setState(() {
                         trialCourtJudge = count;
                       });
@@ -255,7 +255,7 @@ class _BallotPageState extends State<BallotPage> {
                         commissionerOfRevenue = count;
                       });
                     }, 12),
-                    buildRow(context, 'County Commissioner', countyCommissioners, countyCommissionersPics, (count) {
+                    buildRow(context, 'Commissioner', countyCommissioners, countyCommissionersPics, (count) {
                       setState(() {
                         countyCommissioners = count;
                       });
