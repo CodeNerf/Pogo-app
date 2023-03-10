@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/CandidateProfile.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'UserProfile.dart';
@@ -43,6 +44,7 @@ class _HomeState extends State<Home> {
   updateBallot(CandidateDemographics candidate, List<CandidateDemographics> podiumStack) {
     userBallot.localCandidateIds.add(candidate.candidateId);
     ballotStack.add(candidate);
+    putUserBallot(currentUserDemographics.userId, userBallot.localCandidateIds, userBallot.stateCandidateIds, userBallot.federalCandidateIds);
     setState(() {
       candidateStack = podiumStack;
     });
@@ -52,6 +54,7 @@ class _HomeState extends State<Home> {
     CandidateDemographics candidate = ballotStack.firstWhere((element) => element.profileImageURL == candidatePic);
     userBallot.localCandidateIds.remove(candidate.candidateId);
     ballotStack.remove(candidate);
+    putUserBallot(currentUserDemographics.userId, userBallot.localCandidateIds, userBallot.stateCandidateIds, userBallot.federalCandidateIds);
     if(filteredCandidateStack.isNotEmpty) {
       if(candidate.seatType != candidateStack[0].seatType) {
         filteredCandidateStack.add(candidate);
@@ -125,6 +128,11 @@ class _HomeState extends State<Home> {
     candidateStack = widget.candidateStack;
     currentUserDemographics = widget.currentUserDemographics;
     userBallot = widget.userBallot;
+    if(userBallot.localCandidateIds.isNotEmpty) {
+      for(int i = 0; i < userBallot.localCandidateIds.length; i++) {
+        ballotStack.add(candidateStack.firstWhere((element) => element.candidateId == userBallot.localCandidateIds[i]));
+      }
+    }
     setState(() {
       _widgetOptions = <Widget>[
         VoterGuide(user: currentUserDemographics,),

@@ -30,9 +30,13 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
   }
 
   void initializeObjects() async {
+    /*
     userBallot =
         Ballot.empty(); //TODO: initialize userBallot with database ballot
+    */
     currentUser = await fetchCurrentUserAttributes();
+    userBallot = Ballot.empty();
+    userBallot.localCandidateIds = await getUserBallot(currentUser.email);
     currentUserDemographics = await getUserDemographics(currentUser.email);
     // Need to push associated user factors to the database before running this function.
     currentUserFactors = await getUserIssueFactorValues(currentUser.email);
