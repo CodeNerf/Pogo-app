@@ -10,13 +10,13 @@ class CandidateProfile extends StatefulWidget {
   const CandidateProfile({Key? key, required this.candidate, required this.candidateValues}) : super(key: key);
 
   @override
-  _CandidateProfileState createState() => _CandidateProfileState();
+  State<CandidateProfile> createState() => _CandidateProfileState();
 }
 
 class _CandidateProfileState extends State<CandidateProfile>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String PogoLogo = 'assets/Pogo_logo_horizontal.png';
+  final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     super.dispose();
   }
    //returns the candidate's experience
-  String candidateExperience(String careerStart) {
+  String _candidateExperience(String careerStart) {
     print(careerStart);
     String experience = '';
     DateTime start = DateTime.parse(careerStart);
@@ -52,7 +52,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     return experience;
   }
 
- Color candidateColor(String party) {
+ Color _candidateColor(String party) {
     switch (party) {
       case 'Democrat':
         return const Color(0xFF3456CF);
@@ -66,22 +66,22 @@ class _CandidateProfileState extends State<CandidateProfile>
     return const Color(0xFFF9F9F9);
   }
 
-  List<Widget> getRatingCircles() {
+  List<Widget> _getRatingCircles() {
     List<Widget> circles = [];
-    circles.add(Column(children: [ratingCircles('Education\n', widget.candidateValues.educationScore), ratingCircles('Care', widget.candidateValues.educationWeight)],));
-    circles.add(Column(children: [ratingCircles('Climate\n', widget.candidateValues.climateScore), ratingCircles('Care', widget.candidateValues.climateWeight)],));
-    circles.add(Column(children: [ratingCircles('Drug Policy\n', widget.candidateValues.drugPolicyScore), ratingCircles('Care', widget.candidateValues.drugPolicyWeight)],));
-    circles.add(Column(children: [ratingCircles('Economy\n', widget.candidateValues.economyScore), ratingCircles('Care', widget.candidateValues.economyWeight)],));
-    circles.add(Column(children: [ratingCircles('Healthcare\n', widget.candidateValues.healthcareScore), ratingCircles('Care', widget.candidateValues.healthcareWeight)],));
-    circles.add(Column(children: [ratingCircles('Immigration\n', widget.candidateValues.immigrationScore), ratingCircles('Care', widget.candidateValues.immigrationWeight)],));
-    circles.add(Column(children: [ratingCircles('Policing\n', widget.candidateValues.policingScore), ratingCircles('Care', widget.candidateValues.policingWeight)],));
-    circles.add(Column(children: [ratingCircles('Reproductive\nHealth', widget.candidateValues.reproductiveScore), ratingCircles('Care', widget.candidateValues.reproductiveWeight)],));
-    circles.add(Column(children: [ratingCircles('Gun Control\n', widget.candidateValues.gunPolicyScore), ratingCircles('Care', widget.candidateValues.gunPolicyWeight)],));
-    circles.add(Column(children: [ratingCircles('Housing\n', widget.candidateValues.housingScore), ratingCircles('Care', widget.candidateValues.housingWeight)],));
+    circles.add(Column(children: [_ratingCircles('Education\n', widget.candidateValues.educationScore), _ratingCircles('Care', widget.candidateValues.educationWeight)],));
+    circles.add(Column(children: [_ratingCircles('Climate\n', widget.candidateValues.climateScore), _ratingCircles('Care', widget.candidateValues.climateWeight)],));
+    circles.add(Column(children: [_ratingCircles('Drug Policy\n', widget.candidateValues.drugPolicyScore), _ratingCircles('Care', widget.candidateValues.drugPolicyWeight)],));
+    circles.add(Column(children: [_ratingCircles('Economy\n', widget.candidateValues.economyScore), _ratingCircles('Care', widget.candidateValues.economyWeight)],));
+    circles.add(Column(children: [_ratingCircles('Healthcare\n', widget.candidateValues.healthcareScore), _ratingCircles('Care', widget.candidateValues.healthcareWeight)],));
+    circles.add(Column(children: [_ratingCircles('Immigration\n', widget.candidateValues.immigrationScore), _ratingCircles('Care', widget.candidateValues.immigrationWeight)],));
+    circles.add(Column(children: [_ratingCircles('Policing\n', widget.candidateValues.policingScore), _ratingCircles('Care', widget.candidateValues.policingWeight)],));
+    circles.add(Column(children: [_ratingCircles('Reproductive\nHealth', widget.candidateValues.reproductiveScore), _ratingCircles('Care', widget.candidateValues.reproductiveWeight)],));
+    circles.add(Column(children: [_ratingCircles('Gun Control\n', widget.candidateValues.gunPolicyScore), _ratingCircles('Care', widget.candidateValues.gunPolicyWeight)],));
+    circles.add(Column(children: [_ratingCircles('Housing\n', widget.candidateValues.housingScore), _ratingCircles('Care', widget.candidateValues.housingWeight)],));
     return circles;
   }
 
-  Widget ratingCircles(String name, num rating) {
+  Widget _ratingCircles(String name, num rating) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
       child: CircularPercentIndicator(
@@ -122,7 +122,7 @@ class _CandidateProfileState extends State<CandidateProfile>
         ),
         centerTitle: true,
         title: Image(
-          image: AssetImage(PogoLogo),
+          image: AssetImage(_pogoLogo),
           width: 150,
         ),
       ),
@@ -130,7 +130,7 @@ class _CandidateProfileState extends State<CandidateProfile>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          color: candidateColor(widget.candidate.politicalAffiliation),
+          color: _candidateColor(widget.candidate.politicalAffiliation),
           width: double.infinity,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -288,7 +288,7 @@ Expanded(
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: getRatingCircles(),
+                          children: _getRatingCircles(),
                         ),
                       ),
                     ],
@@ -309,7 +309,7 @@ Expanded(
             const SizedBox(height: 15),
             Center(
               child: Text(
-                      candidateExperience(widget.candidate.careerStartDate),
+                      _candidateExperience(widget.candidate.careerStartDate),
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 15,

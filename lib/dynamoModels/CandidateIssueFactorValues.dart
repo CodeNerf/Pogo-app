@@ -1,5 +1,4 @@
 import 'package:pogo/dynamoModels/IssueFactorValues.dart';
-import 'package:pogo/models/IssueFactorValues.dart' hide IssueFactorValues;
 
 class CandidateIssueFactorValues extends IssueFactorValues {
   final String candidateId;

@@ -22,7 +22,8 @@ class SurveyLandingPage extends StatefulWidget {
       profileImageURL: '',
       gender: '',
       racialIdentity: '',
-      politicalAffiliation: '');
+      politicalAffiliation: '',
+      surveyCompletion: false);
   UserIssueFactorValues ratings = UserIssueFactorValues(
       userId: '',
       climateScore: 0,
@@ -52,24 +53,23 @@ class SurveyLandingPage extends StatefulWidget {
 }
 
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
-  late UserIssueFactorValues currentUserFactors;
-  late UserDemographics currentAnswers;
+  late UserIssueFactorValues _currentUserFactors;
+  late UserDemographics _currentAnswers;
   bool _buttonVisible = false;
   @override
   void initState() {
-    getUserFactors();
+    _getUserFactors();
     super.initState();
   }
 
-  void getUserFactors() async {
-    // String userid = await fetchCurrentUserEmail();
-    var currentUser = await fetchCurrentUserAttributes();
+  void _getUserFactors() async {
+    String email = await fetchCurrentUserEmail();
     // Need to push associated user factors to the database before running this function.
-    currentUserFactors = await getUserIssueFactorValues(currentUser.email);
-    currentAnswers = await getUserDemographics(currentUser.email);
+    _currentUserFactors = await getUserIssueFactorValues(email);
+    _currentAnswers = await getUserDemographics(email);
     setState(() {
-      widget.ratings = currentUserFactors;
-      widget.answers = currentAnswers;
+      widget.ratings = _currentUserFactors;
+      widget.answers = _currentAnswers;
       _buttonVisible = true;
     });
   }

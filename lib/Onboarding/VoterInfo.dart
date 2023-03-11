@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/Onboarding/Issues/GunPolicy.dart';
+import 'package:pogo/Onboarding/Issues.dart';
 import '../dynamoModels/UserDemographics.dart';
 import '../dynamoModels/UserIssueFactorValues.dart';
 
@@ -13,45 +13,45 @@ class VoterInfo extends StatefulWidget {
 }
 
 class _VoterInfoState extends State<VoterInfo> {
-  late UserDemographics answers;
- String votedropdownvalue = '';
-  List<String> vote = ['Yes', 'No'];
+  late UserDemographics _answers;
+ String _voteMenuSelection = '';
+  final List<String> _voteMenu = ['Yes', 'No'];
 
-  String partiesdropdownvalue = '';
-  List<String> parties = ['Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'];
+  String _partyMenuSelection = '';
+  final List<String> _partyMenu = ['Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'];
 
-  String votePartydropdownvalue = '';
-  List<String> voteParty = ['Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'];
+  String _votingPartyMenuSelection = '';
+  final List<String> _votingPartyMenu = ['Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'];
 
-  String statedropdownvalue = '';
-  List<String> state = ['Yes', 'No'];
+  String _registeredStateMenuSelection = '';
+  final List<String> _registeredStateMenu = ['Yes', 'No'];
 
  @override
  void initState() {
    super.initState();
    setState(() {
-     answers = widget.answers;
-     if(answers.voterRegistrationStatus) {
-       votedropdownvalue = 'Yes';
+     _answers = widget.answers;
+     if(_answers.voterRegistrationStatus) {
+       _voteMenuSelection = 'Yes';
      }
      else {
-       votedropdownvalue = 'No';
+       _voteMenuSelection = 'No';
      }
-     partiesdropdownvalue = answers.politicalAffiliation;
+     _partyMenuSelection = _answers.politicalAffiliation;
      //TODO: need party user votes with in db and if they live in state they are registered in
-     votePartydropdownvalue = answers.politicalAffiliation;
+     _votingPartyMenuSelection = _answers.politicalAffiliation;
      //statedropdownvalue = answers.registeredState;
    });
  }
 
- void goNextPage() {
-   if(votedropdownvalue == 'Yes') {
+ void _goNextPage() {
+   if(_voteMenuSelection == 'Yes') {
      widget.answers.voterRegistrationStatus = true;
    }
-   widget.answers.politicalAffiliation = partiesdropdownvalue;
+   widget.answers.politicalAffiliation = _partyMenuSelection;
    //TODO: add party user votes for String to db in case this is needed in matching algorithm
    //TODO: add user lives in registered state bool to db in case this value is needed in future
-   Navigator.push(context, MaterialPageRoute(builder: (context) => GunPolicy(ratings: widget.ratings, answers: widget.answers,)));
+   Navigator.push(context, MaterialPageRoute(builder: (context) => Issues(ratings: widget.ratings, answers: widget.answers,)));
  }
 
   @override
@@ -82,11 +82,11 @@ class _VoterInfoState extends State<VoterInfo> {
                 filled: true,
                 fillColor: Colors.grey[300],
               ),
-              value: votedropdownvalue.isNotEmpty ? votedropdownvalue : null,
+              value: _voteMenuSelection.isNotEmpty ? _voteMenuSelection : null,
               icon: const Icon(Icons.keyboard_arrow_down),
               isExpanded: true,
               focusColor: Colors.transparent,
-              items: vote.map((String vote) {
+              items: _voteMenu.map((String vote) {
                 return DropdownMenuItem(
                   value: vote,
                   child: Text(vote),
@@ -94,7 +94,7 @@ class _VoterInfoState extends State<VoterInfo> {
               }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
-                  votedropdownvalue = newValue!;
+                  _voteMenuSelection = newValue!;
                 });
               },
             ),
@@ -118,11 +118,11 @@ class _VoterInfoState extends State<VoterInfo> {
                 filled: true,
                 fillColor: Colors.grey[300],
               ),
-              value: partiesdropdownvalue.isNotEmpty ? partiesdropdownvalue : null,
+              value: _partyMenuSelection.isNotEmpty ? _partyMenuSelection : null,
               icon: const Icon(Icons.keyboard_arrow_down),
               isExpanded: true,
               focusColor: Colors.transparent,
-              items: parties.map((String parties) {
+              items: _partyMenu.map((String parties) {
                 return DropdownMenuItem(
                   value: parties,
                   child: Text(parties),
@@ -130,7 +130,7 @@ class _VoterInfoState extends State<VoterInfo> {
               }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
-                  partiesdropdownvalue = newValue!;
+                  _partyMenuSelection = newValue!;
                 });
               },
             ),
@@ -154,11 +154,11 @@ class _VoterInfoState extends State<VoterInfo> {
                 filled: true,
                 fillColor: Colors.grey[300],
               ),
-              value: votePartydropdownvalue.isNotEmpty ? votePartydropdownvalue : null,
+              value: _votingPartyMenuSelection.isNotEmpty ? _votingPartyMenuSelection : null,
               icon: const Icon(Icons.keyboard_arrow_down),
               isExpanded: true,
               focusColor: Colors.transparent,
-              items: voteParty.map((String voteParty) {
+              items: _votingPartyMenu.map((String voteParty) {
                 return DropdownMenuItem(
                   value: voteParty,
                   child: Text(voteParty),
@@ -166,7 +166,7 @@ class _VoterInfoState extends State<VoterInfo> {
               }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
-                  votePartydropdownvalue = newValue!;
+                  _votingPartyMenuSelection = newValue!;
                 });
               },
             ),
@@ -191,11 +191,11 @@ class _VoterInfoState extends State<VoterInfo> {
                 filled: true,
                 fillColor: Colors.grey[300],
               ),
-              value: statedropdownvalue.isNotEmpty ? statedropdownvalue : null,
+              value: _registeredStateMenuSelection.isNotEmpty ? _registeredStateMenuSelection : null,
               icon: const Icon(Icons.keyboard_arrow_down),
               isExpanded: true,
               focusColor: Colors.transparent,
-              items: state.map((String state) {
+              items: _registeredStateMenu.map((String state) {
                 return DropdownMenuItem(
                   value: state,
                   child: Text(state),
@@ -203,7 +203,7 @@ class _VoterInfoState extends State<VoterInfo> {
               }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
-                  statedropdownvalue = newValue!;
+                  _registeredStateMenuSelection = newValue!;
                 });
               },
             ),
@@ -213,7 +213,7 @@ class _VoterInfoState extends State<VoterInfo> {
 
                     height: 50,
                     onPressed: () {
-                      goNextPage();
+                      _goNextPage();
                     },
                  color: Color.fromARGB(255, 0, 0, 0),
                     shape: RoundedRectangleBorder(

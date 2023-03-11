@@ -1,19 +1,12 @@
-import 'dart:developer';
-import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
-import 'models/ModelProvider.dart'; //temp
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'amplifyconfiguration.dart';
-import 'user.dart';
 
 Future<bool> configureAmplify() async {
   try {
     final auth = AmplifyAuthCognito();
     await Amplify.addPlugin(auth);
-    final dataStorePlugin =
-        AmplifyDataStore(modelProvider: ModelProvider.instance);
-    await Amplify.addPlugin(dataStorePlugin);
     safePrint("Amplify Configured");
     await Amplify.configure(amplifyconfig);
     return true;
@@ -128,7 +121,6 @@ Future<bool> resetPassword(String username) async {
   }
 }
 
-//todo create model to reduce function parameters to 1
 Future<bool> confirmResetPassword(
     String username, String password, String code) async {
   try {
@@ -150,43 +142,7 @@ Future<void> updatePassword(String oldPassword, String newPassword) async {
   }
 }
 
-Future<user> fetchCurrentUserAttributes() async {
-  user current = user.all("", "", "", "", "");
-  try {
-    final result = await Amplify.Auth.fetchUserAttributes();
-    current = routeAttribute(result);
-  } on AuthException catch (e) {
-    safePrint(e.message);
-  }
-  return current;
-}
-
-user routeAttribute(List<AuthUserAttribute> result) {
-  user current = user.all("", "", "", "", "");
-  result.forEach((element) {
-    switch (element.userAttributeKey.toString()) {
-      case 'address':
-        current.address = element.value;
-        break;
-      case 'phone_number':
-        current.phone = element.value;
-        break;
-      case 'given_name':
-        current.fname = element.value;
-        break;
-      case 'family_name':
-        current.lname = element.value;
-        break;
-      case 'email':
-        current.email = element.value;
-        break;
-    }
-  });
-  return current;
-}
-
 Future<String> fetchCurrentUserEmail() async {
-  user current = user.all("", "", "", "", "");
   try {
     final result = await Amplify.Auth.fetchUserAttributes();
     return result[8].value;

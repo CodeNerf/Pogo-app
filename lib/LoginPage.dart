@@ -4,6 +4,7 @@ import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/UserConfirmationPage.dart';
 import 'Home.dart';
 import 'RegisterPage.dart';
+import 'awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/UserDemographics.dart';
 import 'homeLoadingPage.dart';
@@ -20,32 +21,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String signInPogoLogo = 'assets/Pogo_logo_horizontal.png';
-  late final emailController = TextEditingController();
-  late final passwordController = TextEditingController();
-  bool obscure = true;
-  Icon eye = Icon(Icons.remove_red_eye);
-  String errorText = '';
-  UserIssueFactorValues guestFactors = UserIssueFactorValues(userId: '', climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
-  UserDemographics guestDemographics = UserDemographics(userId: '', phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: '', lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
-  Ballot guestBallot = Ballot.empty();
+  final String _signInPogoLogo = 'assets/Pogo_logo_horizontal.png';
+  late final _emailController = TextEditingController();
+  late final _passwordController = TextEditingController();
+  bool _obscure = true;
+  Icon _eye = const Icon(Icons.remove_red_eye);
+  String _errorText = '';
+  final UserIssueFactorValues _guestFactors = UserIssueFactorValues(userId: '', climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
+  final UserDemographics _guestDemographics = UserDemographics(userId: '', phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: '', lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '', surveyCompletion: true);
+  final Ballot _guestBallot = Ballot.empty();
 
-  Future login(context) async {
-    if (await signInUser(emailController.text, passwordController.text)) {
+  Future _login(context) async {
+    if (await signInUser(_emailController.text, _passwordController.text)) {
       safePrint("checking isUserSignedIn()");
       if (await isUserSignedIn()) {
         //check if survey is completed
-        safePrint("checking isSurveyCompleted()");
-        if (await isSurveyCompleted()) {
-          safePrint("SURVEY IS COMPLETE");
+        UserDemographics user = await getUserDemographics(_emailController.text);
+        if(user.surveyCompletion == true) {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const HomeLoadingPage(),
+              builder: (context) => HomeLoadingPage(user: user),
             ),
           );
-        } else {
-          safePrint("SURVEY IS NOT COMPLETE");
+        }
+        else {
           await Navigator.push(
             context,
             MaterialPageRoute(
@@ -91,12 +91,12 @@ class _LoginPageState extends State<LoginPage> {
         */
       } else {
         setState(() {
-          errorText = 'Could not log in.';
+          _errorText = 'Could not log in.';
         });
       }
     } else {
       setState(() {
-        errorText = 'Could not log in.';
+        _errorText = 'Could not log in.';
       });
     }
   }
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                   scale: 0.7,
                   child: Image(
                     image: AssetImage(
-                      signInPogoLogo,
+                      _signInPogoLogo,
                     ),
                   ),
                 ),
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 //ERROR TEXT
                 Text(
-                  errorText,
+                  _errorText,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 18,
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: emailController,
+                        controller: _emailController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
@@ -168,27 +168,27 @@ class _LoginPageState extends State<LoginPage> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: passwordController,
-                        obscureText: obscure,
+                        controller: _passwordController,
+                        obscureText: _obscure,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Password',
                           suffixIcon: GestureDetector(
                             onTap: () {
-                              if (obscure) {
+                              if (_obscure) {
                                 setState(() {
-                                  obscure = false;
-                                  eye =
+                                  _obscure = false;
+                                  _eye =
                                       const Icon(Icons.remove_red_eye_outlined);
                                 });
                               } else {
                                 setState(() {
-                                  obscure = true;
-                                  eye = const Icon(Icons.remove_red_eye);
+                                  _obscure = true;
+                                  _eye = const Icon(Icons.remove_red_eye);
                                 });
                               }
                             },
-                            child: eye,
+                            child: _eye,
                           ),
                         ),
                       ),
@@ -231,7 +231,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
                     onTap: () async {
-                      login(context);
+                      _login(context);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -261,7 +261,7 @@ class _LoginPageState extends State<LoginPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Home(currentUserFactors: guestFactors, candidateStack: const [], currentUserDemographics: guestDemographics, userBallot: guestBallot, candidateStackFactors: const [],),
+                          builder: (context) => Home(currentUserFactors: _guestFactors, candidateStack: const [], currentUserDemographics: _guestDemographics, userBallot: _guestBallot, candidateStackFactors: const [],),
                         ),
                       );
                     },
