@@ -1,9 +1,9 @@
 class Ballot {
-  List<String> localCandidateIds = List.filled(35, '');
-  //List<String> stateCandidateIds = List.filled(35, '');
-  //List<String> federalCandidateIds = List.filled(35, '');
+  List<String> localCandidateIds = [];
+  List<String> stateCandidateIds = [];
+  List<String> federalCandidateIds = [];
 
-  Ballot.candidateIds({required this.localCandidateIds /*, required this.stateCandidateIds, required this.federalCandidateIds */});
+  Ballot.candidateIds({required this.localCandidateIds, required stateCandidateIds, required federalCandidateIds /*, required this.stateCandidateIds, required this.federalCandidateIds */});
 
 
   Ballot.empty();
@@ -12,16 +12,16 @@ class Ballot {
   factory Ballot.fromJson(Map json) {
     return Ballot.candidateIds(
       localCandidateIds: json['localCandidateIds'],
-      //stateCandidateIds: json['stateCandidateIds'],
-      //federalCandidateIds: json['federalCandidateIds'],
+      stateCandidateIds: json['stateCandidateIds'],
+      federalCandidateIds: json['federalCandidateIds'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'localCandidateIds': localCandidateIds,
-      //'stateCandidateIds': stateCandidateIds,
-      //'federalCandidateIds': federalCandidateIds,
+      'stateCandidateIds': stateCandidateIds,
+      'federalCandidateIds': federalCandidateIds,
     };
   }
 }

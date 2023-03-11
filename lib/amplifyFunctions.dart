@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'models/ModelProvider.dart'; //temp
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -72,8 +74,8 @@ Future<bool> signInUser(String email, String password) async {
         await Amplify.Auth.signIn(username: email, password: password);
     return true;
   } on AuthException catch (e) {
-    return false;
     safePrint(e.message);
+    return false;
   }
 }
 

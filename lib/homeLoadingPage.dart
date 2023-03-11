@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
-import 'dynamoModels/Ballot.dart';
 import 'Home.dart';
+import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
 import 'user.dart';
 import 'awsFunctions.dart';
@@ -30,18 +30,28 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
   }
 
   void initializeObjects() async {
+    /*
     userBallot =
         Ballot.empty(); //TODO: initialize userBallot with database ballot
+    */
     currentUser = await fetchCurrentUserAttributes();
+    userBallot = Ballot.empty();
+    userBallot.localCandidateIds = await getUserBallot(currentUser.email);
     currentUserDemographics = await getUserDemographics(currentUser.email);
     // Need to push associated user factors to the database before running this function.
     currentUserFactors = await getUserIssueFactorValues(currentUser.email);
     candidateStack = await getAllCandidateDemographics();
     candidateStackFactors = await getAllCandidateIssueFactorValues();
-    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics, userBallot, candidateStackFactors);
+    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics,
+        userBallot, candidateStackFactors);
   }
 
-  void setObjectStates(UserIssueFactorValues uifv, List<CandidateDemographics> s, UserDemographics ud, Ballot ub, List<CandidateIssueFactorValues> cifv) {
+  void setObjectStates(
+      UserIssueFactorValues uifv,
+      List<CandidateDemographics> s,
+      UserDemographics ud,
+      Ballot ub,
+      List<CandidateIssueFactorValues> cifv) {
     setState(() {
       candidateStackFactors = cifv;
       currentUserFactors = uifv;

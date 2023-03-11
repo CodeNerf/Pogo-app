@@ -1,11 +1,13 @@
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 
 class CandidateProfile extends StatefulWidget {
   final CandidateDemographics candidate;
-
-  const CandidateProfile({Key? key, required this.candidate}) : super(key: key);
+  final CandidateIssueFactorValues candidateValues;
+  const CandidateProfile({Key? key, required this.candidate, required this.candidateValues}) : super(key: key);
 
   @override
   _CandidateProfileState createState() => _CandidateProfileState();
@@ -14,6 +16,7 @@ class CandidateProfile extends StatefulWidget {
 class _CandidateProfileState extends State<CandidateProfile>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  String PogoLogo = 'assets/Pogo_logo_horizontal.png';
 
   @override
   void initState() {
@@ -28,6 +31,7 @@ class _CandidateProfileState extends State<CandidateProfile>
   }
    //returns the candidate's experience
   String candidateExperience(String careerStart) {
+    print(careerStart);
     String experience = '';
     DateTime start = DateTime.parse(careerStart);
     DateTime currentDate = DateTime.now();
@@ -62,34 +66,89 @@ class _CandidateProfileState extends State<CandidateProfile>
     return const Color(0xFFF9F9F9);
   }
 
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-         
- Container(
-  decoration: BoxDecoration(
-    color: candidateColor(widget.candidate.politicalAffiliation),
-  ),
-  child: Padding(
-    padding: const EdgeInsets.only(top: 25.0, bottom: 15.0),
-    child: Container(
-      height: MediaQuery.of(context).size.height * 0.26,
-      child: CircularProfileAvatar(
-        '',
-        radius: 85,
-        elevation: 1,
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: Image(
-            image: NetworkImage(widget.candidate.profileImageURL),
+  List<Widget> getRatingCircles() {
+    List<Widget> circles = [];
+    circles.add(Column(children: [ratingCircles('Education\n', widget.candidateValues.educationScore), ratingCircles('Care', widget.candidateValues.educationWeight)],));
+    circles.add(Column(children: [ratingCircles('Climate\n', widget.candidateValues.climateScore), ratingCircles('Care', widget.candidateValues.climateWeight)],));
+    circles.add(Column(children: [ratingCircles('Drug Policy\n', widget.candidateValues.drugPolicyScore), ratingCircles('Care', widget.candidateValues.drugPolicyWeight)],));
+    circles.add(Column(children: [ratingCircles('Economy\n', widget.candidateValues.economyScore), ratingCircles('Care', widget.candidateValues.economyWeight)],));
+    circles.add(Column(children: [ratingCircles('Healthcare\n', widget.candidateValues.healthcareScore), ratingCircles('Care', widget.candidateValues.healthcareWeight)],));
+    circles.add(Column(children: [ratingCircles('Immigration\n', widget.candidateValues.immigrationScore), ratingCircles('Care', widget.candidateValues.immigrationWeight)],));
+    circles.add(Column(children: [ratingCircles('Policing\n', widget.candidateValues.policingScore), ratingCircles('Care', widget.candidateValues.policingWeight)],));
+    circles.add(Column(children: [ratingCircles('Reproductive\nHealth', widget.candidateValues.reproductiveScore), ratingCircles('Care', widget.candidateValues.reproductiveWeight)],));
+    circles.add(Column(children: [ratingCircles('Gun Control\n', widget.candidateValues.gunPolicyScore), ratingCircles('Care', widget.candidateValues.gunPolicyWeight)],));
+    circles.add(Column(children: [ratingCircles('Housing\n', widget.candidateValues.housingScore), ratingCircles('Care', widget.candidateValues.housingWeight)],));
+    return circles;
+  }
+
+  Widget ratingCircles(String name, num rating) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+      child: CircularPercentIndicator(
+        radius: 25,
+        lineWidth: 6,
+        progressColor: const Color(0xFFF3D433),
+        backgroundColor: const Color(0xFF8B9DDE),
+        footer: Text(
+          name,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        percent: rating/5,
+        center: Text(
+          '$rating',
+          style: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
-    ),
-  ),
-),
+    );
+  }
+
+@override
+  Widget build(BuildContext context) {
+  return Scaffold(
+      backgroundColor: const Color(0xFFE5E5E5),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        centerTitle: true,
+        title: Image(
+          image: AssetImage(PogoLogo),
+          width: 150,
+        ),
+      ),
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          color: candidateColor(widget.candidate.politicalAffiliation),
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProfileAvatar(
+                '',
+                radius: 85,
+                elevation: 5,
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Image(
+                    image: NetworkImage(widget.candidate.profileImageURL),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -112,7 +171,7 @@ Widget build(BuildContext context) {
                             ),
                           ),
                           Text(
-                            'Michigan MI ${widget.candidate.zipCode}',
+                            'Michigan ${widget.candidate.zipCode}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
@@ -129,7 +188,7 @@ Widget build(BuildContext context) {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              '${widget.candidate.politicalAffiliation}',
+                              widget.candidate.politicalAffiliation,
                               style: const TextStyle(
                                 color: Colors.blue,
                                 fontSize: 16,
@@ -190,7 +249,7 @@ Expanded(
   controller: _tabController,
   children: [
     // First tab content
- Center(
+    const Center(
   child: SingleChildScrollView(
     child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -206,12 +265,12 @@ Expanded(
 ),
     // Second tab content (Experience)
     Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -219,7 +278,19 @@ Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      
+                      const Text(
+                        'Views on Political Issues',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: getRatingCircles(),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -235,9 +306,7 @@ Expanded(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 5),
-           
-            SizedBox(height: 10),
+            const SizedBox(height: 15),
             Center(
               child: Text(
                       candidateExperience(widget.candidate.careerStartDate),

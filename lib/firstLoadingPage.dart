@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/HomeLoadingPage.dart';
 import 'package:pogo/LandingPage.dart';
-import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/amplifyFunctions.dart';
+import 'package:pogo/awsFunctions.dart';
+import 'package:pogo/models/userBallots.dart';
 
 class firstLoadingPage extends StatefulWidget {
   const firstLoadingPage({Key? key}) : super(key: key);
@@ -12,7 +13,6 @@ class firstLoadingPage extends StatefulWidget {
 }
 
 class _firstLoadingPageState extends State<firstLoadingPage> {
-
   @override
   void initState() {
     super.initState();
@@ -21,32 +21,20 @@ class _firstLoadingPageState extends State<firstLoadingPage> {
 
   void configure(context) async {
     bool check = await configureAmplify();
-    if(check) {
+    if (check) {
       loginCheck(context);
     }
   }
 
   void loginCheck(context) async {
-    if(await checkLoggedIn()) {
-      if(await isSurveyCompleted()) {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeLoadingPage(),
-          ),
-        );
-      }
-      else {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SurveyLandingPage(),
-          ),
-        );
-      }
-
-    }
-    else {
+    if (await checkLoggedIn()) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeLoadingPage(),
+        ),
+      );
+    } else {
       await Navigator.push(
         context,
         MaterialPageRoute(
