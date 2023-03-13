@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/firstLoadingPage.dart';
-import 'googleFunctions/CivicFunctions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: firstLoadingPage(),
+      home: FirstLoadingPage(),
     );
   }
 }

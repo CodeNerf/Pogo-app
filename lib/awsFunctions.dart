@@ -3,8 +3,7 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pogo/dynamoModels/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
-import 'package:pogo/googleFunctions/CivicModels.dart';
-import 'package:pogo/models/userBallots.dart';
+//import 'package:pogo/models/userBallots.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
 
@@ -166,7 +165,7 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
     client.close();
   }
 }
-
+/*
 Future<void> putUserNationalBallot(UserNationalBallot userBallot) async {
   final client = http.Client();
   try {
@@ -263,6 +262,7 @@ Future<UserLocalBallot> getUserLocalBallot(String userId) async {
     client.close();
   }
 }
+ */
 
 Future<void> putUserBallot(String userId, List<String> localBallot,
     List<String> stateBallot, List<String> nationalBallot) async {
@@ -302,7 +302,7 @@ Future<List<String>> getUserBallot(String userId) async {
     client.close();
   }
 }
-
+/*
 Future<void> updateUserBallot(String userId, String candidateId) async {
   final allCandidates =
       await getAllCandidateDemographics(); //get a list of all available candidate (current one is mutated throughout executuion)
@@ -342,6 +342,8 @@ Future<void> updateUserBallot(String userId, String candidateId) async {
     putUserBallot(userId, userBallot, [''], ['']);
   }
 }
+
+ */
 
 Future<List<CandidateIssueFactorValues>>
     getAllCandidateIssueFactorValues() async {

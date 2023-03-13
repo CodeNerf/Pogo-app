@@ -11,28 +11,28 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  String pogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final emailController = TextEditingController();
-  String errorText = '';
+  String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
+  final _emailController = TextEditingController();
+  String _errorText = '';
 
-  Future requestPasswordResetCode(context) async {
-    if(emailController.text.isEmpty) {
+  Future _requestPasswordResetCode(context) async {
+    if(_emailController.text.isEmpty) {
       setState(() {
-        errorText = 'Email cannot be blank.';
+        _errorText = 'Email cannot be blank.';
       });
     }
     //send link to user email to reset password
-    else if(await resetPassword(emailController.text)) {
+    else if(await resetPassword(_emailController.text)) {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EnterNewPasswordPage(email: emailController.text),
+          builder: (context) => EnterNewPasswordPage(email: _emailController.text),
         ),
       );
     }
     else {
       setState(() {
-        errorText = 'Could not send the password reset code. Please check that the email entered is correct.';
+        _errorText = 'Could not send the password reset code. Please check that the email entered is correct.';
       });
     }
   }
@@ -76,7 +76,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         height: 40,
                         child: Image(
                           image: AssetImage(
-                            pogoLogo,
+                            _pogoLogo,
                           ),
                         ),
                       ),
@@ -98,7 +98,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
               //ERROR TEXT
               Text(
-                errorText,
+                _errorText,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 20,
@@ -120,7 +120,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 20.0),
                     child: TextField(
-                      controller: emailController,
+                      controller: _emailController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Email',
@@ -137,7 +137,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 child: InkWell(
                   //TODO: create login() backend function
                   onTap: () async {
-                    requestPasswordResetCode(context);
+                    _requestPasswordResetCode(context);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(20),

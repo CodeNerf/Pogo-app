@@ -4,6 +4,7 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
 import 'CivicModels.dart';
 
+/*
 Future<List<Election>> getElection() async {
   final queryParams = {'key': "theKey"};
   final url =
@@ -22,6 +23,7 @@ Future<List<Election>> getElection() async {
     return <Election>[];
   }
 }
+*/
 
 Future<List<PollingLocation>> getPollingLocation(String address) async {
   final queryParams = {
@@ -49,6 +51,7 @@ Future<List<PollingLocation>> getPollingLocation(String address) async {
   }
 }
 
+/*
 Future<List<Candidate>> getCandidates(String Address, String electionId) async {
   final queryParams = {
     'key': "theKey",
@@ -75,3 +78,4 @@ Future<List<Candidate>> getCandidates(String Address, String electionId) async {
     return <Candidate>[];
   }
 }
+ */

@@ -17,19 +17,19 @@ class UserConfirmationPage extends StatefulWidget {
 }
 
 class _UserConfirmationPage extends State<UserConfirmationPage> {
-  String pogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final codeController = TextEditingController();
-  late String email = widget.email;
-  late String password = widget.password;
-  String errorText = '';
-  double errorSizeBoxSize = 0;
-  Color errorTextColor = Colors.green;
+  final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
+  final _codeController = TextEditingController();
+  late String _email = widget.email;
+  late String _password = widget.password;
+  String _errorText = '';
+  double _errorSizeBoxSize = 0;
+  Color _errorTextColor = Colors.green;
 
-  Future confirm(context) async {
-    if (await confirmUser(email, codeController.text)) {
-      await signInUser(email, password);
+  Future _confirm(context) async {
+    if (await confirmUser(_email, _codeController.text)) {
+      await signInUser(_email, _password);
       UserIssueFactorValues newValues = UserIssueFactorValues(
-          userId: email,
+          userId: _email,
           climateScore: 0,
           climateWeight: 0,
           drugPolicyScore: 0,
@@ -60,27 +60,27 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
           MaterialPageRoute(builder: (context) => SurveyLandingPage()));
     } else {
       setState(() {
-        errorText =
+        _errorText =
             'Account could not be confirmed. Check if the code entered was correct or request for a new code to be sent.';
-        errorSizeBoxSize = 10;
-        errorTextColor = Colors.red;
+        _errorSizeBoxSize = 10;
+        _errorTextColor = Colors.red;
       });
     }
   }
 
-  Future resendCode() async {
-    if (await resendConfirmationCode(email)) {
+  Future _resendCode() async {
+    if (await resendConfirmationCode(_email)) {
       setState(() {
-        errorText = 'A new code was sent to your email.';
-        errorSizeBoxSize = 10;
-        errorTextColor = Colors.green;
+        _errorText = 'A new code was sent to your email.';
+        _errorSizeBoxSize = 10;
+        _errorTextColor = Colors.green;
       });
     } else {
       //this shouldn't happen
       setState(() {
-        errorText = 'Error occurred when requesting for a new code.';
-        errorSizeBoxSize = 10;
-        errorTextColor = Colors.red;
+        _errorText = 'Error occurred when requesting for a new code.';
+        _errorSizeBoxSize = 10;
+        _errorTextColor = Colors.red;
       });
     }
   }
@@ -102,7 +102,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                   scale: 0.7,
                   child: Image(
                     image: AssetImage(
-                      pogoLogo,
+                      _pogoLogo,
                     ),
                   ),
                 ),
@@ -124,12 +124,12 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Text(
-                    errorText,
+                    _errorText,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: errorTextColor,
+                      color: _errorTextColor,
                     ),
                   ),
                 ),
@@ -147,7 +147,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: codeController,
+                        controller: _codeController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Code',
@@ -163,7 +163,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
                     onTap: () async {
-                      confirm(context);
+                      _confirm(context);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(20),
@@ -190,7 +190,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: InkWell(
                     onTap: () async {
-                      resendCode();
+                      _resendCode();
                     },
                     child: Container(
                       padding: const EdgeInsets.all(30),

@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
-import 'package:flutter/services.dart';
+import 'package:pogo/googleFunctions/CivicFunctions.dart';
+import 'package:pogo/googleFunctions/CivicModels.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VoterGuide extends StatefulWidget {
   final UserDemographics user;
   const VoterGuide({Key? key, required this.user}) : super(key: key);
   @override
-  _VoterGuideState createState() => _VoterGuideState();
+  State<VoterGuide> createState() => _VoterGuideState();
 }
 
 class _VoterGuideState extends State<VoterGuide> {
   List<bool> _isChecked = [false, false, false, false];
+  late List<PollingLocation> _pollingLocations;
+  @override
+  void initState() {
+    super.initState();
+    _getPollingLocations();
+  }
+
+  void _getPollingLocations() async {
+    _pollingLocations = await getPollingLocation(widget.user.addressLine1);
+  }
 
   void _toggleChecked(int index) {
     setState(() {

@@ -1,40 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/HomeLoadingPage.dart';
 import 'package:pogo/LandingPage.dart';
+import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/awsFunctions.dart';
-import 'package:pogo/models/userBallots.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
 
-class firstLoadingPage extends StatefulWidget {
-  const firstLoadingPage({Key? key}) : super(key: key);
+class FirstLoadingPage extends StatefulWidget {
+  const FirstLoadingPage({Key? key}) : super(key: key);
 
   @override
-  State<firstLoadingPage> createState() => _firstLoadingPageState();
+  State<FirstLoadingPage> createState() => _FirstLoadingPageState();
 }
 
-class _firstLoadingPageState extends State<firstLoadingPage> {
+class _FirstLoadingPageState extends State<FirstLoadingPage> {
   @override
   void initState() {
     super.initState();
-    configure(context);
+    _configure(context);
   }
 
-  void configure(context) async {
+  void _configure(context) async {
     bool check = await configureAmplify();
     if (check) {
-      loginCheck(context);
+      _loginCheck(context);
     }
   }
 
-  void loginCheck(context) async {
+  void _loginCheck(context) async {
     if (await checkLoggedIn()) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeLoadingPage(),
-        ),
-      );
-    } else {
+      String email = await fetchCurrentUserEmail();
+      UserDemographics user = await getUserDemographics(email);
+      if(user.surveyCompletion == true) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeLoadingPage(user: user),
+          ),
+        );
+      }
+      else {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SurveyLandingPage(),
+          ),
+        );
+      }
+    }
+    else {
       await Navigator.push(
         context,
         MaterialPageRoute(

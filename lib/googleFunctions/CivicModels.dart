@@ -1,3 +1,4 @@
+/*
 class Election {
   final id;
   final String name;
@@ -23,6 +24,8 @@ class Election {
     return id + ' ' + name + ' ' + electionDay + ' ' + ocdDivisionId;
   }
 }
+
+ */
 
 class PollingLocation {
   final locationName;
@@ -50,6 +53,7 @@ class PollingLocation {
   }
 }
 
+/*
 class Candidate {
   final name;
   final party;
@@ -69,3 +73,5 @@ class Candidate {
     );
   }
 }
+
+ */
