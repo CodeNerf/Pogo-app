@@ -34,6 +34,7 @@ Future<UserIssueFactorValues> getUserIssueFactorValues(String userId) async {
         headers: {
           "content-type": "application/json",
         });
+    print(response.body);
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     return UserIssueFactorValues.fromJson(decodedResponse);
   } finally {

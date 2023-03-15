@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:amplify_core/amplify_core.dart';
 //import 'APIKey.dart';
 import 'package:http/http.dart' as http;
+import 'package:pogo/googleFunctions/APIKey.dart';
 import 'CivicModels.dart';
 
 /*
@@ -27,7 +28,7 @@ Future<List<Election>> getElection() async {
 
 Future<List<PollingLocation>> getPollingLocation(String address) async {
   final queryParams = {
-    'key': "theKey",
+    'key': googleAPIKey,
     'address': address,
     'electionId':
         '2000', //TODO remove test election when we find a working address

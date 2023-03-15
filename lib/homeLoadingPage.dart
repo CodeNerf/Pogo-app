@@ -34,8 +34,8 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     _currentUserFactors = await getUserIssueFactorValues(email);
     _candidateStack = await getAllCandidateDemographics();
     _candidateStackFactors = await getAllCandidateIssueFactorValues();
-    _setObjectStates(_currentUserFactors, _candidateStack,
-        _userBallot, _candidateStackFactors);
+    _setObjectStates(_currentUserFactors, _candidateStack, _userBallot,
+        _candidateStackFactors);
   }
 
   void _setObjectStates(
