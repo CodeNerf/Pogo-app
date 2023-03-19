@@ -34,9 +34,11 @@ Future<UserIssueFactorValues> getUserIssueFactorValues(String userId) async {
         headers: {
           "content-type": "application/json",
         });
-    print(response.body);
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     return UserIssueFactorValues.fromJson(decodedResponse);
+  } catch (e) {
+    safePrint(e);
+    return UserIssueFactorValues(userId: userId);
   } finally {
     client.close();
   }
@@ -103,8 +105,13 @@ Future<UserDemographics> getUserDemographics(String userId) async {
         headers: {
           "content-type": "application/json",
         });
+    print("Get User Demographics");
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    safePrint(decodedResponse.toString());
     return UserDemographics.fromJson(decodedResponse);
+  } catch (e) {
+    print(e);
+    return UserDemographics(userId: userId);
   } finally {
     client.close();
   }

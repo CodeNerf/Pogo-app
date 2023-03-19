@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/LoginPage.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
@@ -63,15 +64,37 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
   }
 
   void _getUserFactors() async {
-    String email = await fetchCurrentUserEmail();
+    bool retry = true;
+    int retryCount = 0;
+    String email = '';
+    try {
+      email = await fetchCurrentUserEmail();
+    } catch (e) {
+      safePrint("Couldn't fetch user email.");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
     // Need to push associated user factors to the database before running this function.
-    _currentUserFactors = await getUserIssueFactorValues(email);
-    _currentAnswers = await getUserDemographics(email);
-    setState(() {
-      widget.ratings = _currentUserFactors;
-      widget.answers = _currentAnswers;
-      _buttonVisible = true;
-    });
+    while (retry) {
+      try {
+        await Future.wait(
+                [getUserIssueFactorValues(email), getUserDemographics(email)])
+            .then((List<dynamic> values) {
+          setState(() {
+            widget.ratings = values[0];
+            widget.answers = values[1];
+            _buttonVisible = true;
+          });
+        });
+        retry = false;
+      } catch (e) {
+        retry = true;
+        retryCount++;
+        safePrint(e);
+        safePrint(
+            "SurveyLandingPage: Failed to fetch user factors. Retrying... $retryCount");
+      }
+    }
   }
 
   @override

@@ -1,7 +1,7 @@
 import 'package:pogo/dynamoModels/Demographics.dart';
 
 class UserDemographics extends Demographics {
-  final String userId;
+  String userId;
   String phoneNumber;
   String registrationState;
   String addressLine1;
@@ -9,24 +9,39 @@ class UserDemographics extends Demographics {
   bool voterRegistrationStatus;
   bool surveyCompletion;
 
+  // UserDemographics(
+  //     {required this.userId,
+  //     required this.phoneNumber,
+  //     required this.registrationState,
+  //     required this.addressLine1,
+  //     required this.pollingLocation,
+  //     required this.voterRegistrationStatus,
+  //     required this.surveyCompletion,
+  //     required super.firstName,
+  //     required super.lastName,
+  //     required super.dateOfBirth,
+  //     required super.zipCode,
+  //     required super.profileImageURL,
+  //     required super.gender,
+  //     required super.racialIdentity,
+  //     required super.politicalAffiliation});
+
   UserDemographics(
-      {
-        required this.userId,
-        required this.phoneNumber,
-        required this.registrationState,
-        required this.addressLine1,
-        required this.pollingLocation,
-        required this.voterRegistrationStatus,
-        required this.surveyCompletion,
-        required super.firstName,
-        required super.lastName,
-        required super.dateOfBirth,
-        required super.zipCode,
-        required super.profileImageURL,
-        required super.gender,
-        required super.racialIdentity,
-        required super.politicalAffiliation
-      });
+      {required this.userId,
+      this.phoneNumber = "",
+      this.registrationState = "",
+      this.addressLine1 = "",
+      this.pollingLocation = "",
+      this.voterRegistrationStatus = false,
+      this.surveyCompletion = false,
+      super.firstName = "",
+      super.lastName = "",
+      super.dateOfBirth = "",
+      super.zipCode = "",
+      super.profileImageURL = "",
+      super.gender = "",
+      super.racialIdentity = "",
+      super.politicalAffiliation = ""});
 
   //factory constructor
   factory UserDemographics.fromJson(Map json) {

@@ -144,12 +144,40 @@ Future<void> updatePassword(String oldPassword, String newPassword) async {
 
 Future<String> fetchCurrentUserEmail() async {
   try {
-    final result = await Amplify.Auth.fetchUserAttributes();
-    return result[8].value;
+    final result = await fetchUserAttributes();
+    String email = result['email']!;
+    return email;
   } on AuthException catch (e) {
     safePrint(e.message);
   }
   return '';
+}
+
+// Future<String> getAttributes() async {
+//   try {
+//     final result = await Amplify.Auth.fetchUserAttributes();
+//     for (var i = 0; i < result.length; i++) {
+//       result[i].userAttributeKey + ${result[i].value}');
+//     }
+//     return result[8].value;
+//   } on AuthException catch (e) {
+//     safePrint(e.message);
+//   }
+//   return '';
+// }
+
+Future<Map<String, String>> fetchUserAttributes() async {
+  Map<String, String> userAttributes = {};
+  try {
+    final result = await Amplify.Auth.fetchUserAttributes();
+    for (var i = 0; i < result.length; i++) {
+      userAttributes[result[i].userAttributeKey.key] = result[i].value;
+    }
+    return userAttributes;
+  } on AuthException catch (e) {
+    safePrint(e.message);
+  }
+  return userAttributes;
 }
 
 Future<bool> isUserConfirmed() async {
