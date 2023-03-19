@@ -30,7 +30,8 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
 
   void _loginCheck(context) async {
     try {
-      if (await checkLoggedIn()) {
+      bool check = await checkLoggedIn();
+      if (check) {
         String email = await fetchCurrentUserEmail();
         UserDemographics user = await getUserDemographics(email);
         if (user.surveyCompletion == true) {
