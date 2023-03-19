@@ -20,6 +20,8 @@ Future<void> putUserIssueFactorValues(
         body: jsonEncode(userIssueFactorValues.toJson()));
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     print(decodedResponse);
+  } catch (e) {
+    safePrint('An error occurred in putUserIssueFactorValues() $e');
   } finally {
     client.close();
   }
@@ -37,7 +39,7 @@ Future<UserIssueFactorValues> getUserIssueFactorValues(String userId) async {
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     return UserIssueFactorValues.fromJson(decodedResponse);
   } catch (e) {
-    safePrint(e);
+    safePrint('An error occurred in getUserIssueFactorValues() $e');
     return UserIssueFactorValues(userId: userId);
   } finally {
     client.close();
@@ -56,7 +58,8 @@ Future<void> putCandidateIssueFactorValues(
         },
         body: jsonEncode(candidateIssueFactorValues.toJson()));
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    print(decodedResponse);
+  } catch (e) {
+    safePrint('An error occurred in putCandidateIssueFactorValues() $e');
   } finally {
     client.close();
   }
@@ -74,6 +77,9 @@ Future<CandidateIssueFactorValues> getCandidateIssueFactorValues(
         });
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
     return CandidateIssueFactorValues.fromJson(decodedResponse);
+  } catch (e) {
+    safePrint('An error occurred in CandidateIssueFactorValues() $e');
+    return CandidateIssueFactorValues(candidateId: candidateId);
   } finally {
     client.close();
   }
@@ -90,7 +96,8 @@ Future<void> putUserDemographics(UserDemographics userDemographics) async {
         },
         body: jsonEncode(userDemographics.toJson()));
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    print(decodedResponse);
+  } catch (e) {
+    safePrint('An error occurred in putUserDemographics() $e');
   } finally {
     client.close();
   }
@@ -105,12 +112,10 @@ Future<UserDemographics> getUserDemographics(String userId) async {
         headers: {
           "content-type": "application/json",
         });
-    print("Get User Demographics");
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    safePrint(decodedResponse.toString());
     return UserDemographics.fromJson(decodedResponse);
   } catch (e) {
-    print(e);
+    safePrint('An error occurred in getUserDemographics() $e');
     return UserDemographics(userId: userId);
   } finally {
     client.close();
@@ -129,7 +134,8 @@ Future<void> putCandidateDemographics(
         },
         body: jsonEncode(candidateDemographics.toJson()));
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    print(decodedResponse);
+  } catch (e) {
+    safePrint('An error occurred in putCandidateDemographics() $e');
   } finally {
     client.close();
   }
@@ -146,8 +152,10 @@ Future<CandidateDemographics> getCandidateDemographics(
           "content-type": "application/json",
         });
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-    safePrint(decodedResponse);
     return CandidateDemographics.fromJson(decodedResponse);
+  } catch (e) {
+    safePrint('An error occurred in getCandidateDemographics() $e');
+    return CandidateDemographics(candidateId: candidateId);
   } finally {
     client.close();
   }
@@ -169,6 +177,9 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
     return candidateDemographicsList;
+  } catch (e) {
+    safePrint('An error occurred in getAllCandidateDemographics() $e');
+    return <CandidateDemographics>[];
   } finally {
     client.close();
   }
@@ -287,6 +298,8 @@ Future<void> putUserBallot(String userId, List<String> localBallot,
           'nationalBallot': nationalBallot,
         }));
     safePrint("AWS response: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+  } catch (e) {
+    safePrint("An error occurred in putUserBallot() $e");
   } finally {
     client.close();
   }
@@ -305,6 +318,9 @@ Future<List<String>> getUserBallot(String userId) async {
       safePrint("decoded ballot: ${decodedResponse['localBallot']}");
       return decodedResponse['localBallot'].cast<String>();
     }
+    return [];
+  } catch (e) {
+    safePrint("An error occurred in getUserBallot() $e");
     return [];
   } finally {
     client.close();
@@ -369,8 +385,10 @@ Future<List<CandidateIssueFactorValues>>
       candidateFactorsList
           .add(CandidateIssueFactorValues.fromJson(candidateissuefactorvalues));
     }
-    safePrint("candidates pulled");
     return candidateFactorsList;
+  } catch (e) {
+    safePrint("An error occurred in getAllCandidateIssueFactorValues: $e");
+    return <CandidateIssueFactorValues>[];
   } finally {
     client.close();
   }
