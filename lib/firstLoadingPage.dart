@@ -22,9 +22,13 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
   }
 
   void _configure(context) async {
-    bool check = await configureAmplify();
-    if (check) {
-      _loginCheck(context);
+    try {
+      bool check = await configureAmplify();
+      if (check) {
+        _loginCheck(context);
+      }
+    } catch (e) {
+      safePrint("Error occurred in _configure(): $e");
     }
   }
 
@@ -58,7 +62,7 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
         );
       }
     } catch (e) {
-      safePrint(e);
+      safePrint("Error occurred in _loginCheck(): $e");
       Navigator.push(
         context,
         MaterialPageRoute(

@@ -35,19 +35,24 @@ Future<List<PollingLocation>> getPollingLocation(String address) async {
   };
   final url =
       Uri.https("www.googleapis.com", "civicinfo/v2/voterinfo", queryParams);
-  final response = await http.get(url);
-  if (response.statusCode == 200) {
-    final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-    final locationsJson = jsonResponse['pollingLocations'] as List<dynamic>?;
-    final locations = locationsJson != null
-        ? locationsJson
-            .map((location) => PollingLocation.fromJson(location))
-            .toList()
-        : <PollingLocation>[];
-    return List<PollingLocation>.from(locations);
-  } else {
-    safePrint(
-        'Request failed with status:  ${response.statusCode} ${response.reasonPhrase}');
+  try {
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
+      final locationsJson = jsonResponse['pollingLocations'] as List<dynamic>?;
+      final locations = locationsJson != null
+          ? locationsJson
+              .map((location) => PollingLocation.fromJson(location))
+              .toList()
+          : <PollingLocation>[];
+      return List<PollingLocation>.from(locations);
+    } else {
+      safePrint(
+          'Request failed with status:  ${response.statusCode} ${response.reasonPhrase}');
+      return <PollingLocation>[];
+    }
+  } catch (e) {
+    safePrint("Error occurred in getPollingLocation(): $e");
     return <PollingLocation>[];
   }
 }

@@ -41,81 +41,102 @@ class _RegisterPageState extends State<RegisterPage> {
   );
 
   Future _signUp(context) async {
-    if (_fnameController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter your first name.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_lnameController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter your last name.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_emailController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter your email.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (!_emailRegex.hasMatch(_emailController.text)) {
-      setState(() {
-        _errorText = 'Invalid email address.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_passwordController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter a password.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_confirmPasswordController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must confirm your password.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_passwordController.text
-            .compareTo(_confirmPasswordController.text) !=
-        0) {
-      setState(() {
-        _errorText = 'Passwords do not match.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_phoneController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter your phone number.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (!isNumeric(_phoneController.text)) {
-      //print(passwordController.text.length);
-      setState(() {
-        _errorText = 'Invalid phone number.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_phoneController.text.length != 10) {
-      setState(() {
-        _errorText = 'Invalid phone number length.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_addressController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter your address.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (await signUpUser(
-        _emailController.text,
-        _passwordController.text,
-        _fnameController.text,
-        _lnameController.text,
-        _phoneController.text,
-        _addressController.text)) {
-      UserDemographics userDemographics = UserDemographics(userId: _emailController.text, phoneNumber: _phoneController.text, registrationState: '', addressLine1: _addressController.text, pollingLocation: '', voterRegistrationStatus: false, firstName: _fnameController.text, lastName: _lnameController.text, dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '', surveyCompletion: false);
-      putUserDemographics(userDemographics);
-      putUserBallot(_emailController.text, [], [], []);
-      //TODO: create blank ballot then push to db
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserConfirmationPage(
-                  email: _emailController.text,
-                  password: _passwordController.text)));
+    try {
+      if (_fnameController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your first name.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_lnameController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your last name.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_emailController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your email.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (!_emailRegex.hasMatch(_emailController.text)) {
+        setState(() {
+          _errorText = 'Invalid email address.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_passwordController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter a password.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_confirmPasswordController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must confirm your password.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_passwordController.text
+              .compareTo(_confirmPasswordController.text) !=
+          0) {
+        setState(() {
+          _errorText = 'Passwords do not match.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_phoneController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your phone number.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (!isNumeric(_phoneController.text)) {
+        //print(passwordController.text.length);
+        setState(() {
+          _errorText = 'Invalid phone number.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_phoneController.text.length != 10) {
+        setState(() {
+          _errorText = 'Invalid phone number length.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_addressController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your address.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (await signUpUser(
+          _emailController.text,
+          _passwordController.text,
+          _fnameController.text,
+          _lnameController.text,
+          _phoneController.text,
+          _addressController.text)) {
+        UserDemographics userDemographics = UserDemographics(
+            userId: _emailController.text,
+            phoneNumber: _phoneController.text,
+            registrationState: '',
+            addressLine1: _addressController.text,
+            pollingLocation: '',
+            voterRegistrationStatus: false,
+            firstName: _fnameController.text,
+            lastName: _lnameController.text,
+            dateOfBirth: '',
+            zipCode: '',
+            profileImageURL: '',
+            gender: '',
+            racialIdentity: '',
+            politicalAffiliation: '',
+            surveyCompletion: false);
+        await Future.wait([
+          putUserDemographics(userDemographics),
+          putUserBallot(_emailController.text, [], [], []),
+        ]);
+        //TODO: create blank ballot then push to db
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserConfirmationPage(
+                    email: _emailController.text,
+                    password: _passwordController.text)));
+      }
+    } catch (e) {
+      safePrint("Error ocurred in _signUp() $e");
     }
   }
 

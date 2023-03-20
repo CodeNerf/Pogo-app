@@ -20,7 +20,7 @@ void sessionCheck() async {
       safePrint("User is signed out");
     }
   } catch (e) {
-    safePrint("Could not check if user is signed in");
+    safePrint("An error occurred in sessionCheck(): $e");
   }
 }
 
