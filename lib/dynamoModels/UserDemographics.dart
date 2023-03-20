@@ -1,30 +1,13 @@
 import 'package:pogo/dynamoModels/Demographics.dart';
 
 class UserDemographics extends Demographics {
-  String userId;
+  final String userId;
   String phoneNumber;
   String registrationState;
   String addressLine1;
   String pollingLocation;
   bool voterRegistrationStatus;
   bool surveyCompletion;
-
-  // UserDemographics(
-  //     {required this.userId,
-  //     required this.phoneNumber,
-  //     required this.registrationState,
-  //     required this.addressLine1,
-  //     required this.pollingLocation,
-  //     required this.voterRegistrationStatus,
-  //     required this.surveyCompletion,
-  //     required super.firstName,
-  //     required super.lastName,
-  //     required super.dateOfBirth,
-  //     required super.zipCode,
-  //     required super.profileImageURL,
-  //     required super.gender,
-  //     required super.racialIdentity,
-  //     required super.politicalAffiliation});
 
   UserDemographics(
       {required this.userId,

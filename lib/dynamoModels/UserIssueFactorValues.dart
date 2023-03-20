@@ -3,29 +3,6 @@ import 'package:pogo/dynamoModels/IssueFactorValues.dart';
 class UserIssueFactorValues extends IssueFactorValues {
   final String userId;
 
-  // UserIssueFactorValues(
-  //     {required this.userId,
-  //     required super.climateScore,
-  //     required super.climateWeight,
-  //     required super.drugPolicyScore,
-  //     required super.drugPolicyWeight,
-  //     required super.economyScore,
-  //     required super.economyWeight,
-  //     required super.educationScore,
-  //     required super.educationWeight,
-  //     required super.gunPolicyScore,
-  //     required super.gunPolicyWeight,
-  //     required super.healthcareScore,
-  //     required super.healthcareWeight,
-  //     required super.housingScore,
-  //     required super.housingWeight,
-  //     required super.immigrationScore,
-  //     required super.immigrationWeight,
-  //     required super.policingScore,
-  //     required super.policingWeight,
-  //     required super.reproductiveScore,
-  //     required super.reproductiveWeight});
-
   UserIssueFactorValues(
       {required this.userId,
       super.climateScore = 0,
