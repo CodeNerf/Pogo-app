@@ -10,7 +10,7 @@ import 'dynamoModels/UserIssueFactorValues.dart';
 
 class HomeLoadingPage extends StatefulWidget {
   final UserDemographics user;
-  HomeLoadingPage({Key? key, required this.user}) : super(key: key);
+  const HomeLoadingPage({Key, key, required this.user}) : super(key: key);
 
   @override
   State<HomeLoadingPage> createState() => _HomeLoadingPageState();

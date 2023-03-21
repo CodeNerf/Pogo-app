@@ -13,106 +13,160 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-
-
-
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[90],
       body: SafeArea(
-       child: Container(
+        child: Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 100),
           child: Column(
-          
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Column(
                 children: <Widget>[
-
-                   Container(
-                height: MediaQuery.of(context).size.height / 3,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/Pogo_logo_horizontal.png")
-                  )
-                ),
-              ),
-                SizedBox(
-                    height: 10,
-                ),
-                  Text(
-                    "Politics on the Go",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-
+                  Positioned(
+                    left: 83,
+                    top: 450,
+                    child: Container(
+                      width: 599,
+                      height: 212,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/Pogo_logo_horizontal.png"),
+                        ),
+                      ),
                     ),
-                    
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Text("Informing the next generation of voters ",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 17,
-
-                  ),)
-                ],
-              ),
-             
-              Column(
-                children: <Widget>[
-                  // the login button
-                  MaterialButton(
-                    minWidth: double.infinity,
-                    height: 70,
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
-                    },
-                 color: Color.fromARGB(255, 0, 0, 0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)
-                    ),
+                  Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
-                      "Login",
+                      "Politics on the Go",
                       style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 30,
+                        color: Color(0xFF0E0E0E),
+                        fontFamily: 'Inter',
+                        fontStyle: FontStyle.normal,
+                        letterSpacing: 0,
+                        height: 1.2,
                       ),
                     ),
                   ),
-
-                  SizedBox(height:20),
-                  MaterialButton(
-                    minWidth: double.infinity,
-                    height: 65,
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> RegisterPage()));
-                    },
-                    color: Color(0xFFF3D433),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)
-                    ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
-                      "Sign up",
+                      "Informing the next generation of voters ",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
+                        color: Color(0xFF57636C),
+                        fontSize: 18,
+                        fontFamily: 'Inter',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                      ),
                     ),
-                  )
+                  ),
                 ],
-              )
+              ),
+              Column(
+                children: <Widget>[
+                  // the login button
+Positioned(
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  child: Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.35),
+          blurRadius: 4,
+          offset: Offset(0, 4),
+        ),
+      ],
+    ),
+    child: MaterialButton(
+      minWidth: double.infinity,
+      height: 60,
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginPage()));
+      },
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)),
+      child: Text(
+        "Login",
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontStyle: FontStyle.normal,
+          fontWeight: FontWeight.w700,
+          fontSize: 20,
+          //height: 42,
+          color: Color(0xFF5F5D5D),
+        ),
+      ),
+    ),
+  ),
+),
+                  SizedBox(height: 40),
+     Positioned(
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  child: Container(
+    decoration: BoxDecoration(
+      color: Color(0xFFF3D433),
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.35),
+          blurRadius: 4,
+          offset: Offset(0, 4),
+        ),
+      ],
+    ),
+    child: MaterialButton(
+      minWidth: double.infinity,
+      height: 60,
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const RegisterPage()));
+      },
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)),
+      child: Text(
+        "Sign Up",
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontStyle: FontStyle.normal,
+          fontWeight: FontWeight.w700,
+          fontSize: 20,
+          //height: 42,
+          color: Colors.black,
+        ),
+      ),
+    ),
+  ),
+)
+                ],
+              ),
             ],
           ),
         ),
       ),
-      );
-  
-  }}
-  
-  
+    );
+  }
+}
