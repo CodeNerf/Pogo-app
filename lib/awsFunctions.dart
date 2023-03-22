@@ -492,7 +492,7 @@ Future<List<MatchingStatistics>> getUserCandidateStackStatistics(
     safePrint("candidates demographics stack pulled");
     return matchStats;
   } catch (e) {
-    safePrint("An error occurred in getUserCandidateStackDemographics: $e");
+    safePrint("An error occurred in getUserCandidateStackStatistics: $e");
     return <MatchingStatistics>[];
   } finally {
     client.close();
