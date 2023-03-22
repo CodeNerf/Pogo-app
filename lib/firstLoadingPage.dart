@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/HomeLoadingPage.dart';
 import 'package:pogo/LandingPage.dart';
@@ -21,35 +22,48 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
   }
 
   void _configure(context) async {
-    bool check = await configureAmplify();
-    if (check) {
-      _loginCheck(context);
+    try {
+      bool check = await configureAmplify();
+      if (check) {
+        _loginCheck(context);
+      }
+    } catch (e) {
+      safePrint("Error occurred in _configure(): $e");
     }
   }
 
   void _loginCheck(context) async {
-    if (await checkLoggedIn()) {
-      String email = await fetchCurrentUserEmail();
-      UserDemographics user = await getUserDemographics(email);
-      if(user.surveyCompletion == true) {
+    try {
+      bool check = await checkLoggedIn();
+      if (check) {
+        String email = await fetchCurrentUserEmail();
+        UserDemographics user = await getUserDemographics(email);
+        if (user.surveyCompletion == true) {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomeLoadingPage(user: user),
+            ),
+          );
+        } else {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SurveyLandingPage(),
+            ),
+          );
+        }
+      } else {
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeLoadingPage(user: user),
+            builder: (context) => const LandingPage(),
           ),
         );
       }
-      else {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SurveyLandingPage(),
-          ),
-        );
-      }
-    }
-    else {
-      await Navigator.push(
+    } catch (e) {
+      safePrint("Error occurred in _loginCheck(): $e");
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const LandingPage(),

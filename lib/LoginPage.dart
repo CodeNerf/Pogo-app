@@ -27,35 +27,72 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscure = true;
   Icon _eye = const Icon(Icons.remove_red_eye);
   String _errorText = '';
-  final UserIssueFactorValues _guestFactors = UserIssueFactorValues(userId: '', climateScore: 0, climateWeight: 0, drugPolicyScore: 0, drugPolicyWeight: 0, economyScore: 0, economyWeight: 0, educationScore: 0, educationWeight: 0, gunPolicyScore: 0, gunPolicyWeight: 0, healthcareScore: 0, healthcareWeight: 0, housingScore: 0, housingWeight: 0, immigrationScore: 0, immigrationWeight: 0, policingScore: 0, policingWeight: 0, reproductiveScore: 0, reproductiveWeight: 0);
-  final UserDemographics _guestDemographics = UserDemographics(userId: '', phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: '', lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '', surveyCompletion: true);
+  final UserIssueFactorValues _guestFactors = UserIssueFactorValues(
+      userId: '',
+      climateScore: 0,
+      climateWeight: 0,
+      drugPolicyScore: 0,
+      drugPolicyWeight: 0,
+      economyScore: 0,
+      economyWeight: 0,
+      educationScore: 0,
+      educationWeight: 0,
+      gunPolicyScore: 0,
+      gunPolicyWeight: 0,
+      healthcareScore: 0,
+      healthcareWeight: 0,
+      housingScore: 0,
+      housingWeight: 0,
+      immigrationScore: 0,
+      immigrationWeight: 0,
+      policingScore: 0,
+      policingWeight: 0,
+      reproductiveScore: 0,
+      reproductiveWeight: 0);
+  final UserDemographics _guestDemographics = UserDemographics(
+      userId: '',
+      phoneNumber: '',
+      registrationState: '',
+      addressLine1: '',
+      pollingLocation: '',
+      voterRegistrationStatus: false,
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      zipCode: '',
+      profileImageURL: '',
+      gender: '',
+      racialIdentity: '',
+      politicalAffiliation: '',
+      surveyCompletion: true);
   final Ballot _guestBallot = Ballot.empty();
 
   Future _login(context) async {
-    if (await signInUser(_emailController.text, _passwordController.text)) {
-      safePrint("checking isUserSignedIn()");
-      if (await isUserSignedIn()) {
-        //check if survey is completed
-        UserDemographics user = await getUserDemographics(_emailController.text);
-        if(user.surveyCompletion == true) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomeLoadingPage(user: user),
-            ),
-          );
-        }
-        else {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SurveyLandingPage(),
-            ),
-          );
-        }
+    try {
+      if (await signInUser(_emailController.text, _passwordController.text)) {
+        safePrint("checking isUserSignedIn()");
+        if (await isUserSignedIn()) {
+          //check if survey is completed
+          UserDemographics user =
+              await getUserDemographics(_emailController.text);
+          if (user.surveyCompletion == true) {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeLoadingPage(user: user),
+              ),
+            );
+          } else {
+            await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SurveyLandingPage(),
+              ),
+            );
+          }
 
-        //TODO: make account confirmation not necessary for logging in (maybe)
-        /* this checks if user is confirmed, not currently possible due to cognito settings
+          //TODO: make account confirmation not necessary for logging in (maybe)
+          /* this checks if user is confirmed, not currently possible due to cognito settings
         safePrint("checking isUserConfirmed()");
         //check if user is confirmed
         if(await isUserConfirmed()) {
@@ -89,15 +126,18 @@ class _LoginPageState extends State<LoginPage> {
           }
         }
         */
+        } else {
+          setState(() {
+            _errorText = 'Could not log in.';
+          });
+        }
       } else {
         setState(() {
           _errorText = 'Could not log in.';
         });
       }
-    } else {
-      setState(() {
-        _errorText = 'Could not log in.';
-      });
+    } catch (e) {
+      safePrint("Error occurred in _login $e");
     }
   }
 
@@ -261,7 +301,13 @@ class _LoginPageState extends State<LoginPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Home(currentUserFactors: _guestFactors, candidateStack: const [], currentUserDemographics: _guestDemographics, userBallot: _guestBallot, candidateStackFactors: const [],),
+                          builder: (context) => Home(
+                            currentUserFactors: _guestFactors,
+                            candidateStack: const [],
+                            currentUserDemographics: _guestDemographics,
+                            userBallot: _guestBallot,
+                            candidateStackFactors: const [],
+                          ),
                         ),
                       );
                     },

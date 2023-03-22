@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'package:pogo/googleFunctions/CivicFunctions.dart';
@@ -21,7 +22,11 @@ class _VoterGuideState extends State<VoterGuide> {
   }
 
   void _getPollingLocations() async {
-    _pollingLocations = await getPollingLocation(widget.user.addressLine1);
+    try {
+      _pollingLocations = await getPollingLocation(widget.user.addressLine1);
+    } catch (e) {
+      safePrint("Error occurred in _getPollingLocations(): $e");
+    }
   }
 
   void _toggleChecked(int index) {

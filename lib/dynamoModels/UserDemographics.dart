@@ -10,23 +10,21 @@ class UserDemographics extends Demographics {
   bool surveyCompletion;
 
   UserDemographics(
-      {
-        required this.userId,
-        required this.phoneNumber,
-        required this.registrationState,
-        required this.addressLine1,
-        required this.pollingLocation,
-        required this.voterRegistrationStatus,
-        required this.surveyCompletion,
-        required super.firstName,
-        required super.lastName,
-        required super.dateOfBirth,
-        required super.zipCode,
-        required super.profileImageURL,
-        required super.gender,
-        required super.racialIdentity,
-        required super.politicalAffiliation
-      });
+      {required this.userId,
+      this.phoneNumber = "",
+      this.registrationState = "",
+      this.addressLine1 = "",
+      this.pollingLocation = "",
+      this.voterRegistrationStatus = false,
+      this.surveyCompletion = false,
+      super.firstName = "",
+      super.lastName = "",
+      super.dateOfBirth = "",
+      super.zipCode = "",
+      super.profileImageURL = "",
+      super.gender = "",
+      super.racialIdentity = "",
+      super.politicalAffiliation = ""});
 
   //factory constructor
   factory UserDemographics.fromJson(Map json) {

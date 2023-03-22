@@ -11,8 +11,13 @@ import 'VoterInfo.dart';
 class Issues extends StatefulWidget {
   final UserIssueFactorValues ratings;
   final UserDemographics answers;
-  late final Widget nextPage = HomeLoadingPage(user: answers,);
-  late final Widget lastPage = VoterInfo(ratings: ratings, answers: answers,);
+  late final Widget nextPage = HomeLoadingPage(
+    user: answers,
+  );
+  late final Widget lastPage = VoterInfo(
+    ratings: ratings,
+    answers: answers,
+  );
   Issues({Key? key, required this.ratings, required this.answers})
       : super(key: key);
 
@@ -22,15 +27,59 @@ class Issues extends StatefulWidget {
 
 class _IssuesState extends State<Issues> {
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final List<String> _issuesLogo = ['assets/gunPolicyPogo.jpeg', 'assets/climatePogo.jpg', 'assets/educationPogo.jpeg', 'assets/marijuana.png', 'assets/healthcarePogo.jpg', 'assets/housingPogo.jpg', 'assets/economyPogo.jpg', 'assets/immigrationPogo.jpg', 'assets/policingPogo.jpg', 'assets/reproductiveHealthPogo.jpg'];
-  final List<String> _issuesText = ['GUN POLICY', 'CLIMATE CHANGE', 'EDUCATION', 'DRUG POLICY', 'HEALTHCARE', 'HOUSING', 'ECONOMY', 'IMMIGRATION', 'POLICING', 'REPRODUCTIVE RIGHTS'];
+  final List<String> _issuesLogo = [
+    'assets/gunPolicyPogo.jpeg',
+    'assets/climatePogo.jpg',
+    'assets/educationPogo.jpeg',
+    'assets/marijuana.png',
+    'assets/healthcarePogo.jpg',
+    'assets/housingPogo.jpg',
+    'assets/economyPogo.jpg',
+    'assets/immigrationPogo.jpg',
+    'assets/policingPogo.jpg',
+    'assets/reproductiveHealthPogo.jpg'
+  ];
+  final List<String> _issuesText = [
+    'GUN POLICY',
+    'CLIMATE CHANGE',
+    'EDUCATION',
+    'DRUG POLICY',
+    'HEALTHCARE',
+    'HOUSING',
+    'ECONOMY',
+    'IMMIGRATION',
+    'POLICING',
+    'REPRODUCTIVE RIGHTS'
+  ];
   int _nextButtonColor = 0xFF808080;
   final int _backgroundColor = 0xFFE1E1E1;
   double _alignRating = 0;
   double _valueRating = 0;
   final Color _ratingBarColor = Colors.black;
-  final List<String> _leftAlignText = ['Gun Control', 'Acceptance', 'Public', 'Legalization', 'Government Funded', 'Affordable Housing', 'Market Regulation', 'Inclusive', 'Divestment and Reallocation', 'Abortion + \nContraceptive Rights'];
-  final List<String> _rightAlignText = ['Gun Rights', 'Doubt', 'School Choice', 'Criminalization', 'Private', 'Market Rate Housing', 'Market Deregulation', 'Exclusive', 'Investment', 'Abortion + \nContraceptive Restrictions'];
+  final List<String> _leftAlignText = [
+    'Gun Control',
+    'Acceptance',
+    'Public',
+    'Legalization',
+    'Government Funded',
+    'Affordable Housing',
+    'Market Regulation',
+    'Inclusive',
+    'Divestment and Reallocation',
+    'Abortion + \nContraceptive Rights'
+  ];
+  final List<String> _rightAlignText = [
+    'Gun Rights',
+    'Doubt',
+    'School Choice',
+    'Criminalization',
+    'Private',
+    'Market Rate Housing',
+    'Market Deregulation',
+    'Exclusive',
+    'Investment',
+    'Abortion + \nContraceptive Restrictions'
+  ];
   int _issueIndex = 0;
   String _buttonText = 'Next';
 
@@ -176,21 +225,28 @@ class _IssuesState extends State<Issues> {
 
   void _checkRatings(context) async {
     if (_alignRating > 0 && _valueRating > 0) {
-      if(_issueIndex == _issuesLogo.length-1) {
+      if (_issueIndex == _issuesLogo.length - 1) {
         //finished survey
         widget.answers.surveyCompletion = true;
-        putUserDemographics(widget.answers);
-        putUserIssueFactorValues(widget.ratings);
+        try {
+          await Future.wait([
+            putUserDemographics(widget.answers),
+            putUserIssueFactorValues(widget.ratings),
+          ]).then((List<dynamic> values) {
+            safePrint("UserDemographics and UserIssueFactorValues updated");
+          });
+        } catch (e) {
+          safePrint("Issues.dart: $e");
+        }
         await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => HomeLoadingPage(user: widget.answers),
           ),
         );
-      }
-      else {
+      } else {
         //load next issue
-        if(_issueIndex == _issuesLogo.length-2) {
+        if (_issueIndex == _issuesLogo.length - 2) {
           _buttonText = 'Submit';
         }
         _issueIndex++;
@@ -201,16 +257,15 @@ class _IssuesState extends State<Issues> {
   }
 
   void _goBack() async {
-    if(_issueIndex > 0) {
+    if (_issueIndex > 0) {
       //load previous issue
-      if(_issueIndex == _issuesLogo.length-1) {
+      if (_issueIndex == _issuesLogo.length - 1) {
         _buttonText = 'Next';
       }
       _issueIndex--;
       _setRatings();
       _updateButton();
-    }
-    else {
+    } else {
       //go to voter info page
       await Navigator.push(
         context,

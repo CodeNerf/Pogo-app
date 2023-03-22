@@ -10,8 +10,8 @@ Future<bool> configureAmplify() async {
     safePrint("Amplify Configured");
     await Amplify.configure(amplifyconfig);
     return true;
-  } on Exception catch (e) {
-    safePrint('An error occurred configuring Amplify: $e');
+  } catch (e) {
+    safePrint('An error occurred configureAmplify(): $e');
     return false;
   }
 }
@@ -20,8 +20,8 @@ Future<bool> isUserSignedIn() async {
   try {
     await Amplify.Auth.fetchAuthSession();
     return true;
-  } on AuthException catch (e) {
-    safePrint(e.message);
+  } catch (e) {
+    safePrint('An error ocurred isUserSignedIn() $e');
     return false;
   }
   /*
@@ -31,8 +31,13 @@ Future<bool> isUserSignedIn() async {
 }
 
 Future<AuthUser> getCurrentUser() async {
-  final user = await Amplify.Auth.getCurrentUser();
-  return user;
+  try {
+    final user = await Amplify.Auth.getCurrentUser();
+    return user;
+  } catch (e) {
+    safePrint('An error ocurred getCurrentUser() $e');
+    return AuthUser(userId: '', username: '');
+  }
 }
 
 Future<bool> signUpUser(String email, String password, String fname,
@@ -55,8 +60,8 @@ Future<bool> signUpUser(String email, String password, String fname,
 
     return true;
     //debugPrint("isSignUpComplete:  $isSignUpComplete");
-  } on AuthException catch (e) {
-    safePrint(e.message);
+  } catch (e) {
+    safePrint('An error occurred in signUpUser() $e');
     return false;
   }
 }
@@ -66,8 +71,8 @@ Future<bool> signInUser(String email, String password) async {
     final result =
         await Amplify.Auth.signIn(username: email, password: password);
     return true;
-  } on AuthException catch (e) {
-    safePrint(e.message);
+  } catch (e) {
+    safePrint('An error occurred in signInUser() $e');
     return false;
   }
 }
@@ -75,8 +80,8 @@ Future<bool> signInUser(String email, String password) async {
 Future<void> logoutUser() async {
   try {
     await Amplify.Auth.signOut();
-  } on AuthException catch (e) {
-    safePrint(e.message);
+  } catch (e) {
+    safePrint('An error occurred in logoutUser() $e');
   }
 }
 
@@ -86,7 +91,7 @@ Future<bool> checkLoggedIn() async {
     safePrint("true");
     return true;
   } on AuthException catch (e) {
-    safePrint("false");
+    safePrint('An error occurred in checkLoggedIn() $e');
     return false;
   }
 }
@@ -95,7 +100,8 @@ Future<bool> confirmUser(String email, String code) async {
   try {
     await Amplify.Auth.confirmSignUp(username: email, confirmationCode: code);
     return true;
-  } on AuthException catch (e) {
+  } catch (e) {
+    safePrint('An error occurred in confirmUser() $e');
     return false;
   }
 }
@@ -106,7 +112,7 @@ Future<bool> resendConfirmationCode(String email) async {
     safePrint('Code was resent');
     return true;
   } catch (e) {
-    safePrint('Error resending code.');
+    safePrint('An error occurred in resendConfirmationCode() $e');
     return false;
   }
 }
@@ -115,8 +121,8 @@ Future<bool> resetPassword(String username) async {
   try {
     await Amplify.Auth.resetPassword(username: username);
     return true;
-  } on AmplifyException catch (e) {
-    safePrint(e);
+  } catch (e) {
+    safePrint('An error occurred in resetPassword() $e');
     return false;
   }
 }
@@ -127,8 +133,8 @@ Future<bool> confirmResetPassword(
     await Amplify.Auth.confirmResetPassword(
         username: username, newPassword: password, confirmationCode: code);
     return true;
-  } on AmplifyException catch (e) {
-    safePrint(e);
+  } catch (e) {
+    safePrint('An error occurred in confirmResetPassword() $e');
     return false;
   }
 }
@@ -137,19 +143,47 @@ Future<void> updatePassword(String oldPassword, String newPassword) async {
   try {
     await Amplify.Auth.updatePassword(
         oldPassword: oldPassword, newPassword: newPassword);
-  } on AmplifyException catch (e) {
-    safePrint(e);
+  } catch (e) {
+    safePrint('An error occurred in updatePassword() $e');
   }
 }
 
 Future<String> fetchCurrentUserEmail() async {
   try {
-    final result = await Amplify.Auth.fetchUserAttributes();
-    return result[8].value;
-  } on AuthException catch (e) {
-    safePrint(e.message);
+    final result = await fetchUserAttributes();
+    String email = result['email']!;
+    return email;
+  } catch (e) {
+    safePrint('An error occurred in fetchCurrentUserEmail() $e');
   }
   return '';
+}
+
+// Future<String> getAttributes() async {
+//   try {
+//     final result = await Amplify.Auth.fetchUserAttributes();
+//     for (var i = 0; i < result.length; i++) {
+//       result[i].userAttributeKey + ${result[i].value}');
+//     }
+//     return result[8].value;
+//   } on AuthException catch (e) {
+//     safePrint(e.message);
+//   }
+//   return '';
+// }
+
+Future<Map<String, String>> fetchUserAttributes() async {
+  Map<String, String> userAttributes = {};
+  try {
+    final result = await Amplify.Auth.fetchUserAttributes();
+    for (var i = 0; i < result.length; i++) {
+      userAttributes[result[i].userAttributeKey.key] = result[i].value;
+    }
+    return userAttributes;
+  } catch (e) {
+    safePrint('An error occurred in fetchUserAttributes() $e');
+  }
+  return userAttributes;
 }
 
 Future<bool> isUserConfirmed() async {
@@ -159,8 +193,8 @@ Future<bool> isUserConfirmed() async {
       return true;
     }
     return false;
-  } on AuthException catch (e) {
-    safePrint(e.message);
+  } catch (e) {
+    safePrint('An error occurred in isUserConfirmed() $e');
   }
   return false;
 }
@@ -175,9 +209,9 @@ Future<bool> isSurveyCompleted() async {
     }
     //completed
     return true;
-  } on AuthException catch (e) {
+  } catch (e) {
+    safePrint('An error occurred in isSurveyCompleted() $e');
     return false;
-    safePrint(e.message);
   }
 }
 
@@ -189,8 +223,8 @@ Future<bool> updateSurveyCompletion() async {
     );
     safePrint("Survey Completed");
     return true;
-  } on AmplifyException catch (e) {
-    safePrint(e.message);
+  } catch (e) {
+    safePrint('An error occurred in updateSurveyCompletion() $e');
     return false;
   }
 }

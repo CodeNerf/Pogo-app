@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'VoterInfo.dart';
 import '../dynamoModels/UserIssueFactorValues.dart';
@@ -65,9 +64,9 @@ class _DemographicsState extends State<Demographics> {
         context,
         MaterialPageRoute(
             builder: (context) => VoterInfo(
-              ratings: widget.ratings,
-              answers: widget.answers,
-            )));
+                  ratings: widget.ratings,
+                  answers: widget.answers,
+                )));
   }
 
   @override

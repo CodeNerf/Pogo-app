@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
@@ -26,62 +27,70 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
   Color _errorTextColor = Colors.green;
 
   Future _confirm(context) async {
-    if (await confirmUser(_email, _codeController.text)) {
-      await signInUser(_email, _password);
-      UserIssueFactorValues newValues = UserIssueFactorValues(
-          userId: _email,
-          climateScore: 0,
-          climateWeight: 0,
-          drugPolicyScore: 0,
-          drugPolicyWeight: 0,
-          economyScore: 0,
-          economyWeight: 0,
-          educationScore: 0,
-          educationWeight: 0,
-          gunPolicyScore: 0,
-          gunPolicyWeight: 0,
-          healthcareScore: 0,
-          healthcareWeight: 0,
-          housingScore: 0,
-          housingWeight: 0,
-          immigrationScore: 0,
-          immigrationWeight: 0,
-          policingScore: 0,
-          policingWeight: 0,
-          reproductiveScore: 0,
-          reproductiveWeight: 0);
-      await putUserIssueFactorValues(newValues);
-      if (await checkLoggedIn()) {
+    try {
+      if (await confirmUser(_email, _codeController.text)) {
+        await signInUser(_email, _password);
+        UserIssueFactorValues newValues = UserIssueFactorValues(
+            userId: _email,
+            climateScore: 0,
+            climateWeight: 0,
+            drugPolicyScore: 0,
+            drugPolicyWeight: 0,
+            economyScore: 0,
+            economyWeight: 0,
+            educationScore: 0,
+            educationWeight: 0,
+            gunPolicyScore: 0,
+            gunPolicyWeight: 0,
+            healthcareScore: 0,
+            healthcareWeight: 0,
+            housingScore: 0,
+            housingWeight: 0,
+            immigrationScore: 0,
+            immigrationWeight: 0,
+            policingScore: 0,
+            policingWeight: 0,
+            reproductiveScore: 0,
+            reproductiveWeight: 0);
+        await putUserIssueFactorValues(newValues);
+        if (await checkLoggedIn()) {
+          await Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SurveyLandingPage()));
+        }
+      } else if (await isUserConfirmed()) {
         await Navigator.push(context,
             MaterialPageRoute(builder: (context) => SurveyLandingPage()));
+      } else {
+        setState(() {
+          _errorText =
+              'Account could not be confirmed. Check if the code entered was correct or request for a new code to be sent.';
+          _errorSizeBoxSize = 10;
+          _errorTextColor = Colors.red;
+        });
       }
-    } else if (await isUserConfirmed()) {
-      await Navigator.push(context,
-          MaterialPageRoute(builder: (context) => SurveyLandingPage()));
-    } else {
-      setState(() {
-        _errorText =
-            'Account could not be confirmed. Check if the code entered was correct or request for a new code to be sent.';
-        _errorSizeBoxSize = 10;
-        _errorTextColor = Colors.red;
-      });
+    } catch (e) {
+      safePrint("Error occurred in _confirm: $e");
     }
   }
 
   Future _resendCode() async {
-    if (await resendConfirmationCode(_email)) {
-      setState(() {
-        _errorText = 'A new code was sent to your email.';
-        _errorSizeBoxSize = 10;
-        _errorTextColor = Colors.green;
-      });
-    } else {
-      //this shouldn't happen
-      setState(() {
-        _errorText = 'Error occurred when requesting for a new code.';
-        _errorSizeBoxSize = 10;
-        _errorTextColor = Colors.red;
-      });
+    try {
+      if (await resendConfirmationCode(_email)) {
+        setState(() {
+          _errorText = 'A new code was sent to your email.';
+          _errorSizeBoxSize = 10;
+          _errorTextColor = Colors.green;
+        });
+      } else {
+        //this shouldn't happen
+        setState(() {
+          _errorText = 'Error occurred when requesting for a new code.';
+          _errorSizeBoxSize = 10;
+          _errorTextColor = Colors.red;
+        });
+      }
+    } catch (e) {
+      safePrint("Error occurred in _resendCode: $e");
     }
   }
 

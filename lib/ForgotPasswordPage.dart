@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'amplifyFunctions.dart';
@@ -16,24 +17,29 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   String _errorText = '';
 
   Future _requestPasswordResetCode(context) async {
-    if(_emailController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Email cannot be blank.';
-      });
-    }
-    //send link to user email to reset password
-    else if(await resetPassword(_emailController.text)) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EnterNewPasswordPage(email: _emailController.text),
-        ),
-      );
-    }
-    else {
-      setState(() {
-        _errorText = 'Could not send the password reset code. Please check that the email entered is correct.';
-      });
+    try {
+      if (_emailController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Email cannot be blank.';
+        });
+      }
+      //send link to user email to reset password
+      else if (await resetPassword(_emailController.text)) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                EnterNewPasswordPage(email: _emailController.text),
+          ),
+        );
+      } else {
+        setState(() {
+          _errorText =
+              'Could not send the password reset code. Please check that the email entered is correct.';
+        });
+      }
+    } catch (e) {
+      safePrint("An error occurred in _requestPasswordResetCode: $e");
     }
   }
 
@@ -147,13 +153,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                     child: const Center(
                         child: Text(
-                          'Submit',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+                      'Submit',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    )),
                   ),
                 ),
               ),
