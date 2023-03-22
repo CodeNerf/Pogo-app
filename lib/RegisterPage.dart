@@ -135,8 +135,9 @@ class _RegisterPageState extends State<RegisterPage> {
   //@override
   @override
   Widget build(BuildContext context) {
+    var twitter;
     return Scaffold(
-      backgroundColor: const Color(0xFFE1E1E1),
+            backgroundColor: Colors.grey[90],
       body: SafeArea(
         child: Form(
           child: Center(
@@ -145,14 +146,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //LOGO
-                  Transform.scale(
-                    scale: 0.5,
-                    child: Image(
-                      image: AssetImage(
-                        _signUpPogoLogo,
-                      ),
-                    ),
-                  ),
+                  // Transform.scale(
+                  //   scale: 0.5,
+                  //   child: Image(
+                  //     image: AssetImage(
+                  //       _signUpPogoLogo,
+                  //     ),
+                  //   ),
+                  // ),
                   //ERROR TEXT
                   Text(
                     _errorText,
@@ -164,15 +165,62 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   SizedBox(height: _errorSizeBoxSize),
+                  Column(
+  children: <Widget>[
+    SizedBox(
+      height: 10,
+    ),
+    Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30.0),
+        child: Text(
+          "Sign Up",
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 30,
+            color: Color(0xFF0E0E0E),
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.normal,
+            letterSpacing: 0,
+            height: 1.2,
+          ),
+        ),
+      ),
+    ),
+    SizedBox(
+      height: 20,
+    ),
+    Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal:30.0),
+        child: Text(
+          "Get started. Make an account today!",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Color(0xFF57636C),
+            fontSize: 18,
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w500,
+            height: 1.2,
+          ),
+        ),
+      ),
+    ),
+  ],
+),
+                  const SizedBox(height: 40),
 
                   //FIRST NAME
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 25.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Colors.grey[90],
                         border: Border.all(
-                            color: Color.fromARGB(255, 178, 169, 169)),
+                            color: Color.fromARGB(255, 0, 0, 0)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Padding(
@@ -181,35 +229,35 @@ class _RegisterPageState extends State<RegisterPage> {
                           controller: _fnameController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'First Name',
+                            hintText: 'your name',
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  //LAST NAME
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        border: Border.all(
-                            color: Color.fromARGB(255, 178, 169, 169)),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: _lnameController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Last Name',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+
+                  // //LAST NAME
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  //   child: Container(
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.grey[200],
+                  //       border: Border.all(
+                  //           color: Color.fromARGB(255, 178, 169, 169)),
+                  //       borderRadius: BorderRadius.circular(12),
+                  //     ),
+                  //     child: Padding(
+                  //       padding: EdgeInsets.only(left: 20.0),
+                  //       child: TextField(
+                  //         controller: _lnameController,
+                  //         decoration: InputDecoration(
+                  //           border: InputBorder.none,
+                  //           hintText: 'Last Name',
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 20),
 
                   //EMAIL
@@ -217,9 +265,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: EdgeInsets.symmetric(horizontal: 25.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: Colors.grey[90],
                         border: Border.all(
-                            color: Color.fromARGB(255, 178, 169, 169)),
+                            color: Color.fromARGB(255, 0, 0, 0)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Padding(
@@ -228,7 +276,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           controller: _emailController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Email',
+                            hintText: 'example@email.com',
                           ),
                         ),
                       ),
@@ -236,196 +284,225 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 20),
 
-                  //PASSWORD
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Text(
-                      'Password must be at least 8 characters and contain at least 1 symbol and uppercase letter.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
+                  // //PASSWORD
+                  // const Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  //   child: Text(
+                  //     'Password must be at least 8 characters and contain at least 1 symbol and uppercase letter.',
+                  //     textAlign: TextAlign.center,
+                  //     style: TextStyle(
+                  //       fontSize: 15,
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        border: Border.all(
-                            color: Color.fromARGB(255, 178, 169, 169)),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          obscureText: _obscure,
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Password',
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                if (_obscure) {
-                                  setState(() {
-                                    _obscure = false;
-                                    _eye = const Icon(
-                                        Icons.remove_red_eye_outlined);
-                                  });
-                                } else {
-                                  setState(() {
-                                    _obscure = true;
-                                    _eye = const Icon(Icons.remove_red_eye);
-                                  });
-                                }
-                              },
-                              child: _eye,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+  padding: EdgeInsets.symmetric(horizontal: 25.0),
+  child: Container(
+    decoration: BoxDecoration(
+      color: Colors.grey[90],
+      border: Border.all(
+        color: Color.fromARGB(255, 0, 0, 0),
+      ),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Padding(
+      padding: EdgeInsets.only(left: 20.0),
+      child: TextField(
+        obscureText: _obscure,
+        controller: _passwordController,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: 'password',
+          suffixIcon: GestureDetector(
+            onTap: () {
+              if (_obscure) {
+                setState(() {
+                  _obscure = false;
+                  _eye = const Icon(Icons.remove_red_eye_outlined, color: Colors.grey);
+                });
+              } else {
+                setState(() {
+                  _obscure = true;
+                  _eye = const Icon(Icons.remove_red_eye, color: Colors.grey);
+                });
+              }
+            },
+            child: _eye,
+          ),
+        ),
+      ),
+    ),
+  ),
+),
+         
 
-                  //CONFIRM PASSWORD
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        border: Border.all(
-                            color: Color.fromARGB(255, 178, 169, 169)),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          obscureText: _obscureConfirm,
-                          controller: _confirmPasswordController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Confirm Password',
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                if (_obscureConfirm) {
-                                  setState(() {
-                                    _obscureConfirm = false;
-                                    _eyeConfirm = const Icon(
-                                        Icons.remove_red_eye_outlined);
-                                  });
-                                } else {
-                                  setState(() {
-                                    _obscureConfirm = true;
-                                    _eyeConfirm =
-                                        const Icon(Icons.remove_red_eye);
-                                  });
-                                }
-                              },
-                              child: _eyeConfirm,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  //PHONE
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        border: Border.all(
-                            color: Color.fromARGB(255, 178, 169, 169)),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: _phoneController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Phone Number e.g 1234567890',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  //ADDRESS
-                  //TODO: separate fields for address: street, zipcode, city, etc
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        border: Border.all(
-                            color: Color.fromARGB(255, 178, 169, 169)),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20.0),
-                        child: TextField(
-                          controller: _addressController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Address',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                  
+                  const SizedBox(height: 40),
                   //REGISTER BUTTON
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: InkWell(
-                      onTap: () async {
-                        _signUp(context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF3D433),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Center(
-                            child: Text(
-                          'Register',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )),
-                      ),
-                    ),
-                  ),
+                 Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+  child: InkWell(
+    onTap: () async {
+      _signUp(context);
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFF3D433),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.35),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: MaterialButton(
+        minWidth: double.infinity,
+        height: 60,
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const RegisterPage()));
+        },
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Text(
+          "FREE Sign Up",
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    ),
+  ),
+),
                   const SizedBox(height: 15),
 
-                  //back to login
-                  GestureDetector(
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Already have an account? Login here!',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  // //back to login
+                  // GestureDetector(
+                  //   onTap: () async {
+                  //     await Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const LoginPage(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   child: const Text(
+                  //     'Already have an account? Login here!',
+                  //     style: TextStyle(
+                  //       color: Color.fromARGB(255, 0, 0, 0),
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  SizedBox(height: 40),
+
+                  Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal:30.0),
+        child: Text(
+          "Or Continue with:",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Color(0xFF57636C),
+            fontSize: 18,
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w500,
+            height: 1.2,
+          ),
+        ),
+      ),
+    ),
                   const SizedBox(height: 20),
+SizedBox(height: 20),
+     Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0xFFD9D9D9),
+      ),
+      child: IconButton(
+        icon: Image.asset('assets/google.png', width: 35, height: 35,),
+        onPressed: () {
+          // Add icon onTap functionality
+        },
+      ),
+    ),
+    SizedBox(width: 20),
+    Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0xFFD9D9D9),
+      ),
+      child: IconButton(
+        icon: Image.asset('assets/facebook.png', width: 35, height: 35,),
+        onPressed: () {
+          // Add icon onTap functionality
+        },
+      ),
+    ),
+    SizedBox(width: 20),
+    Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0xFFD9D9D9),
+      ),
+      child: IconButton(
+        icon: Image.asset('assets/twitter.png', width: 35, height: 35,),
+        onPressed: () {
+          // Add icon onTap functionality
+        },
+      ),
+    ),
+    SizedBox(width: 20),
+    Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0xFFD9D9D9),
+      ),
+      child: IconButton(
+        icon: Image.asset('assets/instagram.png', width: 35, height: 35,),
+        onPressed: () {
+          // Add icon onTap functionality
+        },
+      ),
+    ),
+    SizedBox(width: 20),
+    Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color(0xFFD9D9D9),
+      ),
+      child: IconButton(
+        icon: Image.asset('assets/tiktok.png', width: 35, height: 35,),
+        onPressed: () {
+          // Add icon onTap functionality
+        },
+      ),
+    ),   
+  ],
+)
                 ],
+                
               ),
             ),
           ),

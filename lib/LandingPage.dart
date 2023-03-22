@@ -58,7 +58,7 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 25,
+                    height: 2,
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
