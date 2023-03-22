@@ -6,6 +6,7 @@ import 'package:validators/validators.dart';
 import 'LoginPage.dart';
 import 'amplifyFunctions.dart';
 import 'dynamoModels/UserDemographics.dart';
+import 'SignUpAddress.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -40,6 +41,8 @@ class _RegisterPageState extends State<RegisterPage> {
     r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
   );
 
+
+  
   Future _signUp(context) async {
     if (_fnameController.text.isEmpty) {
       setState(() {
@@ -135,9 +138,9 @@ class _RegisterPageState extends State<RegisterPage> {
   //@override
   @override
   Widget build(BuildContext context) {
-    var twitter;
+
     return Scaffold(
-            backgroundColor: Colors.grey[90],
+            backgroundColor: Color(0xFFF1F4F8),
       body: SafeArea(
         child: Form(
           child: Center(
@@ -425,7 +428,7 @@ SizedBox(height: 20),
      Row(
   mainAxisAlignment: MainAxisAlignment.center,
   children: [
-    Container(
+  Container(
       width: 60,
       height: 60,
       decoration: BoxDecoration(
@@ -435,7 +438,7 @@ SizedBox(height: 20),
       child: IconButton(
         icon: Image.asset('assets/google.png', width: 35, height: 35,),
         onPressed: () {
-          // Add icon onTap functionality
+          
         },
       ),
     ),

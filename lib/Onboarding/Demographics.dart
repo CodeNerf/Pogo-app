@@ -78,157 +78,176 @@ class _DemographicsState extends State<Demographics> {
       },
       child: Scaffold(
         body: Container(
+                  color: Color(0xFFF1F4F8),
           padding: const EdgeInsets.all(20.0),
           transformAlignment: Alignment.center,
           child: Column(
             children: [
+              const SizedBox(height: 200),
+            Align(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30.0),
+        child: Text(
+          "Demographic Info",
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 30,
+            color: Color(0xFF0E0E0E),
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.normal,
+            letterSpacing: 0,
+            height: 1.2,
+          ),
+        ),
+      ),
+    ),
+              const SizedBox(height: 50),
+
+
+   Container(
+  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+  decoration: BoxDecoration(
+    border: Border.all(
+      color: Colors.black,
+      width: 1.5,
+    ),
+    borderRadius: BorderRadius.circular(15.0),
+    color: Color(0xFFF1F4F8),
+  ),
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      DropdownButtonFormField(
+        decoration: InputDecoration.collapsed(hintText: 'your age'),
+        value: _ageSelection,
+        icon: const Icon(Icons.keyboard_arrow_up),
+        isExpanded: true,
+        focusColor: Colors.transparent,
+        items: _ageList.map((String age) {
+          return DropdownMenuItem(
+            value: age,
+            child: Text(age),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            _ageSelection = newValue!;
+          });
+        },
+      ),
+    ],
+  ),
+),
+
+
+
+   Container(
+  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+  decoration: BoxDecoration(
+    border: Border.all(
+      color: Colors.black,
+      width: 1.5,
+    ),
+    borderRadius: BorderRadius.circular(15.0),
+    color: Color(0xFFF1F4F8),
+  ),
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      DropdownButtonFormField(
+        decoration: InputDecoration.collapsed(hintText: 'race/ethnicity'),
+        value: _ethnicitySelection,
+        icon: const Icon(Icons.keyboard_arrow_up),
+        isExpanded: true,
+        focusColor: Colors.transparent,
+        items: _ethnicityList.map((String ethnicity) {
+          return DropdownMenuItem(
+            value: ethnicity,
+            child: Text(ethnicity),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            _ethnicitySelection = newValue!;
+          });
+        },
+      ),
+    ],
+  ),
+),
+
               Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                ),
-              ),
+  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+  decoration: BoxDecoration(
+    border: Border.all(
+      color: Colors.black,
+      width: 1.5,
+    ),
+    borderRadius: BorderRadius.circular(15.0),
+    color: Color(0xFFF1F4F8),
+  ),
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      DropdownButtonFormField(
+        decoration: InputDecoration.collapsed(hintText: 'gender'),
+        value: _genderSelection,
+        icon: const Icon(Icons.keyboard_arrow_up),
+        isExpanded: true,
+        focusColor: Colors.transparent,
+        items: _genderList.map((String gender) {
+          return DropdownMenuItem(
+            value: gender,
+            child: Text(gender),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            _genderSelection = newValue!;
+          });
+        },
+      ),
+    ],
+  ),
+),
+
+ 
+              
+        
               const SizedBox(height: 30),
-              const Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Choose your age category',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              DropdownButtonFormField(
-                decoration: InputDecoration(
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                ),
-                value: _ageSelection,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                isExpanded: true,
-                focusColor: Colors.transparent,
-                items: _ageList.map((String age) {
-                  return DropdownMenuItem(
-                    value: age,
-                    child: Text(age),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _ageSelection = newValue!;
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
-              const Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'I identify as',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              DropdownButtonFormField(
-                decoration: InputDecoration(
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                ),
-                value: _ethnicitySelection,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                isExpanded: true,
-                focusColor: Colors.transparent,
-                items: _ethnicityList.map((String race) {
-                  return DropdownMenuItem(
-                    value: race,
-                    child: Text(race),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _ethnicitySelection = newValue!;
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
-              const Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'I identify as',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              DropdownButtonFormField(
-                decoration: InputDecoration(
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                ),
-                value: _genderSelection,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                isExpanded: true,
-                focusColor: Colors.transparent,
-                items: _genderList.map((String gender) {
-                  return DropdownMenuItem(
-                    value: gender,
-                    child: Text(gender),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _genderSelection = newValue!;
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
-              MaterialButton(
-                height: 50,
-                onPressed: () {
-                  _nextPage();
-                },
-                color: const Color.fromARGB(255, 0, 0, 0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: const Text(
-                  "Next",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+        Padding(
+  padding: const EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0), 
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.end, 
+    children: [
+      MaterialButton(
+        minWidth: 150, 
+        height: 60,
+        onPressed: () {
+          _nextPage();
+        },
+        color: const Color(0xFFF3D433),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          "Next",
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
             ],
           ),
         ),
