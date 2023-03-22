@@ -395,32 +395,6 @@ Future<List<CandidateIssueFactorValues>>
   }
 }
 
-// Future<List<CandidateIssueFactorValues>> getUserCandidateStack(
-//     String userId) async {
-//   var client = http.Client();
-//   var candidateFactorsList = <CandidateIssueFactorValues>[];
-//   try {
-//     var response = await client.get(
-//         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-//             '/userCandidateStack/$userId'),
-//         headers: {
-//           "content-type": "application/json",
-//         });
-//     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
-//     for (var candidateissuefactorvalues in decodedResponse) {
-//       candidateFactorsList
-//           .add(CandidateIssueFactorValues.fromJson(candidateissuefactorvalues));
-//     }
-//     safePrint("candidate issues stack pulled");
-//     return candidateFactorsList;
-//   } catch (e) {
-//     safePrint("An error occurred in getAllCandidateIssueFactorValues: $e");
-//     return <CandidateIssueFactorValues>[];
-//   } finally {
-//     client.close();
-//   }
-// }
-
 Future<List<CandidateIssueFactorValues>> getUserCandidateStackIssueFactorValues(
     String userId) async {
   var client = http.Client();
