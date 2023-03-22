@@ -1,6 +1,7 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/amplifyFunctions.dart';
+import 'package:pogo/dynamoModels/MatchingStatistics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'Home.dart';
 import 'LandingPage.dart';
@@ -23,6 +24,7 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
   late UserIssueFactorValues _currentUserFactors;
   late List<CandidateDemographics> _candidateStack;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
+  late List<MatchingStatistics> _candidateStackStatistics;
   @override
   void initState() {
     _initializeObjects();
@@ -42,11 +44,13 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
           getUserCandidateStackIssueFactorValues(email),
           getUserIssueFactorValues(email),
           getUserBallot(email),
+          getUserCandidateStackStatistics(email),
         ]).then((List<dynamic> values) {
           _candidateStack = values[0];
           _candidateStackFactors = values[1];
           _currentUserFactors = values[2];
           _userBallot.localCandidateIds = values[3];
+          _candidateStackStatistics = values[4];
         });
         retry = false;
       } catch (e) {
@@ -58,19 +62,21 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     }
 
     _setObjectStates(_currentUserFactors, _candidateStack, _userBallot,
-        _candidateStackFactors);
+        _candidateStackFactors, _candidateStackStatistics);
   }
 
   void _setObjectStates(
       UserIssueFactorValues uifv,
       List<CandidateDemographics> s,
       Ballot ub,
-      List<CandidateIssueFactorValues> cifv) {
+      List<CandidateIssueFactorValues> cifv,
+      List<MatchingStatistics> ms) {
     setState(() {
       _candidateStackFactors = cifv;
       _currentUserFactors = uifv;
       _candidateStack = s;
       _userBallot = ub;
+      _candidateStackStatistics = ms;
     });
     _goHome();
   }

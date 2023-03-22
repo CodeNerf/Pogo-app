@@ -474,7 +474,8 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
   }
 }
 
-Future<List<MatchingStatistics>> getUserCandidateStack(String userId) async {
+Future<List<MatchingStatistics>> getUserCandidateStackStatistics(
+    String userId) async {
   var client = http.Client();
   var matchStats = <MatchingStatistics>[];
   try {
