@@ -232,8 +232,10 @@ class _IssuesState extends State<Issues> {
           await Future.wait([
             putUserDemographics(widget.answers),
             putUserIssueFactorValues(widget.ratings),
+            matchCandidatesToUser(widget.answers.userId),
           ]).then((List<dynamic> values) {
-            safePrint("UserDemographics and UserIssueFactorValues updated");
+            safePrint(
+                "UserDemographics and UserIssueFactorValues updated. Candidates matched.");
           });
         } catch (e) {
           safePrint("Issues.dart: $e");

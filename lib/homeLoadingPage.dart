@@ -38,10 +38,10 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     while (retry) {
       try {
         await Future.wait([
-          getAllCandidateDemographics(),
-          getAllCandidateIssueFactorValues(),
+          getUserCandidateStackDemographics(email),
+          getUserCandidateStackIssueFactorValues(email),
           getUserIssueFactorValues(email),
-          getUserBallot(email)
+          getUserBallot(email),
         ]).then((List<dynamic> values) {
           _candidateStack = values[0];
           _candidateStackFactors = values[1];
