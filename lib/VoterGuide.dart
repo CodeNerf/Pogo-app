@@ -1,5 +1,8 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/googleFunctions/CivicFunctions.dart';
+import 'package:pogo/googleFunctions/CivicModels.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'dynamoModels/UserIssueFactorValues.dart';
@@ -8,19 +11,27 @@ class VoterGuide extends StatefulWidget {
   UserDemographics currentUserDemographics;
   VoterGuide({Key? key, required this.currentUserDemographics}) : super(key: key);
   @override
-  _VoterGuideState createState() => _VoterGuideState();
+  State<VoterGuide> createState() => _VoterGuideState();
 }
 
 class _VoterGuideState extends State<VoterGuide> {
   List<bool> _isChecked = [false, false, false, false];
-  String stateInitial = '';
+  late List<PollingLocation> _pollingLocations;
+  
   @override
   void initState() {
     super.initState();
+    _getPollingLocations();
+  }
 
+  void _getPollingLocations() async {
+    try {
+      _pollingLocations = await getPollingLocation(widget.user.addressLine1);
+    } catch (e) {
+      safePrint("Error occurred in _getPollingLocations(): $e");
+    }
   }
   
-
   void _toggleChecked(int index) {
     setState(() {
       _isChecked[index] = !_isChecked[index];

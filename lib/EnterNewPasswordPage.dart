@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'amplifyFunctions.dart';
 import 'ForgotPasswordPage.dart';
@@ -12,37 +13,41 @@ class EnterNewPasswordPage extends StatefulWidget {
 }
 
 class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
-  String pogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final passwordController = TextEditingController();
-  final codeController = TextEditingController();
-  String errorText = '';
-  bool obscure = true;
-  Icon eye = Icon(Icons.remove_red_eye);
+  String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
+  final _passwordController = TextEditingController();
+  final _codeController = TextEditingController();
+  String _errorText = '';
+  bool _obscure = true;
+  Icon _eye = Icon(Icons.remove_red_eye);
 
-  Future confirmNewPassword(context) async {
-    if(passwordController.text.isEmpty) {
-      setState(() {
-        errorText = 'Password cannot be blank.';
-      });
-    }
-    else if(codeController.text.isEmpty) {
-      setState(() {
-        errorText = 'Code cannot be blank.';
-      });
-    }
-    //send link to user email to reset password
-    else if(await confirmResetPassword(widget.email, passwordController.text, codeController.text)) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-    }
-    else {
-      setState(() {
-        errorText = 'Could not reset password. Check to make sure all fields are correct and try again.';
-      });
+  Future _confirmNewPassword(context) async {
+    try {
+      if (_passwordController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Password cannot be blank.';
+        });
+      } else if (_codeController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Code cannot be blank.';
+        });
+      }
+      //send link to user email to reset password
+      else if (await confirmResetPassword(
+          widget.email, _passwordController.text, _codeController.text)) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+        );
+      } else {
+        setState(() {
+          _errorText =
+              'Could not reset password. Check to make sure all fields are correct and try again.';
+        });
+      }
+    } catch (e) {
+      safePrint("An error occurred in _confirmNewPassword: $e");
     }
   }
 
@@ -85,7 +90,7 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                         height: 40,
                         child: Image(
                           image: AssetImage(
-                            pogoLogo,
+                            _pogoLogo,
                           ),
                         ),
                       ),
@@ -107,7 +112,7 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
 
               //ERROR TEXT
               Text(
-                errorText,
+                _errorText,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 20,
@@ -129,27 +134,27 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 20.0),
                     child: TextField(
-                      controller: passwordController,
-                      obscureText: obscure,
+                      controller: _passwordController,
+                      obscureText: _obscure,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'New Password',
                         suffixIcon: GestureDetector(
                           onTap: () {
-                            if(obscure) {
+                            if (_obscure) {
                               setState(() {
-                                obscure = false;
-                                eye = const Icon(Icons.remove_red_eye_outlined);
+                                _obscure = false;
+                                _eye =
+                                    const Icon(Icons.remove_red_eye_outlined);
                               });
-                            }
-                            else {
+                            } else {
                               setState(() {
-                                obscure = true;
-                                eye = const Icon(Icons.remove_red_eye);
+                                _obscure = true;
+                                _eye = const Icon(Icons.remove_red_eye);
                               });
                             }
                           },
-                          child: eye,
+                          child: _eye,
                         ),
                       ),
                     ),
@@ -170,7 +175,7 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 20.0),
                     child: TextField(
-                      controller: codeController,
+                      controller: _codeController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Code',
@@ -186,7 +191,7 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: InkWell(
                   onTap: () async {
-                    confirmNewPassword(context);
+                    _confirmNewPassword(context);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(20),
@@ -196,13 +201,13 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                     ),
                     child: const Center(
                         child: Text(
-                          'Reset',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+                      'Reset',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    )),
                   ),
                 ),
               ),

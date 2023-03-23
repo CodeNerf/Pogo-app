@@ -4,7 +4,6 @@ import 'package:pogo/UserConfirmationPage.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:validators/validators.dart';
 import 'LoginPage.dart';
-import 'Onboarding/Issues/GunPolicy.dart';
 import 'amplifyFunctions.dart';
 import 'dynamoModels/UserDemographics.dart';
 
@@ -16,119 +15,141 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  String signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final formKey = GlobalKey<FormState>();
-  final fnameController = TextEditingController();
-  final lnameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final phoneController = TextEditingController();
-  final addressController = TextEditingController();
-  bool obscure = true;
-  bool obscureConfirm = true;
-  Icon eye = Icon(Icons.remove_red_eye);
-  Icon eyeConfirm = Icon(Icons.remove_red_eye);
-  String errorText = '';
-  double errorSizeBoxSize = 0;
+  final String _signUpPogoLogo = 'assets/Pogo_logo_horizontal.png';
+  final _formKey = GlobalKey<FormState>();
+  final _fnameController = TextEditingController();
+  final _lnameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
+  bool _obscure = true;
+  bool _obscureConfirm = true;
+  Icon _eye = const Icon(Icons.remove_red_eye);
+  Icon _eyeConfirm = const Icon(Icons.remove_red_eye);
+  String _errorText = '';
+  double _errorSizeBoxSize = 0;
 
   // Regular expression for validating US addresses
-  final addressRegex = RegExp(
+  final _addressRegex = RegExp(
     r'^\d+\s[A-z]+\s[A-z]+(\s[A-z]+)?,\s[A-z]{2}\s\d{5}$',
   );
   // Regular expression for validating email address
-  final emailRegex = RegExp(
+  final _emailRegex = RegExp(
     r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
   );
 
-  Future signUp(context) async {
-    if (fnameController.text.isEmpty) {
-      setState(() {
-        errorText = 'Must enter your first name.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (lnameController.text.isEmpty) {
-      setState(() {
-        errorText = 'Must enter your last name.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (emailController.text.isEmpty) {
-      setState(() {
-        errorText = 'Must enter your email.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (!emailRegex.hasMatch(emailController.text)) {
-      setState(() {
-        errorText = 'Invalid email address.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (passwordController.text.isEmpty) {
-      setState(() {
-        errorText = 'Must enter a password.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (confirmPasswordController.text.isEmpty) {
-      setState(() {
-        errorText = 'Must confirm your password.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (passwordController.text
-            .compareTo(confirmPasswordController.text) !=
-        0) {
-      setState(() {
-        errorText = 'Passwords do not match.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (phoneController.text.isEmpty) {
-      setState(() {
-        errorText = 'Must enter your phone number.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (!isNumeric(phoneController.text)) {
-      //print(passwordController.text.length);
-      setState(() {
-        errorText = 'Invalid phone number.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (phoneController.text.length != 10) {
-      setState(() {
-        errorText = 'Invalid phone number length.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (addressController.text.isEmpty) {
-      setState(() {
-        errorText = 'Must enter your address.';
-        errorSizeBoxSize = 10;
-      });
-    } else if (await signUpUser(
-        emailController.text,
-        passwordController.text,
-        fnameController.text,
-        lnameController.text,
-        phoneController.text,
-        addressController.text)) {
-      UserDemographics userDemographics = UserDemographics(userId: emailController.text, phoneNumber: phoneController.text, registrationState: '', addressLine1: addressController.text, pollingLocation: '', voterRegistrationStatus: false, firstName: fnameController.text, lastName: lnameController.text, dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '');
-      putUserDemographics(userDemographics);
-      //TODO: create blank ballot then push to db
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserConfirmationPage(
-                  email: emailController.text,
-                  password: passwordController.text)));
+  Future _signUp(context) async {
+    try {
+      if (_fnameController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your first name.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_lnameController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your last name.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_emailController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your email.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (!_emailRegex.hasMatch(_emailController.text)) {
+        setState(() {
+          _errorText = 'Invalid email address.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_passwordController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter a password.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_confirmPasswordController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must confirm your password.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_passwordController.text
+              .compareTo(_confirmPasswordController.text) !=
+          0) {
+        setState(() {
+          _errorText = 'Passwords do not match.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_phoneController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your phone number.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (!isNumeric(_phoneController.text)) {
+        //print(passwordController.text.length);
+        setState(() {
+          _errorText = 'Invalid phone number.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_phoneController.text.length != 10) {
+        setState(() {
+          _errorText = 'Invalid phone number length.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (_addressController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Must enter your address.';
+          _errorSizeBoxSize = 10;
+        });
+      } else if (await signUpUser(
+          _emailController.text,
+          _passwordController.text,
+          _fnameController.text,
+          _lnameController.text,
+          _phoneController.text,
+          _addressController.text)) {
+        UserDemographics userDemographics = UserDemographics(
+            userId: _emailController.text,
+            phoneNumber: _phoneController.text,
+            registrationState: '',
+            addressLine1: _addressController.text,
+            pollingLocation: '',
+            voterRegistrationStatus: false,
+            firstName: _fnameController.text,
+            lastName: _lnameController.text,
+            dateOfBirth: '',
+            zipCode: '',
+            profileImageURL: '',
+            gender: '',
+            racialIdentity: '',
+            politicalAffiliation: '',
+            surveyCompletion: false);
+        await Future.wait([
+          putUserDemographics(userDemographics),
+          putUserBallot(_emailController.text, [], [], []),
+        ]);
+        //TODO: create blank ballot then push to db
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserConfirmationPage(
+                    email: _emailController.text,
+                    password: _passwordController.text)));
+      }
+    } catch (e) {
+      safePrint("Error ocurred in _signUp() $e");
     }
   }
 
   @override
   void dispose() {
     // Clean up the controllers when the widget is removed from the widget tree.
-    fnameController.dispose();
-    lnameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    phoneController.dispose();
-    addressController.dispose();
+    _fnameController.dispose();
+    _lnameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -149,13 +170,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     scale: 0.5,
                     child: Image(
                       image: AssetImage(
-                        signUpPogoLogo,
+                        _signUpPogoLogo,
                       ),
                     ),
                   ),
                   //ERROR TEXT
                   Text(
-                    errorText,
+                    _errorText,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 15,
@@ -163,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       color: Colors.red,
                     ),
                   ),
-                  SizedBox(height: errorSizeBoxSize),
+                  SizedBox(height: _errorSizeBoxSize),
 
                   //FIRST NAME
                   Padding(
@@ -178,7 +199,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20.0),
                         child: TextField(
-                          controller: fnameController,
+                          controller: _fnameController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'First Name',
@@ -201,7 +222,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20.0),
                         child: TextField(
-                          controller: lnameController,
+                          controller: _lnameController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Last Name',
@@ -225,7 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20.0),
                         child: TextField(
-                          controller: emailController,
+                          controller: _emailController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Email',
@@ -259,27 +280,27 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20.0),
                         child: TextField(
-                          obscureText: obscure,
-                          controller: passwordController,
+                          obscureText: _obscure,
+                          controller: _passwordController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Password',
                             suffixIcon: GestureDetector(
                               onTap: () {
-                                if (obscure) {
+                                if (_obscure) {
                                   setState(() {
-                                    obscure = false;
-                                    eye = const Icon(
+                                    _obscure = false;
+                                    _eye = const Icon(
                                         Icons.remove_red_eye_outlined);
                                   });
                                 } else {
                                   setState(() {
-                                    obscure = true;
-                                    eye = const Icon(Icons.remove_red_eye);
+                                    _obscure = true;
+                                    _eye = const Icon(Icons.remove_red_eye);
                                   });
                                 }
                               },
-                              child: eye,
+                              child: _eye,
                             ),
                           ),
                         ),
@@ -301,28 +322,28 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20.0),
                         child: TextField(
-                          obscureText: obscureConfirm,
-                          controller: confirmPasswordController,
+                          obscureText: _obscureConfirm,
+                          controller: _confirmPasswordController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Confirm Password',
                             suffixIcon: GestureDetector(
                               onTap: () {
-                                if (obscureConfirm) {
+                                if (_obscureConfirm) {
                                   setState(() {
-                                    obscureConfirm = false;
-                                    eyeConfirm = const Icon(
+                                    _obscureConfirm = false;
+                                    _eyeConfirm = const Icon(
                                         Icons.remove_red_eye_outlined);
                                   });
                                 } else {
                                   setState(() {
-                                    obscureConfirm = true;
-                                    eyeConfirm =
+                                    _obscureConfirm = true;
+                                    _eyeConfirm =
                                         const Icon(Icons.remove_red_eye);
                                   });
                                 }
                               },
-                              child: eyeConfirm,
+                              child: _eyeConfirm,
                             ),
                           ),
                         ),
@@ -344,7 +365,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20.0),
                         child: TextField(
-                          controller: phoneController,
+                          controller: _phoneController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Phone Number e.g 1234567890',
@@ -369,7 +390,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: 20.0),
                         child: TextField(
-                          controller: addressController,
+                          controller: _addressController,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Address',
@@ -384,7 +405,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: InkWell(
                       onTap: () async {
-                        signUp(context);
+                        _signUp(context);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(20),

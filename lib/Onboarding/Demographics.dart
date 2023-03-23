@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'VoterInfo.dart';
 import '../dynamoModels/UserIssueFactorValues.dart';
@@ -15,31 +14,29 @@ class Demographics extends StatefulWidget {
 }
 
 class _DemographicsState extends State<Demographics> {
-  late UserDemographics answers;
-  String agesdropdownvalue = '18-25 years old';
-  late String racesdropdownvalue = '';
-  late String gendersdropdownvalue = '';
+  String _ageSelection = '16-25 years old';
+  late String _ethnicitySelection = '';
+  late String _genderSelection = '';
   String pogoLogo = 'assets/Pogo_logo_horizontal.png';
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      answers = widget.answers;
-      racesdropdownvalue = answers.racialIdentity;
-      gendersdropdownvalue = answers.gender;
+      _ethnicitySelection = widget.answers.racialIdentity;
+      _genderSelection = widget.answers.gender;
     });
   }
 
   // List of items for each dropdown menu
-  List<String> agesList = [
-    '18-25 years old',
+  final List<String> _ageList = [
+    '16-25 years old',
     '26-35 years old',
     '36-55 years old',
     '56+ years old',
   ];
 
-  List<String> racesList = [
+  final List<String> _ethnicityList = [
     '',
     'Black',
     'White',
@@ -49,7 +46,7 @@ class _DemographicsState extends State<Demographics> {
     'Hispanic/Latino',
   ];
 
-  List<String> gendersList = [
+  final List<String> _genderList = [
     '',
     'Female',
     'Male',
@@ -58,18 +55,18 @@ class _DemographicsState extends State<Demographics> {
     'Other',
   ];
 
-  void nextPage() async {
-    widget.answers.racialIdentity = racesdropdownvalue;
-    widget.answers.gender = gendersdropdownvalue;
+  void _nextPage() async {
+    widget.answers.racialIdentity = _ethnicitySelection;
+    widget.answers.gender = _genderSelection;
     //TODO: the age dropdown needs to be turned into a date picker for bday
     //widget.answers.dateOfBirth = dateOfBirthStringHere;
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => VoterInfo(
-              ratings: widget.ratings,
-              answers: widget.answers,
-            )));
+                  ratings: widget.ratings,
+                  answers: widget.answers,
+                )));
   }
 
   @override
@@ -98,11 +95,11 @@ class _DemographicsState extends State<Demographics> {
                 ),
               ),
               const SizedBox(height: 30),
-              Align(
+              const Align(
                 alignment: Alignment.topLeft,
                 child: Text(
                   'Choose your age category',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -111,20 +108,20 @@ class _DemographicsState extends State<Demographics> {
               const SizedBox(height: 10),
               DropdownButtonFormField(
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2),
                   ),
                   filled: true,
                   fillColor: Colors.grey[300],
                 ),
-                value: agesdropdownvalue,
+                value: _ageSelection,
                 icon: const Icon(Icons.keyboard_arrow_down),
                 isExpanded: true,
                 focusColor: Colors.transparent,
-                items: agesList.map((String age) {
+                items: _ageList.map((String age) {
                   return DropdownMenuItem(
                     value: age,
                     child: Text(age),
@@ -132,16 +129,16 @@ class _DemographicsState extends State<Demographics> {
                 }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
-                    agesdropdownvalue = newValue!;
+                    _ageSelection = newValue!;
                   });
                 },
               ),
               const SizedBox(height: 30),
-              Align(
+              const Align(
                 alignment: Alignment.topLeft,
                 child: Text(
                   'I identify as',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -150,20 +147,20 @@ class _DemographicsState extends State<Demographics> {
               const SizedBox(height: 10),
               DropdownButtonFormField(
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2),
                   ),
                   filled: true,
                   fillColor: Colors.grey[300],
                 ),
-                value: racesdropdownvalue,
+                value: _ethnicitySelection,
                 icon: const Icon(Icons.keyboard_arrow_down),
                 isExpanded: true,
                 focusColor: Colors.transparent,
-                items: racesList.map((String race) {
+                items: _ethnicityList.map((String race) {
                   return DropdownMenuItem(
                     value: race,
                     child: Text(race),
@@ -171,16 +168,16 @@ class _DemographicsState extends State<Demographics> {
                 }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
-                    racesdropdownvalue = newValue!;
+                    _ethnicitySelection = newValue!;
                   });
                 },
               ),
               const SizedBox(height: 30),
-              Align(
+              const Align(
                 alignment: Alignment.topLeft,
                 child: Text(
                   'I identify as',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -189,20 +186,20 @@ class _DemographicsState extends State<Demographics> {
               const SizedBox(height: 10),
               DropdownButtonFormField(
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2),
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2),
                   ),
                   filled: true,
                   fillColor: Colors.grey[300],
                 ),
-                value: gendersdropdownvalue,
+                value: _genderSelection,
                 icon: const Icon(Icons.keyboard_arrow_down),
                 isExpanded: true,
                 focusColor: Colors.transparent,
-                items: gendersList.map((String gender) {
+                items: _genderList.map((String gender) {
                   return DropdownMenuItem(
                     value: gender,
                     child: Text(gender),
@@ -210,7 +207,7 @@ class _DemographicsState extends State<Demographics> {
                 }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
-                    gendersdropdownvalue = newValue!;
+                    _genderSelection = newValue!;
                   });
                 },
               ),
@@ -218,12 +215,12 @@ class _DemographicsState extends State<Demographics> {
               MaterialButton(
                 height: 50,
                 onPressed: () {
-                  nextPage();
+                  _nextPage();
                 },
-                color: Color.fromARGB(255, 0, 0, 0),
+                color: const Color.fromARGB(255, 0, 0, 0),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
-                child: Text(
+                child: const Text(
                   "Next",
                   style: TextStyle(
                     fontSize: 18,

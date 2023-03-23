@@ -6,168 +6,168 @@ import 'amplifyFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 
 class BallotPage extends StatefulWidget {
-  Ballot userBallot;
-  List<CandidateDemographics> candidateStack;
-  List<CandidateDemographics> ballotStack;
+  final Ballot userBallot;
+  final List<CandidateDemographics> candidateStack;
+  final List<CandidateDemographics> ballotStack;
   final Function(String) removeFromBallot;
   final Function(String) loadCustomCandidatesInPodium;
-  BallotPage({Key? key, required this.userBallot, required this.candidateStack, required this.ballotStack, required this.removeFromBallot, required this.loadCustomCandidatesInPodium}) : super(key: key);
+  const BallotPage({Key? key, required this.userBallot, required this.candidateStack, required this.ballotStack, required this.removeFromBallot, required this.loadCustomCandidatesInPodium}) : super(key: key);
 
   @override
-  _BallotPageState createState() => _BallotPageState();
+  State<BallotPage> createState() => _BallotPageState();
 }
 
 class _BallotPageState extends State<BallotPage> {
   bool _expandedLocal = false;
   bool _expandedGlobal = false;
   bool _expandedOther = false;
-  int mayor = 1;
-  int cityClerk = 1;
-  int cityCouncil = 1;
-  int countySheriff = 1;
-  int trialCourtJudge = 1;
-  int countyRegisterOfDeeds = 1;
-  int schoolBoard = 1;
-  int prosecutors = 1;
-  int coroners = 1;
-  int planningZoningCommission = 1;
-  int publicWorksCommission = 1;
-  int commissionerOfRevenue = 1;
-  int countyCommissioners = 1;
-  List<String> mayorPics = [];
-  List<String> cityClerkPics = [];
-  List<String> cityCouncilPics = [];
-  List<String> countySheriffPics = [];
-  List<String> trialCourtJudgePics = [];
-  List<String> countyRegisterOfDeedsPics = [];
-  List<String> schoolBoardPics = [];
-  List<String> prosecutorsPics = [];
-  List<String> coronersPics = [];
-  List<String> planningZoningCommissionPics = [];
-  List<String> publicWorksCommissionPics = [];
-  List<String> commissionerOfRevenuePics = [];
-  List<String> countyCommissionersPics = [];
+  int _mayor = 1;
+  int _cityClerk = 1;
+  int _cityCouncil = 1;
+  int _countySheriff = 1;
+  int _trialCourtJudge = 1;
+  int _countyRegisterOfDeeds = 1;
+  int _schoolBoard = 1;
+  int _prosecutors = 1;
+  int _coroners = 1;
+  int _planningZoningCommission = 1;
+  int _publicWorksCommission = 1;
+  int _commissionerOfRevenue = 1;
+  int _countyCommissioners = 1;
+  final List<String> _mayorPics = [];
+  final List<String> _cityClerkPics = [];
+  final List<String> _cityCouncilPics = [];
+  final List<String> _countySheriffPics = [];
+  final List<String> _trialCourtJudgePics = [];
+  final List<String> _countyRegisterOfDeedsPics = [];
+  final List<String> _schoolBoardPics = [];
+  final List<String> _prosecutorsPics = [];
+  final List<String> _coronersPics = [];
+  final List<String> _planningZoningCommissionPics = [];
+  final List<String> _publicWorksCommissionPics = [];
+  final List<String> _commissionerOfRevenuePics = [];
+  final List<String> _countyCommissionersPics = [];
 
   @override
   void initState() {
     super.initState();
-    initializeBallot();
+    _initializeBallot();
   }
 
-  void initializeBallot() {
+  void _initializeBallot() {
     if(widget.userBallot.localCandidateIds.isNotEmpty) {
       for(int i = 0; i < widget.userBallot.localCandidateIds.length; i++) {
         CandidateDemographics current = widget.ballotStack[i];
         String seatType = current.seatType;
         switch (seatType) {
           case 'Mayor':
-            mayor++;
-            mayorPics.add(current.profileImageURL);
+            _mayor++;
+            _mayorPics.add(current.profileImageURL);
             break;
-          case 'City Clerk':
-            cityClerk++;
-            cityClerkPics.add(current.profileImageURL);
+          case 'Clerk':
+            _cityClerk++;
+            _cityClerkPics.add(current.profileImageURL);
             break;
           case 'City Council':
-            cityCouncil++;
-            cityCouncilPics.add(current.profileImageURL);
+            _cityCouncil++;
+            _cityCouncilPics.add(current.profileImageURL);
             break;
-          case 'County Commissioner':
-            countyCommissioners++;
-            countyCommissionersPics.add(current.profileImageURL);
+          case 'Commissioner':
+            _countyCommissioners++;
+            _countyCommissionersPics.add(current.profileImageURL);
             break;
-          case 'County Sheriff':
-            countySheriff++;
-            countySheriffPics.add(current.profileImageURL);
+          case 'Sheriff':
+            _countySheriff++;
+            _countySheriffPics.add(current.profileImageURL);
             break;
-          case 'Trial Court Judge':
-            trialCourtJudge++;
-            trialCourtJudgePics.add(current.profileImageURL);
+          case 'Judge':
+            _trialCourtJudge++;
+            _trialCourtJudgePics.add(current.profileImageURL);
             break;
           case 'County Register of Deeds':
-            countyRegisterOfDeeds++;
-            countyRegisterOfDeedsPics.add(current.profileImageURL);
+            _countyRegisterOfDeeds++;
+            _countyRegisterOfDeedsPics.add(current.profileImageURL);
             break;
           case 'School Board':
-            schoolBoard++;
-            schoolBoardPics.add(current.profileImageURL);
+            _schoolBoard++;
+            _schoolBoardPics.add(current.profileImageURL);
             break;
           case 'Prosecutor':
-            prosecutors++;
-            prosecutorsPics.add(current.profileImageURL);
+            _prosecutors++;
+            _prosecutorsPics.add(current.profileImageURL);
             break;
           case 'Coroner':
-            coroners++;
-            coronersPics.add(current.profileImageURL);
+            _coroners++;
+            _coronersPics.add(current.profileImageURL);
             break;
           case 'Planning and Zoning Commission':
-            planningZoningCommission++;
-            planningZoningCommissionPics.add(current.profileImageURL);
+            _planningZoningCommission++;
+            _planningZoningCommissionPics.add(current.profileImageURL);
             break;
           case 'Public Works Commission':
-            publicWorksCommission++;
-            publicWorksCommissionPics.add(current.profileImageURL);
+            _publicWorksCommission++;
+            _publicWorksCommissionPics.add(current.profileImageURL);
             break;
           default:
             break;
         }
       }
     }
-    mayorPics.add('');
-    cityClerkPics.add('');
-    cityCouncilPics.add('');
-    countySheriffPics.add('');
-    trialCourtJudgePics.add('');
-    countyRegisterOfDeedsPics.add('');
-    schoolBoardPics.add('');
-    prosecutorsPics.add('');
-    coronersPics.add('');
-    planningZoningCommissionPics.add('');
-    publicWorksCommissionPics.add('');
-    commissionerOfRevenuePics.add('');
-    countyCommissionersPics.add('');
+    _mayorPics.add('');
+    _cityClerkPics.add('');
+    _cityCouncilPics.add('');
+    _countySheriffPics.add('');
+    _trialCourtJudgePics.add('');
+    _countyRegisterOfDeedsPics.add('');
+    _schoolBoardPics.add('');
+    _prosecutorsPics.add('');
+    _coronersPics.add('');
+    _planningZoningCommissionPics.add('');
+    _publicWorksCommissionPics.add('');
+    _commissionerOfRevenuePics.add('');
+    _countyCommissionersPics.add('');
   }
 
-  void removeCandidate(String candidatePic, String title) {
+  void _removeCandidate(String candidatePic, String title) {
     switch (title) {
       case 'Mayor':
-        mayorPics.remove(candidatePic);
+        _mayorPics.remove(candidatePic);
         break;
-      case 'City Clerk':
-        cityClerkPics.remove(candidatePic);
+      case 'Clerk':
+        _cityClerkPics.remove(candidatePic);
         break;
       case 'City Council':
-        cityCouncilPics.remove(candidatePic);
+        _cityCouncilPics.remove(candidatePic);
         break;
-      case 'County Sheriff':
-        countySheriffPics.remove(candidatePic);
+      case 'Sheriff':
+        _countySheriffPics.remove(candidatePic);
         break;
-      case 'Trial Court Judge':
-        trialCourtJudgePics.remove(candidatePic);
+      case 'Judge':
+        _trialCourtJudgePics.remove(candidatePic);
         break;
       case 'County Register of Deeds':
-        countyRegisterOfDeedsPics.remove(candidatePic);
+        _countyRegisterOfDeedsPics.remove(candidatePic);
         break;
       case 'School Board':
-        schoolBoardPics.remove(candidatePic);
+        _schoolBoardPics.remove(candidatePic);
         break;
       case 'Prosecutor':
-        prosecutorsPics.remove(candidatePic);
+        _prosecutorsPics.remove(candidatePic);
         break;
       case 'Coroner':
-        coronersPics.remove(candidatePic);
+        _coronersPics.remove(candidatePic);
         break;
       case 'Planning/Zoning Commission':
-        planningZoningCommissionPics.remove(candidatePic);
+        _planningZoningCommissionPics.remove(candidatePic);
         break;
       case 'Public Works Commission':
-        publicWorksCommissionPics.remove(candidatePic);
+        _publicWorksCommissionPics.remove(candidatePic);
         break;
       case 'Commissioner of Revenue':
-        commissionerOfRevenuePics.remove(candidatePic);
+        _commissionerOfRevenuePics.remove(candidatePic);
         break;
-      case 'County Commissioner':
-        countyCommissionersPics.remove(candidatePic);
+      case 'Commissioner':
+        _countyCommissionersPics.remove(candidatePic);
         break;
     }
     widget.removeFromBallot(candidatePic);
@@ -178,8 +178,8 @@ class _BallotPageState extends State<BallotPage> {
     return Center(
       child: ListView(
         children: [
-          SizedBox(height: 10),
-          buildExpandableButton(
+          const SizedBox(height: 10),
+          _buildExpandableButton(
             onPressed: () {
               setState(() {
                 _expandedLocal = !_expandedLocal;
@@ -195,69 +195,69 @@ class _BallotPageState extends State<BallotPage> {
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                   children: [
-                    buildRow(context, 'Mayor', mayor, mayorPics, (count) {
+                    _buildRow(context, 'Mayor', _mayor, _mayorPics, (count) {
                       setState(() {
-                        mayor = count;
+                        _mayor = count;
                       });
                     }, 0),
-                    buildRow(context, 'City Clerk', cityClerk, cityClerkPics, (count) {
+                    _buildRow(context, 'Clerk', _cityClerk, _cityClerkPics, (count) {
                       setState(() {
-                        cityClerk = count;
+                        _cityClerk = count;
                       });
                     }, 1),
-                    buildRow(context, 'City Council', cityCouncil, cityCouncilPics, (count) {
+                    _buildRow(context, 'City Council', _cityCouncil, _cityCouncilPics, (count) {
                       setState(() {
-                        cityCouncil = count;
+                        _cityCouncil = count;
                       });
                     }, 2),
-                    buildRow(context, 'County Sheriff', countySheriff, countySheriffPics, (count) {
+                    _buildRow(context, 'Sheriff', _countySheriff, _countySheriffPics, (count) {
                       setState(() {
-                        countySheriff = count;
+                        _countySheriff = count;
                       });
                     }, 4),
-                    buildRow(context, 'Trial Court Judge', trialCourtJudge, trialCourtJudgePics, (count) {
+                    _buildRow(context, 'Judge', _trialCourtJudge, _trialCourtJudgePics, (count) {
                       setState(() {
-                        trialCourtJudge = count;
+                        _trialCourtJudge = count;
                       });
                     }, 5),
-                    buildRow(context, 'County Register of Deeds', countyRegisterOfDeeds, countyRegisterOfDeedsPics, (count) {
+                    _buildRow(context, 'County Register of Deeds', _countyRegisterOfDeeds, _countyRegisterOfDeedsPics, (count) {
                       setState(() {
-                        countyRegisterOfDeeds = count;
+                        _countyRegisterOfDeeds = count;
                       });
                     }, 6),
-                    buildRow(context, 'School Board', schoolBoard, schoolBoardPics, (count) {
+                    _buildRow(context, 'School Board', _schoolBoard, _schoolBoardPics, (count) {
                       setState(() {
-                        schoolBoard = count;
+                        _schoolBoard = count;
                       });
                     }, 7),
-                    buildRow(context, 'Prosecutor', prosecutors, prosecutorsPics, (count) {
+                    _buildRow(context, 'Prosecutor', _prosecutors, _prosecutorsPics, (count) {
                       setState(() {
-                        prosecutors = count;
+                        _prosecutors = count;
                       });
                     }, 8),
-                    buildRow(context, 'Coroner', coroners, coronersPics, (count) {
+                    _buildRow(context, 'Coroner', _coroners, _coronersPics, (count) {
                       setState(() {
-                        coroners = count;
+                        _coroners = count;
                       });
                     }, 9),
-                    buildRow(context, 'Planning/Zoning Commission', planningZoningCommission, planningZoningCommissionPics, (count) {
+                    _buildRow(context, 'Planning/Zoning Commission', _planningZoningCommission, _planningZoningCommissionPics, (count) {
                       setState(() {
-                        planningZoningCommission = count;
+                        _planningZoningCommission = count;
                       });
                     }, 10),
-                    buildRow(context, 'Public Works Commission', publicWorksCommission, publicWorksCommissionPics, (count) {
+                    _buildRow(context, 'Public Works Commission', _publicWorksCommission, _publicWorksCommissionPics, (count) {
                       setState(() {
-                        publicWorksCommission = count;
+                        _publicWorksCommission = count;
                       });
                     }, 11),
-                    buildRow(context, 'Commissioner of Revenue', commissionerOfRevenue, commissionerOfRevenuePics, (count) {
+                    _buildRow(context, 'Commissioner of Revenue', _commissionerOfRevenue, _commissionerOfRevenuePics, (count) {
                       setState(() {
-                        commissionerOfRevenue = count;
+                        _commissionerOfRevenue = count;
                       });
                     }, 12),
-                    buildRow(context, 'County Commissioner', countyCommissioners, countyCommissionersPics, (count) {
+                    _buildRow(context, 'Commissioner', _countyCommissioners, _countyCommissionersPics, (count) {
                       setState(() {
-                        countyCommissioners = count;
+                        _countyCommissioners = count;
                       });
                     }, 13),
                   ],
@@ -266,7 +266,7 @@ class _BallotPageState extends State<BallotPage> {
             ],
           ),
           SizedBox(height: 10), 
-          buildExpandableButton(
+          _buildExpandableButton(
             onPressed: () {
               setState(() {
                 _expandedGlobal = !_expandedGlobal;
@@ -279,7 +279,7 @@ class _BallotPageState extends State<BallotPage> {
             ],
           ),
           SizedBox(height: 10),
-          buildExpandableButton(
+          _buildExpandableButton(
             onPressed: () {
               setState(() {
                 _expandedOther = !_expandedOther;
@@ -297,7 +297,7 @@ class _BallotPageState extends State<BallotPage> {
     );
   }
 
-  Widget buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
+  Widget _buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Container(
@@ -340,7 +340,7 @@ class _BallotPageState extends State<BallotPage> {
                           circleCount,
                               (index) => Padding(
                             padding: const EdgeInsets.only(right: 10.0),
-                            child: buildCircleCandidate(() {
+                            child: _buildCircleCandidate(() {
                               updateCircleCount(circleCount - 1);
                             },() {
                               updateCircleCount(circleCount - 1);
@@ -364,7 +364,7 @@ class _BallotPageState extends State<BallotPage> {
     );
   }
 
-  Widget buildCircleCandidate(VoidCallback onDelete, Null Function() param1, String candidatePic, context, String title) {
+  Widget _buildCircleCandidate(VoidCallback onDelete, Null Function() param1, String candidatePic, context, String title) {
     if(candidatePic != '') {
       CandidateDemographics candidate = widget.ballotStack.firstWhere((element) => element.profileImageURL == candidatePic);
       return GestureDetector(
@@ -387,7 +387,7 @@ class _BallotPageState extends State<BallotPage> {
                     onPressed: () {
                       onDelete();
                       Navigator.of(context).pop();
-                      removeCandidate(candidatePic, title);
+                      _removeCandidate(candidatePic, title);
                     },
                   ),
                 ],
@@ -432,7 +432,7 @@ class _BallotPageState extends State<BallotPage> {
   }
 }
 
-Widget buildExpandableButton({
+Widget _buildExpandableButton({
   required VoidCallback onPressed,
   required bool expanded,
   required String title,

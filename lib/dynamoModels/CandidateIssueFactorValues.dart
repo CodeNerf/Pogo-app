@@ -1,31 +1,30 @@
 import 'package:pogo/dynamoModels/IssueFactorValues.dart';
-import 'package:pogo/models/IssueFactorValues.dart' hide IssueFactorValues;
 
 class CandidateIssueFactorValues extends IssueFactorValues {
   final String candidateId;
 
   CandidateIssueFactorValues(
       {required this.candidateId,
-      required super.climateScore,
-      required super.climateWeight,
-      required super.drugPolicyScore,
-      required super.drugPolicyWeight,
-      required super.economyScore,
-      required super.economyWeight,
-      required super.educationScore,
-      required super.educationWeight,
-      required super.gunPolicyScore,
-      required super.gunPolicyWeight,
-      required super.healthcareScore,
-      required super.healthcareWeight,
-      required super.housingScore,
-      required super.housingWeight,
-      required super.immigrationScore,
-      required super.immigrationWeight,
-      required super.policingScore,
-      required super.policingWeight,
-      required super.reproductiveScore,
-      required super.reproductiveWeight});
+      super.climateScore = 0,
+      super.climateWeight = 0,
+      super.drugPolicyScore = 0,
+      super.drugPolicyWeight = 0,
+      super.economyScore = 0,
+      super.economyWeight = 0,
+      super.educationScore = 0,
+      super.educationWeight = 0,
+      super.gunPolicyScore = 0,
+      super.gunPolicyWeight = 0,
+      super.healthcareScore = 0,
+      super.healthcareWeight = 0,
+      super.housingScore = 0,
+      super.housingWeight = 0,
+      super.immigrationScore = 0,
+      super.immigrationWeight = 0,
+      super.policingScore = 0,
+      super.policingWeight = 0,
+      super.reproductiveScore = 0,
+      super.reproductiveWeight = 0});
 
   factory CandidateIssueFactorValues.fromJson(Map json) {
     return CandidateIssueFactorValues(

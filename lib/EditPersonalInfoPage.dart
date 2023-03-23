@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/LoginPage.dart';
 import 'package:pogo/awsFunctions.dart';
-import 'package:pogo/googleFunctions/CivicModels.dart';
 import 'package:validators/validators.dart';
-import 'Onboarding/SurveyLandingPage.dart';
 import 'dynamoModels/UserDemographics.dart';
-import 'amplifyFunctions.dart';
-import 'dynamoModels/UserIssueFactorValues.dart';
-import 'user.dart';
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-import 'dart:math';
 class EditPersonalInfoPage extends StatefulWidget {
   final UserDemographics userDemographics;
   const EditPersonalInfoPage({Key? key, required this.userDemographics}) : super(key: key);
@@ -24,9 +16,9 @@ class _EditPersonalInfoPageState extends State<EditPersonalInfoPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  String errorText = '';
-  double errorSizeBoxSize = 0;
-  String PogoLogo = 'assets/Pogo_logo_horizontal.png';
+  String _errorText = '';
+  double _errorSizeBoxSize = 0;
+  final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
 
   @override
   void initState() {
@@ -51,7 +43,7 @@ Widget build(BuildContext context) {
         ),
         centerTitle: true,
         title: Image(
-          image: AssetImage(PogoLogo),
+          image: AssetImage(_pogoLogo),
           width: 150,
         ),
       ),
@@ -73,7 +65,7 @@ Widget build(BuildContext context) {
               ),
               //ERROR TEXT
               Text(
-                errorText,
+                _errorText,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 15,
@@ -81,7 +73,7 @@ Widget build(BuildContext context) {
                   color: Colors.red,
                 ),
               ),
-              SizedBox(height: errorSizeBoxSize),
+              SizedBox(height: _errorSizeBoxSize),
                 TextField(
                 controller: _firstNameController,
                 decoration: InputDecoration(labelText: 'First Name'),
@@ -103,33 +95,33 @@ Widget build(BuildContext context) {
                   onPressed: () {
                     if (_firstNameController.text.isEmpty) {
                       setState(() {
-                        errorText = 'Must enter your first name.';
-                        errorSizeBoxSize = 10;
+                        _errorText = 'Must enter your first name.';
+                        _errorSizeBoxSize = 10;
                       });
                     } else if (_lastNameController.text.isEmpty) {
                       setState(() {
-                        errorText = 'Must enter your last name.';
-                        errorSizeBoxSize = 10;
+                        _errorText = 'Must enter your last name.';
+                        _errorSizeBoxSize = 10;
                       });
                     } else if (_phoneController.text.isEmpty) {
                       setState(() {
-                        errorText = 'Must enter your phone number.';
-                        errorSizeBoxSize = 10;
+                        _errorText = 'Must enter your phone number.';
+                        _errorSizeBoxSize = 10;
                       });
                     } else if (!isNumeric(_phoneController.text)) {
                       setState(() {
-                        errorText = 'Invalid phone number.';
-                        errorSizeBoxSize = 10;
+                        _errorText = 'Invalid phone number.';
+                        _errorSizeBoxSize = 10;
                       });
                     } else if (_phoneController.text.length != 10) {
                       setState(() {
-                        errorText = 'Invalid phone number length.';
-                        errorSizeBoxSize = 10;
+                        _errorText = 'Invalid phone number length.';
+                        _errorSizeBoxSize = 10;
                       });
                     } else if (_addressController.text.isEmpty) {
                       setState(() {
-                        errorText = 'Must enter your address.';
-                        errorSizeBoxSize = 10;
+                        _errorText = 'Must enter your address.';
+                        _errorSizeBoxSize = 10;
                       });
                     }
                     else {

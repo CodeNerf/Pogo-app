@@ -1,73 +1,90 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'Home.dart';
+import 'LandingPage.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
-import 'user.dart';
 import 'awsFunctions.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 
 class HomeLoadingPage extends StatefulWidget {
-  const HomeLoadingPage({Key? key}) : super(key: key);
+  final UserDemographics user;
+  HomeLoadingPage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<HomeLoadingPage> createState() => _HomeLoadingPageState();
 }
 
 class _HomeLoadingPageState extends State<HomeLoadingPage> {
-  late Ballot userBallot;
-  late user currentUser;
-  late UserDemographics currentUserDemographics;
-  late UserIssueFactorValues currentUserFactors;
-  late List<CandidateDemographics> candidateStack;
-  late List<CandidateIssueFactorValues> candidateStackFactors;
+  late Ballot _userBallot;
+  late UserIssueFactorValues _currentUserFactors;
+  late List<CandidateDemographics> _candidateStack;
+  late List<CandidateIssueFactorValues> _candidateStackFactors;
   @override
   void initState() {
-    initializeObjects();
+    _initializeObjects();
     super.initState();
   }
 
-  void initializeObjects() async {
-    userBallot =
-        Ballot.empty(); //TODO: initialize userBallot with database ballot
-    currentUser = await fetchCurrentUserAttributes();
-    currentUserDemographics = await getUserDemographics(currentUser.email);
-    // Need to push associated user factors to the database before running this function.
-    currentUserFactors = await getUserIssueFactorValues(currentUser.email);
-    candidateStack = await getAllCandidateDemographics();
-    candidateStackFactors = await getAllCandidateIssueFactorValues();
-    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics,
-        userBallot, candidateStackFactors);
+  void _initializeObjects() async {
+    bool retry = true;
+    int retryCount = 0;
+    String email = widget.user.userId;
+    _userBallot = Ballot.empty();
+
+    while (retry) {
+      try {
+        await Future.wait([
+          getAllCandidateDemographics(),
+          getAllCandidateIssueFactorValues(),
+          getUserIssueFactorValues(email),
+          getUserBallot(email)
+        ]).then((List<dynamic> values) {
+          _candidateStack = values[0];
+          _candidateStackFactors = values[1];
+          _currentUserFactors = values[2];
+          _userBallot.localCandidateIds = values[3];
+        });
+        retry = false;
+      } catch (e) {
+        retryCount++;
+        retry = true;
+        safePrint(e);
+        safePrint("Retrying $retryCount");
+      }
+    }
+
+    _setObjectStates(_currentUserFactors, _candidateStack, _userBallot,
+        _candidateStackFactors);
   }
 
-  void setObjectStates(
+  void _setObjectStates(
       UserIssueFactorValues uifv,
       List<CandidateDemographics> s,
-      UserDemographics ud,
       Ballot ub,
       List<CandidateIssueFactorValues> cifv) {
     setState(() {
-      candidateStackFactors = cifv;
-      currentUserFactors = uifv;
-      candidateStack = s;
-      currentUserDemographics = ud;
-      userBallot = ub;
+      _candidateStackFactors = cifv;
+      _currentUserFactors = uifv;
+      _candidateStack = s;
+      _userBallot = ub;
     });
-    goHome();
+    _goHome();
   }
 
-  void goHome() async {
+  void _goHome() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Home(
-          currentUserFactors: currentUserFactors,
-          candidateStack: candidateStack,
-          currentUserDemographics: currentUserDemographics,
-          userBallot: userBallot,
-          candidateStackFactors: candidateStackFactors,
+          currentUserFactors: _currentUserFactors,
+          candidateStack: _candidateStack,
+          currentUserDemographics: widget.user,
+          userBallot: _userBallot,
+          candidateStackFactors: _candidateStackFactors,
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,50 +9,51 @@ import 'Onboarding/SurveyLandingPage.dart';
 import 'dynamoModels/UserDemographics.dart';
 import 'amplifyFunctions.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
-import 'user.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'dart:math';
 import 'EditPersonalInfoPage.dart';
 
 class UserProfile extends StatefulWidget {
   final UserIssueFactorValues currentUserFactors;
-  UserDemographics currentUserDemographics;
-  UserProfile({Key? key, required this.currentUserFactors, required this.currentUserDemographics}) : super(key: key);
+  final UserDemographics currentUserDemographics;
+  const UserProfile(
+      {Key? key,
+      required this.currentUserFactors,
+      required this.currentUserDemographics})
+      : super(key: key);
 
   @override
   State<UserProfile> createState() => _UserProfileState();
 }
 
 class _UserProfileState extends State<UserProfile> {
-  String firstIssue = "";
-  String secondIssue = "";
-  String thirdIssue = "";
-  List<num> ratings = [];
+  String _firstIssue = "";
+  String _secondIssue = "";
+  String _thirdIssue = "";
+  final List<num> _ratings = [];
   final TextEditingController _profilePicController = TextEditingController();
-  String errorText = '';
-  
+
   @override
   void initState() {
     super.initState();
-    ratings.add(widget.currentUserFactors.climateWeight);
-    ratings.add(widget.currentUserFactors.drugPolicyWeight);
-    ratings.add(widget.currentUserFactors.economyWeight);
-    ratings.add(widget.currentUserFactors.educationWeight);
-    ratings.add(widget.currentUserFactors.gunPolicyWeight);
-    ratings.add(widget.currentUserFactors.healthcareWeight);
-    ratings.add(widget.currentUserFactors.housingWeight);
-    ratings.add(widget.currentUserFactors.immigrationWeight);
-    ratings.add(widget.currentUserFactors.policingWeight);
-    ratings.add(widget.currentUserFactors.reproductiveWeight);
-    setTopIssues(ratings);
+    _ratings.add(widget.currentUserFactors.climateWeight);
+    _ratings.add(widget.currentUserFactors.drugPolicyWeight);
+    _ratings.add(widget.currentUserFactors.economyWeight);
+    _ratings.add(widget.currentUserFactors.educationWeight);
+    _ratings.add(widget.currentUserFactors.gunPolicyWeight);
+    _ratings.add(widget.currentUserFactors.healthcareWeight);
+    _ratings.add(widget.currentUserFactors.housingWeight);
+    _ratings.add(widget.currentUserFactors.immigrationWeight);
+    _ratings.add(widget.currentUserFactors.policingWeight);
+    _ratings.add(widget.currentUserFactors.reproductiveWeight);
+    _setTopIssues(_ratings);
   }
 
-  void setTopIssues(List<num> ratings) async {
+  void _setTopIssues(List<num> ratings) async {
     List<String> topIssues = [];
-    var maxCare = ratings.reduce(max);
     var indexMaxCare = ratings.indexOf(ratings.reduce(max));
-    for(int i = 0; i < 3; i++) {
-      switch(indexMaxCare) {
+    for (int i = 0; i < 3; i++) {
+      switch (indexMaxCare) {
         case 0:
           topIssues.add('CLIMATE');
           break;
@@ -80,38 +82,41 @@ class _UserProfileState extends State<UserProfile> {
           topIssues.add('POLICING');
           break;
         case 9:
-        topIssues.add('REPRODUCTIVE RIGHTS');
+          topIssues.add('REPRODUCTIVE RIGHTS');
           break;
       }
       ratings[indexMaxCare] = 0;
-      maxCare = ratings.reduce(max);
       indexMaxCare = ratings.indexOf(ratings.reduce(max));
     }
     setState(() {
-      firstIssue = topIssues[0];
-      secondIssue = topIssues[1];
-      thirdIssue = topIssues[2];
+      _firstIssue = topIssues[0];
+      _secondIssue = topIssues[1];
+      _thirdIssue = topIssues[2];
     });
   }
 
   //this is just for testing purposes, to be removed later
-  Future logout(context) async {
-    logoutUser();
-    if (await checkLoggedIn()) {
-      //successfully logged out, send to login
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-    } else {
-      //logout not working (this shouldn't ever happen)
+  Future _logout(context) async {
+    try {
+      logoutUser();
+      if (await checkLoggedIn()) {
+        //successfully logged out, send to login
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+        );
+      } else {
+        //logout not working (this shouldn't ever happen)
+      }
+    } catch (e) {
+      safePrint("Error occurred in _logout: $e");
     }
   }
 
   //change profile pic
-  Future<void> changeProfilePic() async {
+  Future<void> _changeProfilePic() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -124,7 +129,9 @@ class _UserProfileState extends State<UserProfile> {
                 const Text('Enter the url of your new profile picture:'),
                 TextField(
                   controller: _profilePicController,
-                  decoration: InputDecoration(labelText: widget.currentUserDemographics.profileImageURL),
+                  decoration: InputDecoration(
+                      labelText:
+                          widget.currentUserDemographics.profileImageURL),
                 ),
               ],
             ),
@@ -132,8 +139,10 @@ class _UserProfileState extends State<UserProfile> {
           actions: <Widget>[
             ElevatedButton(
               onPressed: () {
-                if(_profilePicController.text != widget.currentUserDemographics.profileImageURL) {
-                  widget.currentUserDemographics.profileImageURL = _profilePicController.text;
+                if (_profilePicController.text !=
+                    widget.currentUserDemographics.profileImageURL) {
+                  widget.currentUserDemographics.profileImageURL =
+                      _profilePicController.text;
                   putUserDemographics(widget.currentUserDemographics);
                 }
                 Navigator.pop(context);
@@ -144,7 +153,10 @@ class _UserProfileState extends State<UserProfile> {
                 elevation: 0,
                 minimumSize: Size(double.infinity, 48),
               ),
-              child: const Text('Save New Picture' ,style: TextStyle(fontSize:17, color: Colors.black ),),
+              child: const Text(
+                'Save New Picture',
+                style: TextStyle(fontSize: 17, color: Colors.black),
+              ),
             ),
           ],
         );
@@ -152,10 +164,10 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Widget profilePic() {
+  Widget _profilePic() {
     String pic = widget.currentUserDemographics.profileImageURL;
     bool validURL = Uri.parse(pic).isAbsolute;
-    if(validURL) {
+    if (validURL) {
       return CircularProfileAvatar(
         '',
         radius: 60,
@@ -167,28 +179,82 @@ class _UserProfileState extends State<UserProfile> {
           ),
         ),
       );
-    }
-    else {
+    } else {
       return const Icon(FontAwesomeIcons.person);
     }
   }
 
-  List<Widget> getRatingCircles() {
+  List<Widget> _getRatingCircles() {
     List<Widget> circles = [];
-    circles.add(Column(children: [ratingCircles('Education\n', widget.currentUserFactors.educationScore), ratingCircles('Care', widget.currentUserFactors.educationWeight)],));
-    circles.add(Column(children: [ratingCircles('Climate\n', widget.currentUserFactors.climateScore), ratingCircles('Care', widget.currentUserFactors.climateWeight)],));
-    circles.add(Column(children: [ratingCircles('Drug Policy\n', widget.currentUserFactors.drugPolicyScore), ratingCircles('Care', widget.currentUserFactors.drugPolicyWeight)],));
-    circles.add(Column(children: [ratingCircles('Economy\n', widget.currentUserFactors.economyScore), ratingCircles('Care', widget.currentUserFactors.economyWeight)],));
-    circles.add(Column(children: [ratingCircles('Healthcare\n', widget.currentUserFactors.healthcareScore), ratingCircles('Care', widget.currentUserFactors.healthcareWeight)],));
-    circles.add(Column(children: [ratingCircles('Immigration\n', widget.currentUserFactors.immigrationScore), ratingCircles('Care', widget.currentUserFactors.immigrationWeight)],));
-    circles.add(Column(children: [ratingCircles('Policing\n', widget.currentUserFactors.policingScore), ratingCircles('Care', widget.currentUserFactors.policingWeight)],));
-    circles.add(Column(children: [ratingCircles('Reproductive\nHealth', widget.currentUserFactors.reproductiveScore), ratingCircles('Care', widget.currentUserFactors.reproductiveWeight)],));
-    circles.add(Column(children: [ratingCircles('Gun Control\n', widget.currentUserFactors.gunPolicyScore), ratingCircles('Care', widget.currentUserFactors.gunPolicyWeight)],));
-    circles.add(Column(children: [ratingCircles('Housing\n', widget.currentUserFactors.housingScore), ratingCircles('Care', widget.currentUserFactors.housingWeight)],));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Education\n', widget.currentUserFactors.educationScore),
+        _ratingCircles('Care', widget.currentUserFactors.educationWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Climate\n', widget.currentUserFactors.climateScore),
+        _ratingCircles('Care', widget.currentUserFactors.climateWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles(
+            'Drug Policy\n', widget.currentUserFactors.drugPolicyScore),
+        _ratingCircles('Care', widget.currentUserFactors.drugPolicyWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Economy\n', widget.currentUserFactors.economyScore),
+        _ratingCircles('Care', widget.currentUserFactors.economyWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles(
+            'Healthcare\n', widget.currentUserFactors.healthcareScore),
+        _ratingCircles('Care', widget.currentUserFactors.healthcareWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles(
+            'Immigration\n', widget.currentUserFactors.immigrationScore),
+        _ratingCircles('Care', widget.currentUserFactors.immigrationWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Policing\n', widget.currentUserFactors.policingScore),
+        _ratingCircles('Care', widget.currentUserFactors.policingWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Reproductive\nHealth',
+            widget.currentUserFactors.reproductiveScore),
+        _ratingCircles('Care', widget.currentUserFactors.reproductiveWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles(
+            'Gun Control\n', widget.currentUserFactors.gunPolicyScore),
+        _ratingCircles('Care', widget.currentUserFactors.gunPolicyWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Housing\n', widget.currentUserFactors.housingScore),
+        _ratingCircles('Care', widget.currentUserFactors.housingWeight)
+      ],
+    ));
     return circles;
   }
 
-  Widget ratingCircles(String name, num rating) {
+  Widget _ratingCircles(String name, num rating) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
       child: CircularPercentIndicator(
@@ -204,7 +270,7 @@ class _UserProfileState extends State<UserProfile> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        percent: rating/5,
+        percent: rating / 5,
         center: Text(
           '$rating',
           style: const TextStyle(
@@ -216,32 +282,33 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  String checkRegistered(bool voterRegistrationStatus) {
-    if(voterRegistrationStatus) {
+  String _checkRegistered(bool voterRegistrationStatus) {
+    if (voterRegistrationStatus) {
       return 'Registered to Vote';
-    }
-    else {
+    } else {
       return 'Not registered to Vote';
     }
   }
 
-  showAlert(BuildContext context) {
+  _showAlert(BuildContext context) {
     AlertDialog alert = const AlertDialog(
-      content: Text('A low rating for a political issue means that you align more to the left on that issue. A high rating means you align more to the right.\nThe higher your care rating is for an issue, the more you care about that issue.\nYou can retake the survey at any time to change your ratings by clicking the "Retake Survey" button below.'),
+      content: Text(
+          'A low rating for a political issue means that you align more to the left on that issue. A high rating means you align more to the right.\nThe higher your care rating is for an issue, the more you care about that issue.\nYou can retake the survey at any time to change your ratings by clicking the "Retake Survey" button below.'),
     );
     showDialog(
         barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
           return alert;
-        }
-    );
+        });
   }
 
-  void editPersonalInfo(BuildContext context) async {
+  void _editPersonalInfo(BuildContext context) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EditPersonalInfoPage(userDemographics: widget.currentUserDemographics)),
+      MaterialPageRoute(
+          builder: (context) => EditPersonalInfoPage(
+              userDemographics: widget.currentUserDemographics)),
     );
   }
 
@@ -258,7 +325,7 @@ class _UserProfileState extends State<UserProfile> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 child: Text(
-                    'Hello, ${widget.currentUserDemographics.firstName}',
+                  'Hello, ${widget.currentUserDemographics.firstName}',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -271,18 +338,18 @@ class _UserProfileState extends State<UserProfile> {
             Align(
               alignment: Alignment.center,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(0,0,0,10),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                 child: GestureDetector(
                   onTap: () {
-                    changeProfilePic();
+                    _changeProfilePic();
                   },
                   child: CircularProfileAvatar(
                     '',
                     radius: 40,
                     child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: profilePic(),
-                  ),
+                      fit: BoxFit.cover,
+                      child: _profilePic(),
+                    ),
                   ),
                 ),
               ),
@@ -364,7 +431,7 @@ class _UserProfileState extends State<UserProfile> {
   ),
 ),
             */
-          //personal info
+            //personal info
             ExpansionTile(
               title: Row(
                 children: [
@@ -377,7 +444,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      editPersonalInfo(context);
+                      _editPersonalInfo(context);
                     },
                     child: const Icon(
                       Icons.edit,
@@ -404,7 +471,7 @@ class _UserProfileState extends State<UserProfile> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 3.0),
                           child: Text(
-                          'Email: ${widget.currentUserDemographics.userId}',
+                            'Email: ${widget.currentUserDemographics.userId}',
                             style: const TextStyle(
                               fontSize: 18,
                             ),
@@ -467,7 +534,8 @@ class _UserProfileState extends State<UserProfile> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 3.0),
                           child: Text(
-                            checkRegistered(widget.currentUserDemographics.voterRegistrationStatus),
+                            _checkRegistered(widget.currentUserDemographics
+                                .voterRegistrationStatus),
                             style: const TextStyle(
                               fontSize: 18,
                             ),
@@ -493,7 +561,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      showAlert(context);
+                      _showAlert(context);
                     },
                     child: const Icon(
                       CupertinoIcons.question_circle,
@@ -512,7 +580,7 @@ class _UserProfileState extends State<UserProfile> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: getRatingCircles(),
+                    children: _getRatingCircles(),
                   ),
                 ),
               ],
@@ -539,21 +607,21 @@ class _UserProfileState extends State<UserProfile> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          firstIssue,
+                          _firstIssue,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),
                         ),
                         Text(
-                          secondIssue,
+                          _secondIssue,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),
                         ),
                         Text(
-                          thirdIssue,
+                          _thirdIssue,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
@@ -707,7 +775,7 @@ class _UserProfileState extends State<UserProfile> {
               children: [
                 InkWell(
                   onTap: () async {
-                    logout(context);
+                    _logout(context);
                   },
                   child: Container(
                     //alignment: Alignment.center,
@@ -718,13 +786,13 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     child: const Center(
                         child: Text(
-                          'Logout',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    )),
                   ),
                 ),
                 InkWell(
@@ -744,13 +812,13 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     child: const Center(
                         child: Text(
-                          'Retake Survey',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+                      'Retake Survey',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    )),
                   ),
                 ),
               ],
@@ -761,4 +829,3 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 }
-

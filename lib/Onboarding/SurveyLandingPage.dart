@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/LoginPage.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
@@ -22,7 +23,8 @@ class SurveyLandingPage extends StatefulWidget {
       profileImageURL: '',
       gender: '',
       racialIdentity: '',
-      politicalAffiliation: '');
+      politicalAffiliation: '',
+      surveyCompletion: false);
   UserIssueFactorValues ratings = UserIssueFactorValues(
       userId: '',
       climateScore: 0,
@@ -52,26 +54,47 @@ class SurveyLandingPage extends StatefulWidget {
 }
 
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
-  late UserIssueFactorValues currentUserFactors;
-  late UserDemographics currentAnswers;
+  late UserIssueFactorValues _currentUserFactors;
+  late UserDemographics _currentAnswers;
   bool _buttonVisible = false;
   @override
   void initState() {
-    getUserFactors();
+    _getUserFactors();
     super.initState();
   }
 
-  void getUserFactors() async {
-    // String userid = await fetchCurrentUserEmail();
-    var currentUser = await fetchCurrentUserAttributes();
+  void _getUserFactors() async {
+    bool retry = true;
+    int retryCount = 0;
+    String email = '';
+    try {
+      email = await fetchCurrentUserEmail();
+    } catch (e) {
+      safePrint("Couldn't fetch user email.");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
     // Need to push associated user factors to the database before running this function.
-    currentUserFactors = await getUserIssueFactorValues(currentUser.email);
-    currentAnswers = await getUserDemographics(currentUser.email);
-    setState(() {
-      widget.ratings = currentUserFactors;
-      widget.answers = currentAnswers;
-      _buttonVisible = true;
-    });
+    while (retry) {
+      try {
+        await Future.wait(
+                [getUserIssueFactorValues(email), getUserDemographics(email)])
+            .then((List<dynamic> values) {
+          setState(() {
+            widget.ratings = values[0];
+            widget.answers = values[1];
+            _buttonVisible = true;
+          });
+        });
+        retry = false;
+      } catch (e) {
+        retry = true;
+        retryCount++;
+        safePrint(e);
+        safePrint(
+            "SurveyLandingPage: Failed to fetch user factors. Retrying... $retryCount");
+      }
+    }
   }
 
   @override
