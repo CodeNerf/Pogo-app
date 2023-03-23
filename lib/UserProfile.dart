@@ -495,6 +495,15 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                         ),
+                         Padding(
+                          padding: const EdgeInsets.only(bottom: 3.0),
+                          child: Text(
+                            'Address: ${widget.currentUserDemographics.addressLine1}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 3.0),
                           child: Text(
