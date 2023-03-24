@@ -75,21 +75,7 @@ class _LandingPageState extends State<LandingPage> {
   ],
 ),
     SizedBox(height: 40),
-GestureDetector(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AppWalkThrough()),
-    );
-  },
-  child: Text(
-    'Skip for now',
-    style: TextStyle(
-      color: Colors.blue,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-),
+
               Column(
   // ignore: sort_child_properties_last
   children: <Widget>[
@@ -146,7 +132,7 @@ GestureDetector(
         height: 60,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const RegisterPage()));
+              MaterialPageRoute(builder: (context) => AppWalkThrough()));
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)),

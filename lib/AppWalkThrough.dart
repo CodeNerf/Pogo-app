@@ -267,9 +267,9 @@ Widget build(BuildContext context) {
   right: 16.0,
   child: TextButton(
     onPressed: () {
-      // navigate back to LandingPage
-      Navigator.pop(context);
-    },
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RegisterPage()));
+        },
     child: Text(
       'Skip',
       style: TextStyle(
