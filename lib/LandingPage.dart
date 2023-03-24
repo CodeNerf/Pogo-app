@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pogo/LoginPage.dart';
+import 'AppWalkThrough.dart';
 import 'LoginPage.dart';
 import 'RegisterPage.dart';
-
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
 
@@ -75,8 +75,23 @@ class _LandingPageState extends State<LandingPage> {
   ],
 ),
     SizedBox(height: 40),
-
+GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AppWalkThrough()),
+    );
+  },
+  child: Text(
+    'Skip for now',
+    style: TextStyle(
+      color: Colors.blue,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
               Column(
+  // ignore: sort_child_properties_last
   children: <Widget>[
     // the login button
     Container(
@@ -96,7 +111,7 @@ class _LandingPageState extends State<LandingPage> {
         height: 60,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const LoginPage()));
+              MaterialPageRoute(builder: (context) => LoginPage()));
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)),
@@ -113,7 +128,7 @@ class _LandingPageState extends State<LandingPage> {
         ),
       ),
     ),
-    SizedBox(height: 40),
+    const SizedBox(height: 40),
     Container(
       decoration: BoxDecoration(
         color: Color(0xFFF3D433),
