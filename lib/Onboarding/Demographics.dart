@@ -29,32 +29,33 @@ class _DemographicsState extends State<Demographics> {
     });
   }
 
-  // List of items for each dropdown menu
-  final List<String> _ageList = [
-    '16-25 years old',
-    '26-35 years old',
-    '36-55 years old',
-    '56+ years old',
-  ];
+//   // List of items for each dropdown menu
+//   final List<String> _ageList = [
+//     '16-25 years old',
+//     '26-35 years old',
+//     '36-55 years old',
+//     '56+ years old',
+//   ];
+// List<String> ageRanges = [  '16-25 years old',  '26-35 years old',  '36-55 years old',  '56+ years old',];
 
-  final List<String> _ethnicityList = [
-    '',
-    'Black',
-    'White',
-    'Asian',
-    'American Indian/Alaska Native',
-    'Native Hawaiian/Pacific Islander',
-    'Hispanic/Latino',
-  ];
+//   final List<String> ethnicityList = [
+//     '',
+//     'Black',
+//     'White',
+//     'Asian',
+//     'American Indian/Alaska Native',
+//     'Native Hawaiian/Pacific Islander',
+//     'Hispanic/Latino',
+//   ];
 
-  final List<String> _genderList = [
-    '',
-    'Female',
-    'Male',
-    'Non-binary',
-    'Gender Non-conforming',
-    'Other',
-  ];
+//   final List<String> genderList = [
+//     '',
+//     'Female',
+//     'Male',
+//     'Non-binary',
+//     'Gender Non-conforming',
+//     'Other',
+//   ];
 
   void _nextPage() async {
     widget.answers.racialIdentity = _ethnicitySelection;
@@ -70,187 +71,243 @@ class _DemographicsState extends State<Demographics> {
             )));
   }
 
+  int _selectedOption = -1;
+
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      return false;
+    },
+    child: Scaffold(
+      body: Container(
+        color: Color(0xFFF1F4F8),
+        padding: const EdgeInsets.all(20.0),
+        transformAlignment: Alignment.center,
+        child: ListView(
+          children: 
+            [Column(
+              children: [
+                const SizedBox(height: 70),
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Text(
+                      "Demographic Info",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 30,
+                        color: Color(0xFF0E0E0E),
+                        fontFamily: 'Inter',
+                        fontStyle: FontStyle.normal,
+                        letterSpacing: 0,
+                        height: 1.2,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 50),
+                Expandable(
+                  title: 'your age',
+                  chooseText: 'Choose your age category',
+                  options: [
+                    '16-25 years old',
+                    '26-35 years old',
+                    '36-55 years old',
+                    '56+ years old',
+                  ],
+                  onIndexChanged: _handleIndexChanged,
+                ),
+                const SizedBox(height: 20),
+                Expandable(
+                  title: 'race/ethnicity',
+                  chooseText: 'I identify as...',
+                  options: [
+                    'Black',
+                    'White',
+                    'Asian',
+                    'American Indian/Alaska Native',
+                    'Native Hawaiian/Pacific Islander',
+                    'Hispanic/Latino',
+                  ],
+                  onIndexChanged: _handleIndexChanged,
+                ),
+                const SizedBox(height: 20),
+                Expandable(
+                  title: 'gender',
+                  chooseText: 'I identify as...',
+                  options: [
+                    'Female',
+                    'Male',
+                    'Non-binary',
+                    'Gender Non-conforming',
+                    'Other',
+                  ],
+                  onIndexChanged: _handleIndexChanged,
+                ),
+                const SizedBox(height: 40),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      MaterialButton(
+                        minWidth: 150,
+                        height: 60,
+                        onPressed: () {
+                          _nextPage();
+                        },
+                        color: const Color(0xFFF3D433),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          "Next",
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+  _handleIndexChanged(int? p1) {
+  }
+}
+class Expandable extends StatefulWidget {
+  final String title;
+  final String chooseText;
+  final List<String> options;
+  final Function(int?)? onIndexChanged;
+
+  Expandable({
+    required this.title,
+    required this.chooseText,
+    required this.options,
+    this.onIndexChanged,
+  });
+
+  @override
+  _ExpandableState createState() => _ExpandableState();
+}
+
+class _ExpandableState extends State<Expandable> {
+  bool _isExpanded = false;
+  bool _expanded = false;
+  int _selectedIndex = -1;
+
+  void _handleIndexChanged(int? index) {
+    setState(() {
+      _selectedIndex = index ?? -1;
+      if (widget.onIndexChanged != null) {
+        widget.onIndexChanged!(_selectedIndex);
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: Scaffold(
-        body: Container(
-                  color: Color(0xFFF1F4F8),
-          padding: const EdgeInsets.all(20.0),
-          transformAlignment: Alignment.center,
-          child: Column(
-            children: [
-              const SizedBox(height: 200),
-            Align(
-      alignment: Alignment.center,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.0),
-        child: Text(
-          "Demographic Info",
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 30,
-            color: Color(0xFF0E0E0E),
-            fontFamily: 'Inter',
-            fontStyle: FontStyle.normal,
-            letterSpacing: 0,
-            height: 1.2,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 25.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _expanded = !_expanded;
+              });
+            },
+            child: Container(
+              height: 55,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                color: Color(0xFFF1F4F8),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15.0,
+                          color: Color(0xFF57636C),
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      _expanded ? Icons.expand_less : Icons.expand_more,
+                      size: 40,
+                      color: Color(0xFF57636C),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-    ),
-              const SizedBox(height: 50),
-
-
-   Container(
-  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: Colors.black,
-      width: 1.5,
-    ),
-    borderRadius: BorderRadius.circular(15.0),
-    color: Color(0xFFF1F4F8),
-  ),
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.end,
-    children: [
-      DropdownButtonFormField(
-        decoration: InputDecoration.collapsed(hintText: 'your age'),
-        value: _ageSelection,
-        icon: const Icon(Icons.keyboard_arrow_up),
-        isExpanded: true,
-        focusColor: Colors.transparent,
-        items: _ageList.map((String age) {
-          return DropdownMenuItem(
-            value: age,
-            child: Text(age),
-          );
-        }).toList(),
-        onChanged: (String? newValue) {
-          setState(() {
-            _ageSelection = newValue!;
-          });
-        },
-      ),
-    ],
-  ),
-),
-
-
-
-   Container(
-  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: Colors.black,
-      width: 1.5,
-    ),
-    borderRadius: BorderRadius.circular(15.0),
-    color: Color(0xFFF1F4F8),
-  ),
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.end,
-    children: [
-      DropdownButtonFormField(
-        decoration: InputDecoration.collapsed(hintText: 'race/ethnicity'),
-        value: _ethnicitySelection,
-        icon: const Icon(Icons.keyboard_arrow_up),
-        isExpanded: true,
-        focusColor: Colors.transparent,
-        items: _ethnicityList.map((String ethnicity) {
-          return DropdownMenuItem(
-            value: ethnicity,
-            child: Text(ethnicity),
-          );
-        }).toList(),
-        onChanged: (String? newValue) {
-          setState(() {
-            _ethnicitySelection = newValue!;
-          });
-        },
-      ),
-    ],
-  ),
-),
-
-              Container(
-  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: Colors.black,
-      width: 1.5,
-    ),
-    borderRadius: BorderRadius.circular(15.0),
-    color: Color(0xFFF1F4F8),
-  ),
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.end,
-    children: [
-      DropdownButtonFormField(
-        decoration: InputDecoration.collapsed(hintText: 'gender'),
-        value: _genderSelection,
-        icon: const Icon(Icons.keyboard_arrow_up),
-        isExpanded: true,
-        focusColor: Colors.transparent,
-        items: _genderList.map((String gender) {
-          return DropdownMenuItem(
-            value: gender,
-            child: Text(gender),
-          );
-        }).toList(),
-        onChanged: (String? newValue) {
-          setState(() {
-            _genderSelection = newValue!;
-          });
-        },
-      ),
-    ],
-  ),
-),
-
- 
-              
-        
-              const SizedBox(height: 30),
-        Padding(
-  padding: const EdgeInsets.fromLTRB(25.0, 0.0, 25.0, 0.0), 
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.end, 
-    children: [
-      MaterialButton(
-        minWidth: 150, 
-        height: 60,
-        onPressed: () {
-          _nextPage();
-        },
-        color: const Color(0xFFF3D433),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          "Next",
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
-            color: Colors.black,
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-            ],
-          ),
-        ),
+          if (_expanded) ...[
+            Column(
+              children: [
+                SizedBox(height: 20.0),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.chooseText,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15.0,
+                      color: Color(0xFF57636C),
+                    ),
+                  ),
+                ),
+                for (int i = 0; i < widget.options.length; i++)
+                  RadioListTile(
+                    dense: true,
+                    title: Text(
+                      widget.options[i],
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15.0,
+                        color: Color(0xFF57636C),
+                      ),
+                    ),
+                    value: i,
+                    groupValue: _selectedIndex,
+                    onChanged: _handleIndexChanged,
+                  ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }

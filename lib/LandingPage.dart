@@ -19,7 +19,7 @@ class _LandingPageState extends State<LandingPage> {
         child: Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 100),
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,7 +29,7 @@ class _LandingPageState extends State<LandingPage> {
     Container(
   width: 599,
   height: 212,
-  margin: EdgeInsets.only(left: 10, top: 30, right:10),
+  margin: EdgeInsets.only(left: 5, top: 30, right:5),
   decoration: BoxDecoration(
     image: DecorationImage(
       image: AssetImage("assets/Pogo_logo_horizontal.png"),
@@ -37,9 +37,7 @@ class _LandingPageState extends State<LandingPage> {
     ),
   ),
 ),
-    SizedBox(
-      height: 10,
-    ),
+   
     Align(
             alignment: Alignment.centerLeft,
 
@@ -76,6 +74,8 @@ class _LandingPageState extends State<LandingPage> {
     ),
   ],
 ),
+    SizedBox(height: 40),
+
               Column(
   children: <Widget>[
     // the login button
