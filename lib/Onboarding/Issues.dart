@@ -7,18 +7,21 @@ import '../dynamoModels/UserDemographics.dart';
 import '../awsFunctions.dart';
 import '../dynamoModels/UserIssueFactorValues.dart';
 import 'VoterInfo.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class Issues extends StatefulWidget {
   final UserIssueFactorValues ratings;
   final UserDemographics answers;
+  final int issuesIndex;
   late final Widget nextPage = HomeLoadingPage(
     user: answers,
   );
   late final Widget lastPage = VoterInfo(
     ratings: ratings,
     answers: answers,
+    issuesIndex: issuesIndex,
   );
-  Issues({Key? key, required this.ratings, required this.answers})
+  Issues({Key? key, required this.ratings, required this.answers, required this.issuesIndex})
       : super(key: key);
 
   @override
@@ -26,7 +29,14 @@ class Issues extends StatefulWidget {
 }
 
 class _IssuesState extends State<Issues> {
+  //TODO: fix text align/size in card
+
+
+  FixedExtentScrollController _extentScrollController = FixedExtentScrollController();
+
+
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
+  late int _issueIndex;
   final List<String> _issuesLogo = [
     'assets/gunPolicyPogo.jpeg',
     'assets/climatePogo.jpg',
@@ -55,6 +65,8 @@ class _IssuesState extends State<Issues> {
   final int _backgroundColor = 0xFFE1E1E1;
   double _alignRating = 0;
   double _valueRating = 0;
+  late double _backOpacity;
+  late double _forwardOpacity;
   final Color _ratingBarColor = Colors.black;
   final List<String> _leftAlignText = [
     'Gun Control',
@@ -65,7 +77,7 @@ class _IssuesState extends State<Issues> {
     'Affordable Housing',
     'Market Regulation',
     'Inclusive',
-    'Divestment and Reallocation',
+    'Divestment\nReallocation',
     'Abortion + \nContraceptive Rights'
   ];
   final List<String> _rightAlignText = [
@@ -74,24 +86,35 @@ class _IssuesState extends State<Issues> {
     'School Choice',
     'Criminalization',
     'Private',
-    'Market Rate Housing',
-    'Market Deregulation',
+    'Market Rat\nHousing',
+    'Market\nDeregulation',
     'Exclusive',
     'Investment',
     'Abortion + \nContraceptive Restrictions'
   ];
-  int _issueIndex = 0;
-  String _buttonText = 'Next';
 
   @override
   void initState() {
     super.initState();
+    _issueIndex = widget.issuesIndex;
     _alignRating = widget.ratings.gunPolicyScore.toDouble();
     _valueRating = widget.ratings.gunPolicyWeight.toDouble();
-    if (_alignRating > 0 && _valueRating > 0) {
+    //check if any values are 0 (0 means user never completed survey yet) if not make button yellow
+    List<num> scores = [widget.ratings.gunPolicyScore, widget.ratings.policingScore, widget.ratings.reproductiveScore, widget.ratings.climateScore, widget.ratings.educationScore, widget.ratings.drugPolicyScore, widget.ratings.immigrationScore, widget.ratings.economyScore, widget.ratings.healthcareScore, widget.ratings.housingScore];
+    if (!scores.contains(0)) {
       _nextButtonColor = 0xFFF3D433;
-    } else {
-      _nextButtonColor = 0xFF808080;
+    }
+    if(_issueIndex > 0 && _issueIndex < 9) {
+      _backOpacity = 1;
+      _forwardOpacity = 1;
+    }
+    else if(_issueIndex == 0) {
+      _backOpacity = 0;
+      _forwardOpacity = 1;
+    }
+    else {
+      _forwardOpacity = 0;
+      _backOpacity = 1;
     }
   }
 
@@ -215,236 +238,313 @@ class _IssuesState extends State<Issues> {
   }
 
   void _updateButton() {
-    if (_alignRating > 0 && _valueRating > 0) {
+    if (widget.ratings.reproductiveScore != 0 || _issueIndex == 9) {
       _nextButtonColor = 0xFFF3D433;
-    } else {
-      _nextButtonColor = 0xFF808080;
+    }
+    if(_issueIndex > 0 && _issueIndex < 9) {
+      _backOpacity = 1;
+      _forwardOpacity = 1;
+    }
+    else if(_issueIndex == 0) {
+      _backOpacity = 0;
+    }
+    else {
+      _forwardOpacity = 0;
     }
     setState(() {});
   }
 
-  void _checkRatings(context) async {
-    if (_alignRating > 0 && _valueRating > 0) {
-      if (_issueIndex == _issuesLogo.length - 1) {
-        //finished survey
-        widget.answers.surveyCompletion = true;
-        try {
-          await Future.wait([
-            putUserDemographics(widget.answers),
-            putUserIssueFactorValues(widget.ratings),
-          ]).then((List<dynamic> values) {
-            safePrint("UserDemographics and UserIssueFactorValues updated");
-          });
-        } catch (e) {
-          safePrint("Issues.dart: $e");
-        }
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeLoadingPage(user: widget.answers),
-          ),
-        );
-      } else {
-        //load next issue
-        if (_issueIndex == _issuesLogo.length - 2) {
-          _buttonText = 'Submit';
-        }
+  void _checkRatings(context, String backOrForward) async {
+    //THIS IS CALLED WHEN NEXT ARROW ICON IS CLICKED
+    if (_alignRating == 0) {
+      _updateAlignRating(1);
+    }
+    if (_valueRating == 0) {
+      _updateValueRating(1);
+    }
+    if(backOrForward == "back") {
+      if(_issueIndex != 0) {
+        _issueIndex--;
+        _setRatings();
+        _updateButton();
+      }
+    }
+    else {
+      if(_issueIndex != 9) {
         _issueIndex++;
         _setRatings();
         _updateButton();
       }
     }
+    if(_issueIndex == 9) {
+      widget.ratings.reproductiveScore = 1;
+      widget.ratings.reproductiveWeight = 1;
+    }
   }
 
-  void _goBack() async {
-    if (_issueIndex > 0) {
-      //load previous issue
-      if (_issueIndex == _issuesLogo.length - 1) {
-        _buttonText = 'Next';
+  void _endSurvey(context) async {
+    if(widget.ratings.reproductiveScore != 0) {
+      widget.answers.surveyCompletion = true;
+      try {
+        await Future.wait([
+          putUserDemographics(widget.answers),
+          putUserIssueFactorValues(widget.ratings),
+        ]).then((List<dynamic> values) {
+          safePrint("UserDemographics and UserIssueFactorValues updated");
+        });
+      } catch (e) {
+        safePrint("Issues.dart: $e");
       }
-      _issueIndex--;
-      _setRatings();
-      _updateButton();
-    } else {
-      //go to voter info page
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => widget.lastPage,
+          builder: (context) => HomeLoadingPage(user: widget.answers),
         ),
       );
     }
   }
 
+  void _goBack() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VoterInfo(
+          ratings: widget.ratings,
+          answers: widget.answers,
+          issuesIndex: _issueIndex,
+        ),
+      ),
+    );
+  }
+
+  double setInitialAlignScaleValue() {
+    if(_alignRating == 0) {
+      return 1;
+    }
+    return _alignRating;
+  }
+
+  double setInitialCareScaleValue() {
+    if(_valueRating == 0) {
+      return 1;
+    }
+    return _valueRating;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(_backgroundColor),
+      backgroundColor: const Color(0xFFE5E5E5),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => _goBack(),
+        ),
+        centerTitle: true,
+        title: Image(
+          image: AssetImage(_pogoLogo),
+          width: 150,
+        ),
+      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: Colors.grey,
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(15, 5, 15, 20),
+              child: SizedBox(
+                child: AutoSizeText(
+                  'Choose where you stand and how concerned you are with popular issues',
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 30,
+                    color: Color(0xFF0E0E0E),
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                //last card button
+                GestureDetector(
+                  onTap: () {
+                    _checkRatings(context, "back");
+                  },
+                  child: Opacity(
+                    opacity: _backOpacity,
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
                     ),
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () async {
-                        _goBack();
-                      },
-                      child: const Icon(
-                        Icons.arrow_back,
-                      ),
+                //issue card
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.65,
+                  width: MediaQuery.of(context).size.width * 0.65,
+                  child: Card(
+                    color: const Color(0xFFD9D9D9),
+                    elevation: 10,
+                    clipBehavior: Clip.hardEdge,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: Image(
-                          image: AssetImage(
-                            _pogoLogo,
+                    child: Column(
+                      children: [
+                        //issue pic
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+                          child: Container(
+                            clipBehavior: Clip.hardEdge,
+                            height: MediaQuery.of(context).size.height * 0.60 / 3,
+                            width: MediaQuery.of(context).size.width * 0.65,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade600,
+                                  spreadRadius: 3,
+                                  blurRadius: 7,
+                                  offset: const Offset(3, 3),
+                                ),
+                              ],
+                            ),
+                            child: Image(
+                              image: AssetImage(
+                                _issuesLogo[_issueIndex],
+                              ),
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Card(
-                margin: const EdgeInsets.fromLTRB(50, 50, 50, 0),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      height: 210,
-                      width: 300,
-                      child: Image(
-                        image: AssetImage(
-                          _issuesLogo[_issueIndex],
+                        //name of issue
+                        AutoSizeText(
+                          _issuesText[_issueIndex],
+                          maxLines: 1,
+                          style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 30,
+                            color: Color(0xFF0E0E0E),
+                          ),
                         ),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Text(
-                      _issuesText[_issueIndex],
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30),
-              //Align
-              const Text(
-                'How do you align?',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 10),
-              RatingBar(
-                initialRating: _alignRating,
-                itemCount: 5,
-                direction: Axis.horizontal,
-                allowHalfRating: false,
-                ratingWidget: RatingWidget(
-                  full: Icon(
-                    Icons.square,
-                    color: _ratingBarColor,
-                  ),
-                  empty: Icon(
-                    Icons.square_outlined,
-                    color: _ratingBarColor,
-                  ),
-                  half: Icon(
-                    Icons.square_foot,
-                    color: _ratingBarColor,
-                  ),
-                ),
-                onRatingUpdate: (rating) {
-                  _updateAlignRating(rating);
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    _leftAlignText[_issueIndex],
-                    style: const TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                  Text(_rightAlignText[_issueIndex],
-                      style: const TextStyle(
-                        fontSize: 15,
-                      )),
-                ],
-              ),
-              //Value
-              const SizedBox(height: 30),
-              const Text(
-                'How much do you care?',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 10),
-              RatingBar(
-                initialRating: _valueRating,
-                itemCount: 5,
-                direction: Axis.horizontal,
-                allowHalfRating: false,
-                ratingWidget: RatingWidget(
-                  full: Icon(
-                    Icons.square,
-                    color: _ratingBarColor,
-                  ),
-                  empty: Icon(
-                    Icons.square_outlined,
-                    color: _ratingBarColor,
-                  ),
-                  half: Icon(
-                    Icons.square_foot,
-                    color: _ratingBarColor,
-                  ),
-                ),
-                onRatingUpdate: (rating) {
-                  _updateValueRating(rating);
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  Text(
-                    'A little',
-                    style: TextStyle(
-                      fontSize: 15,
+                        //where do you align
+                        const Text(
+                          'Where do you align?',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: Color(0xFF57636C),
+                          ),
+                        ),
+                        //align slider
+                        Slider(
+                          divisions: 4,
+                          thumbColor: const Color(0xFFF3D433),
+                          activeColor: const Color(0xFF0E0E0E),
+                          inactiveColor: const Color(0xFF0E0E0E),
+                          min: 1,
+                          max: 5,
+                          value: setInitialAlignScaleValue(),
+                          onChangeEnd: (double value) {
+                            _updateAlignRating(value);
+                          },
+                          onChanged: (double value) { },
+                        ),
+                        //align slider text
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Row(
+                            children: [
+                              Text(
+                                _leftAlignText[_issueIndex],
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(_rightAlignText[_issueIndex],
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        //how much do you care
+                        const Text(
+                          'How much do you care?',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: Color(0xFF57636C),
+                          ),
+                        ),
+                        //care slider
+                        Slider(
+                          divisions: 4,
+                          thumbColor: const Color(0xFFF3D433),
+                          activeColor: const Color(0xFF0E0E0E),
+                          inactiveColor: const Color(0xFF0E0E0E),
+                          min: 1,
+                          max: 5,
+                          value: setInitialCareScaleValue(),
+                          onChangeEnd: (double value) {
+                            _updateValueRating(value);
+                          },
+                          onChanged: (double value) { },
+                        ),
+                        //care slider text
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Row(
+                            children: const [
+                              Text(
+                                'Very Little',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                  'Extremely',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Text('A lot',
-                      style: TextStyle(
-                        fontSize: 15,
-                      )),
-                ],
-              ),
-              //Next question button
-              const SizedBox(height: 10),
-              GestureDetector(
+                ),
+                //next card button
+                GestureDetector(
+                  onTap: () {
+                    _checkRatings(context, "");
+                  },
+                  child: Opacity(
+                    opacity: _forwardOpacity,
+                    child: const Icon(
+                      Icons.arrow_forward_ios,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            //Next question button
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 5, 20),
+              child: GestureDetector(
                 onTap: () async {
-                  _checkRatings(context);
+                  _endSurvey(context);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(10),
@@ -452,8 +552,8 @@ class _IssuesState extends State<Issues> {
                     color: Color(_nextButtonColor),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(
-                    _buttonText,
+                  child: const Text(
+                    'PoGo',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 20,
@@ -461,8 +561,8 @@ class _IssuesState extends State<Issues> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

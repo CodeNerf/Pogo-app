@@ -8,8 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 
 class VoterGuide extends StatefulWidget {
-  UserDemographics currentUserDemographics;
-  VoterGuide({Key? key, required this.currentUserDemographics}) : super(key: key);
+  UserDemographics user;
+  VoterGuide({Key? key, required this.user}) : super(key: key);
   @override
   State<VoterGuide> createState() => _VoterGuideState();
 }
@@ -17,10 +17,16 @@ class VoterGuide extends StatefulWidget {
 class _VoterGuideState extends State<VoterGuide> {
   List<bool> _isChecked = [false, false, false, false];
   late List<PollingLocation> _pollingLocations;
-  
+  late String stateInitial;
+
   @override
   void initState() {
     super.initState();
+    List<String> addressParts = widget.user.addressLine1.split(',');
+    if (addressParts.length > 1) {
+      String stateZip = addressParts[addressParts.length - 1].trim();
+      stateInitial = stateZip.split(' ')[0];
+    }
     _getPollingLocations();
   }
 
@@ -40,11 +46,6 @@ class _VoterGuideState extends State<VoterGuide> {
 //nypepawy@mailo.icu
 @override
 Widget build(BuildContext context) {
-  List<String> addressParts = widget.currentUserDemographics.addressLine1.split(',');
-  if (addressParts.length > 1) {
-    String stateZip = addressParts[addressParts.length - 1].trim();
-    stateInitial = stateZip.split(' ')[0];
-  }
   return Scaffold(
     body: Container(
       padding: const EdgeInsets.only(top: 20.0),
@@ -71,7 +72,7 @@ Widget build(BuildContext context) {
                 top: 20.0,
                 left: 20.0,
                 child: Text(
-                  '${widget.currentUserDemographics.firstName} ${widget.currentUserDemographics.lastName}',
+                  '${widget.user.firstName} ${widget.user.lastName}',
                   style: TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,

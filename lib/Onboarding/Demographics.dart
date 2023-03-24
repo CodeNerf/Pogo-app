@@ -6,7 +6,8 @@ import '../dynamoModels/UserIssueFactorValues.dart';
 class Demographics extends StatefulWidget {
   final UserIssueFactorValues ratings;
   final UserDemographics answers;
-  const Demographics({Key? key, required this.ratings, required this.answers})
+  final int issuesIndex;
+  const Demographics({Key? key, required this.ratings, required this.answers, required this.issuesIndex})
       : super(key: key);
 
   @override
@@ -58,7 +59,6 @@ class _DemographicsState extends State<Demographics> {
   void _nextPage() async {
     widget.answers.racialIdentity = _ethnicitySelection;
     widget.answers.gender = _genderSelection;
-    //TODO: the age dropdown needs to be turned into a date picker for bday
     //widget.answers.dateOfBirth = dateOfBirthStringHere;
     Navigator.push(
         context,
@@ -66,6 +66,7 @@ class _DemographicsState extends State<Demographics> {
             builder: (context) => VoterInfo(
                   ratings: widget.ratings,
                   answers: widget.answers,
+                  issuesIndex: widget.issuesIndex,
                 )));
   }
 

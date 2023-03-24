@@ -54,8 +54,6 @@ class SurveyLandingPage extends StatefulWidget {
 }
 
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
-  late UserIssueFactorValues _currentUserFactors;
-  late UserDemographics _currentAnswers;
   bool _buttonVisible = false;
   @override
   void initState() {
@@ -145,6 +143,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                                 builder: (context) => Demographics(
                                       ratings: widget.ratings,
                                       answers: widget.answers,
+                                      issuesIndex: 0,
                                     )));
                       },
                       color: const Color.fromARGB(255, 0, 0, 0),
