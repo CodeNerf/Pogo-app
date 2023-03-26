@@ -9,7 +9,7 @@ import 'dynamoModels/UserIssueFactorValues.dart';
 
 class VoterGuide extends StatefulWidget {
   UserDemographics currentUserDemographics;
-  VoterGuide({Key? key, required this.currentUserDemographics}) : super(key: key);
+  VoterGuide({Key? key, required this.currentUserDemographics, required UserDemographics user}) : super(key: key);
   @override
   State<VoterGuide> createState() => _VoterGuideState();
 }
@@ -17,20 +17,25 @@ class VoterGuide extends StatefulWidget {
 class _VoterGuideState extends State<VoterGuide> {
   List<bool> _isChecked = [false, false, false, false];
   late List<PollingLocation> _pollingLocations;
-  
+  late String stateInitial;
   @override
   void initState() {
     super.initState();
-    _getPollingLocations();
+    // _getPollingLocations();
+    List<String> addressParts = widget.currentUserDemographics.addressLine1.split(',');
+  if (addressParts.length > 1) {
+    String stateZip = addressParts[addressParts.length - 1].trim();
+    stateInitial = stateZip.split(' ')[0];
+  }
   }
 
-  void _getPollingLocations() async {
-    try {
-      _pollingLocations = await getPollingLocation(widget.user.addressLine1);
-    } catch (e) {
-      safePrint("Error occurred in _getPollingLocations(): $e");
-    }
-  }
+  // void _getPollingLocations() async {
+  //   try {
+  //     _pollingLocations = await getPollingLocation(widget.user.addressLine1);
+  //   } catch (e) {
+  //     safePrint("Error occurred in _getPollingLocations(): $e");
+  //   }
+  // }
   
   void _toggleChecked(int index) {
     setState(() {
@@ -40,144 +45,151 @@ class _VoterGuideState extends State<VoterGuide> {
 //nypepawy@mailo.icu
 @override
 Widget build(BuildContext context) {
-  List<String> addressParts = widget.currentUserDemographics.addressLine1.split(',');
-  if (addressParts.length > 1) {
-    String stateZip = addressParts[addressParts.length - 1].trim();
-    stateInitial = stateZip.split(' ')[0];
-  }
+  
   return Scaffold(
+    backgroundColor: Color(0xFFF1F4F8),
     body: Container(
       padding: const EdgeInsets.only(top: 20.0),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            const SizedBox(height: 30.0),
-            const Text(
-              'Voter Guide',
-              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16.0),
             new Stack(children: <Widget>[
               new Column(
                 children: <Widget>[
                   new Container(
                     padding: const EdgeInsets.only(top: 50),
-                    height: MediaQuery.of(context).size.height * .20,
+                    height: MediaQuery.of(context).size.height * .15,
                     color: const Color(0xFFF3D433),
                   ),
                 ],
               ),
               Positioned(
-                top: 20.0,
-                left: 20.0,
-                child: Text(
-                  '${widget.currentUserDemographics.firstName} ${widget.currentUserDemographics.lastName}',
-                  style: TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
+                top: 40.0,
+                left: 30.0,
+               child: Text(
+  '${widget.currentUserDemographics.firstName} ${widget.currentUserDemographics.lastName}',
+  style: TextStyle(
+    fontSize: 22.0,
+    fontWeight: FontWeight.w600, 
+    fontFamily: 'Inter', 
+  ),
+),
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+    
                   Container(
-                    width: 190,
-                    height: 300.0,
-                    margin: const EdgeInsets.only(left: 8.0),
-                    padding: const EdgeInsets.only(top: 60),
-                    child: Card(
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'REGISTERED IN',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(
-                            stateInitial,
-                            style: TextStyle(
-                              fontSize: 40.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            '',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+
+  width: 180,
+  height: 320.0,
+  margin: const EdgeInsets.only(left: 20.0),
+  padding: const EdgeInsets.only(top: 80),
+  child: Card(
+    elevation: 3,
+    shadowColor: Colors.transparent, 
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'REGISTERED',
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.w600, 
+            fontFamily: 'Inter',                              
+            color: Color(0xFF57636C),
+          ),
+        ),
+        Text(
+          stateInitial,
+          style: TextStyle(
+            fontSize: 50.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Inter',        
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          'Since 2015',
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.w600, 
+            fontFamily: 'Inter',        
+            color: Colors.black,
+          ),
+        ),
+      ],
+    ),
+  ),
+),
                   Container(
-                    width: 190.0,
-                    height: 300.0,
-                    margin: const EdgeInsets.only(right: 8.0),
-                    padding: const EdgeInsets.only(top: 60),
-                    child: Card(
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const <Widget>[
-                          Text(
-                            'POLLING LOCATION',
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey),
-                          ),
-                          Text(
-                            '',
-                            style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                          Text(
-                            'No Location Assigned',
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black),
-                          ),
-                          Text(
-                            'Check back later',
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+  width: 180.0,
+  height: 320.0,
+  margin: const EdgeInsets.only(right: 15, left: 15),
+  padding: const EdgeInsets.only(top: 80),
+  child: Card(
+    elevation: 3,
+    shadowColor: Colors.transparent, 
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
+   child: Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: const <Widget>[
+      Text(
+        'POLLING LOCATION',
+        style: TextStyle(
+            fontSize: 15.0,
+             fontWeight: FontWeight.w600, 
+          fontFamily: 'Inter',                              
+          color: Color(0xFF57636C),
+        ),
+      ),
+      Text(
+        '',
+        style: TextStyle(
+          fontSize: 15.0,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
+      Text(
+        'No Location Assigned',
+        style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.w600, 
+            fontFamily: 'Inter', 
+            color: Colors.black,
+            decoration: TextDecoration.underline,
+        ),
+      ),
+      Text(
+        'Check back later',
+        style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.w600, 
+            fontFamily: 'Inter', 
+            color: Colors.black,
+            decoration: TextDecoration.underline,
+        ),
+      ),
+      Text(''),
+      Text('')
+    ],
+  ),
+)
+  ),
+),
                 ],
               ),
-              const SizedBox(height: 50.0), // Adds white space below cards
+              const SizedBox(height: 50.0), 
             ]),
-            const SizedBox(height: 16.0),
-            const Text(
-              'CHECKLIST',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10.0),
+            
+            const SizedBox(height: 30.0),
             InkWell(
   onTap: () {
      String url = '';
@@ -336,134 +348,274 @@ Widget build(BuildContext context) {
     launchUrl(Uri.parse(url));
   },
   child: Text(
-    'Request an absentee ballot in $stateInitial?',
+    'Request an absentee ballot?',
     style: TextStyle(
-        decoration: TextDecoration.underline, color: Colors.grey),
+        decoration: TextDecoration.underline, color: Color(0xFF57636C)),
   ),
 ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 30.0),
+
+             const Text(
+              'CHECKLIST',
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 33.0, fontWeight: FontWeight.bold),
+            ),
+ const SizedBox(height: 30.0),
             Column(
               children: [
-                Card(
-                  elevation: 3,
-                  margin: EdgeInsets.only(right: 15.0, left: 15),
-                  child: CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    title: const Text(
-                      'Who is on your ballot?',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    value: _isChecked[0],
-                    onChanged: (value) => _toggleChecked(0),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('4 Positions',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            )),
-                        Divider(color: Colors.grey),
-                        Text('',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            )),
-                        const SizedBox(height: 10.0),
-                      ],
-                    ),
-                  ),
+Card(
+  elevation: 3,
+  margin: EdgeInsets.only(right: 20.0, left: 20),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20.0),
+  ),
+  shadowColor: Colors.black.withOpacity(0.95),
+  child: Column(
+    children: [
+      Row(
+        children: [
+          Expanded(
+            child: CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
+              title: const Text(
+                'Who is on your ballot?',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
+              ),
+              value: _isChecked[0],
+              onChanged: (value) => _toggleChecked(0),
+            ),
+          ),
+        ],
+      ),
+      Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Padding(
+      padding: EdgeInsets.only(right: 25.0, left: 25.0, bottom: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '10 Positions',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          Text(
+            'Latest Activity Mon, 24, 10:30pm',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
+          const SizedBox(height: 15.0),
+        ],
+      ),
+    ),
+  ],
+),
+    ],
+  ),
+),
+
+                const SizedBox(height: 30.0),
                 Card(
-                  elevation: 3,
-                  margin: EdgeInsets.only(right: 15.0, left: 15),
-                  child: CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    title: const Text(
-                      'Personaize your ballot',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('3 Easy Steps',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            )),
-                        Divider(color: Colors.grey),
-                        Text('',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            )),
-                        const SizedBox(height: 10.0),
-                      ],
-                    ),
-                    value: _isChecked[1],
-                    onChanged: (value) => _toggleChecked(1),
-                  ),
+  elevation: 3,
+  margin: EdgeInsets.only(right: 20.0, left: 20),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20.0),
+  ),
+  shadowColor: Colors.black.withOpacity(0.95),
+  child: Column(
+    children: [
+      Row(
+        children: [
+          Expanded(
+            child: CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
+              title: const Text(
+                'Personalize your Ballot.',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
+              ),
+              value: _isChecked[0],
+              onChanged: (value) => _toggleChecked(0),
+            ),
+          ),
+        ],
+      ),
+      Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Padding(
+      padding: EdgeInsets.only(right: 25.0, left: 25.0, bottom: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Start Swiping!',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          Text(
+            'Latest Activity Mon, 24, 10:30pm',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
+          const SizedBox(height: 15.0),
+        ],
+      ),
+    ),
+  ],
+),
+    ],
+  ),
+),
+                const SizedBox(height: 30.0),
                 Card(
-                  elevation: 3,
-                  margin: EdgeInsets.only(right: 15.0, left: 15),
-                  child: CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    title: const Text(
-                      'Set a reminder',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('2 Quick Steps',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            )),
-                        Divider(color: Colors.grey),
-                        Text('',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            )),
-                        const SizedBox(height: 10.0),
-                      ],
-                    ),
-                    value: _isChecked[2],
-                    onChanged: (value) => _toggleChecked(2),
-                  ),
+  elevation: 3,
+  margin: EdgeInsets.only(right: 20.0, left: 20),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20.0),
+  ),
+  shadowColor: Colors.black.withOpacity(0.95),
+  child: Column(
+    children: [
+      Row(
+        children: [
+          Expanded(
+            child: CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
+              title: const Text(
+                'Set a reminder.',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
+              ),
+              value: _isChecked[0],
+              onChanged: (value) => _toggleChecked(0),
+            ),
+          ),
+        ],
+      ),
+      Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Padding(
+      padding: EdgeInsets.only(right: 25.0, left: 25.0, bottom: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '2 easy steps',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          Text(
+            'Latest Activity Mon, 24, 10:30pm',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
+          const SizedBox(height: 15.0),
+        ],
+      ),
+    ),
+  ],
+),
+    ],
+  ),
+),
+                const SizedBox(height: 30.0),
                 Card(
-                  elevation: 3,
-                  margin: EdgeInsets.only(right: 15.0, left: 15),
-                  child: CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    title: const Text(
-                      'Share your Ballot & VOTE!',
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Vote Informed',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            )),
-                        Divider(color: Colors.grey),
-                        Text('',
-                            style: TextStyle(
-                              fontSize: 12.0,
-                            )),
-                        const SizedBox(height: 10.0),
-                      ],
-                    ),
-                    value: _isChecked[3],
-                    onChanged: (value) => _toggleChecked(3),
-                  ),
+  elevation: 3,
+  margin: EdgeInsets.only(right: 20.0, left: 20),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(20.0),
+  ),
+  shadowColor: Colors.black.withOpacity(0.95),
+  child: Column(
+    children: [
+      Row(
+        children: [
+          Expanded(
+            child: CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
+              title: const Text(
+                'Share your Ballot and VOTE!',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
+              ),
+              value: _isChecked[0],
+              onChanged: (value) => _toggleChecked(0),
+            ),
+          ),
+        ],
+      ),
+      Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Padding(
+      padding: EdgeInsets.only(right: 25.0, left: 25.0, bottom: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Vote Informed',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          Text(
+            'Latest Activity Mon, 24, 10:30pm',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
+          const SizedBox(height: 15.0),
+        ],
+      ),
+    ),
+  ],
+),
+    ],
+  ),
+),
+                const SizedBox(height: 30.0),
               ],
             )
           ],
