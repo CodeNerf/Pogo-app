@@ -433,13 +433,17 @@ class _IssuesState extends State<Issues> {
                           ),
                         ),
                         //where do you align
-                        const Text(
-                          'Where do you align?',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: Color(0xFF57636C),
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                          child: AutoSizeText(
+                            'Where do you align?',
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                              color: Color(0xFF57636C),
+                            ),
                           ),
                         ),
                         //align slider
@@ -476,13 +480,17 @@ class _IssuesState extends State<Issues> {
                           ),
                         ),
                         //how much do you care
-                        const Text(
-                          'How much do you care?',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: Color(0xFF57636C),
+                        const Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                          child: AutoSizeText(
+                            'How much do you care?',
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                              color: Color(0xFF57636C),
+                            ),
                           ),
                         ),
                         //care slider
@@ -542,21 +550,41 @@ class _IssuesState extends State<Issues> {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 5, 20),
-              child: GestureDetector(
-                onTap: () async {
-                  _endSurvey(context);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Color(_nextButtonColor),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Text(
-                    'PoGo',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2,
+                height: 75,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3D433),
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade600,
+                      spreadRadius: 3,
+                      blurRadius: 7,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(25),
+                    onTap: () {
+                      _endSurvey(context);
+                    },
+                    child: const Center(
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          'PoGo',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF0E0E0E),
+                            fontSize: 35,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
