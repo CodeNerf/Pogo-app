@@ -35,17 +35,11 @@ Future<AuthUser> getCurrentUser() async {
   return user;
 }
 
-Future<bool> signUpUser(String email, String password, String fname,
-    String lname, String phoneNumber, String address) async {
+Future<bool> signUpUser(String email, String password, String fname) async {
   //bool isSignUpComplete = false; //Flag used to route away from signup, possibly better as return value
   try {
-    String phone = '+1$phoneNumber';
     final userAttributes = <CognitoUserAttributeKey, String>{
       CognitoUserAttributeKey.givenName: fname,
-      CognitoUserAttributeKey.familyName: lname,
-      CognitoUserAttributeKey.phoneNumber: phone,
-      CognitoUserAttributeKey.address: address,
-      const CognitoUserAttributeKey.custom('survey'): '0',
     };
     final result = await Amplify.Auth.signUp(
       username: email,

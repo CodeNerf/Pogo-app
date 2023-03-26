@@ -74,11 +74,6 @@ class _RegisterPageState extends State<RegisterPage> {
         _errorText = 'Must enter your first name.';
         _errorSizeBoxSize = 10;
       });
-    } else if (_lnameController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter your last name.';
-        _errorSizeBoxSize = 10;
-      });
     } else if (_emailController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter your email.';
@@ -94,47 +89,11 @@ class _RegisterPageState extends State<RegisterPage> {
         _errorText = 'Must enter a password.';
         _errorSizeBoxSize = 10;
       });
-    } else if (_confirmPasswordController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must confirm your password.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_passwordController.text
-            .compareTo(_confirmPasswordController.text) !=
-        0) {
-      setState(() {
-        _errorText = 'Passwords do not match.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_phoneController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter your phone number.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (!isNumeric(_phoneController.text)) {
-      //print(passwordController.text.length);
-      setState(() {
-        _errorText = 'Invalid phone number.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_phoneController.text.length != 10) {
-      setState(() {
-        _errorText = 'Invalid phone number length.';
-        _errorSizeBoxSize = 10;
-      });
-    } else if (_addressController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Must enter your address.';
-        _errorSizeBoxSize = 10;
-      });
     } else if (await signUpUser(
         _emailController.text,
         _passwordController.text,
-        _fnameController.text,
-        _lnameController.text,
-        _phoneController.text,
-        _addressController.text)) {
-      UserDemographics userDemographics = UserDemographics(userId: _emailController.text, phoneNumber: _phoneController.text, registrationState: '', addressLine1: _addressController.text, pollingLocation: '', voterRegistrationStatus: false, firstName: _fnameController.text, lastName: _lnameController.text, dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '', surveyCompletion: false);
+        _fnameController.text)) {
+      UserDemographics userDemographics = UserDemographics(userId: _emailController.text, phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: _fnameController.text, lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '', surveyCompletion: false);
       putUserDemographics(userDemographics);
       putUserBallot(_emailController.text, [], [], []);
       //TODO: create blank ballot then push to db
@@ -220,12 +179,10 @@ class _RegisterPageState extends State<RegisterPage> {
   void dispose() {
     // Clean up the controllers when the widget is removed from the widget tree.
     _fnameController.dispose();
-    _lnameController.dispose();
     _emailController.dispose();
+    _emailSignInController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    _phoneController.dispose();
-    _addressController.dispose();
+    _passwordSignInController.dispose();
     super.dispose();
   }
 
@@ -609,7 +566,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: _fnameController,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'your name',
+                  hintText: 'your first name',
                 ),
               ),
             ),
