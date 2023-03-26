@@ -97,7 +97,7 @@ class _LandingPageState extends State<LandingPage> {
         height: 60,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => LoginPage()));
+              MaterialPageRoute(builder: (context) => RegisterPage(index: 1,)));
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)),

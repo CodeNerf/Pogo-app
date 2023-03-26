@@ -11,7 +11,8 @@ import 'dynamoModels/UserDemographics.dart';
 //import 'SignUpAddress.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  final int index;
+  const RegisterPage({Key? key, required this.index}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -53,6 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
         signin(),
       ];
     });
+    _selectedIndex = widget.index;
   }
 
   // Regular expression for validating US addresses
@@ -253,6 +255,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget signin() {
     return Column(
       children: [
+        //sign up / sign in
         Padding(
           padding: const EdgeInsets.only(top: 10.0),
           child: Row(
@@ -296,28 +299,31 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           ),
         ),
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal:30.0),
-            child: Text(
-              "Sign in to continue your search",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF57636C),
-                fontSize: 18,
-                fontFamily: 'Inter',
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w500,
-                height: 1.2,
+        //sign in to continue your search
+        const Padding(
+          padding: EdgeInsets.only(top: 30.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal:30.0),
+              child: Text(
+                "Sign in to continue your search",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF57636C),
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 40),
         //EMAIL
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
@@ -337,10 +343,9 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        const SizedBox(height: 20),
         //password
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          padding: const EdgeInsets.fromLTRB(25, 20, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
@@ -378,10 +383,9 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        const SizedBox(height: 40),
         //login button
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
           child: InkWell(
             onTap: () async {
               _signIn(context);
@@ -398,128 +402,123 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ],
               ),
-              child: MaterialButton(
-                minWidth: double.infinity,
-                height: 60,
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const RegisterPage()));
-                },
-                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: const Text(
-                  "Login",
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                    color: Colors.black,
-                  ),
+              child: const Text(
+                "Login",
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: Colors.black,
                 ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 15),
-        const SizedBox(height: 40),
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal:30.0),
-            child: Text(
-              "Or Continue with:",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF57636C),
-                fontSize: 18,
-                fontFamily: 'Inter',
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w500,
-                height: 1.2,
+        //or continue with
+        const Padding(
+          padding: EdgeInsets.only(top: 55),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal:30.0),
+              child: Text(
+                "Or Continue with:",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF57636C),
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
+        //social media icons
+        Padding(
+          padding: EdgeInsets.only(top: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/google.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-              child: IconButton(
-                icon: Image.asset('assets/google.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
+              const SizedBox(width: 20),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/facebook.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-            ),
-            SizedBox(width: 20),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
+              const SizedBox(width: 20),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/twitter.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-              child: IconButton(
-                icon: Image.asset('assets/facebook.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
+              const SizedBox(width: 20),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/instagram.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-            ),
-            SizedBox(width: 20),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
+              const SizedBox(width: 20),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/tiktok.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-              child: IconButton(
-                icon: Image.asset('assets/twitter.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
-              ),
-            ),
-            SizedBox(width: 20),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
-              ),
-              child: IconButton(
-                icon: Image.asset('assets/instagram.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
-              ),
-            ),
-            SizedBox(width: 20),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
-              ),
-              child: IconButton(
-                icon: Image.asset('assets/tiktok.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         )
       ],
     );
@@ -528,6 +527,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget signup() {
     return Column(
       children: [
+        // sign up / sign in
         Padding(
           padding: const EdgeInsets.only(top: 10.0),
           child: Row(
@@ -571,43 +571,43 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           ),
         ),
-        const SizedBox(
-          height: 20,
-        ),
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal:30.0),
-            child: Text(
-              "Get started. Make an account today!",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF57636C),
-                fontSize: 18,
-                fontFamily: 'Inter',
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w500,
-                height: 1.2,
+        //get started. make an account today!
+        const Padding(
+          padding: EdgeInsets.only(top: 30.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal:30.0),
+              child: Text(
+                "Get started. Make an account today!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF57636C),
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 40),
         //FIRST NAME
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
               border: Border.all(
-                  color: Color.fromARGB(255, 0, 0, 0)),
+                  color: const Color.fromARGB(255, 0, 0, 0)),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 20.0),
+              padding: const EdgeInsets.only(left: 20.0),
               child: TextField(
                 controller: _fnameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'your name',
                 ),
@@ -615,10 +615,9 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        const SizedBox(height: 20),
         //EMAIL
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0),
+          padding: EdgeInsets.fromLTRB(25, 20, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
@@ -638,19 +637,19 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        //password
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0),
+          padding: const EdgeInsets.fromLTRB(25, 20, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
               border: Border.all(
-                color: Color.fromARGB(255, 0, 0, 0),
+                color: const Color.fromARGB(255, 0, 0, 0),
               ),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
-              padding: EdgeInsets.only(left: 20.0),
+              padding: const EdgeInsets.only(left: 20.0),
               child: TextField(
                 obscureText: _obscure,
                 controller: _passwordController,
@@ -678,149 +677,142 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        const SizedBox(height: 40),
         //REGISTER BUTTON
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
           child: InkWell(
             onTap: () async {
               _signUp(context);
             },
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0xFFF3D433),
+                color: const Color(0xFFF3D433),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.35),
                     blurRadius: 4,
-                    offset: Offset(0, 4),
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
-              child: MaterialButton(
-                minWidth: double.infinity,
-                height: 60,
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const RegisterPage()));
-                },
-                shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: Text(
-                  "FREE Sign Up",
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                    color: Colors.black,
-                  ),
+              child: const Text(
+                "FREE Sign Up",
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: Colors.black,
                 ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 15),
-        SizedBox(height: 40),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal:30.0),
-            child: Text(
-              "Or Continue with:",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF57636C),
-                fontSize: 18,
-                fontFamily: 'Inter',
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w500,
-                height: 1.2,
+        //or continue with
+        const Padding(
+          padding: EdgeInsets.only(top: 55),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal:30.0),
+              child: Text(
+                "Or Continue with:",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF57636C),
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 20),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
+        //social media icons
+        Padding(
+          padding: EdgeInsets.only(top: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/google.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-              child: IconButton(
-                icon: Image.asset('assets/google.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
+              const SizedBox(width: 20),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/facebook.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-            ),
-            SizedBox(width: 20),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
+              const SizedBox(width: 20),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/twitter.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-              child: IconButton(
-                icon: Image.asset('assets/facebook.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
+              const SizedBox(width: 20),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/instagram.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-            ),
-            SizedBox(width: 20),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
+              const SizedBox(width: 20),
+              Container(
+                width: 60,
+                height: 60,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD9D9D9),
+                ),
+                child: IconButton(
+                  icon: Image.asset('assets/tiktok.png', width: 35, height: 35,),
+                  onPressed: () {
+                    // Add icon onTap functionality
+                  },
+                ),
               ),
-              child: IconButton(
-                icon: Image.asset('assets/twitter.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
-              ),
-            ),
-            SizedBox(width: 20),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
-              ),
-              child: IconButton(
-                icon: Image.asset('assets/instagram.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
-              ),
-            ),
-            SizedBox(width: 20),
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFD9D9D9),
-              ),
-              child: IconButton(
-                icon: Image.asset('assets/tiktok.png', width: 35, height: 35,),
-                onPressed: () {
-                  // Add icon onTap functionality
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         )
       ],
     );

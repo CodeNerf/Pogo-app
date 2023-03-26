@@ -268,7 +268,7 @@ Widget build(BuildContext context) {
   child: TextButton(
     onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => RegisterPage()));
+              MaterialPageRoute(builder: (context) => RegisterPage(index: 0,)));
         },
     child: Text(
       'Skip',
