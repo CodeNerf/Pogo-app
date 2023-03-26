@@ -53,7 +53,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         }
-
         //TODO: make account confirmation not necessary for logging in (maybe)
         /* this checks if user is confirmed, not currently possible due to cognito settings
         safePrint("checking isUserConfirmed()");
