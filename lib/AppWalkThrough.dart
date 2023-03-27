@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/RegisterPage.dart';
+import 'package:pogo/SignInSignUpPage.dart';
 
 class AppWalkThrough extends StatefulWidget {
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'LandingPage.dart';
 import 'LoginPage.dart';
-import 'RegisterPage.dart';
+import 'SignInSignUpPage.dart';
 
 class Demographics extends StatefulWidget {
   const Demographics({Key? key}) : super(key: key);

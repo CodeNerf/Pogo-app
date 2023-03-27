@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/UserConfirmationPage.dart';
 import 'Home.dart';
-import 'RegisterPage.dart';
+import 'SignInSignUpPage.dart';
 import 'awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/UserDemographics.dart';

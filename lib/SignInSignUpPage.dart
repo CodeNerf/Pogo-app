@@ -21,16 +21,11 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   final _fnameController = TextEditingController();
-  final _lnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailSignInController = TextEditingController();
   final _passwordSignInController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _addressController = TextEditingController();
   bool _obscure = true;
-  bool _obscureConfirm = true;
   Icon _eye = const Icon(Icons.remove_red_eye);
   Icon _eyeConfirm = const Icon(Icons.remove_red_eye);
   String _errorText = '';

@@ -3,7 +3,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:pogo/LoginPage.dart';
 import 'AppWalkThrough.dart';
 import 'LoginPage.dart';
-import 'RegisterPage.dart';
+import 'SignInSignUpPage.dart';
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
 
