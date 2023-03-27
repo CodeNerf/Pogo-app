@@ -102,6 +102,24 @@ flutter:
     - assets/placeholderCandidatePic.png
     - assets/democratLogo.png
     - assets/podiumPageBackgroundImage.png
+    - assets/Rectangle.png
+    - assets/republicanLogo.png
+    - assets/phone.png
+    - assets/phone2.png
+    - assets/email.png
+    - assets/office.png
+    - assets/website.png
+    - assets/facebook.png
+    - assets/twitter.png
+    - assets/tiktok.png
+    - assets/instagram.png
+    - assets/linkedin.png
+    - assets/candidateImage.png
+    - assets/contributers.png
+    - assets/marketing.png
+    - assets/budget.png
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
