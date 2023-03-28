@@ -13,21 +13,9 @@ class LandingPage extends StatefulWidget {
   State<LandingPage> createState() => _LandingPageState();
 }
 
-void sessionCheck() async {
-  try {
-    if (await isUserSignedIn()) {
-      logoutUser();
-      safePrint("User is signed out");
-    }
-  } catch (e) {
-    safePrint("An error occurred in sessionCheck(): $e");
-  }
-}
-
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    sessionCheck();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(

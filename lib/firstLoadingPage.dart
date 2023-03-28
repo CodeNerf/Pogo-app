@@ -23,8 +23,13 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
 
   void _configure(context) async {
     try {
-      await configureAmplify();
-      _loginCheck(context);
+      bool check = await configureAmplify();
+      if(check) {
+        _loginCheck(context);
+      }
+      else {
+        safePrint("Error occurred when configuring amplify");
+      }
     } catch (e) {
       safePrint("Error occurred in _configure(): $e");
     }
@@ -32,7 +37,7 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
 
   void _loginCheck(context) async {
     try {
-      bool check = await checkLoggedIn();
+      bool check = await isUserSignedIn();
       if (check) {
         String email = await fetchCurrentUserEmail();
         UserDemographics user = await getUserDemographics(email);
@@ -51,7 +56,8 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
             ),
           );
         }
-      } else {
+      }
+      else {
         await Navigator.push(
           context,
           MaterialPageRoute(

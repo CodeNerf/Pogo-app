@@ -7,8 +7,8 @@ Future<bool> configureAmplify() async {
   try {
     final auth = AmplifyAuthCognito();
     await Amplify.addPlugin(auth);
-    safePrint("Amplify Configured");
     await Amplify.configure(amplifyconfig);
+    safePrint("Amplify Configured");
     return true;
   } catch (e) {
     safePrint('An error occurred configureAmplify(): $e');
@@ -18,16 +18,19 @@ Future<bool> configureAmplify() async {
 
 Future<bool> isUserSignedIn() async {
   try {
-    await Amplify.Auth.fetchAuthSession();
-    return true;
+    final result = await Amplify.Auth.fetchAuthSession();
+    if(result.isSignedIn) {
+      safePrint('USER IS SIGNED IN');
+      return true;
+    }
+    else {
+      safePrint('USER IS SIGNED OUT');
+      return false;
+    }
   } catch (e) {
-    safePrint('An error ocurred isUserSignedIn() $e');
+    safePrint('An error occurred isUserSignedIn() $e');
     return false;
   }
-  /*
-  final result = await Amplify.Auth.fetchAuthSession();
-  return result.isSignedIn;
-   */
 }
 
 Future<AuthUser> getCurrentUser() async {

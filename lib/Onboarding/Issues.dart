@@ -65,8 +65,8 @@ class _IssuesState extends State<Issues> {
   final int _backgroundColor = 0xFFE1E1E1;
   double _alignRating = 0;
   double _valueRating = 0;
-  late double _backOpacity;
-  late double _forwardOpacity;
+  late bool _backVisibility;
+  late bool _forwardVisibility;
   final Color _ratingBarColor = Colors.black;
   final List<String> _leftAlignText = [
     'Gun Control',
@@ -78,7 +78,7 @@ class _IssuesState extends State<Issues> {
     'Market Regulation',
     'Inclusive',
     'Divestment\nReallocation',
-    'Abortion + \nContraceptive Rights'
+    'Abortion +\nContraceptive\nRights'
   ];
   final List<String> _rightAlignText = [
     'Gun Rights',
@@ -90,7 +90,7 @@ class _IssuesState extends State<Issues> {
     'Market\nDeregulation',
     'Exclusive',
     'Investment',
-    'Abortion + \nContraceptive Restrictions'
+    'Abortion/Contraceptive\nRestrictions'
   ];
 
   @override
@@ -105,16 +105,16 @@ class _IssuesState extends State<Issues> {
       _nextButtonColor = 0xFFF3D433;
     }
     if(_issueIndex > 0 && _issueIndex < 9) {
-      _backOpacity = 1;
-      _forwardOpacity = 1;
+      _backVisibility = true;
+      _forwardVisibility = true;
     }
     else if(_issueIndex == 0) {
-      _backOpacity = 0;
-      _forwardOpacity = 1;
+      _backVisibility = false;
+      _forwardVisibility = true;
     }
     else {
-      _forwardOpacity = 0;
-      _backOpacity = 1;
+      _forwardVisibility = false;
+      _backVisibility = true;
     }
   }
 
@@ -242,14 +242,14 @@ class _IssuesState extends State<Issues> {
       _nextButtonColor = 0xFFF3D433;
     }
     if(_issueIndex > 0 && _issueIndex < 9) {
-      _backOpacity = 1;
-      _forwardOpacity = 1;
+      _backVisibility = true;
+      _forwardVisibility = true;
     }
     else if(_issueIndex == 0) {
-      _backOpacity = 0;
+      _backVisibility = false;
     }
     else {
-      _forwardOpacity = 0;
+      _forwardVisibility = false;
     }
     setState(() {});
   }
@@ -371,14 +371,36 @@ class _IssuesState extends State<Issues> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 //last card button
-                GestureDetector(
-                  onTap: () {
-                    _checkRatings(context, "back");
-                  },
-                  child: Opacity(
-                    opacity: _backOpacity,
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.transparent,
+                  ),
+                  child: Visibility(
+                    visible: _backVisibility,
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFFFFFFFF),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: () {
+                            _checkRatings(context, "back");
+                          },
+                          child: const Center(
+                            child: Icon(
+                              Icons.arrow_back_ios_new,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -396,135 +418,164 @@ class _IssuesState extends State<Issues> {
                     child: Column(
                       children: [
                         //issue pic
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
-                          child: Container(
-                            clipBehavior: Clip.hardEdge,
-                            height: MediaQuery.of(context).size.height * 0.60 / 3,
-                            width: MediaQuery.of(context).size.width * 0.65,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade600,
-                                  spreadRadius: 3,
-                                  blurRadius: 7,
-                                  offset: const Offset(3, 3),
-                                ),
-                              ],
-                            ),
-                            child: Image(
-                              image: AssetImage(
-                                _issuesLogo[_issueIndex],
+                        Expanded(
+                          flex: 31,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+                            child: Container(
+                              clipBehavior: Clip.hardEdge,
+                              height: MediaQuery.of(context).size.height * 0.60 / 3,
+                              width: MediaQuery.of(context).size.width * 0.65,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade600,
+                                    spreadRadius: 3,
+                                    blurRadius: 7,
+                                    offset: const Offset(3, 3),
+                                  ),
+                                ],
                               ),
-                              fit: BoxFit.fill,
+                              child: Image(
+                                image: AssetImage(
+                                  _issuesLogo[_issueIndex],
+                                ),
+                                fit: BoxFit.fill,
+                              ),
                             ),
                           ),
                         ),
                         //name of issue
-                        AutoSizeText(
-                          _issuesText[_issueIndex],
-                          maxLines: 1,
-                          style: const TextStyle(
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 30,
-                            color: Color(0xFF0E0E0E),
+                        Expanded(
+                          flex: 6,
+                          child: AutoSizeText(
+                            _issuesText[_issueIndex],
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 30,
+                              color: Color(0xFF0E0E0E),
+                            ),
                           ),
                         ),
                         //where do you align
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
-                          child: AutoSizeText(
-                            'Where do you align?',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                              color: Color(0xFF57636C),
+                        Expanded(
+                          flex: 6,
+                          child: const Padding(
+                            padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                            child: AutoSizeText(
+                              'Where do you align?',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                                color: Color(0xFF57636C),
+                              ),
                             ),
                           ),
                         ),
                         //align slider
-                        Slider(
-                          divisions: 4,
-                          thumbColor: const Color(0xFFF3D433),
-                          activeColor: const Color(0xFF0E0E0E),
-                          inactiveColor: const Color(0xFF0E0E0E),
-                          min: 1,
-                          max: 5,
-                          value: setInitialAlignScaleValue(),
-                          onChangeEnd: (double value) {
-                            _updateAlignRating(value);
-                          },
-                          onChanged: (double value) { },
+                        Expanded(
+                          flex: 8,
+                          child: Slider(
+                            divisions: 4,
+                            thumbColor: const Color(0xFFF3D433),
+                            activeColor: const Color(0xFF0E0E0E),
+                            inactiveColor: const Color(0xFF0E0E0E),
+                            min: 1,
+                            max: 5,
+                            value: setInitialAlignScaleValue(),
+                            onChangeEnd: (double value) {
+                              _updateAlignRating(value);
+                            },
+                            onChanged: (double value) { },
+                          ),
                         ),
                         //align slider text
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                          child: Row(
-                            children: [
-                              Text(
-                                _leftAlignText[_issueIndex],
-                                style: const TextStyle(
-                                  fontSize: 15,
+                        Expanded(
+                          flex: 7,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  child: Text(
+                                    _leftAlignText[_issueIndex],
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              const Spacer(),
-                              Text(_rightAlignText[_issueIndex],
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                  )),
-                            ],
+                                const Spacer(),
+                                SizedBox(
+                                  child: Text(
+                                      _rightAlignText[_issueIndex],
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                      )),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         //how much do you care
-                        const Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
-                          child: AutoSizeText(
-                            'How much do you care?',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                              color: Color(0xFF57636C),
+                        Expanded(
+                          flex: 6,
+                          child: const Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                            child: AutoSizeText(
+                              'How much do you care?',
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                                color: Color(0xFF57636C),
+                              ),
                             ),
                           ),
                         ),
                         //care slider
-                        Slider(
-                          divisions: 4,
-                          thumbColor: const Color(0xFFF3D433),
-                          activeColor: const Color(0xFF0E0E0E),
-                          inactiveColor: const Color(0xFF0E0E0E),
-                          min: 1,
-                          max: 5,
-                          value: setInitialCareScaleValue(),
-                          onChangeEnd: (double value) {
-                            _updateValueRating(value);
-                          },
-                          onChanged: (double value) { },
+                        Expanded(
+                          flex: 8,
+                          child: Slider(
+                            divisions: 4,
+                            thumbColor: const Color(0xFFF3D433),
+                            activeColor: const Color(0xFF0E0E0E),
+                            inactiveColor: const Color(0xFF0E0E0E),
+                            min: 1,
+                            max: 5,
+                            value: setInitialCareScaleValue(),
+                            onChangeEnd: (double value) {
+                              _updateValueRating(value);
+                            },
+                            onChanged: (double value) { },
+                          ),
                         ),
                         //care slider text
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                          child: Row(
-                            children: const [
-                              Text(
-                                'Very Little',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                              Spacer(),
-                              Text(
-                                  'Extremely',
+                        Expanded(
+                          flex: 7,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Row(
+                              children: const [
+                                Text(
+                                  'Very Little',
                                   style: TextStyle(
                                     fontSize: 15,
-                                  )),
-                            ],
+                                  ),
+                                ),
+                                Spacer(),
+                                Text(
+                                    'Extremely',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                    )),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -532,27 +583,48 @@ class _IssuesState extends State<Issues> {
                   ),
                 ),
                 //next card button
-                GestureDetector(
-                  onTap: () {
-                    _checkRatings(context, "");
-                  },
-                  child: Opacity(
-                    opacity: _forwardOpacity,
-                    child: const Icon(
-                      Icons.arrow_forward_ios,
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.transparent,
+                  ),
+                  child: Visibility(
+                    visible: _forwardVisibility,
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFFFFFFFF),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: () {
+                            _checkRatings(context, "forward");
+                          },
+                          child: const Center(
+                            child: Icon(
+                              Icons.arrow_forward_ios,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            //Next question button
+            //pogo button
             const Spacer(),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 5, 20),
               child: Container(
                 width: MediaQuery.of(context).size.width / 2,
-                height: 75,
+                height: 40,
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3D433),
                   borderRadius: BorderRadius.circular(25),
