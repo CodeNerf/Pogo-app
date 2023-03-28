@@ -1,7 +1,8 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'amplifyFunctions.dart';
 import 'ForgotPasswordPage.dart';
-import 'LoginPage.dart';
+import 'SignInSignUpPage.dart';
 
 class EnterNewPasswordPage extends StatefulWidget {
   final String email;
@@ -20,29 +21,33 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
   Icon _eye = Icon(Icons.remove_red_eye);
 
   Future _confirmNewPassword(context) async {
-    if(_passwordController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Password cannot be blank.';
-      });
-    }
-    else if(_codeController.text.isEmpty) {
-      setState(() {
-        _errorText = 'Code cannot be blank.';
-      });
-    }
-    //send link to user email to reset password
-    else if(await confirmResetPassword(widget.email, _passwordController.text, _codeController.text)) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-    }
-    else {
-      setState(() {
-        _errorText = 'Could not reset password. Check to make sure all fields are correct and try again.';
-      });
+    try {
+      if (_passwordController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Password cannot be blank.';
+        });
+      } else if (_codeController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Code cannot be blank.';
+        });
+      }
+      //send link to user email to reset password
+      else if (await confirmResetPassword(
+          widget.email, _passwordController.text, _codeController.text)) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignInSignUpPage(index: 1),
+          ),
+        );
+      } else {
+        setState(() {
+          _errorText =
+              'Could not reset password. Check to make sure all fields are correct and try again.';
+        });
+      }
+    } catch (e) {
+      safePrint("An error occurred in _confirmNewPassword: $e");
     }
   }
 
@@ -136,13 +141,13 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                         hintText: 'New Password',
                         suffixIcon: GestureDetector(
                           onTap: () {
-                            if(_obscure) {
+                            if (_obscure) {
                               setState(() {
                                 _obscure = false;
-                                _eye = const Icon(Icons.remove_red_eye_outlined);
+                                _eye =
+                                    const Icon(Icons.remove_red_eye_outlined);
                               });
-                            }
-                            else {
+                            } else {
                               setState(() {
                                 _obscure = true;
                                 _eye = const Icon(Icons.remove_red_eye);
@@ -196,13 +201,13 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                     ),
                     child: const Center(
                         child: Text(
-                          'Reset',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+                      'Reset',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    )),
                   ),
                 ),
               ),

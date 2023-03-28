@@ -6,7 +6,8 @@ import '../dynamoModels/UserIssueFactorValues.dart';
 class VoterInfo extends StatefulWidget {
   final UserIssueFactorValues ratings;
   final UserDemographics answers;
-  const VoterInfo({Key? key, required this.ratings, required this.answers}) : super(key: key);
+  final int issuesIndex;
+  const VoterInfo({Key? key, required this.ratings, required this.answers, required this.issuesIndex}) : super(key: key);
 
   @override
   State<VoterInfo> createState() => _VoterInfoState();
@@ -51,7 +52,7 @@ class _VoterInfoState extends State<VoterInfo> {
    widget.answers.politicalAffiliation = _partyMenuSelection;
    //TODO: add party user votes for String to db in case this is needed in matching algorithm
    //TODO: add user lives in registered state bool to db in case this value is needed in future
-   Navigator.push(context, MaterialPageRoute(builder: (context) => Issues(ratings: widget.ratings, answers: widget.answers,)));
+   Navigator.push(context, MaterialPageRoute(builder: (context) => Issues(ratings: widget.ratings, answers: widget.answers, issuesIndex: widget.issuesIndex,)));
  }
   int _selectedOption = -1;
 

@@ -1,15 +1,16 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:pogo/LoginPage.dart';
 import 'AppWalkThrough.dart';
-import 'LoginPage.dart';
 import 'SignInSignUpPage.dart';
+import 'amplifyFunctions.dart';
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
 
   @override
   State<LandingPage> createState() => _LandingPageState();
 }
+
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
@@ -97,7 +98,7 @@ class _LandingPageState extends State<LandingPage> {
         height: 60,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => RegisterPage(index: 1,)));
+              MaterialPageRoute(builder: (context) => SignInSignUpPage(index: 1,)));
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)),

@@ -75,20 +75,20 @@ Widget build(BuildContext context) {
               ),
               SizedBox(height: _errorSizeBoxSize),
                 TextField(
-                  controller: _firstNameController,
-                  decoration: InputDecoration(labelText: widget.userDemographics.firstName),
+                controller: _firstNameController,
+                decoration: InputDecoration(labelText: 'First Name'),
                 ),
                 TextField(
                   controller: _lastNameController,
-                  decoration: InputDecoration(labelText: widget.userDemographics.lastName),
-                ),
+                 decoration: InputDecoration(labelText: 'Last Name'),                
+                 ),
                 TextField(
                   controller: _phoneController,
-                  decoration: InputDecoration(labelText: widget.userDemographics.phoneNumber),
+                  decoration: InputDecoration(labelText: 'Phone'),
                 ),
                 TextField(
                   controller: _addressController,
-                  decoration: InputDecoration(labelText: widget.userDemographics.addressLine1),
+                  decoration: InputDecoration(labelText: 'Address'  ),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
@@ -128,7 +128,7 @@ Widget build(BuildContext context) {
                       if(_firstNameController.text == widget.userDemographics.firstName) {
                         if(_lastNameController.text == widget.userDemographics.lastName) {
                           if(_phoneController.text == widget.userDemographics.phoneNumber) {
-                            if(_firstNameController.text == widget.userDemographics.firstName) {
+                            if(_addressController.text == widget.userDemographics.addressLine1) {
                               //do nothing
                             }
                             else {

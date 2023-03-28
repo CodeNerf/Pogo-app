@@ -8,18 +8,17 @@ class CandidateDemographics extends Demographics {
 
   CandidateDemographics(
       {required this.candidateId,
-      required this.seatType,
-      required this.electionType,
-      required this.careerStartDate,
-      required super.firstName,
-      required super.lastName,
-      required super.dateOfBirth,
-      required super.zipCode,
-      required super.profileImageURL,
-      required super.gender,
-      required super.racialIdentity,
-      required super.politicalAffiliation});
-
+      this.seatType = '',
+      this.electionType = '',
+      this.careerStartDate = '',
+      super.firstName = '',
+      super.lastName = '',
+      super.dateOfBirth = '',
+      super.zipCode = '',
+      super.profileImageURL = '',
+      super.gender = '',
+      super.racialIdentity = '',
+      super.politicalAffiliation = ''});
 
   //factory constructor
   factory CandidateDemographics.fromJson(Map json) {

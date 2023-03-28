@@ -1,8 +1,10 @@
+import 'package:amplify_core/amplify_core.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:pogo/LoginPage.dart';
+import 'package:pogo/SignInSignUpPage.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 import 'dynamoModels/UserDemographics.dart';
@@ -15,7 +17,11 @@ import 'EditPersonalInfoPage.dart';
 class UserProfile extends StatefulWidget {
   final UserIssueFactorValues currentUserFactors;
   final UserDemographics currentUserDemographics;
-  const UserProfile({Key? key, required this.currentUserFactors, required this.currentUserDemographics}) : super(key: key);
+  const UserProfile(
+      {Key? key,
+      required this.currentUserFactors,
+      required this.currentUserDemographics})
+      : super(key: key);
 
   @override
   State<UserProfile> createState() => _UserProfileState();
@@ -25,9 +31,10 @@ class _UserProfileState extends State<UserProfile> {
   String _firstIssue = "";
   String _secondIssue = "";
   String _thirdIssue = "";
+  String _fourthIssue = "";
   final List<num> _ratings = [];
   final TextEditingController _profilePicController = TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
@@ -45,10 +52,11 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   void _setTopIssues(List<num> ratings) async {
+    //will have to change strings to asset image icons
     List<String> topIssues = [];
     var indexMaxCare = ratings.indexOf(ratings.reduce(max));
-    for(int i = 0; i < 3; i++) {
-      switch(indexMaxCare) {
+    for (int i = 0; i < 4; i++) {
+      switch (indexMaxCare) {
         case 0:
           topIssues.add('CLIMATE');
           break;
@@ -77,7 +85,7 @@ class _UserProfileState extends State<UserProfile> {
           topIssues.add('POLICING');
           break;
         case 9:
-        topIssues.add('REPRODUCTIVE RIGHTS');
+          topIssues.add('REPRODUCTIVE RIGHTS');
           break;
       }
       ratings[indexMaxCare] = 0;
@@ -87,22 +95,27 @@ class _UserProfileState extends State<UserProfile> {
       _firstIssue = topIssues[0];
       _secondIssue = topIssues[1];
       _thirdIssue = topIssues[2];
+      _fourthIssue = topIssues[3];
     });
   }
 
   //this is just for testing purposes, to be removed later
   Future _logout(context) async {
-    logoutUser();
-    if (await checkLoggedIn()) {
-      //successfully logged out, send to login
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-    } else {
-      //logout not working (this shouldn't ever happen)
+    try {
+      logoutUser();
+      if (await checkLoggedIn()) {
+        //successfully logged out, send to login
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignInSignUpPage(index: 1,),
+          ),
+        );
+      } else {
+        //logout not working (this shouldn't ever happen)
+      }
+    } catch (e) {
+      safePrint("Error occurred in _logout: $e");
     }
   }
 
@@ -120,7 +133,9 @@ class _UserProfileState extends State<UserProfile> {
                 const Text('Enter the url of your new profile picture:'),
                 TextField(
                   controller: _profilePicController,
-                  decoration: InputDecoration(labelText: widget.currentUserDemographics.profileImageURL),
+                  decoration: InputDecoration(
+                      labelText:
+                          widget.currentUserDemographics.profileImageURL),
                 ),
               ],
             ),
@@ -128,8 +143,10 @@ class _UserProfileState extends State<UserProfile> {
           actions: <Widget>[
             ElevatedButton(
               onPressed: () {
-                if(_profilePicController.text != widget.currentUserDemographics.profileImageURL) {
-                  widget.currentUserDemographics.profileImageURL = _profilePicController.text;
+                if (_profilePicController.text !=
+                    widget.currentUserDemographics.profileImageURL) {
+                  widget.currentUserDemographics.profileImageURL =
+                      _profilePicController.text;
                   putUserDemographics(widget.currentUserDemographics);
                 }
                 Navigator.pop(context);
@@ -140,7 +157,10 @@ class _UserProfileState extends State<UserProfile> {
                 elevation: 0,
                 minimumSize: Size(double.infinity, 48),
               ),
-              child: const Text('Save New Picture' ,style: TextStyle(fontSize:17, color: Colors.black ),),
+              child: const Text(
+                'Save New Picture',
+                style: TextStyle(fontSize: 17, color: Colors.black),
+              ),
             ),
           ],
         );
@@ -151,7 +171,7 @@ class _UserProfileState extends State<UserProfile> {
   Widget _profilePic() {
     String pic = widget.currentUserDemographics.profileImageURL;
     bool validURL = Uri.parse(pic).isAbsolute;
-    if(validURL) {
+    if (validURL) {
       return CircularProfileAvatar(
         '',
         radius: 60,
@@ -163,24 +183,78 @@ class _UserProfileState extends State<UserProfile> {
           ),
         ),
       );
-    }
-    else {
+    } else {
       return const Icon(FontAwesomeIcons.person);
     }
   }
 
   List<Widget> _getRatingCircles() {
     List<Widget> circles = [];
-    circles.add(Column(children: [_ratingCircles('Education\n', widget.currentUserFactors.educationScore), _ratingCircles('Care', widget.currentUserFactors.educationWeight)],));
-    circles.add(Column(children: [_ratingCircles('Climate\n', widget.currentUserFactors.climateScore), _ratingCircles('Care', widget.currentUserFactors.climateWeight)],));
-    circles.add(Column(children: [_ratingCircles('Drug Policy\n', widget.currentUserFactors.drugPolicyScore), _ratingCircles('Care', widget.currentUserFactors.drugPolicyWeight)],));
-    circles.add(Column(children: [_ratingCircles('Economy\n', widget.currentUserFactors.economyScore), _ratingCircles('Care', widget.currentUserFactors.economyWeight)],));
-    circles.add(Column(children: [_ratingCircles('Healthcare\n', widget.currentUserFactors.healthcareScore), _ratingCircles('Care', widget.currentUserFactors.healthcareWeight)],));
-    circles.add(Column(children: [_ratingCircles('Immigration\n', widget.currentUserFactors.immigrationScore), _ratingCircles('Care', widget.currentUserFactors.immigrationWeight)],));
-    circles.add(Column(children: [_ratingCircles('Policing\n', widget.currentUserFactors.policingScore), _ratingCircles('Care', widget.currentUserFactors.policingWeight)],));
-    circles.add(Column(children: [_ratingCircles('Reproductive\nHealth', widget.currentUserFactors.reproductiveScore), _ratingCircles('Care', widget.currentUserFactors.reproductiveWeight)],));
-    circles.add(Column(children: [_ratingCircles('Gun Control\n', widget.currentUserFactors.gunPolicyScore), _ratingCircles('Care', widget.currentUserFactors.gunPolicyWeight)],));
-    circles.add(Column(children: [_ratingCircles('Housing\n', widget.currentUserFactors.housingScore), _ratingCircles('Care', widget.currentUserFactors.housingWeight)],));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Education\n', widget.currentUserFactors.educationScore),
+        _ratingCircles('Care', widget.currentUserFactors.educationWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Climate\n', widget.currentUserFactors.climateScore),
+        _ratingCircles('Care', widget.currentUserFactors.climateWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles(
+            'Drug Policy\n', widget.currentUserFactors.drugPolicyScore),
+        _ratingCircles('Care', widget.currentUserFactors.drugPolicyWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Economy\n', widget.currentUserFactors.economyScore),
+        _ratingCircles('Care', widget.currentUserFactors.economyWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles(
+            'Healthcare\n', widget.currentUserFactors.healthcareScore),
+        _ratingCircles('Care', widget.currentUserFactors.healthcareWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles(
+            'Immigration\n', widget.currentUserFactors.immigrationScore),
+        _ratingCircles('Care', widget.currentUserFactors.immigrationWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Policing\n', widget.currentUserFactors.policingScore),
+        _ratingCircles('Care', widget.currentUserFactors.policingWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Reproductive\nHealth',
+            widget.currentUserFactors.reproductiveScore),
+        _ratingCircles('Care', widget.currentUserFactors.reproductiveWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles(
+            'Gun Control\n', widget.currentUserFactors.gunPolicyScore),
+        _ratingCircles('Care', widget.currentUserFactors.gunPolicyWeight)
+      ],
+    ));
+    circles.add(Column(
+      children: [
+        _ratingCircles('Housing\n', widget.currentUserFactors.housingScore),
+        _ratingCircles('Care', widget.currentUserFactors.housingWeight)
+      ],
+    ));
     return circles;
   }
 
@@ -200,7 +274,7 @@ class _UserProfileState extends State<UserProfile> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        percent: rating/5,
+        percent: rating / 5,
         center: Text(
           '$rating',
           style: const TextStyle(
@@ -213,33 +287,149 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   String _checkRegistered(bool voterRegistrationStatus) {
-    if(voterRegistrationStatus) {
+    if (voterRegistrationStatus) {
       return 'Registered to Vote';
-    }
-    else {
+    } else {
       return 'Not registered to Vote';
     }
   }
 
   _showAlert(BuildContext context) {
-    AlertDialog alert = const AlertDialog(
-      content: Text('A low rating for a political issue means that you align more to the left on that issue. A high rating means you align more to the right.\nThe higher your care rating is for an issue, the more you care about that issue.\nYou can retake the survey at any time to change your ratings by clicking the "Retake Survey" button below.'),
+    AlertDialog alert = AlertDialog(
+      content:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _getRatingCircles(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+              //overall container
+              child: Container(
+                width: MediaQuery.of(context).size.width / 3,
+                height: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color(0xFFF3D433),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade400,
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: const Offset(3, 6),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(15),
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SurveyLandingPage(),
+                        ),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                      child: Center(
+                        child: AutoSizeText(
+                          'Edit Survey',
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
     );
     showDialog(
         barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
           return alert;
-        }
-    );
+        });
   }
 
   void _editPersonalInfo(BuildContext context) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EditPersonalInfoPage(userDemographics: widget.currentUserDemographics)),
+      MaterialPageRoute(
+          builder: (context) => EditPersonalInfoPage(
+              userDemographics: widget.currentUserDemographics)),
     );
   }
+
+  String getUserExperience(int polls) {
+    //TODO: move to homeloadingpage when data is in db
+    //this function will be used to determine the level of the user, e.g 0 polls - beginner
+    //strings are placeholder for now
+    switch (polls) {
+      case 0:
+        return 'Beginner';
+      case 1:
+        return 'Novice';
+      case 2:
+        return 'Intermediate';
+      case 3:
+        return 'Advanced';
+      case 4:
+        return 'Expert';
+      default:
+        return 'Pro';
+    }
+  }
+
+
+  /*
+  void getLoginStreak() async {
+    //TODO: move to homeloadingpage when data is in db
+    //this function will be used to determine how many consecutive days the user has logged in
+    DateTime lastLoginDate = widget.currentUserDemographics.lastLogin;
+    DateTime now = DateTime.now();
+    DateTime currentDate = DateTime(now.year, now.month, now.day);
+    if(currentDate.year == lastLoginDate.year) {
+      if(currentDate.month == lastLoginDate.month) {
+        if(currentDate.day == (lastLoginDate.day + 1)) {
+          //increment login streak
+          widget.currentUserDemographics.loginStreak = widget.currentUserDemographics.loginStreak + 1;
+          if(widget.currentUserDemographics.loginRecord < widget.currentUserDemographics.loginStreak) {
+            //new login streak record
+            widget.currentUserDemographics.loginRecord = widget.currentUserDemographics.loginStreak;
+          }
+          await putUserDemographics(widget.currentUserDemographics);
+        }
+      }
+      else {
+        //check new month
+      }
+    }
+    else {
+      //check new year
+    }
+  }
+
+  String getLoginStreakText() {
+    if (widget.currentUserDemographics.loginStreak == widget.currentUserDemographics.loginRecord) {
+      return 'New Record!';
+    }
+    return '';
+  }
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -248,499 +438,551 @@ class _UserProfileState extends State<UserProfile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //hello name text
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Text(
-                    'Hello, ${widget.currentUserDemographics.firstName}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+            //hello name
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+              child: Text(
+                'Hello ${widget.currentUserDemographics.firstName}',
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
 
             //profile picture
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0,0,0,10),
-                child: GestureDetector(
-                  onTap: () {
-                    _changeProfilePic();
-                  },
-                  child: CircularProfileAvatar(
-                    '',
-                    radius: 40,
-                    child: FittedBox(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+              child: GestureDetector(
+                onTap: () {
+                  _changeProfilePic();
+                },
+                child: CircularProfileAvatar(
+                  '',
+                  radius: 40,
+                  child: FittedBox(
                     fit: BoxFit.cover,
                     child: _profilePic(),
                   ),
+                ),
+              ),
+            ),
+
+            //user profile level and streak container
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              //overall container
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color(0xFFFFFFFF),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade400,
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: const Offset(3, 6),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                  //row of contents
+                  child: Row(
+                    children: [
+                      //user level and polls
+                      Row(
+                        children: [
+                          //star circle
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: const Color(0xFFD9D9D9),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade400,
+                                  spreadRadius: 0.1,
+                                  blurRadius: 4,
+                                  offset: const Offset(-3, 6),
+                                ),
+                              ],
+                            ),
+                            child: const FittedBox(
+                              fit: BoxFit.cover,
+                              child: Icon(
+                                Icons.star_rate,
+                                color: Color(0xFF8CC461),
+                              ),
+                            ),
+                          ),
+                          //experience level and polls
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Container(
+                              width: 100,
+                              height: 50,
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  //TODO: placeholder poll values will have to be replaced
+                                  children: [
+                                    AutoSizeText(
+                                      getUserExperience(2),
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF0E0E0E),
+                                        fontSize: 22,
+                                      ),
+                                    ),
+                                    AutoSizeText(
+                                      '2 Polls',
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF57636C),
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      //user streak
+                      Row(
+                        children: [
+                          //star circle
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: const Color(0xFFD9D9D9),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade400,
+                                  spreadRadius: 0.1,
+                                  blurRadius: 4,
+                                  offset: const Offset(-3, 6),
+                                ),
+                              ],
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
+                              child: FittedBox(
+                                fit: BoxFit.cover,
+                                child: Image(
+                                  image: AssetImage('assets/flame.png'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          //experience level and polls
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Container(
+                              width: 100,
+                              height: 50,
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  //TODO: placeholder streak values will need to be replaced
+                                  children: [
+                                    AutoSizeText(
+                                      '0 day streak',
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF0E0E0E),
+                                        fontSize: 22,
+                                      ),
+                                    ),
+                                    AutoSizeText(
+                                      'New Record!',
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF57636C),
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-/*
-            Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Personal Info',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-           IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () async {
-                UserDemographics updatedUserDemographics = await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EditPersonalInfoPage(userDemographics: widget.currentUserDemographics)),
-                );
-                if (updatedUserDemographics != null) {
-                  setState(() {
-                    widget.currentUserDemographics = updatedUserDemographics;
-                  });
-                }
-              },
-            )
-            ],
-          ),
 
-          const SizedBox(height: 10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Email: ${widget.currentUserDemographics.userId}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'Phone: ${widget.currentUserDemographics is UserDemographics ? widget.currentUserDemographics.phoneNumber : "N/A"}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'Address: ${widget.currentUserDemographics is UserDemographics ? widget.currentUserDemographics.addressLine1 : "N/A"}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-    ),
-  ),
-),
-            */
-          //personal info
-            ExpansionTile(
-              title: Row(
+            //your top issues, top issues icons
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Personal Info',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                  //your top issues
+                  const Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Your top issues',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Color(0xFF0E0E0E),
+                      ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      _editPersonalInfo(context);
-                    },
-                    child: const Icon(
-                      Icons.edit,
-                      size: 25,
-                    ),
-                  ),
-                ],
-              ),
-              backgroundColor: Colors.grey[200],
-              collapsedBackgroundColor: Colors.grey[500],
-              initiallyExpanded: true,
-              textColor: Colors.black,
-              collapsedTextColor: Colors.black,
-              iconColor: Colors.black,
-              collapsedIconColor: Colors.black,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  //top issues icons
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF9F9F9),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
                           child: Text(
-                          'Email: ${widget.currentUserDemographics.userId}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
+                            _firstIssue,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF9F9F9),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
                           child: Text(
-                            'Last Name: ${widget.currentUserDemographics.lastName}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
+                            _secondIssue,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF9F9F9),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
                           child: Text(
-                            'Phone Number: ${widget.currentUserDemographics.phoneNumber}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
+                            _thirdIssue,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
-                          child: Text(
-                            'Gender: ${widget.currentUserDemographics.gender}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF9F9F9),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
                           child: Text(
-                            'Ethnicity : ${widget.currentUserDemographics.racialIdentity}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
-                          child: Text(
-                            'Political Affiliation: ${widget.currentUserDemographics.politicalAffiliation}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 3.0),
-                          child: Text(
-                            _checkRegistered(widget.currentUserDemographics.voterRegistrationStatus),
-                            style: const TextStyle(
-                              fontSize: 18,
-                            ),
+                            _fourthIssue,
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            //survey results
-            ExpansionTile(
-              title: Row(
-                children: [
-                  const Text(
-                    'Survey Results',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+
+            //invite friends and share your ballot
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              //overall container
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color(0xFFFFFFFF),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade400,
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: const Offset(3, 6),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(15),
+                    onTap: () {
+                      //TODO: pull up invite friends and share ballot menu
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                      //row of contents
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          AutoSizeText(
+                            'Invite Friends & Share Your Ballot!',
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Color(0xFF0E0E0E),
+                            ),
+                          ),
+                          Divider(
+                            color: Color(0xFFDBE2E7),
+                            height: 10,
+                            thickness: 1,
+                          ),
+                          AutoSizeText(
+                            'Help your friends vote informed',
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  GestureDetector(
+                ),
+              ),
+            ),
+
+            //personal info
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              //overall container
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color(0xFFFFFFFF),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade400,
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: const Offset(3, 6),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(15),
+                    onTap: () {
+                      _editPersonalInfo(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                      //row of contents
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          AutoSizeText(
+                            'Personal Info',
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Color(0xFF0E0E0E),
+                            ),
+                          ),
+                          Divider(
+                            color: Color(0xFFDBE2E7),
+                            height: 10,
+                            thickness: 1,
+                          ),
+                          AutoSizeText(
+                            'Edit your personal info',
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            //survey results
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              //overall container
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color(0xFFFFFFFF),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade400,
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: const Offset(3, 6),
+                    ),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(15),
                     onTap: () {
                       _showAlert(context);
                     },
-                    child: const Icon(
-                      CupertinoIcons.question_circle,
-                      size: 25,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                      //row of contents
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          AutoSizeText(
+                            'Survey Results',
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Color(0xFF0E0E0E),
+                            ),
+                          ),
+                          Divider(
+                            color: Color(0xFFDBE2E7),
+                            height: 10,
+                            thickness: 1,
+                          ),
+                          AutoSizeText(
+                            'View and edit your stance on popular issues',
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
-              backgroundColor: Colors.grey[200],
-              collapsedBackgroundColor: Colors.grey[500],
-              textColor: Colors.black,
-              collapsedTextColor: Colors.black,
-              iconColor: Colors.black,
-              collapsedIconColor: Colors.black,
-              children: [
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: _getRatingCircles(),
-                  ),
-                ),
-              ],
-            ),
-            //top issues
-            Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Text(
-                      'Your Top Issues: ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          _firstIssue,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                        Text(
-                          _secondIssue,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                        Text(
-                          _thirdIssue,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                      ],
-                    ),
-                    /*
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          firstIssue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          secondIssue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Text(
-                          thirdIssue,
-                        ),
-                      ),
-                    ),
-                    */
-                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            //share ballot social media
-            /*
-            Container(
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Text(
-                      'Share Your \nBallot',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                    Container(
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const FittedBox(
-                        fit: BoxFit.fill,
-                        child: Icon(
-                          FontAwesomeIcons.facebook,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const FittedBox(
-                        fit: BoxFit.fill,
-                        child: Icon(
-                          FontAwesomeIcons.instagram,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const FittedBox(
-                        fit: BoxFit.fill,
-                        child: Icon(
-                          FontAwesomeIcons.snapchat,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const FittedBox(
-                        fit: BoxFit.fill,
-                        child: Icon(
-                          FontAwesomeIcons.twitter,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const FittedBox(
-                        fit: BoxFit.fill,
-                        child: Icon(
-                          FontAwesomeIcons.linkedin,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-             */
+
             //logout button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InkWell(
-                  onTap: () async {
-                    _logout(context);
-                  },
-                  child: Container(
-                    //alignment: Alignment.center,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3D433),
-                      borderRadius: BorderRadius.circular(50),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+              //overall container
+              child: Container(
+                width: MediaQuery.of(context).size.width / 3,
+                height: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color(0xFFF3D433),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade400,
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: const Offset(3, 6),
                     ),
-                    child: const Center(
-                        child: Text(
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(15),
+                    onTap: () {
+                      _logout(context);
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                      child: Center(
+                        child: AutoSizeText(
                           'Logout',
+                          maxLines: 1,
                           style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Inter',
                           ),
-                        )),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SurveyLandingPage(),
+                        ),
                       ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3D433),
-                      borderRadius: BorderRadius.circular(50),
                     ),
-                    child: const Center(
-                        child: Text(
-                          'Retake Survey',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
                   ),
                 ),
-              ],
+              ),
             ),
           ],
         ),
@@ -748,4 +990,3 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 }
-

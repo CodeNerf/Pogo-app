@@ -4,21 +4,20 @@ import 'package:pogo/UserConfirmationPage.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:validators/validators.dart';
 import 'HomeLoadingPage.dart';
-import 'LoginPage.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 import 'amplifyFunctions.dart';
 import 'dynamoModels/UserDemographics.dart';
 //import 'SignUpAddress.dart';
 
-class RegisterPage extends StatefulWidget {
+class SignInSignUpPage extends StatefulWidget {
   final int index;
-  const RegisterPage({Key? key, required this.index}) : super(key: key);
+  const SignInSignUpPage({Key? key, required this.index}) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<SignInSignUpPage> createState() => _SignInSignUpPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SignInSignUpPageState extends State<SignInSignUpPage> {
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   final _fnameController = TextEditingController();
   final _emailController = TextEditingController();

@@ -1,7 +1,9 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'Home.dart';
+import 'LandingPage.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
 import 'awsFunctions.dart';
@@ -28,14 +30,35 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
   }
 
   void _initializeObjects() async {
-    String email = await fetchCurrentUserEmail();
+    bool retry = true;
+    int retryCount = 0;
+    String email = widget.user.userId;
     _userBallot = Ballot.empty();
-    _userBallot.localCandidateIds = await getUserBallot(email);
-    _currentUserFactors = await getUserIssueFactorValues(email);
-    _candidateStack = await getAllCandidateDemographics();
-    _candidateStackFactors = await getAllCandidateIssueFactorValues();
-    _setObjectStates(_currentUserFactors, _candidateStack,
-        _userBallot, _candidateStackFactors);
+
+    while (retry) {
+      try {
+        await Future.wait([
+          getAllCandidateDemographics(),
+          getAllCandidateIssueFactorValues(),
+          getUserIssueFactorValues(email),
+          getUserBallot(email)
+        ]).then((List<dynamic> values) {
+          _candidateStack = values[0];
+          _candidateStackFactors = values[1];
+          _currentUserFactors = values[2];
+          _userBallot.localCandidateIds = values[3];
+        });
+        retry = false;
+      } catch (e) {
+        retryCount++;
+        retry = true;
+        safePrint(e);
+        safePrint("Retrying $retryCount");
+      }
+    }
+
+    _setObjectStates(_currentUserFactors, _candidateStack, _userBallot,
+        _candidateStackFactors);
   }
 
   void _setObjectStates(
