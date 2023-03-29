@@ -186,25 +186,31 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFFF1F4F8),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: Align(
-            alignment: Alignment.center,
-            child: Image(
-              image: AssetImage(_pogoLogo),
-              width: 150,
-            ),
-          ),
-        ),
+        appBar:AppBar(
+  backgroundColor: Colors.transparent,
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  leading: IconButton(
+    icon: Icon(Icons.arrow_back),
+    onPressed: () => Navigator.of(context).pop(),
+    color: Colors.black,
+  ),
+  title: Align(
+    alignment: Alignment(-0.2, 0),
+    child: Image(
+      image: AssetImage(_pogoLogo),
+      width: 150,
+    ),
+  ),
+),
         body: _widgetOptions.elementAt(_selectedIndex),
       ),
     );
   }
 
   Widget signin() {
-    return Column(
+    return SingleChildScrollView( 
+    child: Column(
       children: [
         //sign up / sign in
         Padding(
@@ -335,40 +341,45 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
           ),
         ),
         //login button
-        Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
-          child: InkWell(
-            onTap: () async {
-              _signIn(context);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3D433),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.35),
-                    blurRadius: 4,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: const Text(
-                "Login",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
+       Padding(
+  padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
+  child: Container(
+    decoration: BoxDecoration(
+      color: Color(0xFFF3D433),
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.35),
+          blurRadius: 4,
+          offset: Offset(0, 4),
         ),
+      ],
+    ),
+    child: MaterialButton(
+      minWidth: double.infinity,
+      height: 60,
+      onPressed: () {
+        _signIn(context);
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10)
+      ),
+      child: Text(
+        "Login",
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontStyle: FontStyle.normal,
+          fontWeight: FontWeight.w700,
+          fontSize: 20,
+          color: Colors.black,
+        ),
+      ),
+    ),
+  ),
+),
         //or continue with
         const Padding(
-          padding: EdgeInsets.only(top: 55),
+          padding: EdgeInsets.only(top: 90),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -472,11 +483,12 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
           ),
         )
       ],
-    );
+    ));
   }
 
   Widget signup() {
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
       children: [
         // sign up / sign in
         Padding(
@@ -630,39 +642,49 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
         ),
         //REGISTER BUTTON
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
-          child: InkWell(
-            onTap: () async {
-              _signUp(context);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3D433),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.35),
-                    blurRadius: 4,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: const Text(
-                "FREE Sign Up",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+  padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
+  child: InkWell(
+    onTap: () async {
+      _signUp(context);
+    },
+    child: Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFF3D433),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.35),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: MaterialButton(
+        minWidth: double.infinity,
+        height: 60,
+        onPressed: () {
+          _signUp(context);
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          "FREE Sign Up",
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+            color: Colors.black,
           ),
         ),
+      ),
+    ),
+  ),
+),
         //or continue with
         const Padding(
-          padding: EdgeInsets.only(top: 55),
+          padding: EdgeInsets.only(top: 20),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -766,6 +788,8 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
           ),
         )
       ],
+    ),
     );
+     
   }
 }

@@ -204,7 +204,7 @@ Widget build(BuildContext context) {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                                  SizedBox(height: 30),
+                                  SizedBox(height: 20),
                             Center(
                               child: Image.asset(
                                 'assets/appWalkThrough4.png',
@@ -258,23 +258,32 @@ Widget build(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: _buildPageIndicator(),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 2.0),
               ],
             ),
           ),
-          Positioned(
+Positioned(
   top: 16.0,
   right: 16.0,
   child: TextButton(
     onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SignInSignUpPage(index: 0,)));
-        },
+      if (_currentPage <= 2) { 
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SignInSignUpPage(index: 0,))
+        );
+      } else {
+        _pageController.nextPage(
+          duration: Duration(milliseconds: 500),
+          curve: Curves.ease,
+        );
+      }
+    },
     child: Text(
-      'Skip',
+      _currentPage <= 2 ? 'Skip' : 'Done', 
       style: TextStyle(
         color: Color(0xFF57636C),
-        fontSize: 25,
+        fontSize: 22,
         fontFamily: 'Inter',
         fontStyle: FontStyle.normal,
         fontWeight: FontWeight.w500,
@@ -283,6 +292,7 @@ Widget build(BuildContext context) {
     ),
   ),
 ),
+
         ],
       ),
     ),
