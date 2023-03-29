@@ -334,7 +334,7 @@ class _IssuesState extends State<Issues> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE5E5E5),
+      backgroundColor: const Color(0xFFF1F4F8),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

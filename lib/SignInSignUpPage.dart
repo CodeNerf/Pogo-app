@@ -65,7 +65,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
   Future _signUp(context) async {
     if (_fnameController.text.isEmpty) {
       setState(() {
-        _errorText = 'Must enter your first name.';
+        _errorText = 'Must enter your name.';
         _errorSizeBoxSize = 10;
       });
     } else if (_emailController.text.isEmpty) {

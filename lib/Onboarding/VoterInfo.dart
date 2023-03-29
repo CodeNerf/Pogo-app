@@ -91,7 +91,7 @@ Widget build(BuildContext context) {
                 ),
                 const SizedBox(height: 50),
                 Expandable(
-              title: 'registration status',
+              title: 'Registration status',
               chooseText: 'Are you registered to vote?',
               options: [
                 'Yes', 'No'
@@ -100,7 +100,7 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 20),
             Expandable(
-              title: 'political party',
+              title: 'Political party',
               chooseText: 'What is your political party',
               options: [
                 'Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'
@@ -109,7 +109,7 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 20),
             Expandable(
-              title: 'how do you vote?',
+              title: 'Voting preference',
               chooseText: 'How do you vote?',
               options: [
                 'Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'
@@ -118,7 +118,7 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 20),
             Expandable(
-              title: 'gender',
+              title: 'Voter residency',
               chooseText: 'Do you live in your registered state',
               options: [
                 'Yes', 'No'
@@ -185,9 +185,9 @@ class Expandable extends StatefulWidget {
 }
 
 class _ExpandableState extends State<Expandable> {
-  bool _isExpanded = false;
-  bool _expanded = false;
   int _selectedIndex = -1;
+  bool _expanded = false;
+  static _ExpandableState? _lastExpanded;
 
   void _handleIndexChanged(int? index) {
     setState(() {
@@ -197,40 +197,85 @@ class _ExpandableState extends State<Expandable> {
       }
     });
   }
+
+  void collapse() {
+    setState(() {
+      _expanded = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 25.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15.0),
+        border: Border.all(
+          color: Colors.black,
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           GestureDetector(
             onTap: () {
               setState(() {
+                if (_lastExpanded != null && _lastExpanded != this) {
+                  _lastExpanded!.collapse();
+                }
                 _expanded = !_expanded;
+                if (_expanded) {
+                  _lastExpanded = this;
+                }
               });
             },
             child: Container(
-              height: 55,
+              height: 50,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(15.0),
+                  bottom: Radius.circular(_expanded ? 0.0 : 15.0),
+                ),
                 color: Color(0xFFF1F4F8),
               ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1.5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      widget.title,
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17.0,
+                        color: Color(0xFF57636C),
+                      ),
+                    ),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
+                  Icon(
+                    _expanded ? Icons.expand_less : Icons.expand_more,
+                    size: 40,
+                    color: Color(0xFF57636C),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_expanded)
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(15.0)),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
                       child: Text(
-                        widget.title,
+                        widget.chooseText,
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontStyle: FontStyle.normal,
@@ -240,58 +285,36 @@ class _ExpandableState extends State<Expandable> {
                         ),
                       ),
                     ),
-                    Icon(
-                      _expanded ? Icons.expand_less : Icons.expand_more,
-                      size: 40,
-                      color: Color(0xFF57636C),
+                  ),
+                  for (int i = 0; i < widget.options.length; i++)
+                    Column(
+                      children: [
+                        Container(
+                          child: RadioListTile(
+                            dense: true,
+                            title: Text(
+                              widget.options[i],
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15.0,
+                                color: Color(0xFF57636C),
+                              ),
+                            ),
+                            contentPadding: EdgeInsets.only(bottom: .0),
+                            value: i,
+                            groupValue: _selectedIndex,
+                            onChanged: _handleIndexChanged,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                ],
               ),
             ),
-          ),
-          if (_expanded) ...[
-            Column(
-              children: [
-                SizedBox(height: 20.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    widget.chooseText,
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15.0,
-                      color: Color(0xFF57636C),
-                    ),
-                  ),
-                ),
-                for (int i = 0; i < widget.options.length; i++)
-                  RadioListTile(
-                    dense: true,
-                    title: Text(
-                      widget.options[i],
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15.0,
-                        color: Color(0xFF57636C),
-                      ),
-                    ),
-                    value: i,
-                    groupValue: _selectedIndex,
-                    onChanged: _handleIndexChanged,
-                  ),
-              ],
-            ),
-          ],
         ],
       ),
     );
   }
 }
-
-
-

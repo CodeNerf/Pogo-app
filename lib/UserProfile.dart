@@ -435,6 +435,8 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        child: Container(
+        color: const Color(0xFFF1F4F8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -987,6 +989,6 @@ class _UserProfileState extends State<UserProfile> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
