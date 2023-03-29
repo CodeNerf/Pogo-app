@@ -4,6 +4,9 @@ import 'package:page_transition/page_transition.dart';
 import 'AppWalkThrough.dart';
 import 'SignInSignUpPage.dart';
 import 'amplifyFunctions.dart';
+import 'AddressAutocomplete.dart';
+import 'dart:math';
+
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
 
@@ -133,7 +136,8 @@ class _LandingPageState extends State<LandingPage> {
         height: 60,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AppWalkThrough()));
+              MaterialPageRoute(builder: (context) => AppWalkThrough(
+        ),));
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)),
@@ -151,8 +155,8 @@ class _LandingPageState extends State<LandingPage> {
       ),
     ),
   ],
-  mainAxisAlignment: MainAxisAlignment.center, // center the widgets vertically
-  crossAxisAlignment: CrossAxisAlignment.center, // center the widgets horizontally
+  mainAxisAlignment: MainAxisAlignment.center, 
+  crossAxisAlignment: CrossAxisAlignment.center, 
 )
             ],
           ),
@@ -161,3 +165,4 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 }
+
