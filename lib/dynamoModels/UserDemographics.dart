@@ -1,8 +1,4 @@
-import 'dart:ffi';
-
 import 'package:pogo/dynamoModels/Demographics.dart';
-import 'package:pogo/models/IssueFactorValues.dart' hide IssueFactorValues;
-import 'package:pogo/Onboarding/Demographics.dart' hide Demographics;
 
 class UserDemographics extends Demographics {
   final String userId;
@@ -11,22 +7,34 @@ class UserDemographics extends Demographics {
   String addressLine1;
   String pollingLocation;
   bool voterRegistrationStatus;
+  bool surveyCompletion;
+  int polls;
+  int loginStreak;
+  int loginStreakRecord;
+  String lastLogin;
 
   UserDemographics(
-      {required this.userId,
-      required this.phoneNumber,
-      required this.registrationState,
-      required this.addressLine1,
-      required this.pollingLocation,
-      required this.voterRegistrationStatus,
-      required super.firstName,
-      required super.lastName,
-      required super.dateOfBirth,
-      required super.zipCode,
-      required super.profileImageURL,
-      required super.gender,
-      required super.racialIdentity,
-      required super.politicalAffiliation});
+      {
+        required this.userId,
+        this.phoneNumber = "",
+        this.registrationState = "",
+        this.addressLine1 = "",
+        this.pollingLocation = "",
+        this.voterRegistrationStatus = false,
+        this.surveyCompletion = false,
+        this.polls = 0,
+        this.loginStreak = 0,
+        this.loginStreakRecord = 0,
+        this.lastLogin = "",
+        super.firstName = "",
+        super.lastName = "",
+        super.dateOfBirth = "",
+        super.zipCode = "",
+        super.profileImageURL = "",
+        super.gender = "",
+        super.racialIdentity = "",
+        super.politicalAffiliation = "",
+      });
 
   //factory constructor
   factory UserDemographics.fromJson(Map json) {
@@ -44,7 +52,13 @@ class UserDemographics extends Demographics {
         profileImageURL: json['profileImageURL'],
         gender: json['gender'],
         racialIdentity: json['racialIdentity'],
-        politicalAffiliation: json['politicalAffiliation']);
+        politicalAffiliation: json['politicalAffiliation'],
+        surveyCompletion: json['surveyCompletion'],
+        polls: json['polls'],
+        loginStreak: json['loginStreak'],
+        loginStreakRecord: json['loginStreakRecord'],
+        lastLogin: json['lastLogin'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -62,7 +76,12 @@ class UserDemographics extends Demographics {
       'profileImageURL': profileImageURL,
       'gender': gender,
       'racialIdentity': racialIdentity,
-      'politicalAffiliation': politicalAffiliation
+      'politicalAffiliation': politicalAffiliation,
+      'surveyCompletion': surveyCompletion,
+      'polls': polls,
+      'loginStreak': loginStreak,
+      'loginStreakRecord': loginStreakRecord,
+      'lastLogin': lastLogin
     };
   }
 }

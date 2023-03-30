@@ -1,7 +1,8 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'amplifyFunctions.dart';
 import 'ForgotPasswordPage.dart';
-import 'LoginPage.dart';
+import 'SignInSignUpPage.dart';
 
 class EnterNewPasswordPage extends StatefulWidget {
   final String email;
@@ -12,201 +13,219 @@ class EnterNewPasswordPage extends StatefulWidget {
 }
 
 class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
-  String pogoLogo = 'assets/Pogo_logo_horizontal.png';
-  final passwordController = TextEditingController();
-  final codeController = TextEditingController();
-  String errorText = '';
-  bool obscure = true;
-  Icon eye = Icon(Icons.remove_red_eye);
+  String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
+  final _passwordController = TextEditingController();
+  final _codeController = TextEditingController();
+  String _errorText = '';
+  bool _obscure = true;
+  Icon _eye = Icon(Icons.remove_red_eye);
 
-  Future confirmNewPassword(context) async {
-    if(passwordController.text.isEmpty) {
-      setState(() {
-        errorText = 'Password cannot be blank.';
-      });
+  Future _confirmNewPassword(context) async {
+    try {
+      if (_passwordController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Password cannot be blank.';
+        });
+      } else if (_codeController.text.isEmpty) {
+        setState(() {
+          _errorText = 'Code cannot be blank.';
+        });
+      }
+      //send link to user email to reset password
+      else if (await confirmResetPassword(
+          widget.email, _passwordController.text, _codeController.text)) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SignInSignUpPage(index: 1),
+          ),
+        );
+      } else {
+        setState(() {
+          _errorText =
+              'Could not reset password. Check to make sure all fields are correct and try again.';
+        });
+      }
+    } catch (e) {
+      safePrint("An error occurred in _confirmNewPassword: $e");
     }
-    else if(codeController.text.isEmpty) {
-      setState(() {
-        errorText = 'Code cannot be blank.';
-      });
-    }
-    //send link to user email to reset password
-    else if(await confirmResetPassword(widget.email, passwordController.text, codeController.text)) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-    }
-    else {
-      setState(() {
-        errorText = 'Could not reset password. Check to make sure all fields are correct and try again.';
-      });
-    }
+  }
+
+  void _goBack() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+        const SignInSignUpPage(index: 1),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE1E1E1),
+      backgroundColor: const Color(0xFFF1F4F8),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => _goBack(),
+        ),
+        centerTitle: true,
+        title: Image(
+          image: AssetImage(_pogoLogo),
+          width: 150,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: Colors.grey,
-                    ),
+              //confused creature
+              const SizedBox(
+                height: 200,
+                width: 200,
+                child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Image(
+                      image: AssetImage('assets/forgotPasswordImage.png'),
+                    )
+                ),
+              ),
+
+              //reset password text
+              const Padding(
+                padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                child: Text(
+                  'Reset Password',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 30,
+                    color: Color(0xFF0E0E0E),
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ForgotPasswordPage(),
-                          ),
-                        );
-                      },
-                      child: const Icon(
-                        Icons.arrow_back,
-                      ),
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: Image(
-                          image: AssetImage(
-                            pogoLogo,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
-              const SizedBox(height: 150),
-
-              //instructions
-              const Text(
-                'Enter a new password that is at least 8 characters long and contains at least 1 uppercase letter and 1 symbol. Then enter the password reset code that was sent to your email.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 15),
 
               //ERROR TEXT
-              Text(
-                errorText,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
-              const SizedBox(height: 15),
-
-              //password textfield
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      controller: passwordController,
-                      obscureText: obscure,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'New Password',
-                        suffixIcon: GestureDetector(
-                          onTap: () {
-                            if(obscure) {
-                              setState(() {
-                                obscure = false;
-                                eye = const Icon(Icons.remove_red_eye_outlined);
-                              });
-                            }
-                            else {
-                              setState(() {
-                                obscure = true;
-                                eye = const Icon(Icons.remove_red_eye);
-                              });
-                            }
-                          },
-                          child: eye,
-                        ),
-                      ),
-                    ),
+                padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                child: Text(
+                  _errorText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
 
               //code textfield
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
+                padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.white),
+                    color: Colors.grey[90],
+                    border: Border.all(
+                        color: const Color.fromARGB(255, 0, 0, 0)),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 20.0),
+                    padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
-                      controller: codeController,
-                      decoration: InputDecoration(
+                      controller: _codeController,
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Code',
+                        hintText: 'code',
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
 
-              //submit button
+              //password
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: InkWell(
-                  onTap: () async {
-                    confirmNewPassword(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3D433),
-                      borderRadius: BorderRadius.circular(12),
+                padding: const EdgeInsets.fromLTRB(25, 20, 25, 0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[90],
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 0, 0, 0),
                     ),
-                    child: const Center(
-                        child: Text(
-                          'Reset',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        )),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: TextField(
+                      obscureText: _obscure,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'new password',
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            if (_obscure) {
+                              setState(() {
+                                _obscure = false;
+                                _eye = const Icon(Icons.remove_red_eye_outlined, color: Colors.grey);
+                              });
+                            } else {
+                              setState(() {
+                                _obscure = true;
+                                _eye = const Icon(Icons.remove_red_eye, color: Colors.grey);
+                              });
+                            }
+                          },
+                          child: _eye,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 75),
+
+              //submit button
+              Padding(
+                padding: const EdgeInsets.fromLTRB(25, 40, 25, 20),
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3D433),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade600,
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(25),
+                      onTap: () {
+                        _confirmNewPassword(context);
+                      },
+                      child: const Center(
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF0E0E0E),
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

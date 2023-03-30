@@ -1,3 +1,4 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/CandidateProfile.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
@@ -10,61 +11,75 @@ import 'BallotPage.dart';
 import 'Podium.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
-import 'user.dart';
 
 class Home extends StatefulWidget {
-  final UserDemographics currentUserDemographics;
-  final UserIssueFactorValues currentUserFactors;
-  final List<CandidateDemographics> candidateStack;
-  final Ballot userBallot;
-  final List<CandidateIssueFactorValues> candidateStackFactors;
-  const Home({Key? key, required this.currentUserFactors, required this.candidateStack, required this.currentUserDemographics, required this.userBallot, required this.candidateStackFactors}) : super(key: key);
+  final UserDemographics _currentUserDemographics;
+  final UserIssueFactorValues _currentUserFactors;
+  final List<CandidateDemographics> _candidateStack;
+  final Ballot _userBallot;
+  final List<CandidateIssueFactorValues> _candidateStackFactors;
+  const Home(
+      {Key? key,
+      required UserIssueFactorValues currentUserFactors,
+      required List<CandidateDemographics> candidateStack,
+      required UserDemographics currentUserDemographics,
+      required Ballot userBallot,
+      required List<CandidateIssueFactorValues> candidateStackFactors})
+      : _candidateStackFactors = candidateStackFactors,
+        _userBallot = userBallot,
+        _candidateStack = candidateStack,
+        _currentUserFactors = currentUserFactors,
+        _currentUserDemographics = currentUserDemographics,
+        super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  String PogoLogo = 'assets/Pogo_logo_horizontal.png';
+  final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  //TODO: implement user issues object
-  //objects
-  user currentUser = user.all('','','','','');
-  List<CandidateDemographics> ballotStack = [];
-  late Ballot userBallot;
-  late UserIssueFactorValues currentUserFactors;
-  late List<CandidateDemographics> candidateStack;
-  late UserDemographics currentUserDemographics;
+  List<CandidateDemographics> _ballotStack = [];
+  late Ballot _userBallot;
+  late UserIssueFactorValues _currentUserFactors;
+  late List<CandidateDemographics> _candidateStack;
+  late UserDemographics _currentUserDemographics;
   late List<Widget> _widgetOptions;
-  late List<CandidateIssueFactorValues> candidateStackFactors;
-  List<CandidateDemographics> filteredCandidateStack = [];
+  late List<CandidateIssueFactorValues> _candidateStackFactors;
+  List<CandidateDemographics> _filteredCandidateStack = [];
 
-  updateBallot(CandidateDemographics candidate, List<CandidateDemographics> podiumStack) {
-    userBallot.localCandidateIds.add(candidate.candidateId);
-    ballotStack.add(candidate);
-    putUserBallot(currentUserDemographics.userId, userBallot.localCandidateIds, userBallot.stateCandidateIds, userBallot.federalCandidateIds);
+  _updateBallot(CandidateDemographics candidate,
+      List<CandidateDemographics> podiumStack) {
+    _userBallot.localCandidateIds.add(candidate.candidateId);
+    _ballotStack.add(candidate);
+    putUserBallot(
+        _currentUserDemographics.userId,
+        _userBallot.localCandidateIds,
+        _userBallot.stateCandidateIds,
+        _userBallot.federalCandidateIds);
     setState(() {
-      candidateStack = podiumStack;
+      _candidateStack = podiumStack;
     });
   }
 
-  removeFromBallot(String candidatePic) {
-    CandidateDemographics candidate = ballotStack.firstWhere((element) => element.profileImageURL == candidatePic);
-    userBallot.localCandidateIds.remove(candidate.candidateId);
-    ballotStack.remove(candidate);
-    putUserBallot(currentUserDemographics.userId, userBallot.localCandidateIds, userBallot.stateCandidateIds, userBallot.federalCandidateIds);
-    if(filteredCandidateStack.isNotEmpty) {
-      if(candidate.seatType != candidateStack[0].seatType) {
-        filteredCandidateStack.add(candidate);
+  _removeFromBallot(String candidatePic) {
+    CandidateDemographics candidate = _ballotStack
+        .firstWhere((element) => element.profileImageURL == candidatePic);
+    _userBallot.localCandidateIds.remove(candidate.candidateId);
+    _ballotStack.remove(candidate);
+    putUserBallot(
+        _currentUserDemographics.userId,
+        _userBallot.localCandidateIds,
+        _userBallot.stateCandidateIds,
+        _userBallot.federalCandidateIds);
+    if (_filteredCandidateStack.isNotEmpty) {
+      if (candidate.seatType != _candidateStack[0].seatType) {
+        _filteredCandidateStack.add(candidate);
+      } else {
+        _candidateStack.add(candidate);
       }
-      else {
-        candidateStack.add(candidate);
-      }
-    }
-    else {
-      candidateStack.add(candidate);
+    } else {
+      _candidateStack.add(candidate);
     }
   }
 
@@ -74,71 +89,99 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> loadCandidateProfile(String fullName) async {
+  Future<void> _loadCandidateProfile(String fullName) async {
     List<String> splitName = fullName.split(' ');
-    CandidateDemographics searchCandidate = candidateStack.firstWhere((element) => element.firstName == splitName[0] && element.lastName == splitName[1]);
-    CandidateIssueFactorValues searchCandidateValues = candidateStackFactors.firstWhere((element) => element.candidateId == searchCandidate.candidateId);
+    CandidateDemographics searchCandidate = _candidateStack.firstWhere(
+        (element) =>
+            element.firstName == splitName[0] &&
+            element.lastName == splitName[1]);
+    CandidateIssueFactorValues searchCandidateValues =
+        _candidateStackFactors.firstWhere(
+            (element) => element.candidateId == searchCandidate.candidateId);
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CandidateProfile(candidate: searchCandidate, candidateValues: searchCandidateValues),
+        builder: (context) => CandidateProfile(
+            candidate: searchCandidate, candidateValues: searchCandidateValues),
       ),
     );
   }
 
-  void filterPodiumCandidates(String category) async {
-    if(filteredCandidateStack.isNotEmpty) {
-      await unFilterPodiumCandidates();
-    }
-    int i = 0;
-    while(i < candidateStack.length) {
-      if(candidateStack[i].seatType != category) {
-        filteredCandidateStack.add(candidateStack[i]);
-        candidateStack.remove(candidateStack[i]);
+  void _filterPodiumCandidates(String category) async {
+    try {
+      if (_filteredCandidateStack.isNotEmpty) {
+        await _unFilterPodiumCandidates();
       }
-      else {
-        i++;
+      int i = 0;
+      while (i < _candidateStack.length) {
+        if (_candidateStack[i].seatType != category) {
+          _filteredCandidateStack.add(_candidateStack[i]);
+          _candidateStack.remove(_candidateStack[i]);
+        } else {
+          i++;
+        }
       }
+      setState(() {
+        _selectedIndex = 1;
+        _candidateStack = _candidateStack;
+        _filteredCandidateStack = _filteredCandidateStack;
+      });
+    } catch (e) {
+      safePrint("An error occurred in _filterPodiumCandidates() $e");
     }
-    setState(() {
-      _selectedIndex = 1;
-      candidateStack = candidateStack;
-      filteredCandidateStack = filteredCandidateStack;
-    });
   }
 
-  Future<void> unFilterPodiumCandidates() async {
-    while(filteredCandidateStack.isNotEmpty) {
-      candidateStack.add(filteredCandidateStack[0]);
-      filteredCandidateStack.remove(filteredCandidateStack[0]);
+  Future<void> _unFilterPodiumCandidates() async {
+    while (_filteredCandidateStack.isNotEmpty) {
+      _candidateStack.add(_filteredCandidateStack[0]);
+      _filteredCandidateStack.remove(_filteredCandidateStack[0]);
     }
     setState(() {
       _selectedIndex = 1;
-      candidateStack = candidateStack;
-      filteredCandidateStack = filteredCandidateStack;
+      _candidateStack = _candidateStack;
+      _filteredCandidateStack = _filteredCandidateStack;
     });
-    candidateStack.shuffle();
+    _candidateStack.shuffle();
   }
 
   @override
   void initState() {
     super.initState();
-    candidateStackFactors = widget.candidateStackFactors;
-    currentUserFactors = widget.currentUserFactors;
-    candidateStack = widget.candidateStack;
-    currentUserDemographics = widget.currentUserDemographics;
-    userBallot = widget.userBallot;
-    if(userBallot.localCandidateIds.isNotEmpty) {
-      for(int i = 0; i < userBallot.localCandidateIds.length; i++) {
-        ballotStack.add(candidateStack.firstWhere((element) => element.candidateId == userBallot.localCandidateIds[i]));
+    _candidateStackFactors = widget._candidateStackFactors;
+    _currentUserFactors = widget._currentUserFactors;
+    _candidateStack = widget._candidateStack;
+    _currentUserDemographics = widget._currentUserDemographics;
+    _userBallot = widget._userBallot;
+    if (_userBallot.localCandidateIds.isNotEmpty) {
+      for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
+        _ballotStack.add(_candidateStack.firstWhere((element) =>
+            element.candidateId == _userBallot.localCandidateIds[i]));
       }
     }
     setState(() {
       _widgetOptions = <Widget>[
-        VoterGuide(user: currentUserDemographics,),
-        Podium(candidateStack: candidateStack, userBallot: userBallot, updateBallot: updateBallot, candidateStackFactors: candidateStackFactors, unFilterPodiumCandidates: unFilterPodiumCandidates, loadCandidateProfile: loadCandidateProfile,),
-        BallotPage(userBallot: userBallot, candidateStack: candidateStack, ballotStack: ballotStack, removeFromBallot: removeFromBallot, loadCustomCandidatesInPodium: filterPodiumCandidates,),
-        UserProfile(currentUserFactors: currentUserFactors, currentUserDemographics: currentUserDemographics,),
+        VoterGuide(
+          currentUserDemographics: _currentUserDemographics,
+        ),
+        Podium(
+          candidateStack: _candidateStack,
+          userBallot: _userBallot,
+          updateBallot: _updateBallot,
+          candidateStackFactors: _candidateStackFactors,
+          unFilterPodiumCandidates: _unFilterPodiumCandidates,
+          loadCandidateProfile: _loadCandidateProfile,
+        ),
+        BallotPage(
+          userBallot: _userBallot,
+          candidateStack: _candidateStack,
+          ballotStack: _ballotStack,
+          removeFromBallot: _removeFromBallot,
+          loadCustomCandidatesInPodium: _filterPodiumCandidates,
+        ),
+        UserProfile(
+          currentUserFactors: _currentUserFactors,
+          currentUserDemographics: _currentUserDemographics,
+        ),
       ];
     });
   }
@@ -159,7 +202,7 @@ class _HomeState extends State<Home> {
           title: Align(
             alignment: Alignment.center,
             child: Image(
-              image: AssetImage(PogoLogo),
+              image: AssetImage(_pogoLogo),
               width: 150,
             ),
           ),

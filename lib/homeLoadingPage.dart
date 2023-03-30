@@ -1,77 +1,124 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pogo/amplifyFunctions.dart';
+import 'package:pogo/dynamoModels/MatchingStatistics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'Home.dart';
+import 'LandingPage.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateIssueFactorValues.dart';
-import 'user.dart';
 import 'awsFunctions.dart';
 import 'dynamoModels/CandidateDemographics.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 
 class HomeLoadingPage extends StatefulWidget {
-  const HomeLoadingPage({Key? key}) : super(key: key);
+  final UserDemographics user;
+  const HomeLoadingPage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<HomeLoadingPage> createState() => _HomeLoadingPageState();
 }
 
 class _HomeLoadingPageState extends State<HomeLoadingPage> {
-  late Ballot userBallot;
-  late user currentUser;
-  late UserDemographics currentUserDemographics;
-  late UserIssueFactorValues currentUserFactors;
-  late List<CandidateDemographics> candidateStack;
-  late List<CandidateIssueFactorValues> candidateStackFactors;
+  late Ballot _userBallot;
+  late UserIssueFactorValues _currentUserFactors;
+  late List<CandidateDemographics> _candidateStack;
+  late List<CandidateIssueFactorValues> _candidateStackFactors;
+  late List<MatchingStatistics> _candidateStackStatistics;
   @override
   void initState() {
-    initializeObjects();
+    _initializeObjects();
     super.initState();
   }
 
-  void initializeObjects() async {
-    /*
-    userBallot =
-        Ballot.empty(); //TODO: initialize userBallot with database ballot
-    */
-    currentUser = await fetchCurrentUserAttributes();
-    userBallot = Ballot.empty();
-    userBallot.localCandidateIds = await getUserBallot(currentUser.email);
-    currentUserDemographics = await getUserDemographics(currentUser.email);
-    // Need to push associated user factors to the database before running this function.
-    currentUserFactors = await getUserIssueFactorValues(currentUser.email);
-    candidateStack = await getAllCandidateDemographics();
-    candidateStackFactors = await getAllCandidateIssueFactorValues();
-    setObjectStates(currentUserFactors, candidateStack, currentUserDemographics,
-        userBallot, candidateStackFactors);
+  void _initializeObjects() async {
+    bool retry = true;
+    int retryCount = 0;
+    String email = widget.user.userId;
+    _userBallot = Ballot.empty();
+
+    while (retry) {
+      try {
+        await Future.wait([
+          getUserCandidateStackDemographics(email),
+          getUserCandidateStackIssueFactorValues(email),
+          getUserIssueFactorValues(email),
+          getUserBallot(email),
+          getUserCandidateStackStatistics(email),
+        ]).then((List<dynamic> values) {
+          _candidateStack = values[0];
+          _candidateStackFactors = values[1];
+          _currentUserFactors = values[2];
+          _userBallot.localCandidateIds = values[3];
+          _candidateStackStatistics = values[4];
+        });
+        retry = false;
+      } catch (e) {
+        retryCount++;
+        retry = true;
+        safePrint(e);
+        safePrint("Retrying $retryCount");
+      }
+    }
+
+    _setObjectStates(_currentUserFactors, _candidateStack, _userBallot,
+        _candidateStackFactors, _candidateStackStatistics);
   }
 
-  void setObjectStates(
+  void _setObjectStates(
       UserIssueFactorValues uifv,
       List<CandidateDemographics> s,
-      UserDemographics ud,
       Ballot ub,
-      List<CandidateIssueFactorValues> cifv) {
+      List<CandidateIssueFactorValues> cifv,
+      List<MatchingStatistics> ms) {
     setState(() {
-      candidateStackFactors = cifv;
-      currentUserFactors = uifv;
-      candidateStack = s;
-      currentUserDemographics = ud;
-      userBallot = ub;
+      _candidateStackFactors = cifv;
+      _currentUserFactors = uifv;
+      _candidateStack = s;
+      _userBallot = ub;
+      _candidateStackStatistics = ms;
     });
-    goHome();
+    _getLoginStreak();
   }
 
-  void goHome() async {
+  void _getLoginStreak() async {
+    //TODO: move to homeloadingpage when data is in db
+    //this function will be used to determine how many consecutive days the user has logged in
+    DateTime lastLoginDate = DateFormat("yyyy-MM-dd").parse(widget.user.lastLogin);
+    DateTime now = DateTime.now();
+    if(now.year == lastLoginDate.year) {
+      if(now.month == lastLoginDate.month) {
+        if(now.day == (lastLoginDate.day + 1)) {
+          //increment login streak
+          widget.user.loginStreak = widget.user.loginStreak + 1;
+          if(widget.user.loginStreakRecord < widget.user.loginStreak) {
+            //new login streak record
+            widget.user.loginStreakRecord = widget.user.loginStreak;
+          }
+          await putUserDemographics(widget.user);
+        }
+      }
+      else {
+        //check new month
+      }
+    }
+    else {
+      //check new year
+    }
+    _goHome();
+  }
+
+  void _goHome() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Home(
-          currentUserFactors: currentUserFactors,
-          candidateStack: candidateStack,
-          currentUserDemographics: currentUserDemographics,
-          userBallot: userBallot,
-          candidateStackFactors: candidateStackFactors,
+          currentUserFactors: _currentUserFactors,
+          candidateStack: _candidateStack,
+          currentUserDemographics: widget.user,
+          userBallot: _userBallot,
+          candidateStackFactors: _candidateStackFactors,
         ),
       ),
     );

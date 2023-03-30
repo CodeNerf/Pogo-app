@@ -60,6 +60,8 @@ dependencies:
   url_launcher: ^6.1.9
   flutter_web_browser: ^0.17.1
   percent_indicator: ^4.2.3
+  auto_size_text: ^3.0.0
+  intl: ^0.18.0
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -92,7 +94,7 @@ flutter:
     - assets/policingPogo.jpg
     - assets/reproductiveHealthPogo.jpg
     - assets/drugPolicyPogo.jpg
-    - assets/surveryLanding.png
+    - assets/surveyLanding.png
     - assets/user.png
     - assets/vote.png
     - assets/speech.png
@@ -102,7 +104,29 @@ flutter:
     - assets/placeholderCandidatePic.png
     - assets/democratLogo.png
     - assets/podiumPageBackgroundImage.png
-
+    - assets/facebook.png
+    - assets/twitter.png
+    - assets/tiktok.png
+    - assets/google.png
+    - assets/instagram.png
+    - assets/appWalkThrough1.png
+    - assets/appWalkThrough2.png
+    - assets/appWalkThrough3.png
+    - assets/appWalkThrough4.png
+    - assets/flame.png
+    - assets/podium plus.png
+    - assets/podium x.png
+    - assets/climateIcon.png
+    - assets/drugPolicyIcon.png
+    - assets/economyIcon.png
+    - assets/educationIcon.png
+    - assets/gunControlIcon.png
+    - assets/healthcareIcon.png
+    - assets/housingIcon.png
+    - assets/immigrationIcon.png
+    - assets/policingIcon.png
+    - assets/reproductiveIcon.png
+    - assets/forgotPasswordImage.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
@@ -114,7 +138,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-VariableFont_slnt,wght.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

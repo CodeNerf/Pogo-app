@@ -1,10 +1,12 @@
+import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pogo/LoginPage.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'package:pogo/awsFunctions.dart';
 import '../dynamoModels/UserIssueFactorValues.dart';
 import '../amplifyFunctions.dart';
 import 'Demographics.dart';
+import '../SignInSignUpPage.dart';
+import 'Demographics2.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
@@ -22,7 +24,8 @@ class SurveyLandingPage extends StatefulWidget {
       profileImageURL: '',
       gender: '',
       racialIdentity: '',
-      politicalAffiliation: '');
+      politicalAffiliation: '',
+      surveyCompletion: false);
   UserIssueFactorValues ratings = UserIssueFactorValues(
       userId: '',
       climateScore: 0,
@@ -52,92 +55,145 @@ class SurveyLandingPage extends StatefulWidget {
 }
 
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
-  late UserIssueFactorValues currentUserFactors;
-  late UserDemographics currentAnswers;
   bool _buttonVisible = false;
   @override
   void initState() {
-    getUserFactors();
+    _getUserFactors();
     super.initState();
   }
 
-  void getUserFactors() async {
-    // String userid = await fetchCurrentUserEmail();
-    var currentUser = await fetchCurrentUserAttributes();
+  void _getUserFactors() async {
+    bool retry = true;
+    int retryCount = 0;
+    String email = '';
+    try {
+      email = await fetchCurrentUserEmail();
+    } catch (e) {
+      safePrint("Couldn't fetch user email.");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const SignInSignUpPage(index: 1)));
+    }
     // Need to push associated user factors to the database before running this function.
-    currentUserFactors = await getUserIssueFactorValues(currentUser.email);
-    currentAnswers = await getUserDemographics(currentUser.email);
-    setState(() {
-      widget.ratings = currentUserFactors;
-      widget.answers = currentAnswers;
-      _buttonVisible = true;
-    });
+    while (retry) {
+      try {
+        await Future.wait(
+                [getUserIssueFactorValues(email), getUserDemographics(email)])
+            .then((List<dynamic> values) {
+          setState(() {
+            widget.ratings = values[0];
+            widget.answers = values[1];
+            _buttonVisible = true;
+          });
+        });
+        retry = false;
+      } catch (e) {
+        retry = true;
+        retryCount++;
+        safePrint(e);
+        safePrint(
+            "SurveyLandingPage: Failed to fetch user factors. Retrying... $retryCount");
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color(0xFFF1F4F8),
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Column(
-                children: <Widget>[
-                  const Text(
-                    "Personalize your search",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 34,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height / 3,
+                  width: MediaQuery.of(context).size.width,
+                  child: const FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      "PERSONALIZE\nYOUR\nSEARCH",
+                      style: TextStyle(
+                        shadows: <Shadow> [
+                          Shadow(
+                            blurRadius: 10.0,
+                            offset: Offset(0, 2),
+                            color: Colors.black38,
+                          ),
+                        ],
+                        fontWeight: FontWeight.w900,
+                        fontSize: 34,
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 140,
-                  ),
-                  Align(
-                      alignment: Alignment.center,
-                      child: Image.asset(
-                        "assets/surveryLanding.png",
-                      )),
-                  Container(
-                    height: MediaQuery.of(context).size.height / 5,
-                  ),
-                ],
+                ),
               ),
-              Column(
-                children: <Widget>[
-                  Visibility(
-                    visible: _buttonVisible,
-                    child: MaterialButton(
-                      minWidth: double.infinity,
-                      height: 70,
-                      onPressed: () {
-                        Navigator.push(
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height / 4,
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Image.asset(
+                      "assets/surveyLanding.png",
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 50, 10, 10),
+                child: Visibility(
+                  visible: _buttonVisible,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: 75,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3D433),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.shade600,
+                            spreadRadius: 3,
+                            blurRadius: 7,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(25),
+                        onTap: () {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Demographics(
-                                      ratings: widget.ratings,
-                                      answers: widget.answers,
-                                    )));
-                      },
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      child: const Text(
-                        "Continue",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
+                              builder: (context) => Demographics2(
+                                ratings: widget.ratings,
+                                answers: widget.answers,
+                                issuesIndex: 0,
+                          )));
+                        },
+                        child: const Center(
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              'PoGo',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF0E0E0E),
+                                fontSize: 35,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ],
-              )
+                ),
+              ),
             ],
           ),
         ),
