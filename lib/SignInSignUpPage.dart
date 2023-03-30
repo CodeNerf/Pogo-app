@@ -409,6 +409,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
         ),
 
         const Spacer(),
+        /*
         //or continue with
         const Align(
           alignment: Alignment.centerLeft,
@@ -428,6 +429,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
             ),
           ),
         ),
+
         //social media icons
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 40, 0, 20),
@@ -511,6 +513,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
             ],
           ),
         )
+         */
       ],
     );
   }
@@ -711,6 +714,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
         ),
 
         const Spacer(),
+        /*
         //or continue with
         const Align(
           alignment: Alignment.centerLeft,
@@ -813,6 +817,8 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
             ],
           ),
         )
+
+         */
       ],
     );
   }
