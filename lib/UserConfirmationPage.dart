@@ -1,5 +1,6 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pogo/AppWalkThrough.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
@@ -55,6 +56,9 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
             reproductiveWeight: 0);
         await putUserIssueFactorValues(newValues);
         if (await checkLoggedIn()) {
+          UserDemographics user = await getUserDemographics(_email);
+          user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
+          await putUserDemographics(user);
           await Navigator.push(context,
               MaterialPageRoute(builder: (context) => AppWalkThrough()));
         }

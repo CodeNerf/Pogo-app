@@ -58,34 +58,34 @@ class _UserProfileState extends State<UserProfile> {
     for (int i = 0; i < 4; i++) {
       switch (indexMaxCare) {
         case 0:
-          topIssues.add('CLIMATE');
+          topIssues.add('assets/climateIcon.png');
           break;
         case 1:
-          topIssues.add('DRUG POLICY');
+          topIssues.add('assets/drugPolicyIcon.png');
           break;
         case 2:
-          topIssues.add('ECONOMY');
+          topIssues.add('assets/economyIcon.png');
           break;
         case 3:
-          topIssues.add('EDUCATION');
+          topIssues.add('assets/educationIcon.png');
           break;
         case 4:
-          topIssues.add('GUN POLICY');
+          topIssues.add('assets/gunControlIcon.png');
           break;
         case 5:
-          topIssues.add('HEALTHCARE');
+          topIssues.add('assets/healthcareIcon.png');
           break;
         case 6:
-          topIssues.add('HOUSING');
+          topIssues.add('assets/housingIcon.png');
           break;
         case 7:
-          topIssues.add('IMMIGRATION');
+          topIssues.add('assets/immigrationIcon.png');
           break;
         case 8:
-          topIssues.add('POLICING');
+          topIssues.add('assets/policingIcon.png');
           break;
         case 9:
-          topIssues.add('REPRODUCTIVE RIGHTS');
+          topIssues.add('assets/reproductiveIcon.png');
           break;
       }
       ratings[indexMaxCare] = 0;
@@ -394,42 +394,13 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
-
-  /*
-  void getLoginStreak() async {
-    //TODO: move to homeloadingpage when data is in db
-    //this function will be used to determine how many consecutive days the user has logged in
-    DateTime lastLoginDate = widget.currentUserDemographics.lastLogin;
-    DateTime now = DateTime.now();
-    DateTime currentDate = DateTime(now.year, now.month, now.day);
-    if(currentDate.year == lastLoginDate.year) {
-      if(currentDate.month == lastLoginDate.month) {
-        if(currentDate.day == (lastLoginDate.day + 1)) {
-          //increment login streak
-          widget.currentUserDemographics.loginStreak = widget.currentUserDemographics.loginStreak + 1;
-          if(widget.currentUserDemographics.loginRecord < widget.currentUserDemographics.loginStreak) {
-            //new login streak record
-            widget.currentUserDemographics.loginRecord = widget.currentUserDemographics.loginStreak;
-          }
-          await putUserDemographics(widget.currentUserDemographics);
-        }
-      }
-      else {
-        //check new month
-      }
-    }
-    else {
-      //check new year
-    }
-  }
-
   String getLoginStreakText() {
-    if (widget.currentUserDemographics.loginStreak == widget.currentUserDemographics.loginRecord) {
+    if (widget.currentUserDemographics.loginStreak == widget.currentUserDemographics.loginStreakRecord && widget.currentUserDemographics.loginStreak > 0) {
       return 'New Record!';
     }
     return '';
   }
-   */
+
 
   @override
   Widget build(BuildContext context) {
@@ -532,10 +503,9 @@ class _UserProfileState extends State<UserProfile> {
                                 fit: BoxFit.contain,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  //TODO: placeholder poll values will have to be replaced
                                   children: [
                                     AutoSizeText(
-                                      getUserExperience(2),
+                                      getUserExperience(widget.currentUserDemographics.polls),
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -545,7 +515,7 @@ class _UserProfileState extends State<UserProfile> {
                                       ),
                                     ),
                                     AutoSizeText(
-                                      '2 Polls',
+                                      '${widget.currentUserDemographics.polls} Polls',
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -604,7 +574,7 @@ class _UserProfileState extends State<UserProfile> {
                                   //TODO: placeholder streak values will need to be replaced
                                   children: [
                                     AutoSizeText(
-                                      '0 day streak',
+                                      '${widget.currentUserDemographics.loginStreak} day streak',
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -614,7 +584,7 @@ class _UserProfileState extends State<UserProfile> {
                                       ),
                                     ),
                                     AutoSizeText(
-                                      'New Record!',
+                                      getLoginStreakText(),
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -676,8 +646,11 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            _firstIssue,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_firstIssue),
+                            ),
                           ),
                         ),
                         Container(
@@ -695,8 +668,11 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            _secondIssue,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_secondIssue),
+                            ),
                           ),
                         ),
                         Container(
@@ -714,8 +690,11 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            _thirdIssue,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_thirdIssue),
+                            ),
                           ),
                         ),
                         Container(
@@ -733,8 +712,11 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            _fourthIssue,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_fourthIssue),
+                            ),
                           ),
                         ),
                       ],
@@ -744,6 +726,8 @@ class _UserProfileState extends State<UserProfile> {
               ),
             ),
 
+            /*
+            //TODO: add share ballot functionality
             //invite friends and share your ballot
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -809,6 +793,8 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               ),
             ),
+
+             */
 
             //personal info
             Padding(

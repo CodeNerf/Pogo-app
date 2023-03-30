@@ -8,6 +8,7 @@ import 'Onboarding/SurveyLandingPage.dart';
 import 'amplifyFunctions.dart';
 import 'dynamoModels/UserDemographics.dart';
 //import 'SignUpAddress.dart';
+import 'package:intl/intl.dart';
 
 class SignInSignUpPage extends StatefulWidget {
   final int index;
@@ -87,7 +88,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
         _emailController.text,
         _passwordController.text,
         _fnameController.text)) {
-      UserDemographics userDemographics = UserDemographics(userId: _emailController.text, phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: _fnameController.text, lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '', surveyCompletion: false);
+      UserDemographics userDemographics = UserDemographics(userId: _emailController.text, phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: _fnameController.text, lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '', surveyCompletion: false, polls: 0, loginStreak: 0, loginStreakRecord: 0, lastLogin: '');
       putUserDemographics(userDemographics);
       putUserBallot(_emailController.text, [], [], []);
       //TODO: create blank ballot then push to db
@@ -106,6 +107,9 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
       if (await isUserSignedIn()) {
         //check if survey is completed
         UserDemographics user = await getUserDemographics(_emailSignInController.text);
+        user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        safePrint(user.lastLogin);
+        await putUserDemographics(user);
         if(user.surveyCompletion == true) {
           await Navigator.push(
             context,
