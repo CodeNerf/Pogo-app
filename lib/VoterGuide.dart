@@ -8,8 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
 
 class VoterGuide extends StatefulWidget {
-  UserDemographics currentUserDemographics;
-  VoterGuide({Key? key, required this.currentUserDemographics})
+  UserDemographics user;
+  VoterGuide({Key? key, required this.user})
       : super(key: key);
   @override
   State<VoterGuide> createState() => _VoterGuideState();
@@ -34,7 +34,7 @@ class _VoterGuideState extends State<VoterGuide> {
   void _getPollingLocations() async {
     try {
       _pollingLocations =
-          await getPollingLocation(widget.currentUserDemographics.addressLine1);
+          await getPollingLocation(widget.user.addressLine1);
     } catch (e) {
       safePrint("Error occurred in _getPollingLocations(): $e");
     }
