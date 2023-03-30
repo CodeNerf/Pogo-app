@@ -51,106 +51,130 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
     }
   }
 
+  void _goBack() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+        const SignInSignUpPage(index: 1),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE1E1E1),
+      backgroundColor: const Color(0xFFF1F4F8),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => _goBack(),
+        ),
+        centerTitle: true,
+        title: Image(
+          image: AssetImage(_pogoLogo),
+          width: 150,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1.0,
-                      color: Colors.grey,
-                    ),
+              //confused creature
+              const SizedBox(
+                height: 200,
+                width: 200,
+                child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Image(
+                      image: AssetImage('assets/forgotPasswordImage.png'),
+                    )
+                ),
+              ),
+
+              //reset password text
+              const Padding(
+                padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                child: Text(
+                  'Reset Password',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 30,
+                    color: Color(0xFF0E0E0E),
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ForgotPasswordPage(),
-                          ),
-                        );
-                      },
-                      child: const Icon(
-                        Icons.arrow_back,
-                      ),
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: Image(
-                          image: AssetImage(
-                            _pogoLogo,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
-              const SizedBox(height: 150),
-
-              //instructions
-              const Text(
-                'Enter a new password that is at least 8 characters long and contains at least 1 uppercase letter and 1 symbol. Then enter the password reset code that was sent to your email.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 15),
 
               //ERROR TEXT
-              Text(
-                _errorText,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                child: Text(
+                  _errorText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
                 ),
               ),
-              const SizedBox(height: 15),
 
-              //password textfield
+              //code textfield
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
+                padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.white),
+                    color: Colors.grey[90],
+                    border: Border.all(
+                        color: const Color.fromARGB(255, 0, 0, 0)),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 20.0),
+                    padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
-                      controller: _passwordController,
+                      controller: _codeController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'code',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              //password
+              Padding(
+                padding: const EdgeInsets.fromLTRB(25, 20, 25, 0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[90],
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: TextField(
                       obscureText: _obscure,
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'New Password',
+                        hintText: 'new password',
                         suffixIcon: GestureDetector(
                           onTap: () {
                             if (_obscure) {
                               setState(() {
                                 _obscure = false;
-                                _eye =
-                                    const Icon(Icons.remove_red_eye_outlined);
+                                _eye = const Icon(Icons.remove_red_eye_outlined, color: Colors.grey);
                               });
                             } else {
                               setState(() {
                                 _obscure = true;
-                                _eye = const Icon(Icons.remove_red_eye);
+                                _eye = const Icon(Icons.remove_red_eye, color: Colors.grey);
                               });
                             }
                           },
@@ -161,57 +185,47 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-
-              //code textfield
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      controller: _codeController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Code',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
 
               //submit button
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: InkWell(
-                  onTap: () async {
-                    _confirmNewPassword(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3D433),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Center(
-                        child: Text(
-                      'Reset',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                padding: const EdgeInsets.fromLTRB(25, 40, 25, 20),
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3D433),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade600,
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 6),
                       ),
-                    )),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(25),
+                      onTap: () {
+                        _confirmNewPassword(context);
+                      },
+                      child: const Center(
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF0E0E0E),
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 75),
             ],
           ),
         ),

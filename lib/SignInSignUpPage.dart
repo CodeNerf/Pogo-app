@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pogo/UserConfirmationPage.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:validators/validators.dart';
+import 'ForgotPasswordPage.dart';
 import 'HomeLoadingPage.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 import 'amplifyFunctions.dart';
@@ -334,6 +335,32 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
                     },
                     child: _eye,
                   ),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        //forgot password text button
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: GestureDetector(
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ForgotPasswordPage(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Forgot Password?',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
                 ),
               ),
             ),
