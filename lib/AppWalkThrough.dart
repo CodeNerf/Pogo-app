@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/SignInSignUpPage.dart';
 
 class AppWalkThrough extends StatefulWidget {
@@ -268,7 +269,7 @@ Widget build(BuildContext context) {
   child: TextButton(
     onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SignInSignUpPage(index: 0,)));
+              MaterialPageRoute(builder: (context) => SurveyLandingPage()));
         },
     child: Text(
       'Skip',

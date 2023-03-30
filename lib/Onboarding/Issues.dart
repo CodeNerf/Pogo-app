@@ -77,8 +77,8 @@ class _IssuesState extends State<Issues> {
     'Affordable Housing',
     'Market Regulation',
     'Inclusive',
-    'Divestment\nReallocation',
-    'Abortion +\nContraceptive\nRights'
+    'Divestment & Reallocation',
+    'Abortion & Contraceptive Rights'
   ];
   final List<String> _rightAlignText = [
     'Gun Rights',
@@ -86,11 +86,11 @@ class _IssuesState extends State<Issues> {
     'School Choice',
     'Criminalization',
     'Private',
-    'Market Rat\nHousing',
-    'Market\nDeregulation',
+    'Market Rate Housing',
+    'Market Deregulation',
     'Exclusive',
     'Investment',
-    'Abortion/Contraceptive\nRestrictions'
+    'Abortion & Contraceptive Restrictions'
   ];
 
   @override
@@ -461,9 +461,9 @@ class _IssuesState extends State<Issues> {
                           ),
                         ),
                         //where do you align
-                        Expanded(
+                        const Expanded(
                           flex: 6,
-                          child: const Padding(
+                          child: Padding(
                             padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
                             child: AutoSizeText(
                               'Where do you align?',
@@ -496,14 +496,17 @@ class _IssuesState extends State<Issues> {
                         ),
                         //align slider text
                         Expanded(
-                          flex: 7,
+                          flex: 8,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                             child: Row(
                               children: [
                                 SizedBox(
-                                  child: Text(
+                                  width: MediaQuery.of(context).size.width * 0.65 / 3,
+                                  child: AutoSizeText(
                                     _leftAlignText[_issueIndex],
+                                    maxLines: 3,
+                                    textAlign: TextAlign.start,
                                     style: const TextStyle(
                                       fontSize: 15,
                                     ),
@@ -511,21 +514,25 @@ class _IssuesState extends State<Issues> {
                                 ),
                                 const Spacer(),
                                 SizedBox(
-                                  child: Text(
-                                      _rightAlignText[_issueIndex],
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                      )),
+                                  width: MediaQuery.of(context).size.width * 0.65 / 2,
+                                  child: AutoSizeText(
+                                    _rightAlignText[_issueIndex],
+                                    maxLines: 3,
+                                    textAlign: TextAlign.end,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
                         //how much do you care
-                        Expanded(
+                        const Expanded(
                           flex: 6,
-                          child: const Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
                             child: AutoSizeText(
                               'How much do you care?',
                               maxLines: 1,
@@ -557,7 +564,7 @@ class _IssuesState extends State<Issues> {
                         ),
                         //care slider text
                         Expanded(
-                          flex: 7,
+                          flex: 8,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                             child: Row(

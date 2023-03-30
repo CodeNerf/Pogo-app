@@ -6,6 +6,7 @@ import '../dynamoModels/UserIssueFactorValues.dart';
 import '../amplifyFunctions.dart';
 import 'Demographics.dart';
 import '../SignInSignUpPage.dart';
+import 'Demographics2.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
@@ -168,7 +169,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Demographics(
+                              builder: (context) => Demographics2(
                                 ratings: widget.ratings,
                                 answers: widget.answers,
                                 issuesIndex: 0,

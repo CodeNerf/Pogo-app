@@ -61,7 +61,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
   );
 
 
-  
+
   Future _signUp(context) async {
     if (_fnameController.text.isEmpty) {
       setState(() {
@@ -185,6 +185,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xFFF1F4F8),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -334,63 +335,71 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
             ),
           ),
         ),
-        //login button
+
+        //sign in button
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
-          child: InkWell(
-            onTap: () async {
-              _signIn(context);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3D433),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.35),
-                    blurRadius: 4,
-                    offset: const Offset(0, 4),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 20),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3D433),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade600,
+                  spreadRadius: 3,
+                  blurRadius: 7,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(25),
+                onTap: () {
+                  _signIn(context);
+                },
+                child: const Center(
+                  child: Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0E0E0E),
+                      fontSize: 30,
+                    ),
                   ),
-                ],
-              ),
-              child: const Text(
-                "Login",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                  color: Colors.black,
                 ),
               ),
             ),
           ),
         ),
+
+        const Spacer(),
         //or continue with
-        const Padding(
-          padding: EdgeInsets.only(top: 55),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal:30.0),
-              child: Text(
-                "Or Continue with:",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF57636C),
-                  fontSize: 18,
-                  fontFamily: 'Inter',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,
-                ),
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal:30.0),
+            child: Text(
+              "Or Continue with:",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF57636C),
+                fontSize: 18,
+                fontFamily: 'Inter',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w500,
+                height: 1.2,
               ),
             ),
           ),
         ),
         //social media icons
         Padding(
-          padding: EdgeInsets.only(top: 40),
+          padding: const EdgeInsets.fromLTRB(0, 40, 0, 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -628,63 +637,71 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
             ),
           ),
         ),
-        //REGISTER BUTTON
+
+        //sign up button
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
-          child: InkWell(
-            onTap: () async {
-              _signUp(context);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3D433),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.35),
-                    blurRadius: 4,
-                    offset: const Offset(0, 4),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 20),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3D433),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade600,
+                  spreadRadius: 3,
+                  blurRadius: 7,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(25),
+                onTap: () {
+                  _signUp(context);
+                },
+                child: const Center(
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0E0E0E),
+                      fontSize: 30,
+                    ),
                   ),
-                ],
-              ),
-              child: const Text(
-                "FREE Sign Up",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                  color: Colors.black,
                 ),
               ),
             ),
           ),
         ),
+
+        const Spacer(),
         //or continue with
-        const Padding(
-          padding: EdgeInsets.only(top: 55),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal:30.0),
-              child: Text(
-                "Or Continue with:",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF57636C),
-                  fontSize: 18,
-                  fontFamily: 'Inter',
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,
-                ),
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal:30.0),
+            child: Text(
+              "Or Continue with:",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFF57636C),
+                fontSize: 18,
+                fontFamily: 'Inter',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w500,
+                height: 1.2,
               ),
             ),
           ),
         ),
         //social media icons
         Padding(
-          padding: EdgeInsets.only(top: 40),
+          padding: EdgeInsets.fromLTRB(0, 40, 0, 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

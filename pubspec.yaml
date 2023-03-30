@@ -113,6 +113,8 @@ flutter:
     - assets/appWalkThrough3.png
     - assets/appWalkThrough4.png
     - assets/flame.png
+    - assets/podium plus.png
+    - assets/podium x.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
