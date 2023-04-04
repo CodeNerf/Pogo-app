@@ -9,8 +9,7 @@ import 'dynamoModels/UserIssueFactorValues.dart';
 
 class VoterGuide extends StatefulWidget {
   UserDemographics user;
-  VoterGuide({Key? key, required this.user})
-      : super(key: key);
+  VoterGuide({Key? key, required this.user}) : super(key: key);
   @override
   State<VoterGuide> createState() => _VoterGuideState();
 }
@@ -18,7 +17,7 @@ class VoterGuide extends StatefulWidget {
 class _VoterGuideState extends State<VoterGuide> {
   List<bool> _isChecked = [false, false, false, false];
   late List<PollingLocation> _pollingLocations;
-  late String stateInitial;
+  String stateInitial = "MI";
 
   @override
   void initState() {
@@ -33,8 +32,7 @@ class _VoterGuideState extends State<VoterGuide> {
 
   void _getPollingLocations() async {
     try {
-      _pollingLocations =
-          await getPollingLocation(widget.user.addressLine1);
+      _pollingLocations = await getPollingLocation(widget.user.addressLine1);
     } catch (e) {
       safePrint("Error occurred in _getPollingLocations(): $e");
     }
@@ -46,10 +44,10 @@ class _VoterGuideState extends State<VoterGuide> {
     });
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Container(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Container(
       padding: const EdgeInsets.only(top: 20.0),
       child: SingleChildScrollView(
         child: Column(

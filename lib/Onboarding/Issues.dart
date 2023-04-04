@@ -21,7 +21,11 @@ class Issues extends StatefulWidget {
     answers: answers,
     issuesIndex: issuesIndex,
   );
-  Issues({Key? key, required this.ratings, required this.answers, required this.issuesIndex})
+  Issues(
+      {Key? key,
+      required this.ratings,
+      required this.answers,
+      required this.issuesIndex})
       : super(key: key);
 
   @override
@@ -31,9 +35,8 @@ class Issues extends StatefulWidget {
 class _IssuesState extends State<Issues> {
   //TODO: fix text align/size in card
 
-
-  FixedExtentScrollController _extentScrollController = FixedExtentScrollController();
-
+  FixedExtentScrollController _extentScrollController =
+      FixedExtentScrollController();
 
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   late int _issueIndex;
@@ -100,19 +103,28 @@ class _IssuesState extends State<Issues> {
     _alignRating = widget.ratings.gunPolicyScore.toDouble();
     _valueRating = widget.ratings.gunPolicyWeight.toDouble();
     //check if any values are 0 (0 means user never completed survey yet) if not make button yellow
-    List<num> scores = [widget.ratings.gunPolicyScore, widget.ratings.policingScore, widget.ratings.reproductiveScore, widget.ratings.climateScore, widget.ratings.educationScore, widget.ratings.drugPolicyScore, widget.ratings.immigrationScore, widget.ratings.economyScore, widget.ratings.healthcareScore, widget.ratings.housingScore];
+    List<num> scores = [
+      widget.ratings.gunPolicyScore,
+      widget.ratings.policingScore,
+      widget.ratings.reproductiveScore,
+      widget.ratings.climateScore,
+      widget.ratings.educationScore,
+      widget.ratings.drugPolicyScore,
+      widget.ratings.immigrationScore,
+      widget.ratings.economyScore,
+      widget.ratings.healthcareScore,
+      widget.ratings.housingScore
+    ];
     if (!scores.contains(0)) {
       _nextButtonColor = 0xFFF3D433;
     }
-    if(_issueIndex > 0 && _issueIndex < 9) {
+    if (_issueIndex > 0 && _issueIndex < 9) {
       _backVisibility = true;
       _forwardVisibility = true;
-    }
-    else if(_issueIndex == 0) {
+    } else if (_issueIndex == 0) {
       _backVisibility = false;
       _forwardVisibility = true;
-    }
-    else {
+    } else {
       _forwardVisibility = false;
       _backVisibility = true;
     }
@@ -241,14 +253,12 @@ class _IssuesState extends State<Issues> {
     if (widget.ratings.reproductiveScore != 0 || _issueIndex == 9) {
       _nextButtonColor = 0xFFF3D433;
     }
-    if(_issueIndex > 0 && _issueIndex < 9) {
+    if (_issueIndex > 0 && _issueIndex < 9) {
       _backVisibility = true;
       _forwardVisibility = true;
-    }
-    else if(_issueIndex == 0) {
+    } else if (_issueIndex == 0) {
       _backVisibility = false;
-    }
-    else {
+    } else {
       _forwardVisibility = false;
     }
     setState(() {});
@@ -262,33 +272,33 @@ class _IssuesState extends State<Issues> {
     if (_valueRating == 0) {
       _updateValueRating(1);
     }
-    if(backOrForward == "back") {
-      if(_issueIndex != 0) {
+    if (backOrForward == "back") {
+      if (_issueIndex != 0) {
         _issueIndex--;
         _setRatings();
         _updateButton();
       }
-    }
-    else {
-      if(_issueIndex != 9) {
+    } else {
+      if (_issueIndex != 9) {
         _issueIndex++;
         _setRatings();
         _updateButton();
       }
     }
-    if(_issueIndex == 9) {
+    if (_issueIndex == 9) {
       widget.ratings.reproductiveScore = 1;
       widget.ratings.reproductiveWeight = 1;
     }
   }
 
   void _endSurvey(context) async {
-    if(widget.ratings.reproductiveScore != 0) {
+    if (widget.ratings.reproductiveScore != 0) {
       widget.answers.surveyCompletion = true;
       try {
         await Future.wait([
           putUserDemographics(widget.answers),
           putUserIssueFactorValues(widget.ratings),
+          matchCandidatesToUser(widget.answers.userId)
         ]).then((List<dynamic> values) {
           safePrint("UserDemographics and UserIssueFactorValues updated");
         });
@@ -318,14 +328,14 @@ class _IssuesState extends State<Issues> {
   }
 
   double setInitialAlignScaleValue() {
-    if(_alignRating == 0) {
+    if (_alignRating == 0) {
       return 1;
     }
     return _alignRating;
   }
 
   double setInitialCareScaleValue() {
-    if(_valueRating == 0) {
+    if (_valueRating == 0) {
       return 1;
     }
     return _valueRating;
@@ -424,7 +434,8 @@ class _IssuesState extends State<Issues> {
                             padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
                             child: Container(
                               clipBehavior: Clip.hardEdge,
-                              height: MediaQuery.of(context).size.height * 0.60 / 3,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.60 / 3,
                               width: MediaQuery.of(context).size.width * 0.65,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
@@ -491,7 +502,7 @@ class _IssuesState extends State<Issues> {
                             onChangeEnd: (double value) {
                               _updateAlignRating(value);
                             },
-                            onChanged: (double value) { },
+                            onChanged: (double value) {},
                           ),
                         ),
                         //align slider text
@@ -502,7 +513,9 @@ class _IssuesState extends State<Issues> {
                             child: Row(
                               children: [
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.65 / 3,
+                                  width: MediaQuery.of(context).size.width *
+                                      0.65 /
+                                      3,
                                   child: AutoSizeText(
                                     _leftAlignText[_issueIndex],
                                     maxLines: 3,
@@ -514,7 +527,9 @@ class _IssuesState extends State<Issues> {
                                 ),
                                 const Spacer(),
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.65 / 2,
+                                  width: MediaQuery.of(context).size.width *
+                                      0.65 /
+                                      2,
                                   child: AutoSizeText(
                                     _rightAlignText[_issueIndex],
                                     maxLines: 3,
@@ -559,7 +574,7 @@ class _IssuesState extends State<Issues> {
                             onChangeEnd: (double value) {
                               _updateValueRating(value);
                             },
-                            onChanged: (double value) { },
+                            onChanged: (double value) {},
                           ),
                         ),
                         //care slider text
@@ -576,8 +591,7 @@ class _IssuesState extends State<Issues> {
                                   ),
                                 ),
                                 Spacer(),
-                                Text(
-                                    'Extremely',
+                                Text('Extremely',
                                     style: TextStyle(
                                       fontSize: 15,
                                     )),
