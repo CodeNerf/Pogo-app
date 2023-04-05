@@ -1,14 +1,15 @@
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:pogo/awsFunctions.dart';
 import 'amplifyconfiguration.dart';
 
 Future<bool> configureAmplify() async {
   try {
     final auth = AmplifyAuthCognito();
     await Amplify.addPlugin(auth);
-    safePrint("Amplify Configured");
     await Amplify.configure(amplifyconfig);
+    safePrint("Amplify Configured");
     return true;
   } catch (e) {
     safePrint('An error occurred configureAmplify(): $e');
@@ -18,16 +19,19 @@ Future<bool> configureAmplify() async {
 
 Future<bool> isUserSignedIn() async {
   try {
-    await Amplify.Auth.fetchAuthSession();
-    return true;
+    final result = await Amplify.Auth.fetchAuthSession();
+    if(result.isSignedIn) {
+      safePrint('USER IS SIGNED IN');
+      return true;
+    }
+    else {
+      safePrint('USER IS SIGNED OUT');
+      return false;
+    }
   } catch (e) {
-    safePrint('An error ocurred isUserSignedIn() $e');
+    safePrint('An error occurred isUserSignedIn() $e');
     return false;
   }
-  /*
-  final result = await Amplify.Auth.fetchAuthSession();
-  return result.isSignedIn;
-   */
 }
 
 Future<AuthUser> getCurrentUser() async {
@@ -40,17 +44,11 @@ Future<AuthUser> getCurrentUser() async {
   }
 }
 
-Future<bool> signUpUser(String email, String password, String fname,
-    String lname, String phoneNumber, String address) async {
+Future<bool> signUpUser(String email, String password, String fname) async {
   //bool isSignUpComplete = false; //Flag used to route away from signup, possibly better as return value
   try {
-    String phone = '+1$phoneNumber';
     final userAttributes = <CognitoUserAttributeKey, String>{
       CognitoUserAttributeKey.givenName: fname,
-      CognitoUserAttributeKey.familyName: lname,
-      CognitoUserAttributeKey.phoneNumber: phone,
-      CognitoUserAttributeKey.address: address,
-      const CognitoUserAttributeKey.custom('survey'): '0',
     };
     final result = await Amplify.Auth.signUp(
       username: email,

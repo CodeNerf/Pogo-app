@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:amplify_core/amplify_core.dart';
 //import 'APIKey.dart';
 import 'package:http/http.dart' as http;
-import 'package:pogo/googleFunctions/APIKey.dart';
+//import 'package:pogo/googleFunctions/APIKey.dart';
 import 'CivicModels.dart';
 
 /*
@@ -25,6 +25,8 @@ Future<List<Election>> getElection() async {
   }
 }
 */
+
+String googleAPIKey = '';
 
 Future<List<PollingLocation>> getPollingLocation(String address) async {
   final queryParams = {

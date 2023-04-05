@@ -1,5 +1,6 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/MatchingStatistics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
@@ -13,7 +14,7 @@ import 'dynamoModels/UserIssueFactorValues.dart';
 
 class HomeLoadingPage extends StatefulWidget {
   final UserDemographics user;
-  HomeLoadingPage({Key? key, required this.user}) : super(key: key);
+  const HomeLoadingPage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<HomeLoadingPage> createState() => _HomeLoadingPageState();
@@ -78,6 +79,33 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
       _userBallot = ub;
       _candidateStackStatistics = ms;
     });
+    _getLoginStreak();
+  }
+
+  void _getLoginStreak() async {
+    //TODO: move to homeloadingpage when data is in db
+    //this function will be used to determine how many consecutive days the user has logged in
+    DateTime lastLoginDate = DateFormat("yyyy-MM-dd").parse(widget.user.lastLogin);
+    DateTime now = DateTime.now();
+    if(now.year == lastLoginDate.year) {
+      if(now.month == lastLoginDate.month) {
+        if(now.day == (lastLoginDate.day + 1)) {
+          //increment login streak
+          widget.user.loginStreak = widget.user.loginStreak + 1;
+          if(widget.user.loginStreakRecord < widget.user.loginStreak) {
+            //new login streak record
+            widget.user.loginStreakRecord = widget.user.loginStreak;
+          }
+          await putUserDemographics(widget.user);
+        }
+      }
+      else {
+        //check new month
+      }
+    }
+    else {
+      //check new year
+    }
     _goHome();
   }
 
