@@ -98,7 +98,7 @@ class _LandingPageState extends State<LandingPage> {
         height: 60,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const SignInSignUpPage(index: 1,)));
+              MaterialPageRoute(builder: (context) => const SignInSignUpPage(index: 0,)));
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)),
@@ -133,7 +133,7 @@ class _LandingPageState extends State<LandingPage> {
         height: 60,
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const SignInSignUpPage(index: 0)));
+              MaterialPageRoute(builder: (context) => const SignInSignUpPage(index: 1)));
         },
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)),
