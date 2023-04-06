@@ -1,9 +1,7 @@
-import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'Demographics2.dart';
 import 'Issues.dart';
-import 'VoterInfo.dart';
 import '../dynamoModels/UserIssueFactorValues.dart';
 
 class VoterInfo2 extends StatefulWidget {
@@ -24,6 +22,10 @@ class _VoterInfo2State extends State<VoterInfo2> {
   bool _preferenceExpand = false;
   bool _residencyExpand = false;
   Color _nextButtonColor = const Color(0xFF808080);
+  bool _regStatusCheckmarkVisibility = false;
+  bool _regStateCheckmarkVisibility = false;
+  bool _partyCheckmarkVisibility = false;
+  bool _voteCheckmarkVisibility = false;
 
   void _nextPage() async {
     Navigator.push(
@@ -103,6 +105,10 @@ class _VoterInfo2State extends State<VoterInfo2> {
     super.initState();
     if(widget.answers.politicalAffiliation != "") {
       _nextButtonColor = const Color(0xFFF3D433);
+      _regStatusCheckmarkVisibility = true;
+      _regStateCheckmarkVisibility = true;
+      _partyCheckmarkVisibility = true;
+      _voteCheckmarkVisibility = true;
     }
   }
 
@@ -110,18 +116,22 @@ class _VoterInfo2State extends State<VoterInfo2> {
     if(tileIndex == 0) {
       //set registration status
       widget.answers.voterRegistrationStatus = status;
+      _regStatusCheckmarkVisibility = true;
     }
     else if(tileIndex == 1) {
       //set registered state status
       widget.answers.liveInRegisteredState = status;
+      _regStateCheckmarkVisibility = true;
     }
     else if(tileIndex == 2) {
       //set political party affiliation
       widget.answers.politicalAffiliation = selection;
+      _partyCheckmarkVisibility = true;
     }
     else {
       //set how do you vote
       widget.answers.partyVoting = selection;
+      _voteCheckmarkVisibility = true;
     }
     //check if all options are filled, changed button to yellow if so
     if(widget.answers.partyVoting != "" && widget.answers.politicalAffiliation != "") {
@@ -189,15 +199,26 @@ class _VoterInfo2State extends State<VoterInfo2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 0);
                       },
-                      title: const Text(
-                        'registration status',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'registration status',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _regStatusCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Padding(
@@ -256,15 +277,26 @@ class _VoterInfo2State extends State<VoterInfo2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 1);
                       },
-                      title: const Text(
-                        'registered state',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'registered state',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _regStateCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Padding(
@@ -323,15 +355,26 @@ class _VoterInfo2State extends State<VoterInfo2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 2);
                       },
-                      title: const Text(
-                        'political party',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'political party',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _partyCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Padding(
@@ -420,15 +463,26 @@ class _VoterInfo2State extends State<VoterInfo2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 3);
                       },
-                      title: const Text(
-                        'how do you vote?',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'how do you vote?',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _voteCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Padding(

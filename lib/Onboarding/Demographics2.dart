@@ -22,6 +22,10 @@ class _Demographics2State extends State<Demographics2> {
   bool ethnicityExpand = false;
   bool genderExpand = false;
   Color _nextButtonColor = Color(0xFF808080);
+  bool _ageCheckmarkVisibility = false;
+  bool _ethnicityCheckmarkVisibility = false;
+  bool _genderCheckmarkVisibility = false;
+
 
   void _nextPage() async {
     Navigator.push(
@@ -78,6 +82,9 @@ class _Demographics2State extends State<Demographics2> {
     super.initState();
     if(widget.answers.racialIdentity != "") {
       _nextButtonColor = const Color(0xFFF3D433);
+      _ageCheckmarkVisibility = true;
+      _ethnicityCheckmarkVisibility = true;
+      _genderCheckmarkVisibility = true;
     }
   }
 
@@ -85,14 +92,17 @@ class _Demographics2State extends State<Demographics2> {
     if(tileIndex == 0) {
       //set age range
       widget.answers.dateOfBirth = selection;
+      _ageCheckmarkVisibility = true;
     }
     else if(tileIndex == 1) {
       //set race/ethnicity
       widget.answers.racialIdentity = selection;
+      _ethnicityCheckmarkVisibility = true;
     }
     else {
       //set gender
       widget.answers.gender = selection;
+      _genderCheckmarkVisibility = true;
     }
     //check if all options are filled, changed button to yellow if so
     if(widget.answers.racialIdentity != "" && widget.answers.dateOfBirth != "" && widget.answers.gender != "") {
@@ -157,15 +167,26 @@ class _Demographics2State extends State<Demographics2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 0);
                       },
-                      title: const Text(
-                        'your age',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'your age',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                              visible: _ageCheckmarkVisibility,
+                              child: const Icon(
+                                  Icons.check,
+                                  color: Colors.green,
+                              ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Text(
@@ -240,15 +261,26 @@ class _Demographics2State extends State<Demographics2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 1);
                       },
-                      title: const Text(
-                        'race/ethnicity',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'race/ethnicity',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _ethnicityCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Text(
@@ -343,15 +375,26 @@ class _Demographics2State extends State<Demographics2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 2);
                       },
-                      title: const Text(
-                        'gender',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'gender',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _genderCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Text(
