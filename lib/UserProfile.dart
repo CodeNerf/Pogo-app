@@ -415,7 +415,7 @@ class _UserProfileState extends State<UserProfile> {
 
   String pogoLinkMessage() {
     //differentiate between android and ios here
-    return "Come download the PoGo app! insert link here";
+    return "Come download the PoGo app! https://www.politicsonthego.info";
   }
 
 
