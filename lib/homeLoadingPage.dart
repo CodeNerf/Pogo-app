@@ -87,27 +87,23 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     DateTime lastLoginDate = DateFormat("yyyy-MM-dd").parse(widget.user.lastLogin);
     DateTime now = DateTime.now();
     widget.user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    if(now.year == lastLoginDate.year) {
-      if(now.month == lastLoginDate.month) {
-        if(now.day == (lastLoginDate.day + 1)) {
-          //increment login streak
-          widget.user.loginStreak = widget.user.loginStreak + 1;
-          if(widget.user.loginStreakRecord < widget.user.loginStreak) {
-            //new login streak record
-            widget.user.loginStreakRecord = widget.user.loginStreak;
-          }
-        }
-        else {
-          //reset login streak to 1
-          widget.user.loginStreak = 1;
-        }
-      }
-      else {
-        //check new month
+    lastLoginDate = DateTime(lastLoginDate.year, lastLoginDate.month, lastLoginDate.day);
+    now = DateTime(now.year, now.month, now.day);
+    int daysBetween = (now.difference(lastLoginDate).inHours / 24).round();
+    if(daysBetween == 1) {
+      //increment loginStreak
+      widget.user.loginStreak = widget.user.loginStreak + 1;
+      //determine if new record
+      if(widget.user.loginStreak > widget.user.loginStreakRecord) {
+        widget.user.loginStreakRecord = widget.user.loginStreak;
       }
     }
+    else if(daysBetween > 1){
+      //reset login streak
+      widget.user.loginStreak = 1;
+    }
     else {
-      //check new year
+      //login same day as last login, do nothing
     }
     await putUserDemographics(widget.user);
     _goHome();
