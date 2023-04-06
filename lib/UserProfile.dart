@@ -399,7 +399,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   String getLoginStreakText() {
-    if (widget.currentUserDemographics.loginStreak == widget.currentUserDemographics.loginStreakRecord && widget.currentUserDemographics.loginStreak > 0) {
+    if (widget.currentUserDemographics.loginStreak == widget.currentUserDemographics.loginStreakRecord) {
       return 'New Record!';
     }
     return '';

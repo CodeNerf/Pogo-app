@@ -12,6 +12,8 @@ class UserDemographics extends Demographics {
   int loginStreak;
   int loginStreakRecord;
   String lastLogin;
+  bool liveInRegisteredState;
+  String partyVoting;
 
   UserDemographics(
       {
@@ -26,6 +28,8 @@ class UserDemographics extends Demographics {
         this.loginStreak = 0,
         this.loginStreakRecord = 0,
         this.lastLogin = "",
+        this.liveInRegisteredState = false,
+        this.partyVoting = "",
         super.firstName = "",
         super.lastName = "",
         super.dateOfBirth = "",
@@ -58,6 +62,8 @@ class UserDemographics extends Demographics {
         loginStreak: json['loginStreak'],
         loginStreakRecord: json['loginStreakRecord'],
         lastLogin: json['lastLogin'],
+        liveInRegisteredState: json['liveInRegisteredState'],
+        partyVoting: json['partyVoting'],
     );
   }
 
@@ -81,7 +87,9 @@ class UserDemographics extends Demographics {
       'polls': polls,
       'loginStreak': loginStreak,
       'loginStreakRecord': loginStreakRecord,
-      'lastLogin': lastLogin
+      'lastLogin': lastLogin,
+      'liveInRegisteredState': liveInRegisteredState,
+      'partyVoting': partyVoting,
     };
   }
 }

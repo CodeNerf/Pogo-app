@@ -86,6 +86,7 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     //this function will be used to determine how many consecutive days the user has logged in
     DateTime lastLoginDate = DateFormat("yyyy-MM-dd").parse(widget.user.lastLogin);
     DateTime now = DateTime.now();
+    widget.user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
     if(now.year == lastLoginDate.year) {
       if(now.month == lastLoginDate.month) {
         if(now.day == (lastLoginDate.day + 1)) {
@@ -95,7 +96,10 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
             //new login streak record
             widget.user.loginStreakRecord = widget.user.loginStreak;
           }
-          await putUserDemographics(widget.user);
+        }
+        else {
+          //reset login streak to 1
+          widget.user.loginStreak = 1;
         }
       }
       else {
@@ -105,6 +109,7 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     else {
       //check new year
     }
+    await putUserDemographics(widget.user);
     _goHome();
   }
 

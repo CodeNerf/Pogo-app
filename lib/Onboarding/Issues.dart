@@ -647,7 +647,7 @@ class _IssuesState extends State<Issues> {
                 width: MediaQuery.of(context).size.width / 2,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3D433),
+                  color: Color(_nextButtonColor),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(

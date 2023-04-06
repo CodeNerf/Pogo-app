@@ -25,7 +25,14 @@ class SurveyLandingPage extends StatefulWidget {
       gender: '',
       racialIdentity: '',
       politicalAffiliation: '',
-      surveyCompletion: false);
+      partyVoting: '',
+      polls: 0,
+      surveyCompletion: false,
+      liveInRegisteredState: false,
+      lastLogin: '',
+      loginStreakRecord: 0,
+      loginStreak: 0,
+  );
   UserIssueFactorValues ratings = UserIssueFactorValues(
       userId: '',
       climateScore: 0,
@@ -56,6 +63,7 @@ class SurveyLandingPage extends StatefulWidget {
 
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
   bool _buttonVisible = false;
+
   @override
   void initState() {
     _getUserFactors();
@@ -71,13 +79,13 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
     } catch (e) {
       safePrint("Couldn't fetch user email.");
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const SignInSignUpPage(index: 1)));
+          context, MaterialPageRoute(builder: (context) => const SignInSignUpPage(index: 0)));
     }
     // Need to push associated user factors to the database before running this function.
     while (retry) {
       try {
         await Future.wait(
-                [getUserIssueFactorValues(email), getUserDemographics(email)])
+            [getUserIssueFactorValues(email), getUserDemographics(email)])
             .then((List<dynamic> values) {
           setState(() {
             widget.ratings = values[0];

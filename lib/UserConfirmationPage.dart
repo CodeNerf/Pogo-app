@@ -22,8 +22,8 @@ class UserConfirmationPage extends StatefulWidget {
 class _UserConfirmationPage extends State<UserConfirmationPage> {
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   final _codeController = TextEditingController();
-  late String _email = widget.email;
-  late String _password = widget.password;
+  late final String _email = widget.email;
+  late final String _password = widget.password;
   String _errorText = '';
   double _errorSizeBoxSize = 0;
   Color _errorTextColor = Colors.green;
@@ -56,16 +56,15 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
             reproductiveWeight: 0);
         await putUserIssueFactorValues(newValues);
         if (await checkLoggedIn()) {
-          UserDemographics user = await getUserDemographics(_email);
-          user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
-          user.loginStreak = 1;
-          await putUserDemographics(user);
           await Navigator.push(context,
               MaterialPageRoute(builder: (context) => AppWalkThrough()));
         }
-      } else if (await isUserConfirmed()) {
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => AppWalkThrough()));
+      }
+      else if (await isUserConfirmed()) {
+        if(await checkLoggedIn()) {
+          await Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AppWalkThrough()));
+        }
       } else {
         setState(() {
           _errorText =
