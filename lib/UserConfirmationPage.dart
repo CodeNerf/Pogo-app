@@ -58,6 +58,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
         if (await checkLoggedIn()) {
           UserDemographics user = await getUserDemographics(_email);
           user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
+          user.loginStreak = 1;
           await putUserDemographics(user);
           await Navigator.push(context,
               MaterialPageRoute(builder: (context) => AppWalkThrough()));

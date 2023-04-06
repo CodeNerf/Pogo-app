@@ -83,7 +83,6 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
   }
 
   void _getLoginStreak() async {
-    //TODO: move to homeloadingpage when data is in db
     //this function will be used to determine how many consecutive days the user has logged in
     DateTime lastLoginDate = DateFormat("yyyy-MM-dd").parse(widget.user.lastLogin);
     DateTime now = DateTime.now();

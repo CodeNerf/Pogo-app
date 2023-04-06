@@ -181,6 +181,7 @@ class _HomeState extends State<Home> {
         UserProfile(
           currentUserFactors: _currentUserFactors,
           currentUserDemographics: _currentUserDemographics,
+          currentUserBallotCandidates: _ballotStack,
         ),
       ];
     });
