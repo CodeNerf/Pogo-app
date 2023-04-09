@@ -22,6 +22,7 @@ class _VoterGuideState extends State<VoterGuide> {
   List<bool> _isChecked = [false, false, false, false];
   late List<PollingLocation> _pollingLocations;
   String stateInitial = 'MI';
+
   @override
   void initState() {
     super.initState();
