@@ -60,6 +60,8 @@ dependencies:
   url_launcher: ^6.1.9
   flutter_web_browser: ^0.17.1
   percent_indicator: ^4.2.3
+  flutter_share: ^2.0.0
+  external_app_launcher: ^3.1.0
   auto_size_text: ^3.0.0
   intl: ^0.18.0
   share_plus: ^6.3.1
@@ -105,6 +107,27 @@ flutter:
     - assets/placeholderCandidatePic.png
     - assets/democratLogo.png
     - assets/podiumPageBackgroundImage.png
+    - assets/Rectangle.png
+    - assets/republicanLogo.png
+    - assets/phone.png
+    - assets/phone2.png
+    - assets/email.png
+    - assets/office.png
+    - assets/website.png
+    - assets/facebook.png
+    - assets/twitter.png
+    - assets/tiktok.png
+    - assets/instagram.png
+    - assets/linkedin.png
+    - assets/candidateImage.png
+    - assets/contributers.png
+    - assets/marketing.png
+    - assets/budget.png
+    - assets/candidateProfileShare.png
+    - assets/independentLogo.png
+    - assets/greenLogo.png
+    - assets/libertarianLogo.png
+    - assets/votinghistory.png
     - assets/facebook.png
     - assets/twitter.png
     - assets/tiktok.png
@@ -128,6 +151,7 @@ flutter:
     - assets/policingIcon.png
     - assets/reproductiveIcon.png
     - assets/forgotPasswordImage.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
