@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dynamoModels/CandidateDemographics.dart';
+import 'package:flutter_share/flutter_share.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
+import 'package:share_plus/share_plus.dart';
+
 
 class CandidateProfile extends StatefulWidget {
   final CandidateDemographics candidate;
@@ -17,7 +24,20 @@ class _CandidateProfileState extends State<CandidateProfile>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
-bool _isCardVisible = false;
+  bool _isCardVisible = false;
+  List<Map<String, dynamic>> contactInfo = [  {    'icon': 'assets/phone.png',    'text': '(517) 373-3400',  },  {    'icon': 'assets/phone2.png',    'text': '(517) 335-7858',  },  {    'icon': 'assets/email.png',    'text': 'info@gretchenwhitmer.com',  },  {    'icon': 'assets/website.png',    'text': 'www.michigan.gov/whitmer',  },  {    'icon': 'assets/office.png',    'text': 'Post Office, Lansing MI 48909',  },];
+  final socialMediaList = [
+  {'name': 'LinkedIn', 'icon': 'assets/linkedin.png', 'url': 'https://www.linkedin.com'},
+  {'name': 'Facebook', 'icon': 'assets/facebook.png', 'url': 'https://www.facebook.com'},
+  {'name': 'Twitter', 'icon': 'assets/twitter.png', 'url': 'https://www.twitter.com'},
+  {'name': 'Instagram', 'icon': 'assets/instagram.png', 'url': 'https://www.instagram.com'},
+  {'name': 'TikTok', 'icon': 'assets/tiktok.png', 'url': 'https://www.tiktok.com'},
+];
+bool _showAllCardsEducation = false;
+bool _showAllCardsPreviousPositions = false;
+bool _showAllCardsOtherExperience = false;
+
+
   @override
   void initState() {
     super.initState();
@@ -37,8 +57,6 @@ bool _isCardVisible = false;
     });
   }
   
-
-
 
 
    //returns the candidate's experience
@@ -64,63 +82,39 @@ bool _isCardVisible = false;
     return experience;
   }
 
- Color _candidateColor(String party) {
-    switch (party) {
-      case 'Democrat':
-        return const Color(0xFF3456CF);
-      case 'Republican':
-        return const Color(0xFFDE0100);
-      case 'Libertarian':
-        return const Color(0xFFFFD100);
-      case 'Green':
-        return const Color(0xFF508C1B);
-    }
-    return const Color(0xFFF9F9F9);
-  }
-  
   Widget getLogoForAffiliation(String party, {double width = 33, double height = 33}) {
   switch (party) {
-    case 'democrat':
+    case 'Democrat':
       return Image.asset(
         'assets/democratLogo.png',
         width: width,
         height: height,
       );
-    case 'republican':
+    case 'Republican':
       return Image.asset(
         'assets/republicanLogo.png',
         width: width,
         height: height,
       );
-    case 'independent':
+      case 'Green':
       return Image.asset(
+        'assets/greenLogo.png',
+        width: width,
+        height: height,
+      );
+    case 'Libertarian':
+      return Image.asset(
+        'assets/libertarianLogo.png',
+        width: width,
+        height: height,
+      );
+    default:
+       return Image.asset(
         'assets/independentLogo.png',
         width: width,
         height: height,
       );
-    
-    default:
-      return Image.asset(
-        'assets/democratLogo.png',
-        width: width,
-        height: height,
-      );
   }}
-
-  // List<Widget> _getRatingCircles() {
-  //   List<Widget> circles = [];
-  //   circles.add(Column(children: [_ratingCircles('\n', widget.candidateValues.educationScore), _ratingCircles('Care', widget.candidateValues.educationWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Climate\n', widget.candidateValues.climateScore), _ratingCircles('Care', widget.candidateValues.climateWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Drug Policy\n', widget.candidateValues.drugPolicyScore), _ratingCircles('Care', widget.candidateValues.drugPolicyWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Economy\n', widget.candidateValues.economyScore), _ratingCircles('Care', widget.candidateValues.economyWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Healthcare\n', widget.candidateValues.healthcareScore), _ratingCircles('Care', widget.candidateValues.healthcareWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Immigration\n', widget.candidateValues.immigrationScore), _ratingCircles('Care', widget.candidateValues.immigrationWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Policing\n', widget.candidateValues.policingScore), _ratingCircles('Care', widget.candidateValues.policingWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Reproductive\nHealth', widget.candidateValues.reproductiveScore), _ratingCircles('Care', widget.candidateValues.reproductiveWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Gun Control\n', widget.candidateValues.gunPolicyScore), _ratingCircles('Care', widget.candidateValues.gunPolicyWeight)],));
-  //   circles.add(Column(children: [_ratingCircles('Housing\n', widget.candidateValues.housingScore), _ratingCircles('Care', widget.candidateValues.housingWeight)],));
-  //   return circles;
-  // }
 
 
 Widget _ratingCircles(num rating) {
@@ -129,22 +123,12 @@ Widget _ratingCircles(num rating) {
     child: Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.black, width: 1),
       ),
       child: CircularPercentIndicator(
         radius: 25,
         lineWidth: 6,
         progressColor: const Color(0xFFF3D433),
         backgroundColor: const Color(0xFF8B9DDE),
-           
-        // footer: Text(
-        //   name,
-        //   textAlign: TextAlign.center,
-        //   style: const TextStyle(
-        //     fontSize: 12,
-        //     fontWeight: FontWeight.w500,
-        //   ),
-        // ),
         percent: rating/5,
         center: Text(
           '$rating/5',
@@ -157,76 +141,296 @@ Widget _ratingCircles(num rating) {
     ),
   );
 }
+Widget createIsssueCard(
+  String titleText,
+  String descriptionText,
+  List<Widget> ratingCircles,
+) {
+  final double screenWidth = MediaQuery.of(context).size.width;
+
+  return Card(
+    elevation: 3,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+    ),
+    shadowColor: Colors.black.withOpacity(0.95),
+    color: Color(0xFFD9D9D9),
+    child: SizedBox(
+      height: 115,
+      width: 400,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth < 400 ? 10 : 20,
+          vertical: 20,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 3.0),
+                  child: Text(
+                    titleText,
+                    style: TextStyle(
+                      fontFamily: "Inter",
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    descriptionText,
+                    style: TextStyle(
+                      fontFamily: "Inter",
+                      fontWeight: FontWeight.w600,
+                      fontSize: 10,
+                      color: Color(0xFF57636C),
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: ratingCircles,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+Widget createEducationCard(
+  String title,
+  String subtitle1,
+  String subtitle2,
+) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double cardWidth = screenWidth <= 330 ? screenWidth * 0.8 : 180.0;
+
+  return Card(
+    elevation: 3,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+    ),
+    shadowColor: Colors.black.withOpacity(0.95),
+    color: Color(0xFFD9D9D9),
+    child: SizedBox(
+      height: 90,
+      width: cardWidth,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3.0),
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: Colors.black,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          subtitle1,
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            color: Color(0xFF57636C),
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        Text(
+                          subtitle2,
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            color: Color(0xFF57636C),
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+Widget createExperienceCard(
+  String title,
+  String subtitle1,
+  String subtitle2,
+) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double cardWidth = screenWidth <= 600 ? screenWidth * 0.7 : 150.0;
+  return Card(
+    elevation: 3,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+    ),
+    shadowColor: Colors.black.withOpacity(0.95),
+    color: Color(0xFFD9D9D9),
+    child: SizedBox(
+      height: 90,
+      width: 150,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3.0),
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: Colors.black,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          subtitle1,
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            color: Color(0xFF57636C),
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        Text(
+                          subtitle2,
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            color: Color(0xFF57636C),
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
 @override
   Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: Color(0xFFF1F4F8),
-
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.arrow_back, color: Colors.black),
-      //     onPressed: () => Navigator.of(context).pop(),
-      //   ),
-      //   centerTitle: true,
-      //   title: Image(
-      //     image: AssetImage(_pogoLogo),
-      //     width: 150,
-      //   ),
-      // ),
     body: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-    Stack(
-  children: [
-    Container(
-      width: 440,
-      height: 350,
+   Padding(
+  padding: EdgeInsets.symmetric(vertical: 16.0), // adjust the horizontal padding as needed
+  child: Stack(
+    children: [
+      Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 0.50,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/candidateImage.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+      Positioned(
+        top: 30,
+        left: 30,
+        child: Container(
+          height:40,
+          width: 45,
+          decoration: BoxDecoration(
+            color: Color(0xFFD9D9D9),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: IconButton(
+            icon: Icon(Icons.arrow_back),
+            iconSize: 25,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ),
+      Positioned(
+  top: 30,
+  right: 30,
+  child: Container(
+    height: 40,
+    width: 45,
+    decoration: BoxDecoration(
+      color: Color(0xFFD9D9D9),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    child: GestureDetector(
+      onTap: () async {
+        await Share.share(
+          'Check out ${widget.candidate.firstName} ${widget.candidate.lastName}\'s profile on the PoGo app! Visit ${'https://www.politicsonthego.info/'} for more information.',
+          subject: 'Share Profile',
+          sharePositionOrigin: Rect.fromLTWH(0, 0, 0, 0),
+        );
+      },
       child: Image.asset(
-        'assets/candidateImage.png',
-        fit: BoxFit.fill,
+        'assets/candidateProfileShare.png',
+        height: 8,
+        width: 8,
       ),
     ),
-    Positioned(
-      top: 30,
-      left: 30,
-      child: Container(
-        height:40,
-        width: 45,
-        decoration: BoxDecoration(
-          color: Color(0xFFD9D9D9),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: IconButton(
-          icon: Icon(Icons.arrow_back),
-          iconSize: 20,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    ),
-    Positioned(
-      top: 30,
-      right: 30,
-      child: Container(
-        height:40,
-        width: 45,
-        decoration: BoxDecoration(
-          color: Color(0xFFD9D9D9),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: IconButton(
-          icon: Icon(Icons.share_outlined),
-          iconSize: 20,
-          onPressed: () {
-            // Add your share button logic here
-          },
-        ),
-      ),
-    ),
-  ],
+  ),
+),
+    ],
+  ),
 ),
         Expanded(
           child: Column(
@@ -298,49 +502,51 @@ Widget _ratingCircles(num rating) {
   ),
 ),
              Container(
-  padding: const EdgeInsets.only(right: 20, left: 10),
+  padding: EdgeInsets.only(
+    left: 10,
+    right: MediaQuery.of(context).size.width > 600 ? 20 : 10,
+  ),
   decoration: BoxDecoration(
-    color:  Color(0xFfF1F4F8),
-    borderRadius: BorderRadius.only(
-    ),
+    color: Color(0xFfF1F4F8),
+    borderRadius: BorderRadius.only(),
   ),
   child: TabBar(
-  controller: _tabController,
-  indicatorSize: TabBarIndicatorSize.label,
-  labelColor: Colors.black,
-  unselectedLabelColor: Colors.grey,
-  indicatorColor: Color(0xFFF3D433),
-  tabs: [
-    Tab(
-      child: Text(
-        'Summary',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 19.0,
+    controller: _tabController,
+    indicatorSize: TabBarIndicatorSize.label,
+    labelColor: Colors.black,
+    unselectedLabelColor: Colors.grey,
+    indicatorColor: Color(0xFFF3D433),
+    tabs: [
+      Tab(
+        child: Text(
+          'Summary',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 19.0,
+          ),
         ),
       ),
-    ),
-    Tab(
-      child: Text(
-        'Views',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 19.0,
+      Tab(
+        child: Text(
+          'Views',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 19.0,
+          ),
         ),
       ),
-    ),
-    Tab(
-      child: Text(
-        'Experience',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 19.0,
+      Tab(
+        child: Text(
+          'Experience',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 19.0,
+          ),
         ),
       ),
-    ),
-  ],
-  indicatorPadding: EdgeInsets.zero,
-),
+    ],
+    indicatorPadding: EdgeInsets.zero,
+  ),
 ),
 Expanded(
   child: TabBarView(
@@ -371,203 +577,101 @@ Expanded(
 
       SizedBox(height: 15),
       Padding(
-  padding: EdgeInsets.only(left:20), 
+  padding: EdgeInsets.only(left: 20),
   child: Column(
-    children: [
-      Row(
-        children: [
-          Image.asset(
-            'assets/phone.png',
-            width: 20,
-            height: 25,
+    children: contactInfo.map((info) => Row(
+      children: [
+        Image.asset(
+          info['icon'],
+          width: 20,
+          height: 25,
+        ),
+        SizedBox(width: 20),
+        Text(
+          info['text'],
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            fontSize: 15,
+            color: Color(0xFF57636C),
           ),
-          SizedBox(width: 20),
-          Text(
-  "(517) 373-3400",
-  style: TextStyle(
-    fontFamily: 'Inter',
-    fontWeight: FontWeight.w500, 
-    fontSize: 15,
-    color: Color(0xFF57636C)
-  ),
-  textAlign: TextAlign.left,
-),
-        ],
-      ),
-      SizedBox(height: 5),
-      Row(
-        children: [
-          Image.asset(
-            'assets/phone2.png',
-            width: 20,
-            height: 20,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "(517) 335-7858",
-            style: TextStyle(
-              fontFamily: 'Inter',
-    fontWeight: FontWeight.w500, 
-              fontSize: 15,
-              color: Color(0xFF57636C)
-            ),
-            textAlign: TextAlign.left,
-          ),
-        ],
-      ),
-      SizedBox(height: 5),
-      Row(
-        children: [
-          Image.asset(
-            'assets/email.png',
-            width: 20,
-            height: 20,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "info@gretchenwhitmer.com",
-            style: TextStyle(
-              fontFamily: 'Inter',
-    fontWeight: FontWeight.w500, 
-              fontSize: 15,
-              color: Color(0xFF57636C)
-            ),
-            textAlign: TextAlign.left,
-          ),
-        ],
-      ),
-      SizedBox(height: 5),
-      Row(
-        children: [
-          Image.asset(
-            'assets/website.png',
-            width: 20,
-            height: 20,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "www.michigan.gov/whitmer",
-            style: TextStyle(
-              fontFamily: 'Inter',
-    fontWeight: FontWeight.w500, 
-              fontSize: 15,
-              color: Color(0xFF57636C)
-            ),
-            textAlign: TextAlign.left,
-          ),
-        ],
-      ),
-      SizedBox(height: 5),
-      Row(
-        children: [
-          Image.asset(
-            'assets/office.png',
-            width: 20,
-            height: 20,
-          ),
-          SizedBox(width: 20),
-          Text(
-            
-            "Post Office, Lansing MI 48909",
-            style: TextStyle(
-              fontFamily: 'Inter',
-    fontWeight: FontWeight.w500, 
-              fontSize: 15,
-              color: Color(0xFF57636C)
-            ),
-            textAlign: TextAlign.left,
-          ),
-        ],
-      ),
-    ],
+          textAlign: TextAlign.left,
+        ),
+      ],
+    )).toList(),
   ),
 ),
       
       SizedBox(height: 15),
 
         //social media icons
+Padding(
+  padding: EdgeInsets.only(
+    right: Platform.isIOS ? 130 : 0, // add padding only for iOS devices
+  ),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      for (var socialMedia in socialMediaList)
         Padding(
-          padding: EdgeInsets.only(right: 130),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFD9D9D9),
-                ),
-                child: IconButton(
-                  icon: Image.asset('assets/linkedin.png', width: 15, height: 15,),
-                  onPressed: () {
-                    // Add icon onTap functionality
-                  },
-                ),
+          padding: const EdgeInsets.only(right: 10.0),
+          child: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFFD9D9D9),
+            ),
+            child: IconButton(
+              icon: Image.asset(
+                socialMedia['icon'] ?? 'assets/default.png',
+                width: 15,
+                height: 15,
               ),
-              const SizedBox(width: 10),
-              Container(
-                width: 30,
-                height: 30,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFD9D9D9),
-                ),
-                child: IconButton(
-                  icon: Image.asset('assets/facebook.png', width: 15, height: 15,),
-                  onPressed: () {
-                    // Add icon onTap functionality
-                  },
-                ),
-              ),
-              const SizedBox(width: 10),
-              Container(
-                width: 30,
-                height: 30,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFD9D9D9),
-                ),
-                child: IconButton(
-                  icon: Image.asset('assets/twitter.png', width: 15, height: 15,),
-                  onPressed: () {
-                    // Add icon onTap functionality
-                  },
-                ),
-              ),
-              const SizedBox(width: 10),
-              Container(
-                width: 30,
-                height: 30,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFD9D9D9),
-                ),
-                child: IconButton(
-                  icon: Image.asset('assets/instagram.png', width: 15, height: 15,),
-                  onPressed: () {
-                    // Add icon onTap functionality
-                  },
-                ),
-              ),
-              const SizedBox(width: 10),
-              Container(
-                width: 30,
-                height: 30,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFD9D9D9),
-                ),
-                child: IconButton(
-                  icon: Image.asset('assets/tiktok.png', width: 15, height: 15,),
-                  onPressed: () {
-                    // Add icon onTap functionality
-                  },
-                ),
-              ),
-            ],
+              onPressed: () {
+                switch (socialMedia['name']) {
+                  case 'LinkedIn':
+                    LaunchApp.openApp(
+                      androidPackageName: 'com.linkedin.android',
+                      iosUrlScheme: 'https://www.linkedin.com/',
+                    );
+                    break;
+                  case 'Facebook':
+                    LaunchApp.openApp(
+                      androidPackageName: 'com.facebook.katana',
+                      iosUrlScheme: 'https://www.facebook.com/GovGretchenWhitmer',
+                    );
+                    break;
+                  case 'Twitter':
+                    LaunchApp.openApp(
+                      androidPackageName: 'com.twitter.android',
+                      iosUrlScheme: 'https://twitter.com/GovWhitmer?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor',
+                    );
+                    break;
+                  case 'Instagram':
+                    LaunchApp.openApp(
+                      androidPackageName: 'com.instagram.android',
+                      iosUrlScheme: 'https://www.instagram.com/whitmermi/channel/',
+                    );
+                    break;
+                  case 'TikTok':
+                    LaunchApp.openApp(
+                      androidPackageName: 'com.zhiliaoapp.musically',
+                      iosUrlScheme: 'https://www.tiktok.com/@biggretchwhitmer?lang=en',
+                    );
+                    break;
+                  default:
+                    // Handle unsupported social media platforms
+                    break;
+                }
+              },
+            ),
           ),
         ),
+    ],
+  ),
+),
+         
          Padding(
   padding: EdgeInsets.only(right: 260, top: 30),
   child: Text(
@@ -708,166 +812,16 @@ Padding(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-  Card(
-  elevation: 3,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(20.0),
-  ),
-  shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
-
-  child: SizedBox(
-    height: 115,
-    width: 400,
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Padding(
-      padding: EdgeInsets.symmetric(vertical: 3.0),
-      child: const Text(
-        "Public Education",
-        style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w600,
-          fontSize: 13,
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.left,
-      ),
-    ),
-    Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: const Text(
-        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-        style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w600,
-          fontSize: 10,
-          color: Color(0xFF57636C),
-        ),
-        textAlign: TextAlign.left,
-      ),
-    ),
+  
+          
+      createIsssueCard(
+  "Gun Control",
+  "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education.",
+  [
+   _ratingCircles( widget.candidateValues.educationScore),
   ],
 ),
-          _ratingCircles( widget.candidateValues.educationScore),
-        ],
-      ),
-    ),
-  ),
-),
 
-Card(
-  elevation: 3,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(20.0),
-  ),
-  shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
-
-  child: SizedBox(
-    height: 115,
-    width: 400,
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Padding(
-      padding: EdgeInsets.symmetric(vertical: 3.0),
-      child: const Text(
-        "Gun Control",
-        style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w600,
-          fontSize: 13,
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.left,
-      ),
-    ),
-    Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: const Text(
-        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education.",
-        style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w600,
-          fontSize: 10,
-          color: Color(0xFF57636C),
-        ),
-        textAlign: TextAlign.left,
-      ),
-    ),
-  ],
-),
-          _ratingCircles( widget.candidateValues.educationScore),
-        ],
-      ),
-    ),
-  ),
-),
-Card(
-  elevation: 3,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(20.0),
-  ),
-  shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
-
-  child: SizedBox(
-    height: 115,
-    width: 400,
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Padding(
-      padding: EdgeInsets.symmetric(vertical: 3.0),
-      child: const Text(
-        "Drug Legalization",
-        style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w600,
-          fontSize: 13,
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.left,
-      ),
-    ),
-    Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: const Text(
-        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-        style: TextStyle(
-          fontFamily: "Inter",
-          fontWeight: FontWeight.w600,
-          fontSize: 10,
-          color: Color(0xFF57636C),
-        ),
-        textAlign: TextAlign.left,
-      ),
-    ),
-  ],
-),
-          _ratingCircles( widget.candidateValues.educationScore),
-        ],
-      ),
-    ),
-  ),
-),
 
 Column(
   children: [
@@ -888,371 +842,7 @@ Visibility(
   visible: _isCardVisible,
   child: Column(
     children: [
-      Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        shadowColor: Colors.black.withOpacity(0.95),
-        color: Color(0xFFD9D9D9),
-        child: SizedBox(
-          height: 115,
-          width: 400,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: const Text(
-                        "Public Education",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: const Text(
-                        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          color: Color(0xFF57636C),
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
-                ),
-                _ratingCircles(widget.candidateValues.educationScore),
-              ],
-            ),
-          ),
-        ),
-      ),
-      Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        shadowColor: Colors.black.withOpacity(0.95),
-        color: Color(0xFFD9D9D9),
-        child: SizedBox(
-          height: 115,
-          width: 400,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: const Text(
-                        "Public Education",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: const Text(
-                        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          color: Color(0xFF57636C),
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
-                ),
-                _ratingCircles(widget.candidateValues.educationScore),
-              ],
-            ),
-          ),
-        ),
-      ),
-      Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        shadowColor: Colors.black.withOpacity(0.95),
-        color: Color(0xFFD9D9D9),
-        child: SizedBox(
-          height: 115,
-          width: 400,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: const Text(
-                        "Public Education",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: const Text(
-                        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          color: Color(0xFF57636C),
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
-                ),
-                _ratingCircles(widget.candidateValues.educationScore),
-              ],
-            ),
-          ),
-        ),
-      ),
-
-      Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        shadowColor: Colors.black.withOpacity(0.95),
-        color: Color(0xFFD9D9D9),
-        child: SizedBox(
-          height: 115,
-          width: 400,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: const Text(
-                        "Public Education",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: const Text(
-                        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          color: Color(0xFF57636C),
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
-                ),
-                _ratingCircles(widget.candidateValues.educationScore),
-              ],
-            ),
-          ),
-        ),
-      ),
-      Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        shadowColor: Colors.black.withOpacity(0.95),
-        color: Color(0xFFD9D9D9),
-        child: SizedBox(
-          height: 115,
-          width: 400,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: const Text(
-                        "Public Education",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: const Text(
-                        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          color: Color(0xFF57636C),
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
-                ),
-                _ratingCircles(widget.candidateValues.educationScore),
-              ],
-            ),
-          ),
-        ),
-      ),
-      Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        shadowColor: Colors.black.withOpacity(0.95),
-        color: Color(0xFFD9D9D9),
-        child: SizedBox(
-          height: 115,
-          width: 400,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: const Text(
-                        "Public Education",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: const Text(
-                        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          color: Color(0xFF57636C),
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
-                ),
-                _ratingCircles(widget.candidateValues.educationScore),
-              ],
-            ),
-          ),
-        ),
-      ),
-     Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        shadowColor: Colors.black.withOpacity(0.95),
-        color: Color(0xFFD9D9D9),
-        child: SizedBox(
-          height: 115,
-          width: 400,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: const Text(
-                        "Public Education",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: const Text(
-                        "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education. ",
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10,
-                          color: Color(0xFF57636C),
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ],
-                ),
-                _ratingCircles(widget.candidateValues.educationScore),
-              ],
-            ),
-          ),
-        ),
-      ),
+      
     ],
   ),
 ),
@@ -1338,20 +928,32 @@ Row(
   ],
 ),
 const SizedBox(height: 25),
- Padding(
-  padding: EdgeInsets.only(right: 235),
-  child: Text(
-    "Voting History",
-    style: TextStyle(
-      fontFamily: "Inter",
-      fontWeight: FontWeight.w600,
-      fontSize: 15,
+Row(
+  crossAxisAlignment: CrossAxisAlignment.center,
+  children: [
+    Padding(
+      padding: EdgeInsets.only(right: 10),
+      child: Image.asset(
+        "assets/votinghistory.png",
+        width: 20,
+        height: 20,
+      ),
     ),
-    textAlign: TextAlign.left,
-  ),
-  
+    Padding(
+      padding: EdgeInsets.only(right: 135),
+      child: Text(
+        "Voting History",
+        style: TextStyle(
+          fontFamily: "Inter",
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
+        ),
+        textAlign: TextAlign.left,
+      ),
+    ),
+  ],
 ),
-   const SizedBox(height: 25),
+   const SizedBox(height: 85),
              ],
               ),
             ),
@@ -1367,767 +969,224 @@ const SizedBox(height: 25),
         child:  Column(
       children: [
         Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 20, top: 20, bottom: 10),
-              child: Text(
-                "Education",
-                style: TextStyle(
-                  fontFamily: "Inter",
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                ),
-                textAlign: TextAlign.left,
-              ),
-            ),
-            GestureDetector(
-              onTap: _toggleShowAllCards,
-              child: Padding(
-                padding: EdgeInsets.only(left: 220, top: 20, bottom: 10),
-                child: Text(
-                  _showAllCards ? "Hide" : "View all",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ),
-          ],
+  children: [
+    Padding(
+      padding: EdgeInsets.only(right: 20, top: 20, bottom: 10),
+      child: Text(
+        "Education",
+        style: TextStyle(
+          fontFamily: "Inter",
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
         ),
-SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-  physics: BouncingScrollPhysics(),
-  child:Row(
-          children:[
-          Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 170,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Michigan State University College of Law",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Doctor of Law - JD, Law",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "1998",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 170,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Michigan State University",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Bachelors of Art, Marketing/Communications",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "1998",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              if (_showAllCards)
-          Row(
-            children: [
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 170,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Michigan State University College of Law",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Doctor of Law - JD, Law",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "1998",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-             
-            ],)]),
-  
-        ),
-         Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 20, top: 20, bottom: 10),
-              child: Text(
-                "Previous Positions",
-                style: TextStyle(
-                  fontFamily: "Inter",
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                ),
-                textAlign: TextAlign.left,
-              ),
-            ),
-            GestureDetector(
-              onTap: _toggleShowAllCards,
-              child: Padding(
-                padding: EdgeInsets.only(left: 160, top: 20, bottom: 10),
-                child: Text(
-                  _showAllCards ? "Hide" : "View all",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ),
-          ],
-        ),
-        
-SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-  physics: BouncingScrollPhysics(),
-  child:Row(
-          children:[
-          Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 140,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Governor",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "State of Michigan",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "2019 - Present",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 150,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Senate Democratic  Leader",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Michigan State Senate",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "2010 - 2014",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              if (_showAllCards)
-          Row(
-            children: [
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 150,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Senator",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Michigan State Senate",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "2006 - 2014",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-             
-            ],)]),
-  
-        ),
+        textAlign: TextAlign.left,
+      ),
+    ),
 
+    GestureDetector(
+      onTap: () {
+        setState(() {
+          _showAllCardsEducation = !_showAllCardsEducation;
+        });
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 220, top: 20, bottom: 10),
+        child: Text(
+          _showAllCardsEducation ? "Hide" : "View all",
+          style: TextStyle(
+            fontFamily: "Inter",
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+          ),
+          textAlign: TextAlign.left,
+        ),
+      ),
+    ),
+  ],
+),
+
+SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  physics: BouncingScrollPhysics(),
+  child: Row(
+    children: [
+      createEducationCard(
+        "Michigan State University College of Law",
+        "Doctor of Law - JD, Law",
+        "1998",
+      ),
+      SizedBox(width: 15),
+      createEducationCard(
+        "Michigan State University",
+        "Bachelors of Art, Marketing/Communications",
+        "1989-93",
+      ),
+        SizedBox(width: 15),
+
+      if (_showAllCardsEducation)
         Row(
           children: [
-            Padding(
-              padding: EdgeInsets.only(right: 20, top: 20, bottom: 10),
-              child: Text(
-                "Other Experience",
-                style: TextStyle(
-                  fontFamily: "Inter",
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                ),
-                textAlign: TextAlign.left,
-              ),
+            createEducationCard(
+              "More",
+              "More",
+              "More",
             ),
-            GestureDetector(
-              onTap: _toggleShowAllCards,
-              child: Padding(
-                padding: EdgeInsets.only(left: 170, top: 20, bottom: 10),
-                child: Text(
-                  _showAllCards ? "Hide" : "View all",
-                  style: TextStyle(
-                    fontFamily: "Inter",
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ),
+      
           ],
         ),
+    ],
+  ),
+),
+
+
+
+        Row(
+  children: [
+    Padding(
+      padding: EdgeInsets.only(right: 0, top: 20, bottom: 10),
+      child: Text(
+        "Previous Positions",
+        style: TextStyle(
+          fontFamily: "Inter",
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
+        ),
+        textAlign: TextAlign.left,
+      ),
+    ),
+
+   GestureDetector(
+      onTap: () {
+        setState(() {
+          _showAllCardsPreviousPositions = !_showAllCardsPreviousPositions;
+        });
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 180, top: 20, bottom: 10),
+        child: Text(
+          _showAllCardsPreviousPositions ? "Hide" : "View all",
+          style: TextStyle(
+            fontFamily: "Inter",
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+          ),
+          textAlign: TextAlign.left,
+        ),
+      ),
+    ),
+  ],
+),
 
 SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+  scrollDirection: Axis.horizontal,
   physics: BouncingScrollPhysics(),
-  child:Row(
-          children:[
-          Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 150,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Ingham County Prosecutor",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Ingham County",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "2016",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 150,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Towsley Policy Maker in Residence",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "University of Michigan",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "2015 - 2016",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              if (_showAllCards)
-          Row(
-            children: [
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                shadowColor: Colors.black.withOpacity(0.95),
-                color: Color(0xFFD9D9D9),
-                child: SizedBox(
-                  height: 90,
-                  width: 150,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 3.0),
-                                child: Text(
-                                  "Of Counsel",
-                                  style: TextStyle(
-                                    fontFamily: "Inter",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Dickinson Wright PLLC",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                    Text(
-                                      "2015 - 2016",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 10,
-                                        color: Color(0xFF57636C),
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-             
-            ],)]),
-  
+  child: Row(
+    children: [
+      createExperienceCard(
+        "Governor",
+        "State of Michigan",
+        "2019 - Present",
+      ),
+      SizedBox(width: 5),
+
+      createExperienceCard(
+        "Senate Democratic Leader",
+        "Michigan State Senate",
+        "2010 - 2014",
+      ),
+      SizedBox(width: 5),
+
+      createExperienceCard(
+        "Senator",
+        "Michigan State Senate",
+        "2006 - 2014",
+      ),
+      SizedBox(width: 5),
+
+      if (_showAllCardsPreviousPositions)
+        createExperienceCard(
+          "More",
+          "More",
+          "More",
         ),
+    ],
+  ),
+),
+
+Row(
+  children: [
+    Padding(
+      padding: EdgeInsets.only(right: 0, top: 20, bottom: 10),
+      child: Text(
+        "Other Experience",
+        style: TextStyle(
+          fontFamily: "Inter",
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
+        ),
+        textAlign: TextAlign.left,
+      ),
+    ),
+
+    GestureDetector(
+      onTap: () {
+        setState(() {
+          _showAllCardsOtherExperience = !_showAllCardsOtherExperience;
+        });
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 190, top: 20, bottom: 10),
+        child: Text(
+          _showAllCardsOtherExperience ? "Hide" : "View all",
+          style: TextStyle(
+            fontFamily: "Inter",
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+          ),
+          textAlign: TextAlign.left,
+        ),
+      ),
+    ),
+  ],
+),
+
+SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  physics: BouncingScrollPhysics(),
+  child: Row(
+    children: [
+      createExperienceCard(
+        "Ingham County Prosecutor",
+        "Ingham County",
+        "2016",
+      ),
+      SizedBox(width: 5),
+
+      createExperienceCard(
+        "Towsley Policy Maker in Residence",
+        "University of Michigan",
+        "2015 - 2016",
+      ),
+      SizedBox(width: 5),
+
+      createExperienceCard(
+        "Of Counsel",
+        "Dickinson Wright PLLC",
+        "2015 - 2016",
+      ),
+      SizedBox(width: 5),
+
+      if (_showAllCardsOtherExperience)
+        createExperienceCard(
+          "More",
+          "More",
+          "More",
+        ),
+    ],
+  ),
+),
+
+
 Padding(
               padding: EdgeInsets.only(right: 255, top: 20, bottom: 10),
               child: Text(

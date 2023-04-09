@@ -17,7 +17,7 @@ class VoterGuide extends StatefulWidget {
 class _VoterGuideState extends State<VoterGuide> {
   List<bool> _isChecked = [false, false, false, false];
   late List<PollingLocation> _pollingLocations;
-  late String stateInitial;
+  late String stateInitial = 'MI';
   @override
   void initState() {
     super.initState();
@@ -37,11 +37,13 @@ class _VoterGuideState extends State<VoterGuide> {
   //   }
   // }
   
-  void _toggleChecked(int index) {
-    setState(() {
-      _isChecked[index] = !_isChecked[index];
-    });
-  }
+
+
+void _toggleChecked(int index) {
+  setState(() {
+    _isChecked[index] = !_isChecked[index];
+  });
+}
 //nypepawy@mailo.icu
 @override
 Widget build(BuildContext context) {
@@ -112,15 +114,15 @@ Widget build(BuildContext context) {
             color: Colors.black,
           ),
         ),
-        Text(
-          'Since 2015',
-          style: TextStyle(
-            fontSize: 15.0,
-            fontWeight: FontWeight.w600, 
-            fontFamily: 'Inter',        
-            color: Colors.black,
-          ),
-        ),
+        // Text(
+        //   'Since 2015',
+        //   style: TextStyle(
+        //     fontSize: 15.0,
+        //     fontWeight: FontWeight.w600, 
+        //     fontFamily: 'Inter',        
+        //     color: Colors.black,
+        //   ),
+        // ),
       ],
     ),
   ),
@@ -130,59 +132,61 @@ Widget build(BuildContext context) {
   height: 320.0,
   margin: const EdgeInsets.only(right: 15, left: 15),
   padding: const EdgeInsets.only(top: 80),
+  child: Center(
   child: Card(
     elevation: 3,
-    shadowColor: Colors.transparent, 
+    shadowColor: Colors.transparent,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(20),
     ),
-   child: Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: const <Widget>[
-      Text(
-        'POLLING LOCATION',
-        style: TextStyle(
-            fontSize: 15.0,
-             fontWeight: FontWeight.w600, 
-          fontFamily: 'Inter',                              
-          color: Color(0xFF57636C),
-        ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[
+          Text(
+            'POLLING LOCATION',
+            style: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+              color: Color(0xFF57636C),
+            ),
+          ),
+          Text(
+            '',
+            style: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          Text(
+            'No Location Assigned',
+            style: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+              color: Colors.black,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+          Text(
+            'Check back later',
+            style: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+              color: Colors.black,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+          Text(''),
+          Text(''),
+        ],
       ),
-      Text(
-        '',
-        style: TextStyle(
-          fontSize: 15.0,
-          fontWeight: FontWeight.normal,
-        ),
-      ),
-      Text(
-        'No Location Assigned',
-        style: TextStyle(
-            fontSize: 15.0,
-            fontWeight: FontWeight.w600, 
-            fontFamily: 'Inter', 
-            color: Colors.black,
-            decoration: TextDecoration.underline,
-        ),
-      ),
-      Text(
-        'Check back later',
-        style: TextStyle(
-            fontSize: 15.0,
-            fontWeight: FontWeight.w600, 
-            fontFamily: 'Inter', 
-            color: Colors.black,
-            decoration: TextDecoration.underline,
-        ),
-      ),
-      Text(''),
-      Text('')
-    ],
+    ),
   ),
-)
-  ),
+),
 ),
                 ],
               ),
@@ -409,13 +413,13 @@ Card(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
-          Text(
-            'Latest Activity Mon, 24, 10:30pm',
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Color(0xFF57636C),
-            ),
-          ),
+          // Text(
+          //   'Latest Activity Mon, 24, 10:30pm',
+          //   style: TextStyle(
+          //     fontSize: 12.0,
+          //     color: Color(0xFF57636C),
+          //   ),
+          // ),
           const SizedBox(height: 15.0),
         ],
       ),
@@ -448,8 +452,8 @@ Card(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              value: _isChecked[0],
-              onChanged: (value) => _toggleChecked(0),
+              value: _isChecked[1],
+              onChanged: (value) => _toggleChecked(1),
             ),
           ),
         ],
@@ -473,13 +477,13 @@ Card(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
-          Text(
-            'Latest Activity Mon, 24, 10:30pm',
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Color(0xFF57636C),
-            ),
-          ),
+          // Text(
+          //   'Latest Activity Mon, 24, 10:30pm',
+          //   style: TextStyle(
+          //     fontSize: 12.0,
+          //     color: Color(0xFF57636C),
+          //   ),
+          // ),
           const SizedBox(height: 15.0),
         ],
       ),
@@ -511,8 +515,8 @@ Card(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              value: _isChecked[0],
-              onChanged: (value) => _toggleChecked(0),
+              value: _isChecked[2],
+              onChanged: (value) => _toggleChecked(2),
             ),
           ),
         ],
@@ -536,13 +540,13 @@ Card(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
-          Text(
-            'Latest Activity Mon, 24, 10:30pm',
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Color(0xFF57636C),
-            ),
-          ),
+          // Text(
+          //   'Latest Activity Mon, 24, 10:30pm',
+          //   style: TextStyle(
+          //     fontSize: 12.0,
+          //     color: Color(0xFF57636C),
+          //   ),
+          // ),
           const SizedBox(height: 15.0),
         ],
       ),
@@ -574,8 +578,8 @@ Card(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              value: _isChecked[0],
-              onChanged: (value) => _toggleChecked(0),
+              value: _isChecked[3],
+              onChanged: (value) => _toggleChecked(3),
             ),
           ),
         ],
@@ -599,13 +603,13 @@ Card(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
-          Text(
-            'Latest Activity Mon, 24, 10:30pm',
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Color(0xFF57636C),
-            ),
-          ),
+          // Text(
+          //   'Latest Activity Mon, 24, 10:30pm',
+          //   style: TextStyle(
+          //     fontSize: 12.0,
+          //     color: Color(0xFF57636C),
+          //   ),
+          // ),
           const SizedBox(height: 15.0),
         ],
       ),

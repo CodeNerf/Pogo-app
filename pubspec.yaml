@@ -60,6 +60,9 @@ dependencies:
   url_launcher: ^6.1.9
   flutter_web_browser: ^0.17.1
   percent_indicator: ^4.2.3
+  flutter_share: ^2.0.0
+  external_app_launcher: ^3.1.0
+  share_plus: ^6.3.1
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -118,7 +121,11 @@ flutter:
     - assets/contributers.png
     - assets/marketing.png
     - assets/budget.png
-
+    - assets/candidateProfileShare.png
+    - assets/independentLogo.png
+    - assets/greenLogo.png
+    - assets/libertarianLogo.png
+    - assets/votinghistory.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
