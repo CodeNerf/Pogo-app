@@ -188,7 +188,6 @@ class _BallotPageState extends State<BallotPage> {
             expanded: _expandedLocal,
             title: 'LOCAL',
             child: [
-              SizedBox(height: 6),
               Container(
                 height: 330, 
                 child: ListView(
@@ -263,9 +262,9 @@ class _BallotPageState extends State<BallotPage> {
                   ],
                 ),
               ),
+
             ],
           ),
-          SizedBox(height: 10), 
           _buildExpandableButton(
             onPressed: () {
               setState(() {
@@ -275,10 +274,8 @@ class _BallotPageState extends State<BallotPage> {
             expanded: _expandedGlobal,
             title: 'STATE',
             child: [
-              SizedBox(height: 10),
             ],
           ),
-          SizedBox(height: 10),
           _buildExpandableButton(
             onPressed: () {
               setState(() {
@@ -288,81 +285,85 @@ class _BallotPageState extends State<BallotPage> {
             expanded: _expandedOther,
             title: 'FEDERAL',
             child: [
-              SizedBox(height: 10),
             ],
           ),
-          SizedBox(height: 10),
         ],
       ),
     );
   }
 
-  Widget _buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
+ Widget _buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
+  return SizedBox(
+    width: MediaQuery.of(context).size.width,
+    child: Container(
+      margin: EdgeInsets.only(bottom: 10.0, top: 10, left: 30),
       child: Container(
-        margin: EdgeInsets.only(bottom: 6.0),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF3D433),
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(
-              color: Colors.black,
-              width: 2,
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFD700),
+          borderRadius: BorderRadius.circular(25.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.35),
+              blurRadius: 2.0,
+              offset: Offset(0, 4),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 5.0),
-                          child: Text(
-                            title,
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: List.generate(
-                          circleCount,
-                              (index) => Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: _buildCircleCandidate(() {
-                              updateCircleCount(circleCount - 1);
-                            },() {
-                              updateCircleCount(circleCount - 1);
-                            },
-                              candidatePics[index],
-                              context,
-                              title,
-                            ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      )
+                    ],
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: List.generate(
+                        circleCount,
+                            (index) => Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: _buildCircleCandidate(() {
+                            updateCircleCount(circleCount - 1);
+                          },() {
+                            updateCircleCount(circleCount - 1);
+                          },
+                            candidatePics[index],
+                            context,
+                            title,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 4),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildCircleCandidate(VoidCallback onDelete, Null Function() param1, String candidatePic, context, String title) {
     if(candidatePic != '') {
@@ -397,7 +398,7 @@ class _BallotPageState extends State<BallotPage> {
         },
         child: CircularProfileAvatar(
           '',
-          radius: 40,
+          radius: 30,
           elevation: 5,
           child: FittedBox(
             fit: BoxFit.cover,
@@ -414,17 +415,19 @@ class _BallotPageState extends State<BallotPage> {
           widget.loadCustomCandidatesInPodium(title);
         },
         child: Container(
-          width: 80,
-          height: 80,
+          width: 60,
+          height: 60,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.grey[200],
-            border: Border.all(color: Colors.black, width: 2),
+                          color: Color(0xFFD9D9D9),
+
+            border: Border.all(color: Colors.black, width: 1),
           ),
           child: const Icon(
             Icons.add,
             color: Colors.black,
-            size: 20,
+            size: 40,
+            
           ),
         ),
       );
@@ -439,53 +442,43 @@ Widget _buildExpandableButton({
   required List<Widget> child,
 }) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: 6.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        GestureDetector(
-          onTap: onPressed,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                color: Colors.black,
-                width: 2,
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black, // set your desired color here
+                width: 2.5, // set the width of the border
               ),
             ),
+          ),
+          child: GestureDetector(
+            onTap: onPressed,
             child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Colors.white,
-              ),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+              color: Color(0xFFD9D9D9),
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Icon(
-                      expanded ? Icons.expand_less : Icons.expand_more,
-                      size: 30,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
         if (expanded) ...child,
+        Container(
+  color: Colors.white,
+)
       ],
     ),
   );
 }
-
-
-
-
