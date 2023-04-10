@@ -196,19 +196,136 @@ class _HomeState extends State<Home> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: const Color(0xFFE5E5E5),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: Align(
-            alignment: Alignment.center,
-            child: Image(
-              image: AssetImage(_pogoLogo),
-              width: 150,
+        backgroundColor: Color(0xFFF1F4F8),
+     appBar:AppBar(
+  backgroundColor: Colors.transparent,
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  iconTheme: IconThemeData(
+    color: Colors.black,
+    size: 40,
+  ),
+  title: Container(
+    padding: EdgeInsets.only(left: 50),
+    alignment: Alignment.center,
+    child: Image(
+      image: AssetImage(_pogoLogo),
+      width: 150,
+    ),
+  ),
+),
+endDrawer: Drawer(
+  child: ListView(
+    padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
+    children: <Widget>[
+      Container(
+        height: 100, 
+        child: ListTile(
+          contentPadding: EdgeInsets.only(right: 300),
+          leading: Icon(
+            Icons.clear,
+            size: 32,
+            color: Colors.black,
+          ),
+          onTap: () {
+            Navigator.pop(context);
+  },
+),
+      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Register to Vote',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              height: 1.24,
+              color: Colors.black,
             ),
           ),
-        ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          SizedBox(height: 50),
+          Text(
+            'Request an Absentee Ballot',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              height: 1.24,
+              color: Colors.black,
+            ),
+          ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          SizedBox(height: 50),
+          Text(
+            'Vote by mail',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              height: 1.24,
+              color: Colors.black,
+            ),
+          ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          SizedBox(height: 50),
+          Text(
+            'Update registration',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              height: 1.24,
+              color: Colors.black,
+            ),
+          ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          SizedBox(height: 50),
+          Text(
+            'Data & Privacy policy',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              height: 1.24,
+              color: Colors.black,
+            ),
+          ),
+          Divider(
+            color: Color(0xFFDBE2E7),
+            thickness: 2,
+          ),
+          SizedBox(height: 50),
+          Text(
+            'Accessible voting',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              height: 1.24,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+      // Add other menu items here
+    ],
+  ),
+),
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,
