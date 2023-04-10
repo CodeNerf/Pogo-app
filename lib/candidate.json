@@ -1,0 +1,90 @@
+{
+    "candidateId": "123",
+    "Candidate Name": "John James",
+    "Position Running": "Governor",
+    "Current Position": "Mayor",
+    "Home Phone": "123-456-7890",
+    "Official Website": "https://www.johnjames.com/",
+    "LinkedIn": "https://www.linkedin.com/in/johnjamesmi/",
+    "Twitter": "https://twitter.com/johnjamesmi",
+    "Facebook": "https://www.facebook.com/johnjamesmi/",
+    "Instagram": "https://www.instagram.com/johnjamesmi/",
+    "TikTok": "https://www.tiktok.com/@johnjamesmi",
+    "Career Start Year": "2010",
+    "Headline": "John James is a Republican candidate for Governor of Michigan. He is a former U.S. Army Captain, Rhodes Scholar, and small business owner.",
+    "Body Bullet Points Array": [
+        "John James is a Republican candidate for Governor of Michigan. He is a former U.S. Army Captain, Rhodes Scholar, and small business owner.",
+        "John James is a Republican candidate for Governor of Michigan. He is a former U.S. Army Captain, Rhodes Scholar, and small business owner.",
+        "John James is a Republican candidate for Governor of Michigan. He is a former U.S. Army Captain, Rhodes Scholar, and small business owner."
+        ],
+    "Body Summary": "John James is a Republican candidate for Governor of Michigan. He is a former U.S. Army Captain, Rhodes Scholar, and small business owner.",
+    "Education Array": [
+        {
+            "school": "Harvard University",
+            "degreeInformation": "Bachelor of Arts in Economics",
+            "year": "2009"
+        },
+        {
+            "school": "Harvard University",
+            "degreeInformation": "Bachelor of Arts in Economics",
+            "year": "2009"
+        },
+        {
+            "school": "Harvard University",
+            "degreeInformation": "Bachelor of Arts in Economics",
+            "year": "2009"
+        }
+    ],
+    "Previous Positions Array": [
+        {
+            "title": "Mayor",
+            "organization": "City of Detroit",
+            "years": "2013-2019"
+        },
+        {
+            "title": "Mayor",
+            "organization": "City of Detroit",
+            "years": "2013-2019"
+        },
+        {
+            "title": "Mayor",
+            "organization": "City of Detroit",
+            "years": "2013-2019"
+        }
+    ],
+    "Other Experience Array": [
+        {
+            "title": "Mayor",
+            "organization": "City of Detroit",
+            "years": "2013-2019"
+        },
+        {
+            "title": "Mayor",
+            "organization": "City of Detroit",
+            "years": "2013-2019"
+        },
+        {
+            "title": "Mayor",
+            "organization": "City of Detroit",
+            "years": "2013-2019"
+        }
+    ],
+    "Campaign Budget": "1000000",
+    "Number of Contributors": "1000",
+    "Number of Staff Members": "100",
+    "donors": [
+        "Coca-Cola",
+        "Pepsi",
+        "McDonalds"
+    ],
+    "Date of Birth": "1980-01-01",
+    "Profile Image URL": "https://picsum.photos/id/237/200/300",
+    "Gender": "Male",
+    "Racial Identity": "White",
+    "Political Party": "Republican",
+    "Address": "123 Main St",
+    "City": "Detroit",
+    "Zipcode": "48226",
+    "Phone Number": "123-456-7890",
+    "Email": "johnjamesmi@gmail.com"
+}

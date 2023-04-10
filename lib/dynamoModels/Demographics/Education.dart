@@ -10,7 +10,7 @@ class Education {
 
   factory Education.fromJson(Map<String, dynamic> json) {
     return Education(
-      placeOfEducation: json['placeOfEducation'],
+      placeOfEducation: json['school'],
       degreeInformation: json['degreeInformation'],
       yearOfGraduation: json['yearOfGraduation'],
     );

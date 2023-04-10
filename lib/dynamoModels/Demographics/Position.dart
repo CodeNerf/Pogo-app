@@ -1,24 +1,25 @@
 class Position {
   String title;
-  String company;
-  String date;
+  String organization;
+  String years;
 
   // Constructor
-  Position({required this.title, required this.company, required this.date});
+  Position(
+      {required this.title, required this.organization, required this.years});
 
   factory Position.fromJson(Map<String, dynamic> json) {
     return Position(
       title: json['title'],
-      company: json['company'],
-      date: json['date'],
+      organization: json['organization'],
+      years: json['years'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'company': company,
-      'date': date,
+      'organization': organization,
+      'years': years,
     };
   }
 }

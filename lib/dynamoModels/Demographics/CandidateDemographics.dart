@@ -23,7 +23,7 @@ class CandidateDemographics extends Demographics {
   final String campaignBudget;
   final String countOfDonors;
   final String countOfStaff;
-  final List<String> additionalDonations;
+  final List<String> donors;
 
   CandidateDemographics(
       {required super.id,
@@ -47,7 +47,7 @@ class CandidateDemographics extends Demographics {
       this.campaignBudget = '',
       this.countOfDonors = '',
       this.countOfStaff = '',
-      this.additionalDonations = const [],
+      this.donors = const [],
       super.dateOfBirth = '',
       super.profileImageURL = '',
       super.gender = '',
@@ -86,8 +86,7 @@ class CandidateDemographics extends Demographics {
         campaignBudget: json['Campaign Budget'],
         countOfDonors: json['Number of Contributors'],
         countOfStaff: json['Number of Staff Members'],
-        additionalDonations:
-            (json["Additional Donations"] as List).cast<String>(),
+        donors: (json["Donors"] as List).cast<String>(),
         dateOfBirth: json['Date of Birth'],
         profileImageURL: json['Profile Image URL'],
         gender: json['Gender'],
@@ -125,7 +124,7 @@ class CandidateDemographics extends Demographics {
       'Campaign Budget': campaignBudget,
       'Number of Contributors': countOfDonors,
       'Number of Staff Members': countOfStaff,
-      "Additional Donations": additionalDonations,
+      "donors": donors,
       'Date of Birth': dateOfBirth,
       'Profile Image URL': profileImageURL,
       'Gender': gender,
