@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'VoterInfo.dart';
-import '../dynamoModels/UserIssueFactorValues.dart';
+import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 
 class Demographics extends StatefulWidget {
   final UserIssueFactorValues ratings;
   final UserDemographics answers;
   final int issuesIndex;
-  const Demographics({Key? key, required this.ratings, required this.answers, required this.issuesIndex})
+  const Demographics(
+      {Key? key,
+      required this.ratings,
+      required this.answers,
+      required this.issuesIndex})
       : super(key: key);
 
   @override
@@ -24,12 +28,11 @@ class _DemographicsState extends State<Demographics> {
   void initState() {
     super.initState();
     if (mounted) {
-  setState(() {
-      _ethnicitySelection = widget.answers.racialIdentity;
-      _genderSelection = widget.answers.gender;
-    });
-}
-    
+      setState(() {
+        _ethnicitySelection = widget.answers.racialIdentity;
+        _genderSelection = widget.answers.gender;
+      });
+    }
   }
 
 //   // List of items for each dropdown menu
@@ -76,16 +79,16 @@ class _DemographicsState extends State<Demographics> {
 
   int _selectedOption = -1;
 
-Widget build(BuildContext context) {
-  return WillPopScope(
-    onWillPop: () async {
-      return false;
-    },
-    child: Scaffold(
-      body: Container(
-        color: Color(0xFFF1F4F8),
-        padding: const EdgeInsets.only(right: 10),
-        transformAlignment: Alignment.center,
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        body: Container(
+          color: Color(0xFFF1F4F8),
+          padding: const EdgeInsets.only(right: 10),
+          transformAlignment: Alignment.center,
           child: ListView(
             children: [
               Column(
@@ -144,7 +147,7 @@ Widget build(BuildContext context) {
                       'Male',
                       'Non-binary',
                       'Gender Non-conforming',
-                   ],
+                    ],
                     onIndexChanged: _handleIndexChanged,
                   ),
                   const SizedBox(height: 40),
@@ -177,7 +180,7 @@ Widget build(BuildContext context) {
                       ],
                     ),
                   ),
-                   const SizedBox(height: 40),
+                  const SizedBox(height: 40),
                 ],
               ),
             ],
@@ -185,11 +188,11 @@ Widget build(BuildContext context) {
         ),
       ),
     );
+  }
+
+  _handleIndexChanged(int? p1) {}
 }
 
-  _handleIndexChanged(int? p1) {
-  }
-}
 class Expandable extends StatefulWidget {
   final String title;
   final String chooseText;
@@ -289,7 +292,8 @@ class _ExpandableState extends State<Expandable> {
           if (_expanded)
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(15.0)),
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(15.0)),
               ),
               child: Column(
                 children: [

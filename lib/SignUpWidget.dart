@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'UserConfirmationPage.dart';
 import 'amplifyFunctions.dart';
 import 'awsFunctions.dart';
-import 'dynamoModels/UserDemographics.dart';
 
 class SignUp extends StatefulWidget {
   final Function(int) switchPage;
@@ -47,11 +47,28 @@ class _SignUpState extends State<SignUp> {
         _errorText = 'Must enter a password.';
         _errorSizeBoxSize = 10;
       });
-    } else if (await signUpUser(
-        _emailController.text,
-        _passwordController.text,
+    } else if (await signUpUser(_emailController.text, _passwordController.text,
         _fnameController.text)) {
-      UserDemographics userDemographics = UserDemographics(userId: _emailController.text, phoneNumber: '', registrationState: '', addressLine1: '', pollingLocation: '', voterRegistrationStatus: false, firstName: _fnameController.text, lastName: '', dateOfBirth: '', zipCode: '', profileImageURL: '', gender: '', racialIdentity: '', politicalAffiliation: '', surveyCompletion: false, polls: 0, loginStreak: 0, loginStreakRecord: 0, lastLogin: '');
+      UserDemographics userDemographics = UserDemographics(
+          id: _emailController.text,
+          phoneNumber: '',
+          registrationState: '',
+          addressLine1: '',
+          pollingLocation: '',
+          voterRegistrationStatus: false,
+          firstName: _fnameController.text,
+          lastName: '',
+          dateOfBirth: '',
+          zipCode: '',
+          profileImageURL: '',
+          gender: '',
+          racialIdentity: '',
+          politicalAffiliation: '',
+          surveyCompletion: false,
+          polls: 0,
+          loginStreak: 0,
+          loginStreakRecord: 0,
+          lastLogin: '');
       putUserDemographics(userDemographics);
       putUserBallot(_emailController.text, [], [], []);
       //TODO: create blank ballot then push to db
@@ -126,7 +143,7 @@ class _SignUpState extends State<SignUp> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal:30.0),
+              padding: EdgeInsets.symmetric(horizontal: 30.0),
               child: Text(
                 "Get started. Make an account today!",
                 textAlign: TextAlign.center,
@@ -148,8 +165,7 @@ class _SignUpState extends State<SignUp> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
-              border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0)),
+              border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
@@ -170,8 +186,7 @@ class _SignUpState extends State<SignUp> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
-              border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0)),
+              border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
@@ -210,12 +225,14 @@ class _SignUpState extends State<SignUp> {
                       if (_obscure) {
                         setState(() {
                           _obscure = false;
-                          _eye = const Icon(Icons.remove_red_eye_outlined, color: Colors.grey);
+                          _eye = const Icon(Icons.remove_red_eye_outlined,
+                              color: Colors.grey);
                         });
                       } else {
                         setState(() {
                           _obscure = true;
-                          _eye = const Icon(Icons.remove_red_eye, color: Colors.grey);
+                          _eye = const Icon(Icons.remove_red_eye,
+                              color: Colors.grey);
                         });
                       }
                     },

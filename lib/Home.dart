@@ -1,16 +1,16 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/CandidateProfile.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
-import 'dynamoModels/CandidateDemographics.dart';
+import 'dynamoModels/Demographics/CandidateDemographics.dart';
 import 'UserProfile.dart';
 import 'VoterGuide.dart';
 import 'BallotPage.dart';
 import 'Podium.dart';
-import 'dynamoModels/CandidateIssueFactorValues.dart';
-import 'dynamoModels/UserIssueFactorValues.dart';
+import 'dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
+import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 
 class Home extends StatefulWidget {
   final UserDemographics _currentUserDemographics;
@@ -50,13 +50,10 @@ class _HomeState extends State<Home> {
 
   _updateBallot(CandidateDemographics candidate,
       List<CandidateDemographics> podiumStack) {
-    _userBallot.localCandidateIds.add(candidate.candidateId);
+    _userBallot.localCandidateIds.add(candidate.id);
     _ballotStack.add(candidate);
-    putUserBallot(
-        _currentUserDemographics.userId,
-        _userBallot.localCandidateIds,
-        _userBallot.stateCandidateIds,
-        _userBallot.federalCandidateIds);
+    putUserBallot(_currentUserDemographics.id, _userBallot.localCandidateIds,
+        _userBallot.stateCandidateIds, _userBallot.federalCandidateIds);
     setState(() {
       _candidateStack = podiumStack;
     });
@@ -65,15 +62,12 @@ class _HomeState extends State<Home> {
   _removeFromBallot(String candidatePic) {
     CandidateDemographics candidate = _ballotStack
         .firstWhere((element) => element.profileImageURL == candidatePic);
-    _userBallot.localCandidateIds.remove(candidate.candidateId);
+    _userBallot.localCandidateIds.remove(candidate.id);
     _ballotStack.remove(candidate);
-    putUserBallot(
-        _currentUserDemographics.userId,
-        _userBallot.localCandidateIds,
-        _userBallot.stateCandidateIds,
-        _userBallot.federalCandidateIds);
+    putUserBallot(_currentUserDemographics.id, _userBallot.localCandidateIds,
+        _userBallot.stateCandidateIds, _userBallot.federalCandidateIds);
     if (_filteredCandidateStack.isNotEmpty) {
-      if (candidate.seatType != _candidateStack[0].seatType) {
+      if (candidate.runningPosition != _candidateStack[0].runningPosition) {
         _filteredCandidateStack.add(candidate);
       } else {
         _candidateStack.add(candidate);
@@ -90,14 +84,10 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _loadCandidateProfile(String fullName) async {
-    List<String> splitName = fullName.split(' ');
-    CandidateDemographics searchCandidate = _candidateStack.firstWhere(
-        (element) =>
-            element.firstName == splitName[0] &&
-            element.lastName == splitName[1]);
-    CandidateIssueFactorValues searchCandidateValues =
-        _candidateStackFactors.firstWhere(
-            (element) => element.candidateId == searchCandidate.candidateId);
+    CandidateDemographics searchCandidate = _candidateStack
+        .firstWhere((element) => element.candidateName == fullName);
+    CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
+        .firstWhere((element) => element.candidateId == searchCandidate.id);
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -114,7 +104,7 @@ class _HomeState extends State<Home> {
       }
       int i = 0;
       while (i < _candidateStack.length) {
-        if (_candidateStack[i].seatType != category) {
+        if (_candidateStack[i].runningPosition != category) {
           _filteredCandidateStack.add(_candidateStack[i]);
           _candidateStack.remove(_candidateStack[i]);
         } else {
@@ -154,16 +144,17 @@ class _HomeState extends State<Home> {
     _userBallot = widget._userBallot;
     if (_userBallot.localCandidateIds.isNotEmpty) {
       for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
-        _ballotStack.add(_candidateStack.firstWhere((element) =>
-            element.candidateId == _userBallot.localCandidateIds[i]));
+        _ballotStack.add(_candidateStack.firstWhere(
+            (element) => element.id == _userBallot.localCandidateIds[i]));
       }
     }
     setState(() {
       _widgetOptions = <Widget>[
         VoterGuide(
-  currentUserDemographics: _currentUserDemographics, // provide required argument
-  user: _currentUserDemographics,
-),
+          currentUserDemographics:
+              _currentUserDemographics, // provide required argument
+          user: _currentUserDemographics,
+        ),
         Podium(
           candidateStack: _candidateStack,
           userBallot: _userBallot,

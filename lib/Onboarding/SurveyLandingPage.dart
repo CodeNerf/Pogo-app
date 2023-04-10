@@ -1,8 +1,8 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'package:pogo/awsFunctions.dart';
-import '../dynamoModels/UserIssueFactorValues.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
+import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import '../amplifyFunctions.dart';
 import 'Demographics.dart';
 import '../SignInSignUpPage.dart';
@@ -10,44 +10,8 @@ import 'Demographics2.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
-  UserDemographics answers = UserDemographics(
-      userId: '',
-      phoneNumber: '',
-      registrationState: '',
-      addressLine1: '',
-      pollingLocation: '',
-      voterRegistrationStatus: false,
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      zipCode: '',
-      profileImageURL: '',
-      gender: '',
-      racialIdentity: '',
-      politicalAffiliation: '',
-      surveyCompletion: false);
-  UserIssueFactorValues ratings = UserIssueFactorValues(
-      userId: '',
-      climateScore: 0,
-      climateWeight: 0,
-      drugPolicyScore: 0,
-      drugPolicyWeight: 0,
-      economyScore: 0,
-      economyWeight: 0,
-      educationScore: 0,
-      educationWeight: 0,
-      gunPolicyScore: 0,
-      gunPolicyWeight: 0,
-      healthcareScore: 0,
-      healthcareWeight: 0,
-      housingScore: 0,
-      housingWeight: 0,
-      immigrationScore: 0,
-      immigrationWeight: 0,
-      policingScore: 0,
-      policingWeight: 0,
-      reproductiveScore: 0,
-      reproductiveWeight: 0);
+  UserDemographics answers = UserDemographics(id: '');
+  UserIssueFactorValues ratings = UserIssueFactorValues(userId: '');
   SurveyLandingPage({Key? key}) : super(key: key);
 
   @override
@@ -71,7 +35,9 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
     } catch (e) {
       safePrint("Couldn't fetch user email.");
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const SignInSignUpPage(index: 1)));
+          context,
+          MaterialPageRoute(
+              builder: (context) => const SignInSignUpPage(index: 1)));
     }
     // Need to push associated user factors to the database before running this function.
     while (retry) {
@@ -115,7 +81,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                     child: Text(
                       "PERSONALIZE\nYOUR\nSEARCH",
                       style: TextStyle(
-                        shadows: <Shadow> [
+                        shadows: <Shadow>[
                           Shadow(
                             blurRadius: 10.0,
                             offset: Offset(0, 2),
@@ -154,12 +120,12 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.grey.shade600,
-                            spreadRadius: 3,
-                            blurRadius: 7,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
+                          color: Colors.grey.shade600,
+                          spreadRadius: 3,
+                          blurRadius: 7,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
                     ),
                     child: Material(
                       color: Colors.transparent,
@@ -167,13 +133,13 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                         borderRadius: BorderRadius.circular(25),
                         onTap: () {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Demographics2(
-                                ratings: widget.ratings,
-                                answers: widget.answers,
-                                issuesIndex: 0,
-                          )));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Demographics2(
+                                        ratings: widget.ratings,
+                                        answers: widget.answers,
+                                        issuesIndex: 0,
+                                      )));
                         },
                         child: const Center(
                           child: FittedBox(

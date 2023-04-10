@@ -1,4 +1,4 @@
-import 'package:pogo/dynamoModels/IssueFactorValues.dart';
+import 'package:pogo/dynamoModels/IssueFactorValues/IssueFactorValues.dart';
 
 class UserIssueFactorValues extends IssueFactorValues {
   final String userId;

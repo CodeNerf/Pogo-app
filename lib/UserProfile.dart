@@ -6,12 +6,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pogo/SignInSignUpPage.dart';
 import 'package:pogo/awsFunctions.dart';
-import 'package:pogo/dynamoModels/CandidateDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 import 'dynamoModels/Ballot.dart';
-import 'dynamoModels/UserDemographics.dart';
+import 'dynamoModels/Demographics/UserDemographics.dart';
 import 'amplifyFunctions.dart';
-import 'dynamoModels/UserIssueFactorValues.dart';
+import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'dart:math';
 import 'EditPersonalInfoPage.dart';
@@ -24,7 +24,8 @@ class UserProfile extends StatefulWidget {
   const UserProfile(
       {Key? key,
       required this.currentUserFactors,
-      required this.currentUserDemographics, required this.currentUserBallotCandidates})
+      required this.currentUserDemographics,
+      required this.currentUserBallotCandidates})
       : super(key: key);
 
   @override
@@ -112,7 +113,9 @@ class _UserProfileState extends State<UserProfile> {
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const SignInSignUpPage(index: 1,),
+            builder: (context) => const SignInSignUpPage(
+              index: 1,
+            ),
           ),
         );
       } else {
@@ -300,67 +303,65 @@ class _UserProfileState extends State<UserProfile> {
 
   _showAlert(BuildContext context) {
     AlertDialog alert = AlertDialog(
-      content:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _getRatingCircles(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-              //overall container
-              child: Container(
-                width: MediaQuery.of(context).size.width / 3,
-                height: 30,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFFF3D433),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade400,
-                      spreadRadius: 2,
-                      blurRadius: 6,
-                      offset: const Offset(3, 6),
-                    ),
-                  ],
+        content: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: _getRatingCircles(),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+          //overall container
+          child: Container(
+            width: MediaQuery.of(context).size.width / 3,
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFFF3D433),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400,
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(3, 6),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(15),
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SurveyLandingPage(),
-                        ),
-                      );
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                      child: Center(
-                        child: AutoSizeText(
-                          'Edit Survey',
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15),
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SurveyLandingPage(),
+                    ),
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                  child: Center(
+                    child: AutoSizeText(
+                      'Edit Survey',
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        )
-    );
+          ),
+        ),
+      ],
+    ));
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -399,7 +400,9 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   String getLoginStreakText() {
-    if (widget.currentUserDemographics.loginStreak == widget.currentUserDemographics.loginStreakRecord && widget.currentUserDemographics.loginStreak > 0) {
+    if (widget.currentUserDemographics.loginStreak ==
+            widget.currentUserDemographics.loginStreakRecord &&
+        widget.currentUserDemographics.loginStreak > 0) {
       return 'New Record!';
     }
     return '';
@@ -407,8 +410,8 @@ class _UserProfileState extends State<UserProfile> {
 
   String ballotMessage() {
     String message = "Check out my PoGo ballot! I'm going to vote for:\n";
-    for(int i = 0; i < widget.currentUserBallotCandidates.length; i++) {
-      message += "${widget.currentUserBallotCandidates[i].firstName} ${widget.currentUserBallotCandidates[i].lastName}\n";
+    for (int i = 0; i < widget.currentUserBallotCandidates.length; i++) {
+      message += "${widget.currentUserBallotCandidates[i].candidateName}\n";
     }
     return message;
   }
@@ -418,12 +421,11 @@ class _UserProfileState extends State<UserProfile> {
     return "Come download the PoGo app! https://www.politicsonthego.info";
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Container(
+        child: SingleChildScrollView(
+      child: Container(
         color: const Color(0xFFF1F4F8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -522,7 +524,8 @@ class _UserProfileState extends State<UserProfile> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     AutoSizeText(
-                                      getUserExperience(widget.currentUserDemographics.polls),
+                                      getUserExperience(
+                                          widget.currentUserDemographics.polls),
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -808,7 +811,8 @@ class _UserProfileState extends State<UserProfile> {
                                     ),
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       GestureDetector(
                                         onTap: () {
@@ -826,7 +830,8 @@ class _UserProfileState extends State<UserProfile> {
                                           ),
                                           child: const FittedBox(
                                             fit: BoxFit.cover,
-                                            child: Icon(Icons.ios_share_rounded),
+                                            child:
+                                                Icon(Icons.ios_share_rounded),
                                           ),
                                         ),
                                       ),
@@ -844,11 +849,13 @@ class _UserProfileState extends State<UserProfile> {
                                     ),
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          if(widget.currentUserBallotCandidates.isNotEmpty) {
+                                          if (widget.currentUserBallotCandidates
+                                              .isNotEmpty) {
                                             Share.share(
                                               ballotMessage(),
                                             );
@@ -864,7 +871,8 @@ class _UserProfileState extends State<UserProfile> {
                                           ),
                                           child: const FittedBox(
                                             fit: BoxFit.cover,
-                                            child: Icon(Icons.ios_share_rounded),
+                                            child:
+                                                Icon(Icons.ios_share_rounded),
                                           ),
                                         ),
                                       ),
@@ -873,8 +881,7 @@ class _UserProfileState extends State<UserProfile> {
                                 ],
                               ),
                             );
-                          }
-                      );
+                          });
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),

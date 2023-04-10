@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import '../HomeLoadingPage.dart';
-import '../dynamoModels/UserDemographics.dart';
+import '../dynamoModels/Demographics/UserDemographics.dart';
 import '../awsFunctions.dart';
-import '../dynamoModels/UserIssueFactorValues.dart';
+import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import 'VoterInfo.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -298,7 +298,7 @@ class _IssuesState extends State<Issues> {
         await Future.wait([
           putUserDemographics(widget.answers),
           putUserIssueFactorValues(widget.ratings),
-          matchCandidatesToUser(widget.answers.userId)
+          matchCandidatesToUser(widget.answers.id)
         ]).then((List<dynamic> values) {
           safePrint("UserDemographics and UserIssueFactorValues updated");
         });

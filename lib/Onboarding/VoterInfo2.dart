@@ -1,16 +1,20 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'Demographics2.dart';
 import 'Issues.dart';
 import 'VoterInfo.dart';
-import '../dynamoModels/UserIssueFactorValues.dart';
+import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 
 class VoterInfo2 extends StatefulWidget {
   final UserIssueFactorValues ratings;
   final UserDemographics answers;
   final int issuesIndex;
-  const VoterInfo2({Key? key, required this.ratings, required this.answers, required this.issuesIndex})
+  const VoterInfo2(
+      {Key? key,
+      required this.ratings,
+      required this.answers,
+      required this.issuesIndex})
       : super(key: key);
 
   @override
@@ -29,14 +33,14 @@ class _VoterInfo2State extends State<VoterInfo2> {
         context,
         MaterialPageRoute(
             builder: (context) => Issues(
-              ratings: widget.ratings,
-              answers: widget.answers,
-              issuesIndex: widget.issuesIndex,
-            )));
+                  ratings: widget.ratings,
+                  answers: widget.answers,
+                  issuesIndex: widget.issuesIndex,
+                )));
   }
 
   void _expandTap(bool expanded, int index) {
-    if(expanded) {
+    if (expanded) {
       switch (index) {
         case 0:
           _regStatusExpand = true;
@@ -64,8 +68,7 @@ class _VoterInfo2State extends State<VoterInfo2> {
           break;
       }
       setState(() {});
-    }
-    else {
+    } else {
       _regStatusExpand = false;
       _partyExpand = false;
       _preferenceExpand = false;
@@ -182,32 +185,35 @@ class _VoterInfo2State extends State<VoterInfo2> {
                           ),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Yes', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
                               value: true,
-                              groupValue: widget.answers.voterRegistrationStatus,
+                              groupValue:
+                                  widget.answers.voterRegistrationStatus,
                               onChanged: (Object? o) {
                                 setState(() {
                                   widget.answers.voterRegistrationStatus = true;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('No', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
                               value: false,
-                              groupValue: widget.answers.voterRegistrationStatus,
+                              groupValue:
+                                  widget.answers.voterRegistrationStatus,
                               onChanged: (Object? o) {
                                 setState(() {
-                                  widget.answers.voterRegistrationStatus = false;
+                                  widget.answers.voterRegistrationStatus =
+                                      false;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                       ],
                     ),
@@ -257,7 +263,8 @@ class _VoterInfo2State extends State<VoterInfo2> {
                           ),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Republican', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -267,11 +274,11 @@ class _VoterInfo2State extends State<VoterInfo2> {
                                 setState(() {
                                   widget.answers.politicalAffiliation = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Democratic', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -281,11 +288,11 @@ class _VoterInfo2State extends State<VoterInfo2> {
                                 setState(() {
                                   widget.answers.politicalAffiliation = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Libertarian', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -295,11 +302,11 @@ class _VoterInfo2State extends State<VoterInfo2> {
                                 setState(() {
                                   widget.answers.politicalAffiliation = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Green', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -309,11 +316,11 @@ class _VoterInfo2State extends State<VoterInfo2> {
                                 setState(() {
                                   widget.answers.politicalAffiliation = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Independent', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -323,8 +330,7 @@ class _VoterInfo2State extends State<VoterInfo2> {
                                 setState(() {
                                   widget.answers.politicalAffiliation = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                       ],
                     ),
@@ -433,7 +439,8 @@ class _VoterInfo2State extends State<VoterInfo2> {
                           ),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Yes', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -443,11 +450,11 @@ class _VoterInfo2State extends State<VoterInfo2> {
                                 setState(() {
                                   widget.answers.registrationState = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('No', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -457,8 +464,7 @@ class _VoterInfo2State extends State<VoterInfo2> {
                                 setState(() {
                                   widget.answers.registrationState = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                       ],
                     ),

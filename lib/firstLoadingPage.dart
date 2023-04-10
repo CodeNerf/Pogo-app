@@ -6,7 +6,7 @@ import 'package:pogo/LandingPage.dart';
 import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/awsFunctions.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 
 class FirstLoadingPage extends StatefulWidget {
   const FirstLoadingPage({Key? key}) : super(key: key);
@@ -25,10 +25,9 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
   void _configure(context) async {
     try {
       bool check = await configureAmplify();
-      if(check) {
+      if (check) {
         _loginCheck(context);
-      }
-      else {
+      } else {
         safePrint("Error occurred when configuring amplify");
       }
     } catch (e) {
@@ -60,8 +59,7 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
             ),
           );
         }
-      }
-      else {
+      } else {
         await Navigator.push(
           context,
           MaterialPageRoute(

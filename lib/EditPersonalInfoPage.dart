@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:validators/validators.dart';
-import 'dynamoModels/UserDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
+
 class EditPersonalInfoPage extends StatefulWidget {
   final UserDemographics userDemographics;
-  const EditPersonalInfoPage({Key? key, required this.userDemographics}) : super(key: key);
+  const EditPersonalInfoPage({Key? key, required this.userDemographics})
+      : super(key: key);
 
   @override
   _EditPersonalInfoPageState createState() => _EditPersonalInfoPageState();
@@ -25,70 +27,70 @@ class _EditPersonalInfoPageState extends State<EditPersonalInfoPage> {
     super.initState();
     _firstNameController.text = widget.userDemographics.firstName;
     _lastNameController.text = widget.userDemographics.lastName;
-    _emailController.text = widget.userDemographics.userId;
+    _emailController.text = widget.userDemographics.id;
     _phoneController.text = widget.userDemographics.phoneNumber;
     _addressController.text = widget.userDemographics.addressLine1;
   }
-@override
-Widget build(BuildContext context) {
-  return Container(
-    color: Colors.grey[400],
-    child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        centerTitle: true,
-        title: Image(
-          image: AssetImage(_pogoLogo),
-          width: 150,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-              
-            children: [
-            SizedBox(height: 20),
 
-              const Text(
-                'Edit Personal Information',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[400],
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          centerTitle: true,
+          title: Image(
+            image: AssetImage(_pogoLogo),
+            width: 150,
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 20),
+
+                const Text(
+                  'Edit Personal Information',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              //ERROR TEXT
-              Text(
-                _errorText,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
+                //ERROR TEXT
+                Text(
+                  _errorText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
                 ),
-              ),
-              SizedBox(height: _errorSizeBoxSize),
+                SizedBox(height: _errorSizeBoxSize),
                 TextField(
-                controller: _firstNameController,
-                decoration: InputDecoration(labelText: 'First Name'),
+                  controller: _firstNameController,
+                  decoration: InputDecoration(labelText: 'First Name'),
                 ),
                 TextField(
                   controller: _lastNameController,
-                 decoration: InputDecoration(labelText: 'Last Name'),                
-                 ),
+                  decoration: InputDecoration(labelText: 'Last Name'),
+                ),
                 TextField(
                   controller: _phoneController,
                   decoration: InputDecoration(labelText: 'Phone'),
                 ),
                 TextField(
                   controller: _addressController,
-                  decoration: InputDecoration(labelText: 'Address'  ),
+                  decoration: InputDecoration(labelText: 'Address'),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
@@ -123,43 +125,58 @@ Widget build(BuildContext context) {
                         _errorText = 'Must enter your address.';
                         _errorSizeBoxSize = 10;
                       });
-                    }
-                    else {
-                      if(_firstNameController.text == widget.userDemographics.firstName) {
-                        if(_lastNameController.text == widget.userDemographics.lastName) {
-                          if(_phoneController.text == widget.userDemographics.phoneNumber) {
-                            if(_addressController.text == widget.userDemographics.addressLine1) {
+                    } else {
+                      if (_firstNameController.text ==
+                          widget.userDemographics.firstName) {
+                        if (_lastNameController.text ==
+                            widget.userDemographics.lastName) {
+                          if (_phoneController.text ==
+                              widget.userDemographics.phoneNumber) {
+                            if (_addressController.text ==
+                                widget.userDemographics.addressLine1) {
                               //do nothing
-                            }
-                            else {
-                              widget.userDemographics.firstName = _firstNameController.text;
-                              widget.userDemographics.lastName = _lastNameController.text;
-                              widget.userDemographics.phoneNumber = _phoneController.text;
-                              widget.userDemographics.addressLine1 = _addressController.text;
+                            } else {
+                              widget.userDemographics.firstName =
+                                  _firstNameController.text;
+                              widget.userDemographics.lastName =
+                                  _lastNameController.text;
+                              widget.userDemographics.phoneNumber =
+                                  _phoneController.text;
+                              widget.userDemographics.addressLine1 =
+                                  _addressController.text;
                               putUserDemographics(widget.userDemographics);
                             }
-                          }
-                          else {
-                            widget.userDemographics.firstName = _firstNameController.text;
-                            widget.userDemographics.lastName = _lastNameController.text;
-                            widget.userDemographics.phoneNumber = _phoneController.text;
-                            widget.userDemographics.addressLine1 = _addressController.text;
+                          } else {
+                            widget.userDemographics.firstName =
+                                _firstNameController.text;
+                            widget.userDemographics.lastName =
+                                _lastNameController.text;
+                            widget.userDemographics.phoneNumber =
+                                _phoneController.text;
+                            widget.userDemographics.addressLine1 =
+                                _addressController.text;
                             putUserDemographics(widget.userDemographics);
                           }
-                        }
-                        else {
-                          widget.userDemographics.firstName = _firstNameController.text;
-                          widget.userDemographics.lastName = _lastNameController.text;
-                          widget.userDemographics.phoneNumber = _phoneController.text;
-                          widget.userDemographics.addressLine1 = _addressController.text;
+                        } else {
+                          widget.userDemographics.firstName =
+                              _firstNameController.text;
+                          widget.userDemographics.lastName =
+                              _lastNameController.text;
+                          widget.userDemographics.phoneNumber =
+                              _phoneController.text;
+                          widget.userDemographics.addressLine1 =
+                              _addressController.text;
                           putUserDemographics(widget.userDemographics);
                         }
-                      }
-                      else {
-                        widget.userDemographics.firstName = _firstNameController.text;
-                        widget.userDemographics.lastName = _lastNameController.text;
-                        widget.userDemographics.phoneNumber = _phoneController.text;
-                        widget.userDemographics.addressLine1 = _addressController.text;
+                      } else {
+                        widget.userDemographics.firstName =
+                            _firstNameController.text;
+                        widget.userDemographics.lastName =
+                            _lastNameController.text;
+                        widget.userDemographics.phoneNumber =
+                            _phoneController.text;
+                        widget.userDemographics.addressLine1 =
+                            _addressController.text;
                         putUserDemographics(widget.userDemographics);
                       }
                     }
@@ -169,9 +186,12 @@ Widget build(BuildContext context) {
                     foregroundColor: Colors.white,
                     backgroundColor: const Color(0xFFF3D433),
                     elevation: 0,
-                    minimumSize: Size(double.infinity, 48), 
+                    minimumSize: Size(double.infinity, 48),
                   ),
-                  child: const Text('Save Changes' ,style: TextStyle(fontSize:17, color: Colors.black ),),
+                  child: const Text(
+                    'Save Changes',
+                    style: TextStyle(fontSize: 17, color: Colors.black),
+                  ),
                 ),
               ],
             ),
