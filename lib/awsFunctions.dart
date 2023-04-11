@@ -147,7 +147,7 @@ Future<CandidateDemographics> getCandidateDemographics(
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/candidateDemographics/$candidateId'),
+            '/candidateDemographics/test/$candidateId'),
         headers: {
           "content-type": "application/json",
         });
@@ -401,7 +401,7 @@ Future<List<CandidateIssueFactorValues>> getUserCandidateStackIssueFactorValues(
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/userCandidateStack/issues/$userId'),
+            '/userCandidateStack/test/issues/$userId'),
         headers: {
           "content-type": "application/json",
         });
@@ -428,7 +428,7 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/userCandidateStack/demographics/$userId'),
+            '/userCandidateStack/test/demographics/$userId'),
         headers: {
           "content-type": "application/json",
         });
@@ -437,6 +437,7 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
       candidateDemographicsList
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
+
     safePrint("candidates demographics stack pulled");
     return candidateDemographicsList;
   } catch (e) {

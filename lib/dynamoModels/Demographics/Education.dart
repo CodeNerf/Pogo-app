@@ -12,7 +12,7 @@ class Education {
     return Education(
       placeOfEducation: json['school'],
       degreeInformation: json['degreeInformation'],
-      yearOfGraduation: json['yearOfGraduation'],
+      yearOfGraduation: json['year'],
     );
   }
 
@@ -20,7 +20,7 @@ class Education {
     return {
       'placeOfEducation': placeOfEducation,
       'degreeInformation': degreeInformation,
-      'yearOfGraduation': yearOfGraduation,
+      'year': yearOfGraduation,
     };
   }
 }

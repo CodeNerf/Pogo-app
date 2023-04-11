@@ -26,63 +26,16 @@ class _CandidateProfileState extends State<CandidateProfile>
   late TabController _tabController;
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   bool _isCardVisible = false;
-  List<Map<String, dynamic>> contactInfo = [
-    {
-      'icon': 'assets/phone.png',
-      'text': '(517) 373-3400',
-    },
-    {
-      'icon': 'assets/phone2.png',
-      'text': '(517) 335-7858',
-    },
-    {
-      'icon': 'assets/email.png',
-      'text': 'info@gretchenwhitmer.com',
-    },
-    {
-      'icon': 'assets/website.png',
-      'text': 'www.michigan.gov/whitmer',
-    },
-    {
-      'icon': 'assets/office.png',
-      'text': 'Post Office, Lansing MI 48909',
-    },
-  ];
-  final socialMediaList = [
-    {
-      'name': 'LinkedIn',
-      'icon': 'assets/linkedin.png',
-      'url': 'https://www.linkedin.com'
-    },
-    {
-      'name': 'Facebook',
-      'icon': 'assets/facebook.png',
-      'url': 'https://www.facebook.com'
-    },
-    {
-      'name': 'Twitter',
-      'icon': 'assets/twitter.png',
-      'url': 'https://www.twitter.com'
-    },
-    {
-      'name': 'Instagram',
-      'icon': 'assets/instagram.png',
-      'url': 'https://www.instagram.com'
-    },
-    {
-      'name': 'TikTok',
-      'icon': 'assets/tiktok.png',
-      'url': 'https://www.tiktok.com'
-    },
-  ];
   bool _showAllCardsEducation = false;
   bool _showAllCardsPreviousPositions = false;
   bool _showAllCardsOtherExperience = false;
-
+  var contactInfo = [];
+  var socialMediaList = [];
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    mapData();
   }
 
   @override
@@ -97,6 +50,59 @@ class _CandidateProfileState extends State<CandidateProfile>
     setState(() {
       _showAllCards = !_showAllCards;
     });
+  }
+
+  void mapData() {
+    contactInfo = [
+      {
+        'icon': 'assets/phone.png',
+        'text': widget.candidate.phoneNumber,
+      },
+      {
+        'icon': 'assets/phone2.png',
+        'text': widget.candidate.homePhoneNumber,
+      },
+      {
+        'icon': 'assets/email.png',
+        'text': widget.candidate.email,
+      },
+      {
+        'icon': 'assets/website.png',
+        'text': widget.candidate.officialWebsiteURL,
+      },
+      {
+        'icon': 'assets/office.png',
+        'text': widget.candidate.addressLine1,
+      },
+    ];
+
+    socialMediaList = [
+      {
+        'name': 'LinkedIn',
+        'icon': 'assets/linkedin.png',
+        'url': widget.candidate.linkedInURL
+      },
+      {
+        'name': 'Facebook',
+        'icon': 'assets/facebook.png',
+        'url': widget.candidate.facebookURL
+      },
+      {
+        'name': 'Twitter',
+        'icon': 'assets/twitter.png',
+        'url': widget.candidate.twitterURL
+      },
+      {
+        'name': 'Instagram',
+        'icon': 'assets/instagram.png',
+        'url': widget.candidate.instagramURL
+      },
+      {
+        'name': 'TikTok',
+        'icon': 'assets/tiktok.png',
+        'url': widget.candidate.tiktokURL
+      },
+    ];
   }
 
   //returns the candidate's experience
@@ -816,7 +822,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 30),
                               child: Text(
-                                'Lorem ipsum dolor sit amet. Eum quia saepe aut sint fugit ut nihil sunt quo placeat voluptatem non sunt veritatis est doloribus mollitia. Ex possimus quam ut perspiciatis reprehenderit est sunt consequuntur in obcaecati voluptas et necessitatibus quos. Et maxime voluptatum et omnis delectus et enim quas et libero animi eum rerum suscipit a perspiciatis velit ut voluptatem officia. Et nulla incidunt ab dolor magni sit quae voluptatem aut omnis enim rem necessitatibus alias non reprehenderit dolor vel laudantium quia.Qui officiis asperiores aut doloribus deleniti sit incidunt enim At accusantium deserunt et vero modi? Est distinctio internos et asperiores explicabo id vitae laborum et dolor error eos pariatur nesciunt et nulla quia aut eius autem. At laboriosam repudiandae ut consequatur reprehenderit aut repellat nisi cum aperiam architecto a molestias fugit. Aut tenetur recusandae a vero enim quo nihil laboriosam. Ut iusto labore qui galisum autem et nisi nesciunt qui voluptatem galisum qui voluptatibus maiores.',
+                                widget.candidate.bodySummary,
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Colors.black,
@@ -977,33 +983,6 @@ class _CandidateProfileState extends State<CandidateProfile>
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 25),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 10),
-                                        child: Image.asset(
-                                          "assets/votinghistory.png",
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 135),
-                                        child: Text(
-                                          "Voting History",
-                                          style: TextStyle(
-                                            fontFamily: "Inter",
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 15,
-                                          ),
-                                          textAlign: TextAlign.left,
                                         ),
                                       ),
                                     ],

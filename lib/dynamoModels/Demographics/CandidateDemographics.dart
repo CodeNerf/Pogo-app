@@ -15,7 +15,7 @@ class CandidateDemographics extends Demographics {
   final String tiktokURL;
   final String careerStartYear;
   final String headline;
-  List<String> bodyBulletPoints;
+  final List<dynamic> bodyBulletPoints;
   final String bodySummary;
   final List<Education> education;
   final List<Position> prevPositions;
@@ -23,7 +23,7 @@ class CandidateDemographics extends Demographics {
   final String campaignBudget;
   final String countOfDonors;
   final String countOfStaff;
-  final List<String> donors;
+  final List<dynamic> donors;
 
   CandidateDemographics(
       {required super.id,
@@ -75,18 +75,24 @@ class CandidateDemographics extends Demographics {
         tiktokURL: json['TikTok'],
         careerStartYear: json['Career Start Year'],
         headline: json['Headline'],
-        bodyBulletPoints:
-            (json["Body Bullet Points Array"] as List).cast<String>(),
+        bodyBulletPoints: json["Body Bullet Points Array"],
         bodySummary: json['Body Summary'],
-        education: (json["Education Array"] as List).cast<Education>(),
-        prevPositions:
-            (json["Previous Positions Array"] as List).cast<Position>(),
-        otherExperience:
-            (json["Other Experience Array"] as List).cast<Position>(),
+        education: [
+          for (var i = 0; i < json["Education Array"].length; i++)
+            Education.fromJson(json["Education Array"][i])
+        ],
+        prevPositions: [
+          for (var i = 0; i < json["Previous Positions Array"].length; i++)
+            Position.fromJson(json["Previous Positions Array"][i])
+        ],
+        otherExperience: [
+          for (var i = 0; i < json["Other Experience Array"].length; i++)
+            Position.fromJson(json["Other Experience Array"][i])
+        ],
         campaignBudget: json['Campaign Budget'],
         countOfDonors: json['Number of Contributors'],
         countOfStaff: json['Number of Staff Members'],
-        donors: (json["Donors"] as List).cast<String>(),
+        donors: json["donors"],
         dateOfBirth: json['Date of Birth'],
         profileImageURL: json['Profile Image URL'],
         gender: json['Gender'],
