@@ -1,13 +1,13 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 
 import 'ForgotPasswordPage.dart';
 import 'HomeLoadingPage.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 import 'amplifyFunctions.dart';
 import 'awsFunctions.dart';
-import 'dynamoModels/UserDemographics.dart';
 
 class SignIn extends StatefulWidget {
   final Function(int) switchPage;
@@ -26,23 +26,24 @@ class _SignInState extends State<SignIn> {
   double _errorSizeBoxSize = 0;
 
   Future _signIn(context) async {
-    if (await signInUser(_emailSignInController.text, _passwordSignInController.text)) {
+    if (await signInUser(
+        _emailSignInController.text, _passwordSignInController.text)) {
       safePrint("checking isUserSignedIn()");
       if (await isUserSignedIn()) {
         //check if survey is completed
-        UserDemographics user = await getUserDemographics(_emailSignInController.text);
+        UserDemographics user =
+            await getUserDemographics(_emailSignInController.text);
         user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
         safePrint(user.lastLogin);
         await putUserDemographics(user);
-        if(user.surveyCompletion == true) {
+        if (user.surveyCompletion == true) {
           await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => HomeLoadingPage(user: user),
             ),
           );
-        }
-        else {
+        } else {
           await Navigator.push(
             context,
             MaterialPageRoute(
@@ -158,7 +159,7 @@ class _SignInState extends State<SignIn> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal:30.0),
+              padding: EdgeInsets.symmetric(horizontal: 30.0),
               child: Text(
                 "Sign in to continue your search",
                 textAlign: TextAlign.center,
@@ -180,8 +181,7 @@ class _SignInState extends State<SignIn> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
-              border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0)),
+              border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
@@ -220,12 +220,14 @@ class _SignInState extends State<SignIn> {
                       if (_obscure) {
                         setState(() {
                           _obscure = false;
-                          _eye = const Icon(Icons.remove_red_eye_outlined, color: Colors.grey);
+                          _eye = const Icon(Icons.remove_red_eye_outlined,
+                              color: Colors.grey);
                         });
                       } else {
                         setState(() {
                           _obscure = true;
-                          _eye = const Icon(Icons.remove_red_eye, color: Colors.grey);
+                          _eye = const Icon(Icons.remove_red_eye,
+                              color: Colors.grey);
                         });
                       }
                     },

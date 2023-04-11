@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pogo/AppWalkThrough.dart';
 import 'package:pogo/awsFunctions.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'amplifyFunctions.dart';
 import 'Onboarding/SurveyLandingPage.dart';
-import 'dynamoModels/UserIssueFactorValues.dart';
+import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 
 class UserConfirmationPage extends StatefulWidget {
   final String email;
@@ -64,8 +64,8 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
               MaterialPageRoute(builder: (context) => AppWalkThrough()));
         }
       } else if (await isUserConfirmed()) {
-        await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => AppWalkThrough()));
+        await Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AppWalkThrough()));
       } else {
         setState(() {
           _errorText =

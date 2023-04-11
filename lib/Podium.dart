@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
-import 'package:pogo/dynamoModels/CandidateIssueFactorValues.dart';
-import 'dynamoModels/CandidateDemographics.dart';
+import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
+import 'dynamoModels/Demographics/CandidateDemographics.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -72,7 +72,7 @@ class _PodiumState extends State<Podium> {
 
   void _initializeSearchResults() {
     for (int i = 0; i < _stackLength; i++) {
-      _candidateList.add('${_stack[i].firstName} ${_stack[i].lastName}');
+      _candidateList.add('${_stack[i].candidateName}');
     }
   }
 
@@ -254,7 +254,7 @@ class _PodiumState extends State<Podium> {
       ),
       child: InkWell(
         onTap: () async {
-          _goToCandidateProfile('${candidate.firstName} ${candidate.lastName}');
+          _goToCandidateProfile('${candidate.candidateName}');
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -288,7 +288,7 @@ class _PodiumState extends State<Podium> {
             Expanded(
               flex: 7,
               child: Text(
-                "${candidate.firstName} ${candidate.lastName}",
+                "${candidate.candidateName}",
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
@@ -301,7 +301,7 @@ class _PodiumState extends State<Podium> {
             Expanded(
               flex: 7,
               child: Text(
-                '${candidate.seatType}  •  Michigan',
+                '${candidate.runningPosition}  •  ${candidate.city}}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 17,
@@ -330,7 +330,7 @@ class _PodiumState extends State<Podium> {
                     const SizedBox(width: 10),
                     //party
                     Text(
-                      _candidateExperience(candidate.careerStartDate),
+                      _candidateExperience(candidate.careerStartYear),
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 15,
@@ -348,7 +348,7 @@ class _PodiumState extends State<Podium> {
                 padding: const EdgeInsets.only(top: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: _getRatingCircles(candidate.candidateId),
+                  children: _getRatingCircles(candidate.id),
                 ),
               ),
             ),
@@ -494,210 +494,219 @@ class _PodiumState extends State<Podium> {
                       ),
                     ),
                     Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      //search bar
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD9D9D9),
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 2,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //search bar
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: TypeAheadField(
-                              textFieldConfiguration: TextFieldConfiguration(
-                                controller: _searchController,
-                                decoration: const InputDecoration(
-                                  labelText: 'Search',
-                                  labelStyle: TextStyle(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: TypeAheadField(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  controller: _searchController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Search',
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                                suggestionsCallback: (query) async {
+                                  return _candidateSearchOptions(query);
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    title: Text(suggestion),
+                                  );
+                                },
+                                noItemsFoundBuilder: (context) => const Text(
+                                  'No Candidates Found',
+                                  style: TextStyle(
+                                    fontSize: 20,
                                     fontWeight: FontWeight.w700,
                                   ),
-                                  border: InputBorder.none,
                                 ),
+                                transitionBuilder:
+                                    (context, suggestionsBox, controller) {
+                                  return suggestionsBox;
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  _goToCandidateProfile(suggestion);
+                                },
                               ),
-                              suggestionsCallback: (query) async {
-                                return _candidateSearchOptions(query);
-                              },
-                              itemBuilder: (context, suggestion) {
-                                return ListTile(
-                                  title: Text(suggestion),
-                                );
-                              },
-                              noItemsFoundBuilder: (context) => const Text(
-                                'No Candidates Found',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              transitionBuilder:
-                                  (context, suggestionsBox, controller) {
-                                return suggestionsBox;
-                              },
-                              onSuggestionSelected: (suggestion) {
-                                _goToCandidateProfile(suggestion);
-                              },
                             ),
                           ),
                         ),
-                      ),
-                      //candidate cards
-                      SwipeableCardsSection(
-                        cardController: _cardController,
-                        context: context,
-                        items: _initialCards(),
-                        cardWidthMiddleMul: 0.9,
-                        cardHeightMiddleMul: 0.6,
-                        cardWidthBottomMul: 0.9,
-                        cardHeightBottomMul: 0.6,
-                        onCardSwiped: (dir, index, widget) {
-                          if (_stackLength > 3 && _stack.isNotEmpty) {
-                            //if the three buffer cards are not yet reached
-                            if (_count < _stackLength) {
-                              _cardController.addItem(_newCard(_stack[_count]));
-                            }
-                            if (dir == Direction.right) {
-                              _addCandidate(_stack[_stackIterator]);
-                              _stackLength--;
-                            } else {
+                        //candidate cards
+                        SwipeableCardsSection(
+                          cardController: _cardController,
+                          context: context,
+                          items: _initialCards(),
+                          cardWidthMiddleMul: 0.9,
+                          cardHeightMiddleMul: 0.6,
+                          cardWidthBottomMul: 0.9,
+                          cardHeightBottomMul: 0.6,
+                          onCardSwiped: (dir, index, widget) {
+                            if (_stackLength > 3 && _stack.isNotEmpty) {
+                              //if the three buffer cards are not yet reached
                               if (_count < _stackLength) {
-                                if (_count == _stackLength - 1) {
-                                  _count = 0;
-                                } else {
-                                  _count++;
-                                }
-                              } else {
-                                _count = 0;
+                                _cardController
+                                    .addItem(_newCard(_stack[_count]));
                               }
-                              if (_stackIterator >= _stackLength - 1) {
-                                _stackIterator = 0;
-                              } else {
-                                _stackIterator++;
-                              }
-                            }
-                          } else if (_stack.isNotEmpty && _stackLength == 3) {
-                            //edge of buffer
-                            int temp = _stackIterator;
-                            if (dir == Direction.right) {
-                              _stackLength = 2;
-                              _addCandidate(_stack[temp]);
-                            } else {
-                              if (_count == 2) {
-                                _count = 0;
-                                if (_stackIterator == 2) {
-                                  _stackIterator = 0;
-                                  _cardController.addItem(_newCard(_stack[2]));
-                                } else {
-                                  _stackIterator = 2;
-                                  _cardController.addItem(_newCard(_stack[0]));
-                                }
-                              } else if (_count == 1) {
-                                _count = 2;
-                                if (_stackIterator == 1) {
-                                  _stackIterator = 2;
-                                  _cardController.addItem(_newCard(_stack[1]));
-                                } else {
-                                  _stackIterator = 1;
-                                  _cardController.addItem(_newCard(_stack[2]));
-                                }
-                              } else if (_count == 0) {
-                                _count = 1;
-                                if (_stackIterator == 0) {
-                                  _stackIterator = 1;
-                                  _cardController.addItem(_newCard(_stack[0]));
-                                } else {
-                                  _stackIterator = 0;
-                                  _cardController.addItem(_newCard(_stack[1]));
-                                }
-                              } else {
-                                _count = 1;
-                                _stackIterator = 1;
-                                _cardController.addItem(_newCard(_stack[0]));
-                              }
-                            }
-                          } else if (_stack.isNotEmpty && _stackLength == 2) {
-                            if (widget != null) {
                               if (dir == Direction.right) {
-                                _stackLength = 1;
                                 _addCandidate(_stack[_stackIterator]);
+                                _stackLength--;
                               } else {
-                                if (_stackIterator == 0) {
+                                if (_count < _stackLength) {
+                                  if (_count == _stackLength - 1) {
+                                    _count = 0;
+                                  } else {
+                                    _count++;
+                                  }
+                                } else {
+                                  _count = 0;
+                                }
+                                if (_stackIterator >= _stackLength - 1) {
+                                  _stackIterator = 0;
+                                } else {
+                                  _stackIterator++;
+                                }
+                              }
+                            } else if (_stack.isNotEmpty && _stackLength == 3) {
+                              //edge of buffer
+                              int temp = _stackIterator;
+                              if (dir == Direction.right) {
+                                _stackLength = 2;
+                                _addCandidate(_stack[temp]);
+                              } else {
+                                if (_count == 2) {
+                                  _count = 0;
+                                  if (_stackIterator == 2) {
+                                    _stackIterator = 0;
+                                    _cardController
+                                        .addItem(_newCard(_stack[2]));
+                                  } else {
+                                    _stackIterator = 2;
+                                    _cardController
+                                        .addItem(_newCard(_stack[0]));
+                                  }
+                                } else if (_count == 1) {
+                                  _count = 2;
+                                  if (_stackIterator == 1) {
+                                    _stackIterator = 2;
+                                    _cardController
+                                        .addItem(_newCard(_stack[1]));
+                                  } else {
+                                    _stackIterator = 1;
+                                    _cardController
+                                        .addItem(_newCard(_stack[2]));
+                                  }
+                                } else if (_count == 0) {
+                                  _count = 1;
+                                  if (_stackIterator == 0) {
+                                    _stackIterator = 1;
+                                    _cardController
+                                        .addItem(_newCard(_stack[0]));
+                                  } else {
+                                    _stackIterator = 0;
+                                    _cardController
+                                        .addItem(_newCard(_stack[1]));
+                                  }
+                                } else {
+                                  _count = 1;
                                   _stackIterator = 1;
                                   _cardController.addItem(_newCard(_stack[0]));
+                                }
+                              }
+                            } else if (_stack.isNotEmpty && _stackLength == 2) {
+                              if (widget != null) {
+                                if (dir == Direction.right) {
+                                  _stackLength = 1;
+                                  _addCandidate(_stack[_stackIterator]);
                                 } else {
-                                  _stackIterator = 0;
-                                  _cardController.addItem(_newCard(_stack[1]));
+                                  if (_stackIterator == 0) {
+                                    _stackIterator = 1;
+                                    _cardController
+                                        .addItem(_newCard(_stack[0]));
+                                  } else {
+                                    _stackIterator = 0;
+                                    _cardController
+                                        .addItem(_newCard(_stack[1]));
+                                  }
+                                }
+                              }
+                            } else if (_stack.isNotEmpty && _stackLength == 1) {
+                              if (widget != null) {
+                                if (dir == Direction.left) {
+                                  _cardController.addItem(_newCard(_stack[0]));
+                                } else {
+                                  _stackLength = 0;
+                                  _addCandidate(_stack[0]);
                                 }
                               }
                             }
-                          } else if (_stack.isNotEmpty && _stackLength == 1) {
-                            if (widget != null) {
-                              if (dir == Direction.left) {
-                                _cardController.addItem(_newCard(_stack[0]));
-                              } else {
-                                _stackLength = 0;
-                                _addCandidate(_stack[0]);
-                              }
-                            }
-                          }
-                        },
-                        enableSwipeUp: false,
-                        enableSwipeDown: false,
-                      ),
-                      //alert
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                _showAlert(context);
-                              },
-                              child: const Icon(
-                                CupertinoIcons.question_circle,
-                                size: 25,
-                              ),
-                            ),
-                            Material(
-                              color: const Color(0xFFF3D433),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: InkWell(
-                                splashColor: const Color(0xFF000000),
-                                splashFactory: InkRipple.splashFactory,
-                                borderRadius: BorderRadius.circular(10),
-                                onTap: () async {
-                                  await widget.unFilterPodiumCandidates();
-                                  setState(() {
-                                    _stack = widget.candidateStack;
-                                    _stackLength = _stack.length;
-                                  });
-                                  _initializeSearchResults();
+                          },
+                          enableSwipeUp: false,
+                          enableSwipeDown: false,
+                        ),
+                        //alert
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  _showAlert(context);
                                 },
-                                child: const Text(
-                                  'Remove Filter',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                child: const Icon(
+                                  CupertinoIcons.question_circle,
+                                  size: 25,
+                                ),
+                              ),
+                              Material(
+                                color: const Color(0xFFF3D433),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: InkWell(
+                                  splashColor: const Color(0xFF000000),
+                                  splashFactory: InkRipple.splashFactory,
+                                  borderRadius: BorderRadius.circular(10),
+                                  onTap: () async {
+                                    await widget.unFilterPodiumCandidates();
+                                    setState(() {
+                                      _stack = widget.candidateStack;
+                                      _stackLength = _stack.length;
+                                    });
+                                    _initializeSearchResults();
+                                  },
+                                  child: const Text(
+                                    'Remove Filter',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                   ],
                 ),
               ),

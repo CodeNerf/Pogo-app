@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
-import 'package:pogo/dynamoModels/CandidateDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/MatchingStatistics.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
-//import 'package:pogo/models/userBallots.dart';
-import 'dynamoModels/UserIssueFactorValues.dart';
-import 'dynamoModels/CandidateIssueFactorValues.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
+import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
+import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 
 Future<void> putUserIssueFactorValues(
     UserIssueFactorValues userIssueFactorValues) async {
@@ -117,7 +116,7 @@ Future<UserDemographics> getUserDemographics(String userId) async {
     return UserDemographics.fromJson(decodedResponse);
   } catch (e) {
     safePrint('An error occurred in getUserDemographics() $e');
-    return UserDemographics(userId: userId);
+    return UserDemographics(id: userId);
   } finally {
     client.close();
   }
@@ -148,7 +147,7 @@ Future<CandidateDemographics> getCandidateDemographics(
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/candidateDemographics/$candidateId'),
+            '/candidateDemographics/test/$candidateId'),
         headers: {
           "content-type": "application/json",
         });
@@ -156,7 +155,7 @@ Future<CandidateDemographics> getCandidateDemographics(
     return CandidateDemographics.fromJson(decodedResponse);
   } catch (e) {
     safePrint('An error occurred in getCandidateDemographics() $e');
-    return CandidateDemographics(candidateId: candidateId);
+    return CandidateDemographics(id: candidateId);
   } finally {
     client.close();
   }
@@ -402,7 +401,7 @@ Future<List<CandidateIssueFactorValues>> getUserCandidateStackIssueFactorValues(
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/userCandidateStack/issues/$userId'),
+            '/userCandidateStack/test/issues/$userId'),
         headers: {
           "content-type": "application/json",
         });
@@ -429,7 +428,7 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
   try {
     var response = await client.get(
         Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
-            '/userCandidateStack/demographics/$userId'),
+            '/userCandidateStack/test/demographics/$userId'),
         headers: {
           "content-type": "application/json",
         });
@@ -438,6 +437,7 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
       candidateDemographicsList
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
+
     safePrint("candidates demographics stack pulled");
     return candidateDemographicsList;
   } catch (e) {

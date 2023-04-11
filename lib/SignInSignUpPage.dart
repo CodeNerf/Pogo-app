@@ -10,7 +10,7 @@ import 'Onboarding/SurveyLandingPage.dart';
 import 'SignInWidget.dart';
 import 'SignUpWidget.dart';
 import 'amplifyFunctions.dart';
-import 'dynamoModels/UserDemographics.dart';
+import 'dynamoModels/Demographics/UserDemographics.dart';
 //import 'SignUpAddress.dart';
 import 'package:intl/intl.dart';
 
@@ -45,9 +45,15 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
     super.initState();
     setState(() {
       _widgetOptions = <Widget>[
-        SignIn(switchPage: _switchSection,),
-        SignUp(switchPage: _switchSection,),
-        ForgotPasswordPage(resetPasswordPage: _goToResetPassword,),
+        SignIn(
+          switchPage: _switchSection,
+        ),
+        SignUp(
+          switchPage: _switchSection,
+        ),
+        ForgotPasswordPage(
+          resetPasswordPage: _goToResetPassword,
+        ),
         EnterNewPasswordPage(email: _email, switchPage: _switchSection),
       ];
     });
@@ -70,7 +76,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
-                if(Navigator.canPop(context)) {
+                if (Navigator.canPop(context)) {
                   Navigator.of(context).pop();
                 }
               },
@@ -117,7 +123,11 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
                         color: Color(0xFFD9D9D9),
                       ),
                       child: IconButton(
-                        icon: Image.asset('assets/google.png', width: 35, height: 35,),
+                        icon: Image.asset(
+                          'assets/google.png',
+                          width: 35,
+                          height: 35,
+                        ),
                         onPressed: () {
                           // Add icon onTap functionality
                         },
@@ -131,7 +141,11 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
                         color: Color(0xFFD9D9D9),
                       ),
                       child: IconButton(
-                        icon: Image.asset('assets/facebook.png', width: 35, height: 35,),
+                        icon: Image.asset(
+                          'assets/facebook.png',
+                          width: 35,
+                          height: 35,
+                        ),
                         onPressed: () {
                           // Add icon onTap functionality
                         },
@@ -145,7 +159,11 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
                         color: Color(0xFFD9D9D9),
                       ),
                       child: IconButton(
-                        icon: Image.asset('assets/twitter.png', width: 35, height: 35,),
+                        icon: Image.asset(
+                          'assets/twitter.png',
+                          width: 35,
+                          height: 35,
+                        ),
                         onPressed: () {
                           // Add icon onTap functionality
                         },
@@ -159,7 +177,11 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
                         color: Color(0xFFD9D9D9),
                       ),
                       child: IconButton(
-                        icon: Image.asset('assets/instagram.png', width: 35, height: 35,),
+                        icon: Image.asset(
+                          'assets/instagram.png',
+                          width: 35,
+                          height: 35,
+                        ),
                         onPressed: () {
                           // Add icon onTap functionality
                         },
@@ -173,7 +195,11 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
                         color: Color(0xFFD9D9D9),
                       ),
                       child: IconButton(
-                        icon: Image.asset('assets/tiktok.png', width: 35, height: 35,),
+                        icon: Image.asset(
+                          'assets/tiktok.png',
+                          width: 35,
+                          height: 35,
+                        ),
                         onPressed: () {
                           // Add icon onTap functionality
                         },

@@ -1,7 +1,7 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:pogo/dynamoModels/CandidateDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
 import 'amplifyFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 
@@ -11,7 +11,14 @@ class BallotPage extends StatefulWidget {
   final List<CandidateDemographics> ballotStack;
   final Function(String) removeFromBallot;
   final Function(String) loadCustomCandidatesInPodium;
-  const BallotPage({Key? key, required this.userBallot, required this.candidateStack, required this.ballotStack, required this.removeFromBallot, required this.loadCustomCandidatesInPodium}) : super(key: key);
+  const BallotPage(
+      {Key? key,
+      required this.userBallot,
+      required this.candidateStack,
+      required this.ballotStack,
+      required this.removeFromBallot,
+      required this.loadCustomCandidatesInPodium})
+      : super(key: key);
 
   @override
   State<BallotPage> createState() => _BallotPageState();
@@ -55,10 +62,10 @@ class _BallotPageState extends State<BallotPage> {
   }
 
   void _initializeBallot() {
-    if(widget.userBallot.localCandidateIds.isNotEmpty) {
-      for(int i = 0; i < widget.userBallot.localCandidateIds.length; i++) {
+    if (widget.userBallot.localCandidateIds.isNotEmpty) {
+      for (int i = 0; i < widget.userBallot.localCandidateIds.length; i++) {
         CandidateDemographics current = widget.ballotStack[i];
-        String seatType = current.seatType;
+        String seatType = current.runningPosition;
         switch (seatType) {
           case 'Mayor':
             _mayor++;
@@ -190,7 +197,7 @@ class _BallotPageState extends State<BallotPage> {
             child: [
               SizedBox(height: 6),
               Container(
-                height: 330, 
+                height: 330,
                 child: ListView(
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
@@ -200,62 +207,90 @@ class _BallotPageState extends State<BallotPage> {
                         _mayor = count;
                       });
                     }, 0),
-                    _buildRow(context, 'Clerk', _cityClerk, _cityClerkPics, (count) {
+                    _buildRow(context, 'Clerk', _cityClerk, _cityClerkPics,
+                        (count) {
                       setState(() {
                         _cityClerk = count;
                       });
                     }, 1),
-                    _buildRow(context, 'City Council', _cityCouncil, _cityCouncilPics, (count) {
+                    _buildRow(
+                        context, 'City Council', _cityCouncil, _cityCouncilPics,
+                        (count) {
                       setState(() {
                         _cityCouncil = count;
                       });
                     }, 2),
-                    _buildRow(context, 'Sheriff', _countySheriff, _countySheriffPics, (count) {
+                    _buildRow(
+                        context, 'Sheriff', _countySheriff, _countySheriffPics,
+                        (count) {
                       setState(() {
                         _countySheriff = count;
                       });
                     }, 4),
-                    _buildRow(context, 'Judge', _trialCourtJudge, _trialCourtJudgePics, (count) {
+                    _buildRow(context, 'Judge', _trialCourtJudge,
+                        _trialCourtJudgePics, (count) {
                       setState(() {
                         _trialCourtJudge = count;
                       });
                     }, 5),
-                    _buildRow(context, 'County Register of Deeds', _countyRegisterOfDeeds, _countyRegisterOfDeedsPics, (count) {
+                    _buildRow(
+                        context,
+                        'County Register of Deeds',
+                        _countyRegisterOfDeeds,
+                        _countyRegisterOfDeedsPics, (count) {
                       setState(() {
                         _countyRegisterOfDeeds = count;
                       });
                     }, 6),
-                    _buildRow(context, 'School Board', _schoolBoard, _schoolBoardPics, (count) {
+                    _buildRow(
+                        context, 'School Board', _schoolBoard, _schoolBoardPics,
+                        (count) {
                       setState(() {
                         _schoolBoard = count;
                       });
                     }, 7),
-                    _buildRow(context, 'Prosecutor', _prosecutors, _prosecutorsPics, (count) {
+                    _buildRow(
+                        context, 'Prosecutor', _prosecutors, _prosecutorsPics,
+                        (count) {
                       setState(() {
                         _prosecutors = count;
                       });
                     }, 8),
-                    _buildRow(context, 'Coroner', _coroners, _coronersPics, (count) {
+                    _buildRow(context, 'Coroner', _coroners, _coronersPics,
+                        (count) {
                       setState(() {
                         _coroners = count;
                       });
                     }, 9),
-                    _buildRow(context, 'Planning/Zoning Commission', _planningZoningCommission, _planningZoningCommissionPics, (count) {
+                    _buildRow(
+                        context,
+                        'Planning/Zoning Commission',
+                        _planningZoningCommission,
+                        _planningZoningCommissionPics, (count) {
                       setState(() {
                         _planningZoningCommission = count;
                       });
                     }, 10),
-                    _buildRow(context, 'Public Works Commission', _publicWorksCommission, _publicWorksCommissionPics, (count) {
+                    _buildRow(
+                        context,
+                        'Public Works Commission',
+                        _publicWorksCommission,
+                        _publicWorksCommissionPics, (count) {
                       setState(() {
                         _publicWorksCommission = count;
                       });
                     }, 11),
-                    _buildRow(context, 'Commissioner of Revenue', _commissionerOfRevenue, _commissionerOfRevenuePics, (count) {
+                    _buildRow(
+                        context,
+                        'Commissioner of Revenue',
+                        _commissionerOfRevenue,
+                        _commissionerOfRevenuePics, (count) {
                       setState(() {
                         _commissionerOfRevenue = count;
                       });
                     }, 12),
-                    _buildRow(context, 'Commissioner', _countyCommissioners, _countyCommissionersPics, (count) {
+                    _buildRow(context, 'Commissioner', _countyCommissioners,
+                        _countyCommissionersPics, (count) {
                       setState(() {
                         _countyCommissioners = count;
                       });
@@ -265,7 +300,7 @@ class _BallotPageState extends State<BallotPage> {
               ),
             ],
           ),
-          SizedBox(height: 10), 
+          SizedBox(height: 10),
           _buildExpandableButton(
             onPressed: () {
               setState(() {
@@ -297,7 +332,13 @@ class _BallotPageState extends State<BallotPage> {
     );
   }
 
-  Widget _buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
+  Widget _buildRow(
+      context,
+      String title,
+      int circleCount,
+      List<String> candidatePics,
+      Function(int) updateCircleCount,
+      int rowIndex) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Container(
@@ -326,7 +367,8 @@ class _BallotPageState extends State<BallotPage> {
                           child: Text(
                             title,
                             textAlign: TextAlign.left,
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -338,13 +380,15 @@ class _BallotPageState extends State<BallotPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: List.generate(
                           circleCount,
-                              (index) => Padding(
+                          (index) => Padding(
                             padding: const EdgeInsets.only(right: 10.0),
-                            child: _buildCircleCandidate(() {
-                              updateCircleCount(circleCount - 1);
-                            },() {
-                              updateCircleCount(circleCount - 1);
-                            },
+                            child: _buildCircleCandidate(
+                              () {
+                                updateCircleCount(circleCount - 1);
+                              },
+                              () {
+                                updateCircleCount(circleCount - 1);
+                              },
                               candidatePics[index],
                               context,
                               title,
@@ -364,17 +408,20 @@ class _BallotPageState extends State<BallotPage> {
     );
   }
 
-  Widget _buildCircleCandidate(VoidCallback onDelete, Null Function() param1, String candidatePic, context, String title) {
-    if(candidatePic != '') {
-      CandidateDemographics candidate = widget.ballotStack.firstWhere((element) => element.profileImageURL == candidatePic);
+  Widget _buildCircleCandidate(VoidCallback onDelete, Null Function() param1,
+      String candidatePic, context, String title) {
+    if (candidatePic != '') {
+      CandidateDemographics candidate = widget.ballotStack
+          .firstWhere((element) => element.profileImageURL == candidatePic);
       return GestureDetector(
         onLongPress: () {
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Remove ${candidate.firstName} ${candidate.lastName} from Ballot'),
-                content: const Text('Are you sure you want to remove them from your ballot?'),
+                title: Text('Remove ${candidate.candidateName} from Ballot'),
+                content: const Text(
+                    'Are you sure you want to remove them from your ballot?'),
                 actions: <Widget>[
                   TextButton(
                     child: const Text('Cancel'),
@@ -407,8 +454,7 @@ class _BallotPageState extends State<BallotPage> {
           ),
         ),
       );
-    }
-    else {
+    } else {
       return GestureDetector(
         onTap: () {
           widget.loadCustomCandidatesInPodium(title);
@@ -459,7 +505,8 @@ Widget _buildExpandableButton({
                 color: Colors.white,
               ),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0, vertical: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -485,7 +532,3 @@ Widget _buildExpandableButton({
     ),
   );
 }
-
-
-
-

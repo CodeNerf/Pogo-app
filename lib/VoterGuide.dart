@@ -1,11 +1,11 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'package:pogo/googleFunctions/CivicFunctions.dart';
 import 'package:pogo/googleFunctions/CivicModels.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'dynamoModels/UserIssueFactorValues.dart';
+import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 
 class VoterGuide extends StatefulWidget {
   UserDemographics currentUserDemographics;

@@ -1,15 +1,19 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
-import 'package:pogo/dynamoModels/UserDemographics.dart';
+import '../dynamoModels/Demographics/UserDemographics.dart';
 import 'VoterInfo.dart';
-import '../dynamoModels/UserIssueFactorValues.dart';
+import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import 'VoterInfo2.dart';
 
 class Demographics2 extends StatefulWidget {
   final UserIssueFactorValues ratings;
   final UserDemographics answers;
   final int issuesIndex;
-  const Demographics2({Key? key, required this.ratings, required this.answers, required this.issuesIndex})
+  const Demographics2(
+      {Key? key,
+      required this.ratings,
+      required this.answers,
+      required this.issuesIndex})
       : super(key: key);
 
   @override
@@ -27,14 +31,14 @@ class _Demographics2State extends State<Demographics2> {
         context,
         MaterialPageRoute(
             builder: (context) => VoterInfo2(
-              ratings: widget.ratings,
-              answers: widget.answers,
-              issuesIndex: widget.issuesIndex,
-            )));
+                  ratings: widget.ratings,
+                  answers: widget.answers,
+                  issuesIndex: widget.issuesIndex,
+                )));
   }
 
   void _expandTap(bool expanded, int index) {
-    if(expanded) {
+    if (expanded) {
       switch (index) {
         case 0:
           ageExpand = true;
@@ -53,8 +57,7 @@ class _Demographics2State extends State<Demographics2> {
           break;
       }
       setState(() {});
-    }
-    else {
+    } else {
       ageExpand = false;
       ethnicityExpand = false;
       genderExpand = false;
@@ -64,11 +67,11 @@ class _Demographics2State extends State<Demographics2> {
 
   TextStyle optionsTextStyle() {
     return const TextStyle(
-        fontFamily: 'Inter',
-        fontStyle: FontStyle.normal,
-        fontWeight: FontWeight.w500,
-        fontSize: 15.0,
-        color: Color(0xFF57636C),
+      fontFamily: 'Inter',
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.w500,
+      fontSize: 15.0,
+      color: Color(0xFF57636C),
     );
   }
 
@@ -150,7 +153,8 @@ class _Demographics2State extends State<Demographics2> {
                           ),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('16-25', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -160,11 +164,11 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.dateOfBirth = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('26-35', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -174,11 +178,11 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.dateOfBirth = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('36-55', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -188,11 +192,11 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.dateOfBirth = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('56+', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -202,8 +206,7 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.dateOfBirth = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                       ],
                     ),
@@ -249,7 +252,8 @@ class _Demographics2State extends State<Demographics2> {
                           ),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Black', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -259,11 +263,11 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.racialIdentity = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('White', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -273,11 +277,11 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.racialIdentity = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Asian', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -287,12 +291,13 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.racialIdentity = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('American Indian/Alaska Native', style: optionsTextStyle()),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
+                          title: Text('American Indian/Alaska Native',
+                              style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
                               value: "American Indian/Alaska Native",
@@ -301,12 +306,13 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.racialIdentity = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Native Hawaiian/Pacific Islander', style: optionsTextStyle()),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
+                          title: Text('Native Hawaiian/Pacific Islander',
+                              style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
                               value: "Native Hawaiian/Pacific Islander",
@@ -315,12 +321,13 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.racialIdentity = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Hispanic/Latino', style: optionsTextStyle()),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
+                          title: Text('Hispanic/Latino',
+                              style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
                               value: "Hispanic/Latino",
@@ -329,8 +336,7 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.racialIdentity = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                       ],
                     ),
@@ -344,7 +350,7 @@ class _Demographics2State extends State<Demographics2> {
                     color: Colors.transparent,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12),
                       side: const BorderSide(color: Colors.black, width: 1),
                     ),
                     clipBehavior: Clip.antiAlias,
@@ -376,7 +382,8 @@ class _Demographics2State extends State<Demographics2> {
                           ),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Female', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -386,11 +393,11 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.gender = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Male', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -400,11 +407,11 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.gender = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
                           title: Text('Non-binary', style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
@@ -414,12 +421,13 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.gender = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                         ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Gender Non-conforming', style: optionsTextStyle()),
+                          visualDensity:
+                              const VisualDensity(horizontal: -4, vertical: -4),
+                          title: Text('Gender Non-conforming',
+                              style: optionsTextStyle()),
                           leading: Radio(
                               activeColor: Colors.black,
                               value: "Gender Non-conforming",
@@ -428,8 +436,7 @@ class _Demographics2State extends State<Demographics2> {
                                 setState(() {
                                   widget.answers.gender = s!;
                                 });
-                              }
-                          ),
+                              }),
                         ),
                       ],
                     ),
