@@ -13,10 +13,12 @@ import 'dynamoModels/UserIssueFactorValues.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'dart:math';
 import 'EditPersonalInfoPage.dart';
+import 'AddressAutocomplete.dart';
 
 class UserProfile extends StatefulWidget {
   final UserIssueFactorValues currentUserFactors;
   final UserDemographics currentUserDemographics;
+  
   const UserProfile(
       {Key? key,
       required this.currentUserFactors,
@@ -34,7 +36,7 @@ class _UserProfileState extends State<UserProfile> {
   String _fourthIssue = "";
   final List<num> _ratings = [];
   final TextEditingController _profilePicController = TextEditingController();
-
+UserDemographics userDemographics = UserDemographics(userId: '');
   @override
   void initState() {
     super.initState();
@@ -635,6 +637,25 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               ),
             ),
+InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+                  MaterialPageRoute(builder: (context) => AddressAutocomplete(userDemographics: userDemographics)),
+
+          );
+        },
+        child: Center(
+          child: Text(
+            'Click here to go to Address Autocomplete Page',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+              color: Colors.blue,
+              fontSize: 18.0,
+            ),
+          ),
+        ),
+      ),
 
             //your top issues, top issues icons
             Padding(

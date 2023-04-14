@@ -267,7 +267,7 @@ Positioned(
   right: 16.0,
   child: TextButton(
     onPressed: () {
-      if (_currentPage <= 2) { 
+      if (_currentPage <=3) { 
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SignInSignUpPage(index: 0,))

@@ -1,6 +1,7 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/UserConfirmationPage.dart';
+import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'package:validators/validators.dart';
 
 import 'Onboarding/SurveyLandingPage.dart';
@@ -12,7 +13,8 @@ import 'package:google_maps_webservice/places.dart';
 
 
 class AddressAutocomplete extends StatefulWidget {
-  const AddressAutocomplete({Key? key}) : super(key: key);
+  final UserDemographics userDemographics;
+  const AddressAutocomplete({Key? key, required this.userDemographics}) : super(key: key);
 
   @override
   _AddressAutocompleteState createState() => _AddressAutocompleteState();
@@ -24,7 +26,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
   double errorSizeBoxSize = 0;
 bool isAddressSelected = false;
 
-  final _placesApiClient = GoogleMapsPlaces(apiKey: 'apiKey');
+  final _placesApiClient = GoogleMapsPlaces(apiKey: 'ApiKey');
 
   // Regular expression for validating US addresses
   final addressRegex = RegExp(
@@ -75,6 +77,15 @@ Future<void> _onAddressChanged(String value) async {
     });
   }
 }
+Future<void> _onAddressSelected(Prediction prediction) async {
+  final place = await _placesApiClient.getDetailsByPlaceId(prediction.placeId!);
+  final address = place.result.formattedAddress;
+
+  setState(() {
+    addressController.text = address!;
+    isAddressSelected = true;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -93,20 +104,20 @@ Future<void> _onAddressChanged(String value) async {
   child: Column( 
     children: [
       Align(
-        alignment: Alignment.center,
-        child: Text(
-          "Welcome to PoGo, Ashley",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-            color: Color(0xFF0E0E0E),
-            fontFamily: 'Inter',
-            fontStyle: FontStyle.normal,
-            letterSpacing: 0,
-            height: 1.2,
-          ),
-        ),
-      ),
+  alignment: Alignment.center,
+  child: Text(
+    "Welcome to PoGo, ${widget.userDemographics.firstName}",
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 30,
+      color: Color(0xFF0E0E0E),
+      fontFamily: 'Inter',
+      fontStyle: FontStyle.normal,
+      letterSpacing: 0,
+      height: 1.2,
+    ),
+  ),
+),
       SizedBox(
         height: 20,
       ),
@@ -128,7 +139,7 @@ Future<void> _onAddressChanged(String value) async {
     ],
   ),
 ),
-                  SizedBox(height: 30,), 
+                  SizedBox(height: 10,), 
                   //ADDRESS
 Padding(
   padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -176,32 +187,37 @@ Padding(
       SizedBox(
         width: 50.0,
         child: GestureDetector(
-          onTap: () async {
-  // String address = addressController.text;
-  // setState(() {
-  //   userDemographics.addressLine1 = address;
-  // });
-  // await Navigator.push(
-  //   context,
-  //   MaterialPageRoute(builder: (context) => SurveyLandingPage()),
-  // );
-},
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xFFF3D433),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Icon(
-                Icons.arrow_forward,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ),
-      )
-    ],
+  onTap: () async {
+    if (!isAddressSelected) {
+      final prediction = addressPredictions.first;
+      await _onAddressSelected(prediction);
+    }
+
+    final address = addressController.text;
+    setState(() {
+    widget.userDemographics.addressLine1 = address;
+    });
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SurveyLandingPage()),
+    );
+  },
+  child: Container(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: Color(0xFFF3D433),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Icon(
+        Icons.arrow_forward,
+        color: Colors.black,
+      ),
+    ),
+  ),
+),
+  )],
   ),
 ),
       if (addressPredictions.isNotEmpty && !isAddressSelected)
