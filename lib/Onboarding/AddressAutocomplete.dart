@@ -32,8 +32,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
   double errorSizeBoxSize = 0;
   bool isAddressSelected = false;
 
-  final _placesApiClient =
-      GoogleMapsPlaces(apiKey: 'AIzaSyBiXFGuy-dTD2F5Z3f7ow5ts9KG2Xy5bEE');
+  final _placesApiClient = GoogleMapsPlaces(apiKey: '');
 
   // Regular expression for validating US addresses
   final addressRegex = RegExp(
