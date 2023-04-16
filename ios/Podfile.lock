@@ -49,19 +49,19 @@ PODS:
     - SQLite.swift (= 0.13.2)
   - AppSyncRealTimeClient (2.1.1):
     - Starscream (~> 4.0.4)
-  - AWSAuthCore (2.28.6):
-    - AWSCore (= 2.28.6)
-  - AWSCognitoIdentityProvider (2.28.6):
-    - AWSCognitoIdentityProviderASF (= 2.28.6)
-    - AWSCore (= 2.28.6)
-  - AWSCognitoIdentityProviderASF (2.28.6):
-    - AWSCore (= 2.28.6)
-  - AWSCore (2.28.6)
-  - AWSMobileClient (2.28.6):
-    - AWSAuthCore (= 2.28.6)
-    - AWSCognitoIdentityProvider (= 2.28.6)
-    - AWSCognitoIdentityProviderASF (= 2.28.6)
-    - AWSCore (= 2.28.6)
+  - AWSAuthCore (2.28.5):
+    - AWSCore (= 2.28.5)
+  - AWSCognitoIdentityProvider (2.28.5):
+    - AWSCognitoIdentityProviderASF (= 2.28.5)
+    - AWSCore (= 2.28.5)
+  - AWSCognitoIdentityProviderASF (2.28.5):
+    - AWSCore (= 2.28.5)
+  - AWSCore (2.28.5)
+  - AWSMobileClient (2.28.5):
+    - AWSAuthCore (= 2.28.5)
+    - AWSCognitoIdentityProvider (= 2.28.5)
+    - AWSCognitoIdentityProviderASF (= 2.28.5)
+    - AWSCore (= 2.28.5)
   - AWSPluginsCore (1.28.3):
     - Amplify (= 1.28.3)
     - AWSCore (~> 2.28.0)
@@ -73,7 +73,17 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - google_maps_flutter_ios (0.0.1):
+    - Flutter
+    - GoogleMaps
+  - GoogleMaps (7.4.0):
+    - GoogleMaps/Maps (= 7.4.0)
+  - GoogleMaps/Base (7.4.0)
+  - GoogleMaps/Maps (7.4.0):
+    - GoogleMaps/Base
   - ObjectMapper (4.2.0)
+  - package_info_plus (0.4.5):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -87,7 +97,7 @@ PODS:
     - SQLite.swift/standard (= 0.13.2)
   - SQLite.swift/standard (0.13.2)
   - Starscream (4.0.4)
-  - SwiftFormat/CLI (0.50.8)
+  - SwiftFormat/CLI (0.51.6)
   - SwiftLint (0.48.0)
   - url_launcher_ios (0.0.1):
     - Flutter
@@ -101,6 +111,8 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_web_browser (from `.symlinks/plugins/flutter_web_browser/ios`)
+  - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
@@ -118,6 +130,7 @@ SPEC REPOS:
     - AWSMobileClient
     - AWSPluginsCore
     - FMDB
+    - GoogleMaps
     - ObjectMapper
     - SQLite.swift
     - Starscream
@@ -141,6 +154,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_web_browser:
     :path: ".symlinks/plugins/flutter_web_browser/ios"
+  google_maps_flutter_ios:
+    :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/ios"
   shared_preferences_foundation:
@@ -159,26 +176,29 @@ SPEC CHECKSUMS:
   amplify_flutter_ios: 8943b5e5fb995a7aa3eb5c5238a6822756703584
   AmplifyPlugins: 98bcd23f2c13179f75c733b887e80dd06243be5e
   AppSyncRealTimeClient: 937360221f2b664c4c33ae142a60643e64f480cd
-  AWSAuthCore: 2a63f8afd6e9d9fe80389c21532c116194e6673e
-  AWSCognitoIdentityProvider: 59dc9418fdcd70c086f4bd63e5c7d97a52637bd2
-  AWSCognitoIdentityProviderASF: ee4ccaa9ed0e444613e709e496f71937bc110e22
-  AWSCore: d1194a634f406c1f93d8b6d78bf7ddbda3b5f663
-  AWSMobileClient: c2ba524757751afd82dbf53ca2ddb050ba772069
+  AWSAuthCore: e728d73a2b4eed9e826506a1f0fcc58171537267
+  AWSCognitoIdentityProvider: 261fac98d461e9e398bf3c1e18c3cd90578b33ca
+  AWSCognitoIdentityProviderASF: 8e35d6414d9ee2443e9167414ef5e839a58e1e72
+  AWSCore: 4bad3f0eb17393b4926a9491e32b835991c56382
+  AWSMobileClient: c898658a4d15e64e07d39c7dc6354fd3ea3055a9
   AWSPluginsCore: 93f813579479fa4c5bfff58817df89e0e10f9f3b
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_web_browser: 7bccaafbb0c5b8862afe7bcd158f15557109f61f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  google_maps_flutter_ios: 3e0b99383a8003b8169d06e7e324170bd0424105
+  GoogleMaps: 032f676450ba0779bd8ce16840690915f84e57ac
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SQLite.swift: 4fc2be46c36392e3b87afe6fe7f1801c1daa07ef
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
-  SwiftFormat: 16f04fcde066f40004f51e26bc95bc14dc377d6f
+  SwiftFormat: b2062ab08a5c83c075e32355175c58b99e52187f
   SwiftLint: 284cea64b6187c5d6bd83e9a548a64104d546447
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
-PODFILE CHECKSUM: 1f634a18643bc8f74f66ad61dc1d74e73334259e
+PODFILE CHECKSUM: 138b4ab033657e59f29cd0cd301755d5cf219d11
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0
