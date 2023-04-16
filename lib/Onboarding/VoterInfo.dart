@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pogo/Onboarding/Demographics2.dart';
 import 'package:pogo/Onboarding/Issues.dart';
 import '../dynamoModels/UserDemographics.dart';
 import '../dynamoModels/UserIssueFactorValues.dart';
@@ -14,6 +15,7 @@ class VoterInfo extends StatefulWidget {
 }
 
 class _VoterInfoState extends State<VoterInfo> {
+  final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   late UserDemographics _answers;
  String _voteMenuSelection = '';
   final List<String> _voteMenu = ['Yes', 'No'];
@@ -54,7 +56,18 @@ class _VoterInfoState extends State<VoterInfo> {
    //TODO: add user lives in registered state bool to db in case this value is needed in future
    Navigator.push(context, MaterialPageRoute(builder: (context) => Issues(ratings: widget.ratings, answers: widget.answers, issuesIndex: widget.issuesIndex,)));
  }
-  int _selectedOption = -1;
+  void _goBack() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Demographics2(
+          ratings: widget.ratings,
+          answers: widget.answers,
+          issuesIndex: widget.issuesIndex,
+        ),
+      ),
+    );
+  }
 
 Widget build(BuildContext context) {
   return WillPopScope(
@@ -62,6 +75,19 @@ Widget build(BuildContext context) {
       return false;
     },
     child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => _goBack(),
+        ),
+        elevation: 0,
+        centerTitle: true,
+        title: Image(
+          image: AssetImage(_pogoLogo),
+          width: 150,
+        ),
+      ),
       body: Container(
         color: Color(0xFFF1F4F8),
         padding: const EdgeInsets.all(20.0),

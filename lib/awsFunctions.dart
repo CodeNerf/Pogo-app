@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pogo/dynamoModels/CandidateDemographics.dart';
+import 'package:pogo/dynamoModels/MatchingStatistics.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 //import 'package:pogo/models/userBallots.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
@@ -389,6 +390,103 @@ Future<List<CandidateIssueFactorValues>>
   } catch (e) {
     safePrint("An error occurred in getAllCandidateIssueFactorValues: $e");
     return <CandidateIssueFactorValues>[];
+  } finally {
+    client.close();
+  }
+}
+
+Future<List<CandidateIssueFactorValues>> getUserCandidateStackIssueFactorValues(
+    String userId) async {
+  var client = http.Client();
+  var candidateFactorsList = <CandidateIssueFactorValues>[];
+  try {
+    var response = await client.get(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/userCandidateStack/issues/$userId'),
+        headers: {
+          "content-type": "application/json",
+        });
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    for (var candidateissuefactorvalues in decodedResponse) {
+      candidateFactorsList
+          .add(CandidateIssueFactorValues.fromJson(candidateissuefactorvalues));
+    }
+    safePrint("candidate issues stack pulled");
+    return candidateFactorsList;
+  } catch (e) {
+    safePrint(
+        "An error occurred in getUserCandidateStackIssueFactorValues: $e");
+    return <CandidateIssueFactorValues>[];
+  } finally {
+    client.close();
+  }
+}
+
+Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
+    String userId) async {
+  var client = http.Client();
+  var candidateDemographicsList = <CandidateDemographics>[];
+  try {
+    var response = await client.get(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/userCandidateStack/demographics/$userId'),
+        headers: {
+          "content-type": "application/json",
+        });
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    for (var candidateDemographics in decodedResponse) {
+      candidateDemographicsList
+          .add(CandidateDemographics.fromJson(candidateDemographics));
+    }
+    safePrint("candidates demographics stack pulled");
+    return candidateDemographicsList;
+  } catch (e) {
+    safePrint("An error occurred in getUserCandidateStackDemographics: $e");
+    return <CandidateDemographics>[];
+  } finally {
+    client.close();
+  }
+}
+
+Future<List<MatchingStatistics>> getUserCandidateStackStatistics(
+    String userId) async {
+  var client = http.Client();
+  var matchStats = <MatchingStatistics>[];
+  try {
+    var response = await client.get(
+        Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+            '/userCandidateStack/$userId'),
+        headers: {
+          "content-type": "application/json",
+        });
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    for (var stats in decodedResponse) {
+      matchStats.add(MatchingStatistics.fromJson(stats));
+    }
+    safePrint("candidates demographics stack pulled");
+    return matchStats;
+  } catch (e) {
+    safePrint("An error occurred in getUserCandidateStackStatistics: $e");
+    return <MatchingStatistics>[];
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> matchCandidatesToUser(String userId) async {
+  var client = http.Client();
+  try {
+    var response = await client.post(
+        Uri.https(
+            'i4tti59faj.execute-api.us-east-1.amazonaws.com', '/matching'),
+        headers: {
+          "content-type": "application/json",
+        },
+        body: jsonEncode({"userId": userId}));
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    print(decodedResponse);
+  } catch (e) {
+    safePrint("An error occurred in matchCandidatesToUser: $e");
   } finally {
     client.close();
   }

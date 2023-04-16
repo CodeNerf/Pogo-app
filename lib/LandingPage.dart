@@ -100,8 +100,8 @@ class _LandingPageState extends State<LandingPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SignInSignUpPage(
-                                      index: 1,
+                                builder: (context) => const SignInSignUpPage(
+                                      index: 0,
                                     )));
                       },
                       shape: RoundedRectangleBorder(
@@ -139,8 +139,8 @@ class _LandingPageState extends State<LandingPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AppWalkThrough(),
-                            ));
+                                builder: (context) =>
+                                    const SignInSignUpPage(index: 1)));
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
@@ -158,8 +158,10 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // center the widgets vertically
+                crossAxisAlignment: CrossAxisAlignment
+                    .center, // center the widgets horizontally
               )
             ],
           ),

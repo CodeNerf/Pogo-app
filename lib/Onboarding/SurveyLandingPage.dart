@@ -7,6 +7,7 @@ import '../dynamoModels/UserIssueFactorValues.dart';
 import '../amplifyFunctions.dart';
 import 'Demographics.dart';
 import '../SignInSignUpPage.dart';
+import 'Demographics2.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values

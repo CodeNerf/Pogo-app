@@ -6,7 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pogo/SignInSignUpPage.dart';
 import 'package:pogo/awsFunctions.dart';
+import 'package:pogo/dynamoModels/CandidateDemographics.dart';
 import 'Onboarding/SurveyLandingPage.dart';
+import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/UserDemographics.dart';
 import 'amplifyFunctions.dart';
 import 'dynamoModels/UserIssueFactorValues.dart';
@@ -14,15 +16,17 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'dart:math';
 import 'EditPersonalInfoPage.dart';
 import 'Onboarding/AddressAutocomplete.dart';
+import 'package:share_plus/share_plus.dart';
 
 class UserProfile extends StatefulWidget {
   final UserIssueFactorValues currentUserFactors;
   final UserDemographics currentUserDemographics;
-
+  final List<CandidateDemographics> currentUserBallotCandidates;
   const UserProfile(
       {Key? key,
       required this.currentUserFactors,
-      required this.currentUserDemographics})
+      required this.currentUserDemographics,
+      required this.currentUserBallotCandidates})
       : super(key: key);
 
   @override
@@ -60,34 +64,34 @@ class _UserProfileState extends State<UserProfile> {
     for (int i = 0; i < 4; i++) {
       switch (indexMaxCare) {
         case 0:
-          topIssues.add('CLIMATE');
+          topIssues.add('assets/climateIcon.png');
           break;
         case 1:
-          topIssues.add('DRUG POLICY');
+          topIssues.add('assets/drugPolicyIcon.png');
           break;
         case 2:
-          topIssues.add('ECONOMY');
+          topIssues.add('assets/economyIcon.png');
           break;
         case 3:
-          topIssues.add('EDUCATION');
+          topIssues.add('assets/educationIcon.png');
           break;
         case 4:
-          topIssues.add('GUN POLICY');
+          topIssues.add('assets/gunControlIcon.png');
           break;
         case 5:
-          topIssues.add('HEALTHCARE');
+          topIssues.add('assets/healthcareIcon.png');
           break;
         case 6:
-          topIssues.add('HOUSING');
+          topIssues.add('assets/housingIcon.png');
           break;
         case 7:
-          topIssues.add('IMMIGRATION');
+          topIssues.add('assets/immigrationIcon.png');
           break;
         case 8:
-          topIssues.add('POLICING');
+          topIssues.add('assets/policingIcon.png');
           break;
         case 9:
-          topIssues.add('REPRODUCTIVE RIGHTS');
+          topIssues.add('assets/reproductiveIcon.png');
           break;
       }
       ratings[indexMaxCare] = 0;
@@ -396,41 +400,28 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
-  /*
-  void getLoginStreak() async {
-    //TODO: move to homeloadingpage when data is in db
-    //this function will be used to determine how many consecutive days the user has logged in
-    DateTime lastLoginDate = widget.currentUserDemographics.lastLogin;
-    DateTime now = DateTime.now();
-    DateTime currentDate = DateTime(now.year, now.month, now.day);
-    if(currentDate.year == lastLoginDate.year) {
-      if(currentDate.month == lastLoginDate.month) {
-        if(currentDate.day == (lastLoginDate.day + 1)) {
-          //increment login streak
-          widget.currentUserDemographics.loginStreak = widget.currentUserDemographics.loginStreak + 1;
-          if(widget.currentUserDemographics.loginRecord < widget.currentUserDemographics.loginStreak) {
-            //new login streak record
-            widget.currentUserDemographics.loginRecord = widget.currentUserDemographics.loginStreak;
-          }
-          await putUserDemographics(widget.currentUserDemographics);
-        }
-      }
-      else {
-        //check new month
-      }
-    }
-    else {
-      //check new year
-    }
-  }
-
   String getLoginStreakText() {
-    if (widget.currentUserDemographics.loginStreak == widget.currentUserDemographics.loginRecord) {
+    if (widget.currentUserDemographics.loginStreak ==
+            widget.currentUserDemographics.loginStreakRecord &&
+        widget.currentUserDemographics.loginStreak > 0) {
       return 'New Record!';
     }
     return '';
   }
-   */
+
+  String ballotMessage() {
+    String message = "Check out my PoGo ballot! I'm going to vote for:\n";
+    for (int i = 0; i < widget.currentUserBallotCandidates.length; i++) {
+      message +=
+          "${widget.currentUserBallotCandidates[i].firstName} ${widget.currentUserBallotCandidates[i].lastName}\n";
+    }
+    return message;
+  }
+
+  String pogoLinkMessage() {
+    //differentiate between android and ios here
+    return "Come download the PoGo app! https://www.politicsonthego.info";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -533,10 +524,10 @@ class _UserProfileState extends State<UserProfile> {
                                 fit: BoxFit.contain,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  //TODO: placeholder poll values will have to be replaced
                                   children: [
                                     AutoSizeText(
-                                      getUserExperience(2),
+                                      getUserExperience(
+                                          widget.currentUserDemographics.polls),
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -546,7 +537,7 @@ class _UserProfileState extends State<UserProfile> {
                                       ),
                                     ),
                                     AutoSizeText(
-                                      '2 Polls',
+                                      '${widget.currentUserDemographics.polls} Polls',
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -605,7 +596,7 @@ class _UserProfileState extends State<UserProfile> {
                                   //TODO: placeholder streak values will need to be replaced
                                   children: [
                                     AutoSizeText(
-                                      '0 day streak',
+                                      '${widget.currentUserDemographics.loginStreak} day streak',
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -615,7 +606,7 @@ class _UserProfileState extends State<UserProfile> {
                                       ),
                                     ),
                                     AutoSizeText(
-                                      'New Record!',
+                                      getLoginStreakText(),
                                       maxLines: 1,
                                       style: const TextStyle(
                                         fontFamily: 'Inter',
@@ -697,8 +688,11 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            _firstIssue,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_firstIssue),
+                            ),
                           ),
                         ),
                         Container(
@@ -716,8 +710,11 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            _secondIssue,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_secondIssue),
+                            ),
                           ),
                         ),
                         Container(
@@ -735,8 +732,11 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            _thirdIssue,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_thirdIssue),
+                            ),
                           ),
                         ),
                         Container(
@@ -754,8 +754,11 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            _fourthIssue,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_fourthIssue),
+                            ),
                           ),
                         ),
                       ],
@@ -789,7 +792,118 @@ class _UserProfileState extends State<UserProfile> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(15),
                     onTap: () {
-                      //TODO: pull up invite friends and share ballot menu
+                      //toaster pull up
+                      showModalBottomSheet(
+                          context: context,
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                          ),
+                          backgroundColor: const Color(0xFFFFFFFF),
+                          builder: (BuildContext context) {
+                            return SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.75,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 13.0),
+                                    child: Container(
+                                      height: 7,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: const Color(0xFFD9D9D9),
+                                      ),
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 30.0),
+                                    child: Text(
+                                      "Invite Friends",
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Share.share(
+                                            pogoLinkMessage(),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: 50,
+                                          clipBehavior: Clip.hardEdge,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Color(0xFFD9D9D9),
+                                          ),
+                                          child: const FittedBox(
+                                            fit: BoxFit.cover,
+                                            child:
+                                                Icon(Icons.ios_share_rounded),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 30.0),
+                                    child: Text(
+                                      "Share your ballot!",
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 25,
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (widget.currentUserBallotCandidates
+                                              .isNotEmpty) {
+                                            Share.share(
+                                              ballotMessage(),
+                                            );
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: 50,
+                                          clipBehavior: Clip.hardEdge,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Color(0xFFD9D9D9),
+                                          ),
+                                          child: const FittedBox(
+                                            fit: BoxFit.cover,
+                                            child:
+                                                Icon(Icons.ios_share_rounded),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),

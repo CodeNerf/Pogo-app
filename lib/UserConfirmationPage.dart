@@ -1,5 +1,7 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pogo/AppWalkThrough.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'amplifyFunctions.dart';
@@ -33,12 +35,16 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
         UserIssueFactorValues newValues = UserIssueFactorValues(userId: _email);
         await putUserIssueFactorValues(newValues);
         if (await checkLoggedIn()) {
+          UserDemographics user = await getUserDemographics(_email);
+          user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
+          user.loginStreak = 1;
+          await putUserDemographics(user);
           await Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SurveyLandingPage()));
+              MaterialPageRoute(builder: (context) => AppWalkThrough()));
         }
       } else if (await isUserConfirmed()) {
         await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => SurveyLandingPage()));
+            MaterialPageRoute(builder: (context) => AppWalkThrough()));
       } else {
         setState(() {
           _errorText =
