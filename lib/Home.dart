@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
       context,
       MaterialPageRoute(
         builder: (context) => CandidateProfile(
-            candidate: searchCandidate, candidateValues: searchCandidateValues),
+            candidate: searchCandidate, candidateValues: searchCandidateValues, candidateStackFactors: _candidateStackFactors,),
       ),
     );
   }
