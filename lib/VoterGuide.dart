@@ -132,7 +132,7 @@ class _VoterGuideState extends State<VoterGuide> {
                       Container(
                         width: 180.0,
                         height: 320.0,
-                        margin: const EdgeInsets.only(right: 15, left: 15),
+                        margin: const EdgeInsets.only(right: 5, left: 5),
                         padding: const EdgeInsets.only(top: 80),
                         child: Center(
                           child: Card(
