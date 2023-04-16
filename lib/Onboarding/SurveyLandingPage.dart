@@ -1,5 +1,6 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/Onboarding/AddressAutocomplete.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
 import 'package:pogo/awsFunctions.dart';
 import '../dynamoModels/UserIssueFactorValues.dart';
@@ -9,22 +10,7 @@ import '../SignInSignUpPage.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
-  UserDemographics answers = UserDemographics(
-      userId: '',
-      phoneNumber: '',
-      registrationState: '',
-      addressLine1: '',
-      pollingLocation: '',
-      voterRegistrationStatus: false,
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      zipCode: '',
-      profileImageURL: '',
-      gender: '',
-      racialIdentity: '',
-      politicalAffiliation: '',
-      surveyCompletion: false);
+  UserDemographics answers = UserDemographics(userId: '');
   UserIssueFactorValues ratings = UserIssueFactorValues(userId: '');
   SurveyLandingPage({Key? key}) : super(key: key);
 
@@ -149,10 +135,9 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Demographics(
-                                        ratings: widget.ratings,
-                                        answers: widget.answers,
-                                        issuesIndex: 0,
+                                  builder: (context) => AddressAutocomplete(
+                                        userIssueFactorValues: widget.ratings,
+                                        userDemographics: widget.answers,
                                       )));
                         },
                         child: const Center(

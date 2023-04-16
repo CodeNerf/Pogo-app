@@ -30,28 +30,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
     try {
       if (await confirmUser(_email, _codeController.text)) {
         await signInUser(_email, _password);
-        UserIssueFactorValues newValues = UserIssueFactorValues(
-            userId: _email,
-            climateScore: 0,
-            climateWeight: 0,
-            drugPolicyScore: 0,
-            drugPolicyWeight: 0,
-            economyScore: 0,
-            economyWeight: 0,
-            educationScore: 0,
-            educationWeight: 0,
-            gunPolicyScore: 0,
-            gunPolicyWeight: 0,
-            healthcareScore: 0,
-            healthcareWeight: 0,
-            housingScore: 0,
-            housingWeight: 0,
-            immigrationScore: 0,
-            immigrationWeight: 0,
-            policingScore: 0,
-            policingWeight: 0,
-            reproductiveScore: 0,
-            reproductiveWeight: 0);
+        UserIssueFactorValues newValues = UserIssueFactorValues(userId: _email);
         await putUserIssueFactorValues(newValues);
         if (await checkLoggedIn()) {
           await Navigator.push(context,

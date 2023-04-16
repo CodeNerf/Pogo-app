@@ -13,12 +13,12 @@ import 'dynamoModels/UserIssueFactorValues.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'dart:math';
 import 'EditPersonalInfoPage.dart';
-import 'AddressAutocomplete.dart';
+import 'Onboarding/AddressAutocomplete.dart';
 
 class UserProfile extends StatefulWidget {
   final UserIssueFactorValues currentUserFactors;
   final UserDemographics currentUserDemographics;
-  
+
   const UserProfile(
       {Key? key,
       required this.currentUserFactors,
@@ -36,7 +36,7 @@ class _UserProfileState extends State<UserProfile> {
   String _fourthIssue = "";
   final List<num> _ratings = [];
   final TextEditingController _profilePicController = TextEditingController();
-UserDemographics userDemographics = UserDemographics(userId: '');
+  UserDemographics userDemographics = UserDemographics(userId: '');
   @override
   void initState() {
     super.initState();
@@ -110,7 +110,9 @@ UserDemographics userDemographics = UserDemographics(userId: '');
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const SignInSignUpPage(index: 1,),
+            builder: (context) => const SignInSignUpPage(
+              index: 1,
+            ),
           ),
         );
       } else {
@@ -298,67 +300,65 @@ UserDemographics userDemographics = UserDemographics(userId: '');
 
   _showAlert(BuildContext context) {
     AlertDialog alert = AlertDialog(
-      content:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _getRatingCircles(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-              //overall container
-              child: Container(
-                width: MediaQuery.of(context).size.width / 3,
-                height: 30,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFFF3D433),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade400,
-                      spreadRadius: 2,
-                      blurRadius: 6,
-                      offset: const Offset(3, 6),
-                    ),
-                  ],
+        content: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: _getRatingCircles(),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+          //overall container
+          child: Container(
+            width: MediaQuery.of(context).size.width / 3,
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFFF3D433),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400,
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(3, 6),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(15),
-                    onTap: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SurveyLandingPage(),
-                        ),
-                      );
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                      child: Center(
-                        child: AutoSizeText(
-                          'Edit Survey',
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15),
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SurveyLandingPage(),
+                    ),
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                  child: Center(
+                    child: AutoSizeText(
+                      'Edit Survey',
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        )
-    );
+          ),
+        ),
+      ],
+    ));
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -395,7 +395,6 @@ UserDemographics userDemographics = UserDemographics(userId: '');
         return 'Pro';
     }
   }
-
 
   /*
   void getLoginStreak() async {
@@ -436,8 +435,8 @@ UserDemographics userDemographics = UserDemographics(userId: '');
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Container(
+        child: SingleChildScrollView(
+      child: Container(
         color: const Color(0xFFF1F4F8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -637,25 +636,26 @@ UserDemographics userDemographics = UserDemographics(userId: '');
                 ),
               ),
             ),
-InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-                  MaterialPageRoute(builder: (context) => AddressAutocomplete(userDemographics: userDemographics)),
-
-          );
-        },
-        child: Center(
-          child: Text(
-            'Click here to go to Address Autocomplete Page',
-            style: TextStyle(
-              decoration: TextDecoration.underline,
-              color: Colors.blue,
-              fontSize: 18.0,
-            ),
-          ),
-        ),
-      ),
+            // InkWell(
+            //   onTap: () {
+            //     // Navigator.push(
+            //     //   context,
+            //     //   MaterialPageRoute(
+            //     //       builder: (context) => AddressAutocomplete(
+            //     //           userDemographics: userDemographics)),
+            //     // );
+            //   },
+            //   child: Center(
+            //     child: Text(
+            //       'Click here to go to Address Autocomplete Page',
+            //       style: TextStyle(
+            //         decoration: TextDecoration.underline,
+            //         color: Colors.blue,
+            //         fontSize: 18.0,
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
             //your top issues, top issues icons
             Padding(
@@ -965,41 +965,40 @@ InkWell(
 
             //logout button
             Padding(
-  padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
-  child: Container(
-    decoration: BoxDecoration(
-      color: Color(0xFFF3D433),
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.35),
-          blurRadius: 4,
-          offset: Offset(0, 4),
-        ),
-      ],
-    ),
-    child: MaterialButton(
-      minWidth: double.infinity,
-      height: 60,
-      onPressed: () {
-        _logout(context);
-      },
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10)
-      ),
-      child: Text(
-        "Logout",
-        style: TextStyle(
-          fontFamily: 'Inter',
-          fontStyle: FontStyle.normal,
-          fontWeight: FontWeight.w700,
-          fontSize: 20,
-          color: Colors.black,
-        ),
-      ),
-    ),
-  ),
-),
+              padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFF3D433),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.35),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: MaterialButton(
+                  minWidth: double.infinity,
+                  height: 60,
+                  onPressed: () {
+                    _logout(context);
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    "Logout",
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
