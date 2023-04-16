@@ -1,5 +1,6 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/Onboarding/AddressAutocomplete.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
@@ -135,10 +136,9 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Demographics2(
-                                        ratings: widget.ratings,
-                                        answers: widget.answers,
-                                        issuesIndex: 0,
+                                  builder: (context) => AddressAutocomplete(
+                                        userIssueFactorValues: widget.ratings,
+                                        userDemographics: widget.answers,
                                       )));
                         },
                         child: const Center(

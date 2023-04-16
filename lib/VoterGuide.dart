@@ -30,8 +30,8 @@ class _VoterGuideState extends State<VoterGuide> {
     List<String> addressParts =
         widget.currentUserDemographics.addressLine1.split(',');
     if (addressParts.length > 1) {
-      String stateZip = addressParts[addressParts.length - 1].trim();
-      stateInitial = stateZip.split(' ')[0];
+      // String stateZip = addressParts[addressParts.length - 1].trim();
+      stateInitial = addressParts[addressParts.length - 2].trim();
     }
   }
 
