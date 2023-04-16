@@ -1,7 +1,9 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/CandidateProfile.dart';
+import 'package:pogo/HamburgerMenuFunctions.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/CandidateDemographics.dart';
@@ -37,6 +39,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+    late String stateInitial = "AL";
+
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   int _selectedIndex = 0;
   List<CandidateDemographics> _ballotStack = [];
@@ -161,7 +165,6 @@ class _HomeState extends State<Home> {
     setState(() {
       _widgetOptions = <Widget>[
         VoterGuide(
-  currentUserDemographics: _currentUserDemographics, // provide required argument
   user: _currentUserDemographics,
 ),
         Podium(
@@ -235,7 +238,10 @@ endDrawer: Drawer(
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+
+          InkWell(
+            onTap: () => HamburgerMenuFunctions.registerToVote(stateInitial),
+            child: Text(
             'Register to Vote',
             style: TextStyle(
               fontFamily: 'Inter',
@@ -244,13 +250,18 @@ endDrawer: Drawer(
               height: 1.24,
               color: Colors.black,
             ),
-          ),
+          ),),
+        
+
+          
           Divider(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
           SizedBox(height: 50),
-          Text(
+     InkWell(
+            onTap: () => HamburgerMenuFunctions.requestAbsenteeBallot(stateInitial),
+            child: Text(
             'Request an Absentee Ballot',
             style: TextStyle(
               fontFamily: 'Inter',
@@ -259,13 +270,18 @@ endDrawer: Drawer(
               height: 1.24,
               color: Colors.black,
             ),
-          ),
+          ),),
+        
+
+          
           Divider(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
           SizedBox(height: 50),
-          Text(
+          InkWell(
+            onTap: () => HamburgerMenuFunctions.voteByMail(stateInitial),
+            child: Text(
             'Vote by mail',
             style: TextStyle(
               fontFamily: 'Inter',
@@ -274,13 +290,18 @@ endDrawer: Drawer(
               height: 1.24,
               color: Colors.black,
             ),
-          ),
+          ),),
+        
+
+          
           Divider(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
           SizedBox(height: 50),
-          Text(
+  InkWell(
+            onTap: () => HamburgerMenuFunctions.updateRegistration(stateInitial),
+            child: Text(
             'Update registration',
             style: TextStyle(
               fontFamily: 'Inter',
@@ -289,7 +310,9 @@ endDrawer: Drawer(
               height: 1.24,
               color: Colors.black,
             ),
-          ),
+          ),),
+        
+          
           Divider(
             color: Color(0xFFDBE2E7),
             thickness: 2,

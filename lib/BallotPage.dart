@@ -292,60 +292,70 @@ class _BallotPageState extends State<BallotPage> {
     );
   }
 
- Widget _buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
-  return SizedBox(
-    width: MediaQuery.of(context).size.width,
+Widget _buildRow(context, String title, int circleCount, List<String> candidatePics, Function(int) updateCircleCount, int rowIndex) {
+  return Container(
+    height: 140, // set a fixed height
+    margin: EdgeInsets.only(bottom: 10.0, top: 10, left: 30),
     child: Container(
-      margin: EdgeInsets.only(bottom: 10.0, top: 10, left: 30),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFD700),
-          borderRadius: BorderRadius.circular(25.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.35),
-              blurRadius: 2.0,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+      padding: EdgeInsets.all(3.0),      
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFD700),
+        borderRadius: BorderRadius.circular(25.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.35),
+            blurRadius: 2.0,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 145,
+                                            padding: EdgeInsets.only(left: 10, top:15),
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Text(
-                          title,
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                      SizedBox(
+                        height: 100, // set a fixed height for the text widget
+                        child: Center(
+                          child: Text(
+                            title.replaceAll(" ", "\n"),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
-                      SizedBox(
-                        height: 40,
-                      )
                     ],
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List.generate(
-                        circleCount,
-                            (index) => Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: _buildCircleCandidate(() {
-                            updateCircleCount(circleCount - 1);
-                          },() {
-                            updateCircleCount(circleCount - 1);
-                          },
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: List.generate(
+                      circleCount,
+                      (index) => SizedBox(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20, top:30),
+                          child: _buildCircleCandidate(
+                            () {
+                              updateCircleCount(circleCount - 1);
+                            },
+                            () {
+                              updateCircleCount(circleCount - 1);
+                            },
                             candidatePics[index],
                             context,
                             title,
@@ -354,11 +364,11 @@ class _BallotPageState extends State<BallotPage> {
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );
@@ -398,7 +408,7 @@ class _BallotPageState extends State<BallotPage> {
         },
         child: CircularProfileAvatar(
           '',
-          radius: 30,
+          radius:35,
           elevation: 5,
           child: FittedBox(
             fit: BoxFit.cover,
@@ -415,8 +425,8 @@ class _BallotPageState extends State<BallotPage> {
           widget.loadCustomCandidatesInPodium(title);
         },
         child: Container(
-          width: 60,
-          height: 60,
+          width: 70,
+          height: 70,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
                           color: Color(0xFFD9D9D9),
