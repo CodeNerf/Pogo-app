@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:pogo/dynamoModels/Demographics/Education.dart';
 import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dynamoModels/Demographics/CandidateDemographics.dart';
@@ -13,9 +14,14 @@ import 'package:share_plus/share_plus.dart';
 class CandidateProfile extends StatefulWidget {
   final CandidateDemographics candidate;
   final CandidateIssueFactorValues candidateValues;
-  const CandidateProfile(
-      {Key? key, required this.candidate, required this.candidateValues})
-      : super(key: key);
+  final List<CandidateIssueFactorValues> candidateStackFactors;
+
+  const CandidateProfile({
+    Key? key,
+    required this.candidate,
+    required this.candidateValues,
+    required this.candidateStackFactors,
+  }) : super(key: key);
 
   @override
   State<CandidateProfile> createState() => _CandidateProfileState();
@@ -28,11 +34,15 @@ class _CandidateProfileState extends State<CandidateProfile>
   bool _isCardVisible = false;
   bool _showAllCardsEducation = false;
   bool _showAllCardsPreviousPositions = false;
+   late List<CandidateIssueFactorValues> _stackFactors;
   bool _showAllCardsOtherExperience = false;
   var contactInfo = [];
   var socialMediaList = [];
   @override
   void initState() {
+    setState(() {
+      _stackFactors = widget.candidateStackFactors;
+    });
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     mapData();
@@ -106,61 +116,67 @@ class _CandidateProfileState extends State<CandidateProfile>
   }
 
   //returns the candidate's experience
-  String _candidateExperience(String careerStart) {
-    print(careerStart);
+ String _candidateExperience(String careerStartYear) {
+    print(careerStartYear);
     String experience = '';
-    DateTime start = DateTime.parse(careerStart);
+    DateTime start = DateTime.parse(careerStartYear);
     DateTime currentDate = DateTime.now();
     int days = currentDate.difference(start).inDays;
     if (days > 364) {
       int years = days ~/ 365;
       //years
-      experience = '$years years of experience';
+      experience = '$years';
     } else if (days > 29) {
       //months
       int months = days ~/ 30;
-      experience = '$months months of experience';
+      experience = '$months';
     } else {
-      experience = '$days days of experience';
+      experience = "$days";
     }
     return experience;
+}
+  //returns the candidate's current age 
+String calculateAge(String dateOfBirth) {
+  DateTime birthDate = DateTime.parse(dateOfBirth);
+  DateTime currentDate = DateTime.now();
+  int days = currentDate.difference(birthDate).inDays;
+  if (days > 364) {
+    int years = days ~/ 365;
+    return '$years';
+  } else if (days > 29) {
+    int months = days ~/ 30;
+    return '$months';
+  } else {
+    return "$days";
   }
+}
 
-  Widget getLogoForAffiliation(String party,
-      {double width = 33, double height = 33}) {
-    switch (party) {
-      case 'Democrat':
-        return Image.asset(
-          'assets/democratLogo.png',
-          width: width,
-          height: height,
-        );
-      case 'Republican':
-        return Image.asset(
-          'assets/republicanLogo.png',
-          width: width,
-          height: height,
-        );
-      case 'Green':
-        return Image.asset(
-          'assets/greenLogo.png',
-          width: width,
-          height: height,
-        );
-      case 'Libertarian':
-        return Image.asset(
-          'assets/libertarianLogo.png',
-          width: width,
-          height: height,
-        );
-      default:
-        return Image.asset(
-          'assets/independentLogo.png',
-          width: width,
-          height: height,
-        );
-    }
+
+String getBudgetString(String campaignBudgetString) {
+  int campaignBudget = int.tryParse(campaignBudgetString) ?? 0;
+  if (campaignBudget < 1000) {
+    return '$campaignBudget';
+  } else if (campaignBudget < 1000000) {
+    return '${(campaignBudget / 1000).toStringAsFixed(1).replaceAll('.0', '')} Thousand';
+  } else if (campaignBudget < 1000000000) {
+    return '${(campaignBudget / 1000000).toStringAsFixed(1).replaceAll('.0', '')} Million';
+  } else {
+    return '${(campaignBudget / 1000000000).toStringAsFixed(1).replaceAll('.0', '')} Billion';
   }
+}
+
+String getDonorsString(String countOfDonorsString) {
+  int countOfDonors = int.tryParse(countOfDonorsString) ?? 0;
+  if (countOfDonors < 1000) {
+    return '$countOfDonors';
+  } else if (countOfDonors < 1000000) {
+    return '${(countOfDonors / 1000).toStringAsFixed(1).replaceAll('.0', '')} Thousand';
+  } else if (countOfDonors < 1000000000) {
+    return '${(countOfDonors / 1000000).toStringAsFixed(1).replaceAll('.0', '')} Million';
+  } else {
+    return '${(countOfDonors / 1000000000).toStringAsFixed(1).replaceAll('.0', '')} Billion';
+  }
+}
 
   Widget _ratingCircles(num rating) {
     return Padding(
@@ -187,6 +203,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     );
   }
 
+
   Widget createIsssueCard(
     String titleText,
     String descriptionText,
@@ -206,7 +223,7 @@ class _CandidateProfileState extends State<CandidateProfile>
         width: 400,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: screenWidth < 400 ? 10 : 20,
+            horizontal: screenWidth < 400 ? 10 : 15,
             vertical: 20,
           ),
           child: Row(
@@ -252,6 +269,54 @@ class _CandidateProfileState extends State<CandidateProfile>
       ),
     );
   }
+
+List<Widget> displayIssues() {
+  // Retrieve the ratings for each issue and create a map with them
+
+
+  Map<String, double> issueRatings = {
+    'Climate': _stackFactors.first.climateScore.toDouble(),
+    'Drug Policy': _stackFactors.first.drugPolicyScore.toDouble(),
+    'Economy': _stackFactors.first.economyScore.toDouble(),
+    'Education': _stackFactors.first.educationScore.toDouble(),
+    'Gun Policy': _stackFactors.first.gunPolicyScore.toDouble(),
+    'Healthcare': _stackFactors.first.healthcareScore.toDouble(),
+    'Housing': _stackFactors.first.housingScore.toDouble(),
+    'Immigration': _stackFactors.first.immigrationScore.toDouble(),
+    'Policing': _stackFactors.first.policingScore.toDouble(),
+    'Reproductive Rights': _stackFactors.first.reproductiveScore.toDouble(),
+  };
+  
+  // Sort the issues by rating in descending order
+  List<MapEntry<String, double>> sortedIssues = issueRatings.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+  
+  // Create a list of issue cards
+  List<Widget> issueCards = [];
+  
+  // Add the first three issues without hiding them
+  for (int i = 0; i < 3; i++) {
+    String title = sortedIssues[i].key;
+    double rating = sortedIssues[i].value;
+    List<Widget> ratingCircles = [_ratingCircles(rating.toInt())];
+    issueCards.add(createIsssueCard(title, '', ratingCircles));
+  }
+  
+  // Add the rest of the issues with a visibility toggle
+  for (int i = 3; i < sortedIssues.length; i++) {
+    String title = sortedIssues[i].key;
+    double rating = sortedIssues[i].value;
+    List<Widget> ratingCircles = [_ratingCircles(rating.toInt())];
+    issueCards.add(Visibility(
+      visible: _isCardVisible,
+      child: createIsssueCard(title, '', ratingCircles),
+    ));
+  }
+  
+  // Return the list of issue cards
+  return issueCards;
+}
+
 
   Widget createEducationCard(
     String title,
@@ -332,6 +397,19 @@ class _CandidateProfileState extends State<CandidateProfile>
       ),
     );
   }
+List<Widget> createEducationCards(List<Education> educationList) {
+  List<Widget> cards = [];
+  for (int i = 0; i < educationList.length; i++) {
+    Education education = educationList[i];
+    String title = education.placeOfEducation;
+    String subtitle1 = education.degreeInformation;
+    String subtitle2 = "Graduated in ${education.yearOfGraduation}";
+
+    Widget card = createEducationCard(title, subtitle1, subtitle2);
+    cards.add(card);
+  }
+  return cards;
+}
 
   Widget createExperienceCard(
     String title,
@@ -419,12 +497,12 @@ class _CandidateProfileState extends State<CandidateProfile>
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Padding(
             padding: EdgeInsets.symmetric(
-                vertical: 16.0), // adjust the horizontal padding as needed
+                vertical: 0.0), 
             child: Stack(
               children: [
                 Container(
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.50,
+                  height: MediaQuery.of(context).size.height * 0.45,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/candidateImage.png'),
@@ -482,8 +560,9 @@ class _CandidateProfileState extends State<CandidateProfile>
           ),
           Expanded(
               child: Column(children: [
+                SizedBox(height: 10,),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 25),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
               decoration: BoxDecoration(
                 color: Color(0xFfF1F4F8),
                 borderRadius: BorderRadius.only(
@@ -534,8 +613,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                             ),
                           ),
                           const SizedBox(width: 40),
-                          getLogoForAffiliation(
-                              widget.candidate.politicalAffiliation),
+                         
                         ],
                       ),
                     ),
@@ -604,7 +682,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                           alignment: Alignment.topLeft,
                           child: Column(children: [
                             Padding(
-                              padding: EdgeInsets.only(right: 260, top: 20),
+                              padding: EdgeInsets.only(right: 250),
                               child: Text(
                                 "Contact Info",
                                 style: TextStyle(
@@ -647,87 +725,43 @@ class _CandidateProfileState extends State<CandidateProfile>
 
                             SizedBox(height: 15),
 
-                            //social media icons
-                            Padding(
-                              padding: EdgeInsets.only(
-                                right: Platform.isIOS
-                                    ? 130
-                                    : 0, // add padding only for iOS devices
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  for (var socialMedia in socialMediaList)
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 10.0),
-                                      child: Container(
-                                        width: 30,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Color(0xFFD9D9D9),
-                                        ),
-                                        child: IconButton(
-                                          icon: Image.asset(
-                                            socialMedia['icon'] ??
-                                                'assets/default.png',
-                                            width: 15,
-                                            height: 15,
-                                          ),
-                                          onPressed: () {
-                                            switch (socialMedia['name']) {
-                                              case 'LinkedIn':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.linkedin.android',
-                                                  iosUrlScheme:
-                                                      'https://www.linkedin.com/',
-                                                );
-                                                break;
-                                              case 'Facebook':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.facebook.katana',
-                                                  iosUrlScheme:
-                                                      'https://www.facebook.com/GovGretchenWhitmer',
-                                                );
-                                                break;
-                                              case 'Twitter':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.twitter.android',
-                                                  iosUrlScheme:
-                                                      'https://twitter.com/GovWhitmer?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor',
-                                                );
-                                                break;
-                                              case 'Instagram':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.instagram.android',
-                                                  iosUrlScheme:
-                                                      'https://www.instagram.com/whitmermi/channel/',
-                                                );
-                                                break;
-                                              case 'TikTok':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.zhiliaoapp.musically',
-                                                  iosUrlScheme:
-                                                      'https://www.tiktok.com/@biggretchwhitmer?lang=en',
-                                                );
-                                                break;
-                                              default:
-                                                // Handle unsupported social media platforms
-                                                break;
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
+    Padding(
+  padding: EdgeInsets.only(
+    right: Platform.isIOS ? 130 : 0, // add padding only for iOS devices
+  ),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      for (var socialMedia in socialMediaList)
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: Container(
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFFD9D9D9),
+            ),
+            child: IconButton(
+              icon: Image.asset(
+                socialMedia['icon'] ?? 'assets/default.png',
+                width: 25,
+                height: 25,
+              ),
+              onPressed: () async {
+                final url = socialMedia['url'];
+                if (url != null && await canLaunch(url)) {
+                  await launch(url, forceWebView: true);
+                } else {
+                  // Handle unsupported social media platforms
+                }
+              },
+            ),
+          ),
+        ),
+    ],
+  ),
+),
 
                             Padding(
                               padding: EdgeInsets.only(right: 260, top: 30),
@@ -745,7 +779,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                               children: [
                                 Expanded(
                                   child: Container(
-                                    height: 40,
+                                    height: 50,
                                     margin: EdgeInsets.only(
                                         top: 10, left: 30, right: 20),
                                     decoration: BoxDecoration(
@@ -756,15 +790,15 @@ class _CandidateProfileState extends State<CandidateProfile>
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          "61",
-                                          style: TextStyle(
-                                            fontFamily: "Inter",
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 25,
-                                            color: Colors.black,
-                                          ),
-                                        ),
+                                       Text(
+  calculateAge(widget.candidate.dateOfBirth), // pass the date of birth as a string
+  style: TextStyle(
+    fontFamily: "Inter",
+    fontWeight: FontWeight.bold,
+    fontSize: 25,
+    color: Colors.black,
+  ),
+),
                                         SizedBox(width: 10),
                                         Text(
                                           "years old",
@@ -781,7 +815,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 ),
                                 Expanded(
                                   child: Container(
-                                    height: 40,
+                                    height: 50,
                                     width: 40,
                                     margin: EdgeInsets.only(
                                         top: 10, left: 30, right: 20),
@@ -793,15 +827,15 @@ class _CandidateProfileState extends State<CandidateProfile>
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          "20",
-                                          style: TextStyle(
-                                            fontFamily: "Inter",
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 25,
-                                            color: Colors.black,
-                                          ),
-                                        ),
+                                       Text(
+  _candidateExperience(widget.candidate.careerStartYear),
+  style: TextStyle(
+    fontFamily: "Inter",
+    fontWeight: FontWeight.bold,
+    fontSize: 25,
+    color: Colors.black,
+  ),
+),
                                         SizedBox(width: 10),
                                         Text(
                                           "years of \nexperience",
@@ -839,11 +873,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                 SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 265),
+                          padding: EdgeInsets.only(right: 260),
                           child: Text(
                             "Top 3 Issues",
                             style: TextStyle(
@@ -1056,6 +1090,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 "Bachelors of Art, Marketing/Communications",
                                 "1989-93",
                               ),
+
+                              
                               SizedBox(width: 15),
                               if (_showAllCardsEducation)
                                 Row(
@@ -1214,113 +1250,113 @@ class _CandidateProfileState extends State<CandidateProfile>
                             ],
                           ),
                         ),
+                       Padding(
+  padding: EdgeInsets.symmetric(vertical: 20.0, ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        "Their campaign",
+        style: TextStyle(
+          fontFamily: "Inter",
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
+        ),
+        textAlign: TextAlign.left,
+      ),
+      SizedBox(height: 20.0),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              Image(
+                image: AssetImage('assets/budget.png'),
+                width: 35,
+                height: 35,
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                '\$' + getDonorsString(widget.candidate.countOfDonors),
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Inter",
+                ),
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                'Contributors',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey,
+                  fontFamily: "Inter",
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Image(
+                image: AssetImage('assets/contributers.png'),
+                width: 35,
+                height: 35,
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                widget.candidate.countOfStaff,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Inter",
+                ),
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                'Staff members',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.grey,
+                  fontFamily: "Inter",
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Image(
+                image: AssetImage('assets/marketing.png'),
+                width: 35,
+                height: 35,
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                '\$' + getBudgetString(widget.candidate.campaignBudget),
+                style: TextStyle(
+                  fontSize: 15,
+                  fontFamily: "Inter",
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 5.0),
+              Text(
+                'Campaign Budget',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontFamily: "Inter",
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  ),
+),
                         Padding(
                           padding:
-                              EdgeInsets.only(right: 255, top: 20, bottom: 10),
-                          child: Text(
-                            "Their campaign",
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Image(
-                                    image: AssetImage('assets/budget.png'),
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    '\$14 Million',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "Inter",
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    'Contributors',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                      fontFamily: "Inter",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 20.0),
-                              Column(
-                                children: [
-                                  Image(
-                                    image:
-                                        AssetImage('assets/contributers.png'),
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    '32',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "Inter",
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    'Staff members',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                      fontFamily: "Inter",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 20.0),
-                              Column(
-                                children: [
-                                  Image(
-                                    image: AssetImage('assets/marketing.png'),
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    '\$14 Million',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    'Campaign Budget',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontFamily: "Inter",
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(left: 20, top: 40, bottom: 40),
+                              EdgeInsets.only(left: 20, top: 10, bottom: 40, right:20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
