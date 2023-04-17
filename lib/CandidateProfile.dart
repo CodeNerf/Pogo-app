@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,8 @@ class _CandidateProfileState extends State<CandidateProfile>
   bool _showAllCardsOtherExperience = false;
   var contactInfo = [];
   var socialMediaList = [];
-  
+  bool _isViewAllVisible = false;
+
   @override
   void initState() {
     setState(() {
@@ -180,33 +182,25 @@ String getDonorsString(String countOfDonorsString) {
   }
 }
 
-  Widget _ratingCircles(num rating) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-        child: CircularPercentIndicator(
-          radius: 25,
-          lineWidth: 6,
-          progressColor: const Color(0xFFF3D433),
-          backgroundColor: const Color(0xFF8B9DDE),
-          percent: rating / 5,
-          center: Text(
-            '$rating/5',
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+Widget _ratingCircles(double rating) {
+    return CircularPercentIndicator(
+      radius: 25,
+      lineWidth: 6,
+      progressColor: const Color(0xFFF3D433),
+      backgroundColor: const Color(0xFF8B9DDE),
+      percent: rating / 5,
+      center: Text(
+        '$rating',
+        style: const TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
   }
 
 
-Widget createIsssueCard(
+Widget createIssueCard(
   String titleText,
   String descriptionText,
   List<Widget> ratingCircles,
@@ -221,7 +215,7 @@ Widget createIsssueCard(
     shadowColor: Colors.black.withOpacity(0.95),
     color: Color(0xFFD9D9D9),
     child: SizedBox(
-      height: 170,
+      height: 110,
       width: 400,
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -282,104 +276,114 @@ Widget createIsssueCard(
     ),
   );
 }
-List<Widget> displayIssues() {
-  // Retrieve the ratings for each issue and create a map with them
-  Map<String, double> issueRatings = {
-    'Climate': _stackFactors.first.climateScore.toDouble(),
-    'Drug Policy': _stackFactors.first.drugPolicyScore.toDouble(),
-    'Economy': _stackFactors.first.economyScore.toDouble(),
-    'Education': _stackFactors.first.educationScore.toDouble(),
-    'Gun Policy': _stackFactors.first.gunPolicyScore.toDouble(),
-    'Healthcare': _stackFactors.first.healthcareScore.toDouble(),
-    'Housing': _stackFactors.first.housingScore.toDouble(),
-    'Immigration': _stackFactors.first.immigrationScore.toDouble(),
-    'Policing': _stackFactors.first.policingScore.toDouble(),
-    'Reproductive Rights': _stackFactors.first.reproductiveScore.toDouble(),
-  };
-   // Define the sides of the spectrum for each issue
-  Map<String, List<String>> ratingSides = {
-    'Climate': ['People in favor of climate policy are generally conservative in this area, preferring to ban economic activity that may create jobs but harm the environment. ',
-     'Peoplee in the middle may support some degree of climate policy, recognizing the importance of protecting the environment while also considering the economic impact of environmental regulation. They may support measures to reduce carbon emissions but may not support a complete ban on economic activity that may harm the environment.', 
-     'People who doubt climate policy don’t believe the climate is a threat to our environment. They are more permissive when weighing the economic impact of environmental regulation. People who doubt climate change believe the free market will find its own solution to environmental issues. '],
-    'Drug Policy': ['People who favor legalization believe that drug policy should be less strict including decreasing the penalties or punishments associated with the drug. Many people believe in the decriminalization of marijuana ', 
-    'People in the middle may support some degree of drug legalization, particularly for marijuana, while also recognizing the potential risks associated with drug use. They may believe that drug policy should balance individual liberty with public safety.', 
-    'People who favor the criminalization of drugs believe that drug policy should be stricter including increasing the penalties or punishments associated with the drug. '],
-    'Economy': ['People in favor of market regulation desire for the economy to be run by a cooperative collective agency, which can mean the state but also a network of communes',
-     'People in the middle may support some level of market regulation while also recognizing the importance of individual entrepreneurship and the free market. They may believe that government intervention in the economy should be balanced with the need to promote economic growth and job creation.',
-      'People in favor of market deregulation desire for the economy to be left to the devices of competing individuals and organizations. '],
-    'Education': ['People in favor of public education believe every child in America, regardless of family income or place of residence, deserves access to a quality education. Including: expanded, free, public education including free college; student-loan forgiveness, teacher-pay raises, and universal pre-kindergarten', 
-    'People in the middle may support public education and believe in expanding access to free, quality education for all children in America. They may also support some degree of school choice while also recognizing the importance of academic performance, free speech, and federal and state separation in education.', 
-    'People in favor of school choice believe academic performance, free speech, and federal and state separation are essential to a good education. They believe “keeping Washington out of education” to ensure parents are in control of what their kids are learning in their districts. '],
-    'Gun Policy': ['People in favor of gun control desire laws to be put in place such as background checks, wait times before buying a gun, banning automatic weapons, and disallowing concealed weapons ',
-     ' People in the middle may support some level of gun control while also recognizing the importance of the Second Amendment and the right to bear arms. They may support background checks and waiting periods before purchasing guns but may not support a ban on all firearms.', 
-     'People in favor of gun rights are strongly opposed to gun laws. Many are strong advocates of the second amendment [the right to bear arms], including “freedom to carry” for self-protection and relying on the state at little as possible. '],
-    'Healthcare': ['People in favor of government-funded healthcare believe that access to healthcare is a fundamental right for all people. They support “Universal Healthcare”, “The Affordable Care Act”, and the expansion of Medicare and Medicaid. ', 
-    'People in middle may support a mix of government-funded and private healthcare. They may believe that access to healthcare is a fundamental right for all people but may also recognize the benefits of competition and choice in the healthcare market.', 
-    'People in favor of private healthcare believe there should be competition with Medicare from private insurance companies. They oppose “Universal Healthcare”, “The Affordable Care Act”, and Medicare expansion. '],
-    'Housing': ['People in favor of Affordable housing believe that the government should support the creation of affordable housing and how it affects urban planning.',
-     'People in the middle might believe in inding ways to promote affordable housing options while also respecting property rights and encouraging economic growth. This could also involve programs to assist low-income individuals and families in accessing safe and stable housing, while also encouraging the creation of new jobs and economic opportunities in underserved areas.', 
-     'People in favor of Market rate housing believe that people should live where they can afford to and the government shouldn’t give tax breaks to support affordable housing. '],
-    'Immigration': ['People in favor of inclusive immigration believe there should be pathways to citizenship for undocumented immigrants. Delay in deportations or prosecutions of undocumented immigrants who are young adults and have no criminal record. ', 
-    'People in the middle may support some form of inclusive immigration policy while also recognizing the need for border security and a fair immigration process. They may support pathways to citizenship for undocumented immigrants while also acknowledging the impact that illegal immigration may have on wages and job opportunities for American citizens.', 
-    'No “amnesty” for undocumented immigrants; stronger border patrol, etc. There’s a strong belief that illegal immigration is lowering the wages for citizens and documented immigrants. '],
-    'Policing': ['People in favor of abolishing the police desire to reform the entire policing policy. They demand an entirely new public safety system based on social and economic equity, supported by a network of nonviolent emergency responders. They have a different view of what causes crime. In the world they imagine, America would spend much more on education, health care, and infrastructure, and nothing on police departments as we currently know them.', 
-    'People in favor of Divestment and Reallocation advocate for investments made in supportive services and divestment from policing institutions. They believe that money is invested into minority communities to criminalize them instead of supporting them systematically. ',
-     'People in favor of Investment advocate for more funding for training, weaponry, and local policing infrastructure. '],
-    'Reproductive Rights': ['People in favor of “Pro-choice” generally believe in unpenalized access to abortion and both adult and embryonic stem cell research. They believe in “my body, my choice”. ', 
-    'People in the middle might believe in finding a way to balance the right to access safe and legal abortion services with concerns about the potential harm to fetuses and the ethical implications of terminating a pregnancy. This could involve policies that promote education and access to contraception to reduce unintended pregnancies, while also providing support and resources for individuals who do choose to carry a pregnancy to term.', 
-    'People in favor of abortion and contraceptive criminalization believe that people shouldn’t get abortions or use contraceptives no matter what. They believe that a baby is alive at the moment of conception. Abortions/abortion relation surgeries and contraceptives should be criminalized'],
-  };
-  // Sort the issues by rating in descending order
-  List<MapEntry<String, double>> sortedIssues = issueRatings.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-  
-  // Create a list of issue cards
+
+
+List<Widget> _getIssueCards(String candidateId) {
+  CandidateIssueFactorValues current = _stackFactors
+      .firstWhere((element) => element.candidateId == candidateId);
+  List<num> candidateWeights = [
+    current.climateWeight,
+    current.drugPolicyWeight,
+    current.economyWeight,
+    current.educationWeight,
+    current.gunPolicyWeight,
+  ];
   List<Widget> issueCards = [];
-  
-  // Add the first three issues without hiding them
-  for (int i = 0; i < 3; i++) {
-    String title = sortedIssues[i].key;
-    double rating = sortedIssues[i].value;
-    String ratingSideList = rating < 3 ? ratingSides[title]![0] : 
-                            (rating == 3 ? ratingSides[title]![1] : ratingSides[title]![2]);
-    List<Widget> ratingCircles = [_ratingCircles(rating.toInt())];
-    issueCards.add(createIsssueCard(title, ratingSideList, ratingCircles));
+  while (issueCards.length < 10) {
+    num maxWeight = candidateWeights.reduce(max);
+    if (maxWeight == 0) {
+      break;
+    }
+    int indexMaxWeight = candidateWeights.indexOf(maxWeight);
+    String title = "";
+    String description = "";
+    double ratingScore = 0;
+    switch (indexMaxWeight) {
+      case 0:
+        title = 'CLIMATE';
+        description = 'Policies and actions to mitigate climate change';
+        ratingScore = current.climateScore.toDouble();
+        break;
+      case 1:
+        title = 'DRUG POLICY';
+        description = 'Policies and actions related to drug use and addiction';
+        ratingScore = current.drugPolicyScore.toDouble();
+        break;
+      case 2:
+        title = 'ECONOMY';
+        description = 'Policies and actions to manage economic growth and stability';
+        ratingScore = current.economyScore.toDouble();
+        break;
+      case 3:
+        title = 'EDUCATION';
+        description = 'Policies and actions related to education system and funding';
+        ratingScore = current.educationScore.toDouble();
+        break;
+        case 4:
+        title = 'GUN POLICY';
+        description = 'Policies and actions related to gun control and ownership';
+        ratingScore = current.gunPolicyScore.toDouble();
+        break;
+        case 5:
+        title = 'HEALTHCARE';
+        description = 'Policies and actions related to healthcare system and access';
+        ratingScore = current.healthcareScore.toDouble();
+        break;
+      case 6:
+        title = 'HOUSING';
+        description = 'Policies and actions related to affordable and accessible housing';
+        ratingScore = current.housingScore.toDouble();
+        break;
+      case 7:
+        title = 'IMMIGRATION';
+        description = 'Policies and actions related to immigration and border control';
+        ratingScore = current.immigrationScore.toDouble();
+        break;
+      case 8:
+        title = 'POLICING';
+        description = 'Policies and actions related to law enforcement and criminal justice system';
+        ratingScore = current.policingScore.toDouble();
+        break;
+      case 9:
+        title = 'REPRODUCTIVE RIGHTS';
+        description = 'Policies and actions related to reproductive health and rights';
+        ratingScore = current.reproductiveScore.toDouble();
+        break;
+    }
+    issueCards.add(createIssueCard(
+        title, description, [_ratingCircles(ratingScore)]));
+    candidateWeights[indexMaxWeight] = 0;
   }
-  
-  // Add the rest of the issues with a visibility toggle
-  List<Widget> hiddenCards = [];
-  for (int i = 3; i < sortedIssues.length; i++) {
-    String title = sortedIssues[i].key;
-    double rating = sortedIssues[i].value;
-    String ratingSideList = rating < 3 ? ratingSides[title]![0] : 
-                            (rating == 3 ? ratingSides[title]![1] : ratingSides[title]![2]);
-    List<Widget> ratingCircles = [_ratingCircles(rating.toInt())];
-    hiddenCards.add(createIsssueCard(title, ratingSideList as String, ratingCircles));
-  }
-  
-  // Add the "View More" or "View Less" button
-  if (hiddenCards.isNotEmpty) {
-  issueCards.add(TextButton(
-    onPressed: () => setState(() => _isCardVisible = !_isCardVisible),
-    child: Text(
-      _isCardVisible ? 'View Less' : 'View More',
-      style: TextStyle(
-        color: Color(0xFF57636C),
+
+  // Wrap the issue cards in a Visibility widget
+  return [
+    ...issueCards.take(3),
+    Visibility(
+      visible: _isViewAllVisible,
+      child: Column(
+        children: issueCards.skip(3).toList(),
       ),
     ),
-  ));
+    GestureDetector(
+      onTap: () {
+        setState(() {
+          _isViewAllVisible = !_isViewAllVisible;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16.0),
+        alignment: Alignment.center,
+        child: Text(
+          _isViewAllVisible ? 'View Less' : 'View All',
+          style: TextStyle(
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+  ];
 }
-  
-  // Add the hidden cards if they're visible
-  if (_isCardVisible && hiddenCards.isNotEmpty) {
-    issueCards.addAll(hiddenCards);
-  }
-  
-  // Return the list of issue cards
-  return issueCards;
-}
-
-
   Widget createEducationCard(
     String placeOfEducation,
     String degreeInformation,
@@ -1002,7 +1006,7 @@ Padding(
                                 children: [
                                   
                                   Column(
-  children: displayIssues(),
+children: _getIssueCards((widget.candidate.id)),
 ),
                                   const SizedBox(height: 25),
                                   Padding(
