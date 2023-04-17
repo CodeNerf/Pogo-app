@@ -301,7 +301,7 @@ class _PodiumState extends State<Podium> {
             Expanded(
               flex: 7,
               child: Text(
-                '${candidate.runningPosition}  •  ${candidate.city}}',
+                '${candidate.runningPosition}  •  ${candidate.city}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 17,
