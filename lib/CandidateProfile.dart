@@ -263,16 +263,6 @@ class _CandidateProfileState extends State<CandidateProfile>
                   ],
                 ),
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: SizedBox(
-                  height: 130 - 40,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: ratingCircles,
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -761,7 +751,6 @@ class _CandidateProfileState extends State<CandidateProfile>
                             fontSize: 25,
                           ),
                         ),
-                        const SizedBox(height: 10),
                         Text(
                           '${widget.candidate.runningPosition}  •  ${widget.candidate.city}',
                           style: const TextStyle(
@@ -773,7 +762,6 @@ class _CandidateProfileState extends State<CandidateProfile>
                       ],
                     ),
                   ),
-                  const SizedBox(width: 10),
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -789,7 +777,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                               fontSize: 16,
                             ),
                           ),
-                          const SizedBox(width: 40),
+                          const SizedBox(width: 20),
                         ],
                       ),
                     ),
@@ -799,7 +787,6 @@ class _CandidateProfileState extends State<CandidateProfile>
             ),
             Container(
               padding: EdgeInsets.only(
-                left: 10,
                 right: MediaQuery.of(context).size.width > 600 ? 20 : 10,
               ),
               decoration: BoxDecoration(
@@ -900,7 +887,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                             SizedBox(height: 15),
                             Padding(
                               padding: EdgeInsets.only(
-                                right: Platform.isIOS ? 0 : 0,
+                                right: Platform.isIOS ? 10 : 10,
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
