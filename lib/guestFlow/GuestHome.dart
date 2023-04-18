@@ -168,61 +168,64 @@ class _GuestHomeState extends State<GuestHome> {
   }
 
   Widget lockedPage(String pageName) {
-    return Center(
-      child: Column(
-        children: [
-          Text(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Text(
             'You must have a PoGo account to access the $pageName',
+            textAlign: TextAlign.center,
             style: const TextStyle(
               fontFamily: 'Inter',
               fontSize: 25,
               fontWeight: FontWeight.w600,
             ),
           ),
-          //sign up button
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-            //overall container
-            child: Container(
-              width: MediaQuery.of(context).size.width / 3,
-              height: 30,
-              decoration: BoxDecoration(
+        ),
+        //sign up button
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+          //overall container
+          child: Container(
+            width: 100,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFFF3D433),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400,
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(3, 6),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
                 borderRadius: BorderRadius.circular(15),
-                color: const Color(0xFFF3D433),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade400,
-                    spreadRadius: 2,
-                    blurRadius: 6,
-                    offset: const Offset(3, 6),
-                  ),
-                ],
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(15),
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignInSignUpPage(
-                          index: 0,
-                        ),
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SignInSignUpPage(
+                        index: 0,
                       ),
-                    );
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                    child: Center(
-                      child: AutoSizeText(
-                        'Sign Up',
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Inter',
-                        ),
+                    ),
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                  child: Center(
+                    child: AutoSizeText(
+                      'Sign Up',
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
                       ),
                     ),
                   ),
@@ -230,8 +233,8 @@ class _GuestHomeState extends State<GuestHome> {
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
