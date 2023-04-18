@@ -199,76 +199,75 @@ class _CandidateProfileState extends State<CandidateProfile>
       ),
     );
   }
-
-  Widget createIssueCard(
-    String titleText,
-    String descriptionText,
-    List<Widget> ratingCircles,
-  ) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
-      child: SizedBox(
-        height: 155,
-        width: 400,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth < 400 ? 10 : 15,
-            vertical: 20,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: Text(
-                        titleText,
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.left,
+Widget createIssueCard(
+  String titleText,
+  String descriptionText,
+  List<Widget> ratingCircles,
+) {
+  final double screenWidth = MediaQuery.of(context).size.width;
+  return Card(
+    elevation: 3,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0),
+    ),
+    shadowColor: Colors.black.withOpacity(0.95),
+    color: Color(0xFFD9D9D9),
+    child: SizedBox(
+      height: 155,
+      width: 400,
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth < 400 ? 10 : 15,
+          vertical: 20,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3.0),
+                    child: Text(
+                      titleText,
+                      style: TextStyle(
+                        fontFamily: "Inter",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: Colors.black,
                       ),
+                      textAlign: TextAlign.left,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.0, right: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            descriptionText,
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 10,
-                              color: Color(0xFF57636C),
-                            ),
-                            textAlign: TextAlign.left,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8.0, right: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          descriptionText,
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            color: Color(0xFF57636C),
                           ),
-                        ],
-                      ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Row(children: ratingCircles),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   List<Widget> _getIssueCards(String candidateId) {
     CandidateIssueFactorValues current = _stackFactors
@@ -955,7 +954,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                       children: [
                                         Text(
                                           calculateAge(widget.candidate
-                                              .dateOfBirth), // pass the date of birth as a string
+                                              .dateOfBirth), 
                                           style: TextStyle(
                                             fontFamily: "Inter",
                                             fontWeight: FontWeight.bold,
@@ -1038,7 +1037,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                 SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Column(
                       children: [
                         Padding(
