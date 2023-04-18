@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pogo/SignInSignUpPage.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
+import 'LandingPage.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/Demographics/UserDemographics.dart';
@@ -110,14 +111,9 @@ class _UserProfileState extends State<UserProfile> {
       logoutUser();
       if (await checkLoggedIn()) {
         //successfully logged out, send to login
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SignInSignUpPage(
-              index: 1,
-            ),
-          ),
-        );
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
+          return const LandingPage();
+        }));
       } else {
         //logout not working (this shouldn't ever happen)
       }
