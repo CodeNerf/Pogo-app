@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
+import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/MatchingStatistics.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
@@ -459,13 +460,10 @@ Future<List<CandidateDemographics>> getUserCandidatesWithDeferred(
       deferredList.add(candidate);
     }
   }
-  safePrint("Deferred ids: ${deferredIDs}");
-  safePrint("Deferred list: ${deferredList}");
   //remove the deferred candidates
   startingStack.removeWhere((candidate) => deferredList.contains(candidate));
   //putting the deferred candidate in the back, change this to prevent candidates from showing up twice
   startingStack.addAll(deferredList);
-  safePrint("Final stack: ${startingStack.last.id}");
   return startingStack;
 }
 
@@ -521,7 +519,6 @@ Future<List<String>> getDeferred(String userId) async {
           '/userBallot/$userId'),
       headers: {"content-type": "application/json"},
     );
-    safePrint("deferred: ${jsonDecode(utf8.decode(response.bodyBytes))}");
     if (response.body.isNotEmpty) {
       final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint("decoded deferred: ${decodedResponse['deferred']}");
@@ -536,17 +533,18 @@ Future<List<String>> getDeferred(String userId) async {
   }
 }
 
-Future<void> putDeferred(String userId, String deferred) async {
+Future<void> putDeferred(String deferred) async {
+  final user = await getCurrentUser();
   final client = http.Client();
   try {
-    var currentList = await getDeferred(userId);
+    var currentList = await getDeferred(user.username);
     currentList.add(deferred);
     final response = await client.put(
         Uri.https(
             'i4tti59faj.execute-api.us-east-1.amazonaws.com', '/userBallot'),
         headers: {"content-type": "application/json"},
         body: jsonEncode({
-          'userId': userId,
+          'userId': user.username,
           'deferred': currentList,
         }));
     safePrint("AWS response: ${jsonDecode(utf8.decode(response.bodyBytes))}");

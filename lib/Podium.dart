@@ -567,7 +567,7 @@ class _PodiumState extends State<Podium> {
                                 _addCandidate(_stack[_stackIterator]);
                                 _stackLength--;
                               } else {
-                                //putDeferred(, _stack[0].id)
+                                putDeferred(_stack[_stackIterator].id);
                                 if (_count < _stackLength) {
                                   if (_count == _stackLength - 1) {
                                     _count = 0;
