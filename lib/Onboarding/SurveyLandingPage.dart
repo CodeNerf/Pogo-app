@@ -20,6 +20,7 @@ class SurveyLandingPage extends StatefulWidget {
 
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
   bool _buttonVisible = false;
+
   @override
   void initState() {
     _getUserFactors();
@@ -37,7 +38,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const SignInSignUpPage(index: 1)));
+              builder: (context) => const SignInSignUpPage(index: 0)));
     }
     // Need to push associated user factors to the database before running this function.
     while (retry) {
