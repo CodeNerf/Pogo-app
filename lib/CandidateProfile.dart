@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,9 +17,10 @@ class CandidateProfile extends StatefulWidget {
   final CandidateDemographics candidate;
   final CandidateIssueFactorValues candidateValues;
   final List<CandidateIssueFactorValues> candidateStackFactors;
-
+final String descriptionText;
   const CandidateProfile({
     Key? key,
+    required this.descriptionText, 
     required this.candidate,
     required this.candidateValues,
     required this.candidateStackFactors,
@@ -42,6 +42,7 @@ class _CandidateProfileState extends State<CandidateProfile>
   var contactInfo = [];
   var socialMediaList = [];
   bool _isViewAllVisible = false;
+  bool isExpanded = false;
 
   @override
   void initState() {
@@ -100,12 +101,12 @@ class _CandidateProfileState extends State<CandidateProfile>
       {
         'name': 'Facebook',
         'icon': 'assets/facebook.png',
-        'url': 'https://www.facebook.com/GretchenWhitmer/'
+        'url': widget.candidate.facebookURL
       },
       {
         'name': 'Twitter',
         'icon': 'assets/twitter.png',
-        'url': 'https://twitter.com/GovWhitmer'
+        'url': widget.candidate.twitterURL
       },
       {
         'name': 'Instagram',
@@ -206,7 +207,6 @@ Widget createIssueCard(
   List<Widget> ratingCircles,
 ) {
   final double screenWidth = MediaQuery.of(context).size.width;
-
   return Card(
     elevation: 3,
     shape: RoundedRectangleBorder(
@@ -215,7 +215,7 @@ Widget createIssueCard(
     shadowColor: Colors.black.withOpacity(0.95),
     color: Color(0xFFD9D9D9),
     child: SizedBox(
-      height: 110,
+      height: 155,
       width: 400,
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -224,46 +224,51 @@ Widget createIssueCard(
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 3.0),
-                  child: Text(
-                    titleText,
-                    style: TextStyle(
-                      fontFamily: "Inter",
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Container(
-                    width: 240,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3.0),
                     child: Text(
-                      descriptionText,
+                      titleText,
                       style: TextStyle(
                         fontFamily: "Inter",
                         fontWeight: FontWeight.w600,
-                        fontSize: 10,
-                        color: Color(0xFF57636C),
+                        fontSize: 13,
+                        color: Colors.black,
                       ),
                       textAlign: TextAlign.left,
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 8.0, right:15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          descriptionText,
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            color: Color(0xFF57636C),
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             Align(
               alignment: Alignment.centerRight,
               child: SizedBox(
-                height: 170 - 40, 
+                height: 130 - 40, 
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: ratingCircles,
@@ -277,16 +282,20 @@ Widget createIssueCard(
   );
 }
 
-
 List<Widget> _getIssueCards(String candidateId) {
   CandidateIssueFactorValues current = _stackFactors
       .firstWhere((element) => element.candidateId == candidateId);
   List<num> candidateWeights = [
-    current.climateWeight,
+        current.climateWeight,
     current.drugPolicyWeight,
     current.economyWeight,
     current.educationWeight,
     current.gunPolicyWeight,
+    current.healthcareWeight,
+    current.housingWeight,
+    current.immigrationWeight,
+    current.policingWeight,
+    current.reproductiveWeight
   ];
   List<Widget> issueCards = [];
   while (issueCards.length < 10) {
@@ -300,61 +309,62 @@ List<Widget> _getIssueCards(String candidateId) {
     double ratingScore = 0;
     switch (indexMaxWeight) {
       case 0:
-        title = 'CLIMATE';
-        description = 'Policies and actions to mitigate climate change';
+        title = current.climateScore == 3 ? 'Climate' : (current.climateScore < 3 ? 'Doubt' : 'Acceptance');
+        description = current.climateScore  == 3 ? '' : (current.climateScore < 3 ? 'People who doubt climate policy don’t believe the climate is a threat to our environment. They are more permissive when weighing the economic impact of environmental regulation. People who doubt climate change believe the free market will find its own solution to environmental issues.' : 'People in favor of climate policy are generally conservative in this area, preferring to ban economic activity that may create jobs but harm the environment.');
         ratingScore = current.climateScore.toDouble();
         break;
       case 1:
-        title = 'DRUG POLICY';
-        description = 'Policies and actions related to drug use and addiction';
+        title = current.drugPolicyScore == 3 ? 'Drug Policy' : (current.drugPolicyScore < 3 ? 'Criminalization' : 'Legalization');
+        description = current.drugPolicyScore  == 3 ? '' : (current.drugPolicyScore < 3 ? 'People who favor the criminalization of drugs believe that drug policy should be stricter including increasing the penalties or punishments associated with the drug.' : 'People who favor legalization believe that drug policy should be less strict including decreasing the penalties or punishments associated with the drug. Many people believe in the decriminalization of marijuana.');
         ratingScore = current.drugPolicyScore.toDouble();
         break;
       case 2:
-        title = 'ECONOMY';
-        description = 'Policies and actions to manage economic growth and stability';
+        title = current.economyScore == 3 ? 'Economy' : (current.economyScore < 3 ? 'Market Deregulation' : 'Market Regulation');
+        description = current.economyScore  == 3 ? '' : (current.economyScore < 3 ? 'People in favor of market deregulation desire for the economy to be left to the devices of competing individuals and organizations. ' : 'People in favor of market regulation desire for the economy to be run by a cooperative collective agency, which can mean the state but also a network of communes.');
         ratingScore = current.economyScore.toDouble();
         break;
       case 3:
-        title = 'EDUCATION';
-        description = 'Policies and actions related to education system and funding';
+        title = current.educationScore == 3 ? 'Education' : (current.educationScore < 3 ? 'School Choice' : 'Public Education');
+        description = current.educationScore == 3 ? '' : (current.educationScore > 3 ? 'People in favor of school choice believe academic performance, free speech, and federal and state separation are essential to a good education. They believe “keeping Washington out of education” to ensure parents are in control of what their kids are learning in their districts.' : 'People in favor of public education believe every child in America, regardless of family income or place of residence, deserves access to a quality education. Including: expanded, free, public education including free college; student-loan forgiveness, teacher-pay raises, and universal pre-kindergarten.');
         ratingScore = current.educationScore.toDouble();
         break;
-        case 4:
-        title = 'GUN POLICY';
-        description = 'Policies and actions related to gun control and ownership';
+      case 4:
+        title = current.gunPolicyScore == 3 ? 'Gun Policy' : (current.gunPolicyScore < 3 ? 'Gun Rights' : 'Gun Control');
+        description = current.gunPolicyScore  == 3 ? '' : (current.gunPolicyScore < 3 ? 'People in favor of gun rights are strongly opposed to gun laws. Many are strong advocates of the second amendment [the right to bear arms], including “freedom to carry” for self-protection and relying on the state at little as possible.' : 'People in favor of gun control desire laws to be put in place such as background checks, wait times before buying a gun, banning automatic weapons, and disallowing concealed weapons.');
         ratingScore = current.gunPolicyScore.toDouble();
         break;
         case 5:
-        title = 'HEALTHCARE';
-        description = 'Policies and actions related to healthcare system and access';
+        title = current.healthcareScore == 3 ? 'Health Care' : (current.healthcareScore < 3 ? 'Private' : 'Government Funded');
+        description =  current.healthcareScore  == 3 ? '' : (current.healthcareScore < 3 ? 'People in favor of private healthcare believe there should be competition with Medicare from private insurance companies. They oppose “Universal Healthcare”, “The Affordable Care Act”, and Medicare expansion. ' : 'People in favor of government-funded healthcare believe that access to healthcare is a fundamental right for all people. They support “Universal Healthcare”, “The Affordable Care Act”, and the expansion of Medicare and Medicaid.');
         ratingScore = current.healthcareScore.toDouble();
         break;
       case 6:
-        title = 'HOUSING';
-        description = 'Policies and actions related to affordable and accessible housing';
+        title = current.housingScore == 3 ? 'Housing' : (current.housingScore < 3 ? 'Market Rate Housing' : 'Affordable Housing');
+        description =  current.housingScore  == 3 ? '' : (current.housingScore < 3 ? 'People in favor of Market rate housing believe that people should live where they can afford to and the government shouldn’t give tax breaks to support affordable housing.' : 'People in favor of Affordable housing believe that the government should support the creation of affordable housing and how it affects urban planning.');
         ratingScore = current.housingScore.toDouble();
         break;
       case 7:
-        title = 'IMMIGRATION';
-        description = 'Policies and actions related to immigration and border control';
+        title = current.immigrationScore == 3 ? 'Immigration' : (current.immigrationScore < 3 ? 'Exclusive' : 'Inclusive');
+        description =  current.immigrationScore  == 3 ? '' : (current.immigrationScore < 3 ? 'No “amnesty” for undocumented immigrants; stronger border patrol, etc. There’s a strong belief that illegal immigration is lowering the wages for citizens and documented immigrants. ' : 'People in favor of inclusive immigration believe there should be pathways to citizenship for undocumented immigrants. Delay in deportations or prosecutions of undocumented immigrants who are young adults and have no criminal record.');
         ratingScore = current.immigrationScore.toDouble();
         break;
       case 8:
-        title = 'POLICING';
-        description = 'Policies and actions related to law enforcement and criminal justice system';
+        title = current.policingScore == 3 ? 'Policing' : (current.policingScore < 3 ? 'Abolish' : 'Divestment & Reallocation');
+        description =  current.policingScore  == 3 ? '' : (current.policingScore < 3 ? 'People in favor of abolishing the police desire to reform the entire policing policy. They demand an entirely new public safety system based on social and economic equity, supported by a network of nonviolent emergency responders.' : 'People in favor of Divestment and Reallocation advocate for investments made in supportive services and divestment from policing institutions. They believe that money is invested into minority communities to criminalize them instead of supporting them systematically.');
         ratingScore = current.policingScore.toDouble();
         break;
       case 9:
-        title = 'REPRODUCTIVE RIGHTS';
-        description = 'Policies and actions related to reproductive health and rights';
+        title = current.reproductiveScore == 3 ? 'Reproductive Rights' : (current.reproductiveScore < 3 ? 'Abortion & contraceptive criminalization' : 'Pro-choice Rights ');
+        description =  current.reproductiveScore  == 3 ? '' : (current.reproductiveScore < 3 ? 'People in favor of abortion and contraceptive criminalization believe that people shouldn’t get abortions or use contraceptives no matter what. They believe that a baby is alive at the moment of conception.' : 'People in favor of “Pro-choice” generally believe in unpenalized access to abortion and both adult and embryonic stem cell research. They believe in “my body, my choice”.');
         ratingScore = current.reproductiveScore.toDouble();
         break;
     }
-    issueCards.add(createIssueCard(
-        title, description, [_ratingCircles(ratingScore)]));
+    if (description.isNotEmpty) {
+      issueCards.add(createIssueCard(
+          title, description, [_ratingCircles(ratingScore)]));
+    }
     candidateWeights[indexMaxWeight] = 0;
   }
-
   // Wrap the issue cards in a Visibility widget
   return [
     ...issueCards.take(3),
@@ -376,7 +386,7 @@ List<Widget> _getIssueCards(String candidateId) {
         child: Text(
           _isViewAllVisible ? 'View Less' : 'View All',
           style: TextStyle(
-            color: Colors.blue,
+                            color: Color(0xFF57636C),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -384,6 +394,7 @@ List<Widget> _getIssueCards(String candidateId) {
     ),
   ];
 }
+
   Widget createEducationCard(
     String placeOfEducation,
     String degreeInformation,
@@ -848,7 +859,7 @@ Padding(
               onPressed: () async {
                 final url = socialMedia['url'];
                 if (url != null) {
-                  await launch(url, forceWebView: false);
+                  await launch(url, forceWebView: true, enableJavaScript: true);
                 } else {
                   // Handle unsupported social media platforms
                 }
@@ -859,7 +870,6 @@ Padding(
     ],
   ),
 ),
-
                             Padding(
                               padding: EdgeInsets.only(right: 260, top: 30),
                               child: Text(
