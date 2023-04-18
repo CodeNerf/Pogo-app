@@ -41,7 +41,7 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     while (retry) {
       try {
         await Future.wait([
-          getUserCandidateStackDemographics(email),
+          getUserCandidatesWithDeferred(email),
           getUserCandidateStackIssueFactorValues(email),
           getUserIssueFactorValues(email),
           getUserBallot(email),

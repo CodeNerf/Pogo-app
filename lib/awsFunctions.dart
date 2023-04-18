@@ -448,6 +448,27 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
   }
 }
 
+Future<List<CandidateDemographics>> getUserCandidatesWithDeferred(
+    String userId) async {
+  final deferredIDs = await getDeferred(userId);
+  var startingStack = await getUserCandidateStackDemographics(userId);
+  //making serperate array to append at the end to prevent infinite loop
+  var deferredList = <CandidateDemographics>[];
+  for (var candidate in startingStack) {
+    if (deferredIDs.contains(candidate.id)) {
+      deferredList.add(candidate);
+    }
+  }
+  safePrint("Deferred ids: ${deferredIDs}");
+  safePrint("Deferred list: ${deferredList}");
+  //remove the deferred candidates
+  startingStack.removeWhere((candidate) => deferredList.contains(candidate));
+  //putting the deferred candidate in the back, change this to prevent candidates from showing up twice
+  startingStack.addAll(deferredList);
+  safePrint("Final stack: ${startingStack.last.id}");
+  return startingStack;
+}
+
 Future<List<MatchingStatistics>> getUserCandidateStackStatistics(
     String userId) async {
   var client = http.Client();
@@ -487,6 +508,50 @@ Future<void> matchCandidatesToUser(String userId) async {
     print(decodedResponse);
   } catch (e) {
     safePrint("An error occurred in matchCandidatesToUser: $e");
+  } finally {
+    client.close();
+  }
+}
+
+Future<List<String>> getDeferred(String userId) async {
+  final client = http.Client();
+  try {
+    final response = await client.get(
+      Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+          '/userBallot/$userId'),
+      headers: {"content-type": "application/json"},
+    );
+    safePrint("deferred: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+    if (response.body.isNotEmpty) {
+      final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      safePrint("decoded deferred: ${decodedResponse['deferred']}");
+      return decodedResponse['deferred'].cast<String>();
+    }
+    return [];
+  } catch (e) {
+    safePrint("An error occurred in getDeferred() $e");
+    return [];
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> putDeferred(String userId, String deferred) async {
+  final client = http.Client();
+  try {
+    var currentList = await getDeferred(userId);
+    currentList.add(deferred);
+    final response = await client.put(
+        Uri.https(
+            'i4tti59faj.execute-api.us-east-1.amazonaws.com', '/userBallot'),
+        headers: {"content-type": "application/json"},
+        body: jsonEncode({
+          'userId': userId,
+          'deferred': currentList,
+        }));
+    safePrint("AWS response: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+  } catch (e) {
+    safePrint("An error occurred in putDeferred() $e");
   } finally {
     client.close();
   }
