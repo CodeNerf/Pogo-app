@@ -456,7 +456,6 @@ class _PodiumState extends State<Podium> {
             Expanded(
               flex: 13,
               //podium background
-              //TODO: add x icon to left of page and + icon to right of page
               child: Container(
                 decoration: const BoxDecoration(
                   color: Color(0xFFF9F9F9),
@@ -472,10 +471,10 @@ class _PodiumState extends State<Podium> {
                       child: Row(
                         children: const [
                           Padding(
-                            padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                             child: SizedBox(
-                              height: 50,
-                              width: 50,
+                              height: 25,
+                              width: 25,
                               child: FittedBox(
                                 fit: BoxFit.contain,
                                 child: Image(
@@ -486,10 +485,10 @@ class _PodiumState extends State<Podium> {
                           ),
                           Spacer(),
                           Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                            padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
                             child: SizedBox(
-                              height: 50,
-                              width: 50,
+                              height: 25,
+                              width: 25,
                               child: FittedBox(
                                 fit: BoxFit.contain,
                                 child: Image(
