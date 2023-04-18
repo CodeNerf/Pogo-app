@@ -354,7 +354,7 @@ List<Widget> _getIssueCards(String candidateId) {
         ratingScore = current.policingScore.toDouble();
         break;
       case 9:
-        title = current.reproductiveScore == 3 ? 'Reproductive Rights' : (current.reproductiveScore < 3 ? 'Abortion & contraceptive criminalization' : 'Pro-choice Rights ');
+        title = current.reproductiveScore == 3 ? 'Reproductive Rights' : (current.reproductiveScore < 3 ? 'Abortion & Contraceptive Criminalization' : 'Pro-choice Rights ');
         description =  current.reproductiveScore  == 3 ? '' : (current.reproductiveScore < 3 ? 'People in favor of abortion and contraceptive criminalization believe that people shouldn’t get abortions or use contraceptives no matter what. They believe that a baby is alive at the moment of conception.' : 'People in favor of “Pro-choice” generally believe in unpenalized access to abortion and both adult and embryonic stem cell research. They believe in “my body, my choice”.');
         ratingScore = current.reproductiveScore.toDouble();
         break;
