@@ -37,9 +37,9 @@ class _GuestLoadingPageState extends State<GuestLoadingPage> {
     while (retry) {
       try {
         var lists = await matchCandidatesToUserTest(widget.ratings);
-        _candidateStack = lists[0];
-        _candidateStackFactors = lists[1];
-        _matchingStatisticsList = lists[2];
+        _candidateStack = lists["Demographics"];
+        _candidateStackFactors = lists["Issues"];
+        _matchingStatisticsList = lists["Statistics"];
         retry = false;
       } catch (e) {
         retryCount++;
