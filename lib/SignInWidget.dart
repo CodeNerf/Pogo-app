@@ -257,7 +257,7 @@ class _SignInState extends State<SignIn> {
 
         //sign in button
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 20),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
           child: Container(
             width: double.infinity,
             height: 50,

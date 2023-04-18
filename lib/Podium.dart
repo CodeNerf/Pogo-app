@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class Podium extends StatefulWidget {
   final List<CandidateIssueFactorValues> candidateStackFactors;
   final Function() unFilterPodiumCandidates;
   final Function(String) loadCandidateProfile;
+  final bool filter;
   const Podium(
       {Key? key,
       required this.candidateStack,
@@ -26,7 +28,8 @@ class Podium extends StatefulWidget {
       required this.userBallot,
       required this.updateBallot,
       required this.unFilterPodiumCandidates,
-      required this.loadCandidateProfile})
+      required this.loadCandidateProfile,
+        required this.filter})
       : super(key: key);
 
   @override
@@ -58,6 +61,9 @@ class _PodiumState extends State<Podium> {
   //static List<String> candidateList = <String>[];
   static List<String> _candidateList = [];
 
+  //filtering
+  late bool _filtering;
+
   @override
   void initState() {
     setState(() {
@@ -65,7 +71,9 @@ class _PodiumState extends State<Podium> {
       _stack = widget.candidateStack;
       _stackLength = _stack.length;
       _candidateList = [];
+      _filtering = widget.filter;
     });
+    safePrint(_filtering);
     _initializeSearchResults();
     super.initState();
   }
@@ -650,7 +658,7 @@ class _PodiumState extends State<Podium> {
                         enableSwipeUp: false,
                         enableSwipeDown: false,
                       ),
-                      //alert
+                      //alert and remove filter button
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Row(
@@ -665,30 +673,50 @@ class _PodiumState extends State<Podium> {
                                 size: 25,
                               ),
                             ),
-                            Material(
-                              color: const Color(0xFFF3D433),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: InkWell(
-                                splashColor: const Color(0xFF000000),
-                                splashFactory: InkRipple.splashFactory,
-                                borderRadius: BorderRadius.circular(10),
-                                onTap: () async {
-                                  await widget.unFilterPodiumCandidates();
-                                  setState(() {
-                                    _stack = widget.candidateStack;
-                                    _stackLength = _stack.length;
-                                  });
-                                  _initializeSearchResults();
-                                },
-                                child: const Text(
-                                  'Remove Filter',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                            Visibility(
+                              visible: _filtering,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width / 3,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF3D433),
+                                  borderRadius: BorderRadius.circular(25),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade600,
+                                      spreadRadius: 3,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 6),
+                                    ),
+                                  ],
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(25),
+                                    onTap: () async {
+                                      await widget.unFilterPodiumCandidates();
+                                      setState(() {
+                                        _stack = widget.candidateStack;
+                                        _stackLength = _stack.length;
+                                        _filtering = false;
+                                      });
+                                      _initializeSearchResults();
+                                    },
+                                    child: const Center(
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                          'Remove Filter',
+                                          style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xFF0E0E0E),
+                                            fontSize: 25,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

@@ -1,63 +1,58 @@
 import 'package:amplify_core/amplify_core.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/CandidateProfile.dart';
+import 'package:pogo/SignInSignUpPage.dart';
 import 'package:pogo/dynamoModels/UserDemographics.dart';
-import 'awsFunctions.dart';
-import 'dynamoModels/Ballot.dart';
-import 'dynamoModels/CandidateDemographics.dart';
-import 'UserProfile.dart';
-import 'VoterGuide.dart';
-import 'BallotPage.dart';
-import 'Podium.dart';
-import 'dynamoModels/CandidateIssueFactorValues.dart';
-import 'dynamoModels/UserIssueFactorValues.dart';
+import '../awsFunctions.dart';
+import '../dynamoModels/Ballot.dart';
+import '../dynamoModels/CandidateDemographics.dart';
+import '../UserProfile.dart';
+import '../VoterGuide.dart';
+import '../BallotPage.dart';
+import '../Podium.dart';
+import '../dynamoModels/CandidateIssueFactorValues.dart';
+import '../dynamoModels/MatchingStatistics.dart';
+import '../dynamoModels/UserIssueFactorValues.dart';
 
-class Home extends StatefulWidget {
-  final UserDemographics _currentUserDemographics;
-  final UserIssueFactorValues _currentUserFactors;
-  final List<CandidateDemographics> _candidateStack;
-  final Ballot _userBallot;
-  final List<CandidateIssueFactorValues> _candidateStackFactors;
-  const Home(
-      {Key? key,
-      required UserIssueFactorValues currentUserFactors,
-      required List<CandidateDemographics> candidateStack,
-      required UserDemographics currentUserDemographics,
-      required Ballot userBallot,
-      required List<CandidateIssueFactorValues> candidateStackFactors})
-      : _candidateStackFactors = candidateStackFactors,
-        _userBallot = userBallot,
-        _candidateStack = candidateStack,
-        _currentUserFactors = currentUserFactors,
-        _currentUserDemographics = currentUserDemographics,
+class GuestHome extends StatefulWidget {
+  final UserIssueFactorValues _guestFactors;
+  final List<CandidateDemographics> _guestCandidateStack;
+  final Ballot _guestBallot;
+  final List<CandidateIssueFactorValues> _guestCandidateStackFactors;
+  final List<MatchingStatistics> _guestMatchingStatistics;
+  const GuestHome({Key? key,
+    required UserIssueFactorValues guestFactors,
+    required List<CandidateDemographics> guestCandidateStack,
+    required Ballot guestBallot,
+    required List<CandidateIssueFactorValues> guestCandidateStackFactors,
+    required List<MatchingStatistics> guestMatchingStatistics})
+      : _guestCandidateStackFactors = guestCandidateStackFactors,
+        _guestBallot = guestBallot,
+        _guestCandidateStack = guestCandidateStack,
+        _guestFactors = guestFactors,
+        _guestMatchingStatistics = guestMatchingStatistics,
         super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<GuestHome> createState() => _GuestHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _GuestHomeState extends State<GuestHome> {
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   int _selectedIndex = 0;
   List<CandidateDemographics> _ballotStack = [];
   late Ballot _userBallot;
-  late UserIssueFactorValues _currentUserFactors;
   late List<CandidateDemographics> _candidateStack;
-  late UserDemographics _currentUserDemographics;
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
+  
   List<CandidateDemographics> _filteredCandidateStack = [];
-  bool _filtering = false;
 
   _updateBallot(CandidateDemographics candidate,
       List<CandidateDemographics> podiumStack) {
     _userBallot.localCandidateIds.add(candidate.candidateId);
     _ballotStack.add(candidate);
-    putUserBallot(
-        _currentUserDemographics.userId,
-        _userBallot.localCandidateIds,
-        _userBallot.stateCandidateIds,
-        _userBallot.federalCandidateIds);
     setState(() {
       _candidateStack = podiumStack;
     });
@@ -68,11 +63,6 @@ class _HomeState extends State<Home> {
         .firstWhere((element) => element.profileImageURL == candidatePic);
     _userBallot.localCandidateIds.remove(candidate.candidateId);
     _ballotStack.remove(candidate);
-    putUserBallot(
-        _currentUserDemographics.userId,
-        _userBallot.localCandidateIds,
-        _userBallot.stateCandidateIds,
-        _userBallot.federalCandidateIds);
     if (_filteredCandidateStack.isNotEmpty) {
       if (candidate.seatType != _candidateStack[0].seatType) {
         _filteredCandidateStack.add(candidate);
@@ -93,11 +83,11 @@ class _HomeState extends State<Home> {
   Future<void> _loadCandidateProfile(String fullName) async {
     List<String> splitName = fullName.split(' ');
     CandidateDemographics searchCandidate = _candidateStack.firstWhere(
-        (element) =>
-            element.firstName == splitName[0] &&
+            (element) =>
+        element.firstName == splitName[0] &&
             element.lastName == splitName[1]);
     CandidateIssueFactorValues searchCandidateValues =
-        _candidateStackFactors.firstWhere(
+    _candidateStackFactors.firstWhere(
             (element) => element.candidateId == searchCandidate.candidateId);
     await Navigator.push(
       context,
@@ -123,15 +113,6 @@ class _HomeState extends State<Home> {
         }
       }
       setState(() {
-        _widgetOptions[1] = Podium(
-          candidateStack: _candidateStack,
-          userBallot: _userBallot,
-          updateBallot: _updateBallot,
-          candidateStackFactors: _candidateStackFactors,
-          unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
-          filter: true,
-        );
         _selectedIndex = 1;
         _candidateStack = _candidateStack;
         _filteredCandidateStack = _filteredCandidateStack;
@@ -147,15 +128,6 @@ class _HomeState extends State<Home> {
       _filteredCandidateStack.remove(_filteredCandidateStack[0]);
     }
     setState(() {
-      _widgetOptions[1] = Podium(
-        candidateStack: _candidateStack,
-        userBallot: _userBallot,
-        updateBallot: _updateBallot,
-        candidateStackFactors: _candidateStackFactors,
-        unFilterPodiumCandidates: _unFilterPodiumCandidates,
-        loadCandidateProfile: _loadCandidateProfile,
-        filter: false,
-      );
       _selectedIndex = 1;
       _candidateStack = _candidateStack;
       _filteredCandidateStack = _filteredCandidateStack;
@@ -166,22 +138,18 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _candidateStackFactors = widget._candidateStackFactors;
-    _currentUserFactors = widget._currentUserFactors;
-    _candidateStack = widget._candidateStack;
-    _currentUserDemographics = widget._currentUserDemographics;
-    _userBallot = widget._userBallot;
+    _candidateStackFactors = widget._guestCandidateStackFactors;
+    _candidateStack = widget._guestCandidateStack;
+    _userBallot = widget._guestBallot;
     if (_userBallot.localCandidateIds.isNotEmpty) {
       for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
         _ballotStack.add(_candidateStack.firstWhere((element) =>
-            element.candidateId == _userBallot.localCandidateIds[i]));
+        element.candidateId == _userBallot.localCandidateIds[i]));
       }
     }
     setState(() {
       _widgetOptions = <Widget>[
-        VoterGuide(
-          user: _currentUserDemographics,
-        ),
+        lockedPage('Voter Guide'),
         Podium(
           candidateStack: _candidateStack,
           userBallot: _userBallot,
@@ -189,7 +157,7 @@ class _HomeState extends State<Home> {
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
           loadCandidateProfile: _loadCandidateProfile,
-          filter: _filtering,
+          filter: false,
         ),
         BallotPage(
           userBallot: _userBallot,
@@ -198,13 +166,75 @@ class _HomeState extends State<Home> {
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
         ),
-        UserProfile(
-          currentUserFactors: _currentUserFactors,
-          currentUserDemographics: _currentUserDemographics,
-          currentUserBallotCandidates: _ballotStack,
-        ),
+        lockedPage('Profile'),
       ];
     });
+  }
+
+  Widget lockedPage(String pageName) {
+    return Center(
+      child: Column(
+        children: [
+          Text(
+            'You must have a PoGo account to access the $pageName',
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          //sign up button
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            //overall container
+            child: Container(
+              width: MediaQuery.of(context).size.width / 3,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: const Color(0xFFF3D433),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade400,
+                    spreadRadius: 2,
+                    blurRadius: 6,
+                    offset: const Offset(3, 6),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(15),
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SignInSignUpPage(index: 0,),
+                      ),
+                    );
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                    child: Center(
+                      child: AutoSizeText(
+                        'Sign Up',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
