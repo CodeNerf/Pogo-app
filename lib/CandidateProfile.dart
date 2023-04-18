@@ -692,7 +692,6 @@ List<Widget> createPrePositionCards(List<Position> prevpositionList) {
                             fontSize: 25,
                           ),
                         ),
-                        const SizedBox(height: 10),
                         Text(
                           '${widget.candidate.runningPosition}  •  ${widget.candidate.city}',
                           style: const TextStyle(
@@ -704,7 +703,6 @@ List<Widget> createPrePositionCards(List<Position> prevpositionList) {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 10),
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -720,7 +718,7 @@ List<Widget> createPrePositionCards(List<Position> prevpositionList) {
                               fontSize: 16,
                             ),
                           ),
-                          const SizedBox(width: 40),
+                          const SizedBox(width: 20),
                          
                         ],
                       ),
@@ -731,7 +729,7 @@ List<Widget> createPrePositionCards(List<Position> prevpositionList) {
             ),
             Container(
               padding: EdgeInsets.only(
-                left: 10,
+
                 right: MediaQuery.of(context).size.width > 600 ? 20 : 10,
               ),
               decoration: BoxDecoration(
@@ -835,7 +833,7 @@ List<Widget> createPrePositionCards(List<Position> prevpositionList) {
 
 Padding(
   padding: EdgeInsets.only(
-    right: Platform.isIOS ? 130 : 0,
+    right: Platform.isIOS ? 10 : 10,
   ),
   child: Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -1135,7 +1133,7 @@ children: _getIssueCards((widget.candidate.id)),
     });
   },
   child: Padding(
-    padding: EdgeInsets.only(left: 220, top: 20, bottom: 10),
+    padding: EdgeInsets.only(left: 200, top: 20, bottom: 10),
     child: Text(
       _showAllCardsEducation ? "Hide" : "View all",
       style: TextStyle(
@@ -1180,7 +1178,7 @@ children: _getIssueCards((widget.candidate.id)),
     });
   },
   child: Padding(
-    padding: EdgeInsets.only(left: 183, top: 20, bottom: 10),
+    padding: EdgeInsets.only(left: 161, top: 20, bottom: 10),
     child: Text(
       _showAllCardsPreviousPositions ? "Hide" : "View all",
       style: TextStyle(
@@ -1225,7 +1223,7 @@ children: _getIssueCards((widget.candidate.id)),
     });
   },
   child: Padding(
-    padding: EdgeInsets.only(left: 190, top: 20, bottom: 10),
+    padding: EdgeInsets.only(left: 168, top: 20, bottom: 10),
     child: Text(
       _showAllCardsOtherExperience ? "Hide" : "View all",
       style: TextStyle(
