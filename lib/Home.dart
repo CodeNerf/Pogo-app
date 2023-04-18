@@ -189,6 +189,7 @@ class _HomeState extends State<Home> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
+          loadCandidateProfile: _loadCandidateProfile,
         ),
         UserProfile(
           currentUserFactors: _currentUserFactors,

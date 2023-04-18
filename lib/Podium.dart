@@ -73,14 +73,13 @@ class _PodiumState extends State<Podium> {
       _candidateList = [];
       _filtering = widget.filter;
     });
-    safePrint(_filtering);
     _initializeSearchResults();
     super.initState();
   }
 
   void _initializeSearchResults() {
     for (int i = 0; i < _stackLength; i++) {
-      _candidateList.add('${_stack[i].candidateName}');
+      _candidateList.add(_stack[i].candidateName);
     }
   }
 

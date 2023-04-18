@@ -109,6 +109,15 @@ class _GuestHomeState extends State<GuestHome> {
         }
       }
       setState(() {
+        _widgetOptions[1] = Podium(
+          candidateStack: _candidateStack,
+          userBallot: _userBallot,
+          updateBallot: _updateBallot,
+          candidateStackFactors: _candidateStackFactors,
+          unFilterPodiumCandidates: _unFilterPodiumCandidates,
+          loadCandidateProfile: _loadCandidateProfile,
+          filter: true,
+        );
         _selectedIndex = 1;
         _candidateStack = _candidateStack;
         _filteredCandidateStack = _filteredCandidateStack;
@@ -124,6 +133,15 @@ class _GuestHomeState extends State<GuestHome> {
       _filteredCandidateStack.remove(_filteredCandidateStack[0]);
     }
     setState(() {
+      _widgetOptions[1] = Podium(
+        candidateStack: _candidateStack,
+        userBallot: _userBallot,
+        updateBallot: _updateBallot,
+        candidateStackFactors: _candidateStackFactors,
+        unFilterPodiumCandidates: _unFilterPodiumCandidates,
+        loadCandidateProfile: _loadCandidateProfile,
+        filter: false,
+      );
       _selectedIndex = 1;
       _candidateStack = _candidateStack;
       _filteredCandidateStack = _filteredCandidateStack;
@@ -161,6 +179,7 @@ class _GuestHomeState extends State<GuestHome> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
+          loadCandidateProfile: _loadCandidateProfile,
         ),
         lockedPage('Profile'),
       ];

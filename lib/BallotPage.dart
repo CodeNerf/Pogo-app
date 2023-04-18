@@ -11,13 +11,15 @@ class BallotPage extends StatefulWidget {
   final List<CandidateDemographics> ballotStack;
   final Function(String) removeFromBallot;
   final Function(String) loadCustomCandidatesInPodium;
+  final Function(String) loadCandidateProfile;
   const BallotPage(
       {Key? key,
-      required this.userBallot,
-      required this.candidateStack,
-      required this.ballotStack,
-      required this.removeFromBallot,
-      required this.loadCustomCandidatesInPodium})
+        required this.userBallot,
+        required this.candidateStack,
+        required this.ballotStack,
+        required this.removeFromBallot,
+        required this.loadCustomCandidatesInPodium,
+        required this.loadCandidateProfile})
       : super(key: key);
 
   @override
@@ -441,6 +443,9 @@ class _BallotPageState extends State<BallotPage> {
               );
             },
           );
+        },
+        onDoubleTap: () {
+          widget.loadCandidateProfile(candidate.candidateName);
         },
         child: CircularProfileAvatar(
           '',
