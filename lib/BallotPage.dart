@@ -342,7 +342,7 @@ class _BallotPageState extends State<BallotPage> {
             title: 'LOCAL',
             child: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.58,
+                height: MediaQuery.of(context).size.height * 0.56,
                 child: ListView(
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
@@ -456,7 +456,7 @@ class _BallotPageState extends State<BallotPage> {
             child: [
               SizedBox(height: 6),
               Container(
-                height: MediaQuery.of(context).size.height * 0.58,
+                height: MediaQuery.of(context).size.height * 00.56,
                 child: ListView(
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
@@ -542,7 +542,7 @@ class _BallotPageState extends State<BallotPage> {
             child: [
               SizedBox(height: 6),
               Container(
-                height: MediaQuery.of(context).size.height * 0.58,
+                height: MediaQuery.of(context).size.height * 0.56,
                 child: ListView(
                   physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
