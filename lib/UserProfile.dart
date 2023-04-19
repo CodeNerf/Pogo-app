@@ -40,7 +40,7 @@ class _UserProfileState extends State<UserProfile> {
   String _fourthIssue = "";
   final List<num> _ratings = [];
   final TextEditingController _profilePicController = TextEditingController();
-
+  UserDemographics userDemographics = UserDemographics(id: '');
   @override
   void initState() {
     super.initState();
@@ -620,6 +620,26 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               ),
             ),
+            // InkWell(
+            //   onTap: () {
+            //     // Navigator.push(
+            //     //   context,
+            //     //   MaterialPageRoute(
+            //     //       builder: (context) => AddressAutocomplete(
+            //     //           userDemographics: userDemographics)),
+            //     // );
+            //   },
+            //   child: Center(
+            //     child: Text(
+            //       'Click here to go to Address Autocomplete Page',
+            //       style: TextStyle(
+            //         decoration: TextDecoration.underline,
+            //         color: Colors.blue,
+            //         fontSize: 18.0,
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
             //your top issues, top issues icons
             Padding(
@@ -1052,43 +1072,35 @@ class _UserProfileState extends State<UserProfile> {
 
             //logout button
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-              //overall container
+              padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
               child: Container(
-                width: MediaQuery.of(context).size.width / 3,
-                height: 30,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFFF3D433),
+                  color: Color(0xFFF3D433),
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.shade400,
-                      spreadRadius: 2,
-                      blurRadius: 6,
-                      offset: const Offset(3, 6),
+                      color: Colors.black.withOpacity(0.35),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(15),
-                    onTap: () {
-                      _logout(context);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                      child: Center(
-                        child: AutoSizeText(
-                          'Logout',
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ),
+                child: MaterialButton(
+                  minWidth: double.infinity,
+                  height: 60,
+                  onPressed: () {
+                    _logout(context);
+                  },
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    "Logout",
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                      color: Colors.black,
                     ),
                   ),
                 ),
