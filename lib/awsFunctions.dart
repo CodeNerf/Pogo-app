@@ -437,7 +437,6 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
       candidateDemographicsList
           .add(CandidateDemographics.fromJson(candidateDemographics));
     }
-
     safePrint("candidates demographics stack pulled");
     return candidateDemographicsList;
   } catch (e) {

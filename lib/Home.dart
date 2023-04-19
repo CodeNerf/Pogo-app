@@ -2,6 +2,8 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/CandidateProfile.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
+import 'package:pogo/HamburgerMenuFunctions.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
 import 'dynamoModels/Demographics/CandidateDemographics.dart';
@@ -11,6 +13,7 @@ import 'BallotPage.dart';
 import 'Podium.dart';
 import 'dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
+import 'dynamoModels/MatchingStatistics.dart';
 
 class Home extends StatefulWidget {
   final UserDemographics _currentUserDemographics;
@@ -18,18 +21,21 @@ class Home extends StatefulWidget {
   final List<CandidateDemographics> _candidateStack;
   final Ballot _userBallot;
   final List<CandidateIssueFactorValues> _candidateStackFactors;
+  final List<MatchingStatistics> _candidateStackStatistics;
   const Home(
       {Key? key,
       required UserIssueFactorValues currentUserFactors,
       required List<CandidateDemographics> candidateStack,
       required UserDemographics currentUserDemographics,
       required Ballot userBallot,
-      required List<CandidateIssueFactorValues> candidateStackFactors})
+      required List<CandidateIssueFactorValues> candidateStackFactors,
+      required List<MatchingStatistics> candidateStackStatistics})
       : _candidateStackFactors = candidateStackFactors,
         _userBallot = userBallot,
         _candidateStack = candidateStack,
         _currentUserFactors = currentUserFactors,
         _currentUserDemographics = currentUserDemographics,
+        _candidateStackStatistics = candidateStackStatistics,
         super(key: key);
 
   @override
@@ -37,6 +43,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late String stateInitial = "MI";
+
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   int _selectedIndex = 0;
   List<CandidateDemographics> _ballotStack = [];
@@ -46,6 +54,7 @@ class _HomeState extends State<Home> {
   late UserDemographics _currentUserDemographics;
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
+  late List<MatchingStatistics> _candidateStackStatistics;
   List<CandidateDemographics> _filteredCandidateStack = [];
   bool _filtering = false;
 
@@ -92,9 +101,10 @@ class _HomeState extends State<Home> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CandidateProfile(
-            candidate: searchCandidate, candidateValues: searchCandidateValues),
-      ),
+          builder: (context) => CandidateProfile(
+              candidate: searchCandidate,
+              candidateValues: searchCandidateValues,
+              candidateStackFactors: _candidateStackFactors)),
     );
   }
 
@@ -114,6 +124,7 @@ class _HomeState extends State<Home> {
       }
       setState(() {
         _widgetOptions[1] = Podium(
+          candidateStackStatistics: _candidateStackStatistics,
           candidateStack: _candidateStack,
           userBallot: _userBallot,
           updateBallot: _updateBallot,
@@ -139,6 +150,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _widgetOptions[1] = Podium(
         candidateStack: _candidateStack,
+        candidateStackStatistics: _candidateStackStatistics,
         userBallot: _userBallot,
         updateBallot: _updateBallot,
         candidateStackFactors: _candidateStackFactors,
@@ -161,6 +173,7 @@ class _HomeState extends State<Home> {
     _candidateStack = widget._candidateStack;
     _currentUserDemographics = widget._currentUserDemographics;
     _userBallot = widget._userBallot;
+    _candidateStackStatistics = widget._candidateStackStatistics;
     if (_userBallot.localCandidateIds.isNotEmpty) {
       for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
         _ballotStack.add(_candidateStack.firstWhere(
@@ -170,12 +183,12 @@ class _HomeState extends State<Home> {
     setState(() {
       _widgetOptions = <Widget>[
         VoterGuide(
-          currentUserDemographics:
-              _currentUserDemographics, // provide required argument
+          // provide required argument
           user: _currentUserDemographics,
         ),
         Podium(
           candidateStack: _candidateStack,
+          candidateStackStatistics: _candidateStackStatistics,
           userBallot: _userBallot,
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
@@ -208,17 +221,150 @@ class _HomeState extends State<Home> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: const Color(0xFFE5E5E5),
+        backgroundColor: Color(0xFFF1F4F8),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Align(
+          iconTheme: IconThemeData(
+            color: Colors.black,
+            size: 40,
+          ),
+          title: Container(
+            padding: EdgeInsets.only(left: 50),
             alignment: Alignment.center,
             child: Image(
               image: AssetImage(_pogoLogo),
               width: 150,
             ),
+          ),
+        ),
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
+            children: <Widget>[
+              Container(
+                height: 100,
+                child: ListTile(
+                  contentPadding: EdgeInsets.only(right: 300),
+                  leading: Icon(
+                    Icons.clear,
+                    size: 32,
+                    color: Colors.black,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () =>
+                        HamburgerMenuFunctions.registerToVote(stateInitial),
+                    child: Text(
+                      'Register to Vote',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        height: 1.24,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0xFFDBE2E7),
+                    thickness: 2,
+                  ),
+                  SizedBox(height: 50),
+                  InkWell(
+                    onTap: () => HamburgerMenuFunctions.requestAbsenteeBallot(
+                        stateInitial),
+                    child: Text(
+                      'Request an Absentee Ballot',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        height: 1.24,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0xFFDBE2E7),
+                    thickness: 2,
+                  ),
+                  SizedBox(height: 50),
+                  InkWell(
+                    onTap: () =>
+                        HamburgerMenuFunctions.voteByMail(stateInitial),
+                    child: Text(
+                      'Vote by mail',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        height: 1.24,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0xFFDBE2E7),
+                    thickness: 2,
+                  ),
+                  SizedBox(height: 50),
+                  InkWell(
+                    onTap: () =>
+                        HamburgerMenuFunctions.updateRegistration(stateInitial),
+                    child: Text(
+                      'Update registration',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        height: 1.24,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0xFFDBE2E7),
+                    thickness: 2,
+                  ),
+                  SizedBox(height: 50),
+                  Text(
+                    'Data & Privacy policy',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      height: 1.24,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Divider(
+                    color: Color(0xFFDBE2E7),
+                    thickness: 2,
+                  ),
+                  SizedBox(height: 50),
+                  Text(
+                    'Accessible voting',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      height: 1.24,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              // Add other menu items here
+            ],
           ),
         ),
         body: _widgetOptions.elementAt(_selectedIndex),

@@ -45,8 +45,8 @@ class _SignUpState extends State<SignUp> {
       });
     } else if (await signUpUser(_emailController.text, _passwordController.text,
         _fnameController.text)) {
-      UserDemographics userDemographics =
-          UserDemographics(id: _emailController.text);
+      UserDemographics userDemographics = UserDemographics(
+          id: _emailController.text, firstName: _fnameController.text);
       userDemographics.lastLogin =
           DateFormat('yyyy-MM-dd').format(DateTime.now());
       userDemographics.loginStreak = 1;
