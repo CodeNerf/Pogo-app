@@ -20,7 +20,6 @@ class _SignUpState extends State<SignUp> {
   bool _obscure = true;
   Icon _eye = const Icon(Icons.remove_red_eye);
   String _errorText = '';
-  double _errorSizeBoxSize = 0;
 
   // Regular expression for validating email address
   final _emailRegex = RegExp(
@@ -31,22 +30,18 @@ class _SignUpState extends State<SignUp> {
     if (_fnameController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter your name.';
-        _errorSizeBoxSize = 10;
       });
     } else if (_emailController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter your email.';
-        _errorSizeBoxSize = 10;
       });
     } else if (!_emailRegex.hasMatch(_emailController.text)) {
       setState(() {
         _errorText = 'Invalid email address.';
-        _errorSizeBoxSize = 10;
       });
     } else if (_passwordController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter a password.';
-        _errorSizeBoxSize = 10;
       });
     } else if (await signUpUser(_emailController.text, _passwordController.text,
         _fnameController.text)) {
@@ -144,9 +139,25 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
         ),
+        //sign up error text
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
+          child: Text(
+            _errorText,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 18,
+              fontFamily: 'Inter',
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w500,
+              height: 1.2,
+            ),
+          ),
+        ),
         //FIRST NAME
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
+          padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
