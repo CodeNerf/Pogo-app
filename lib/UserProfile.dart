@@ -41,6 +41,9 @@ class _UserProfileState extends State<UserProfile> {
   final List<num> _ratings = [];
   final TextEditingController _profilePicController = TextEditingController();
   UserDemographics userDemographics = UserDemographics(id: '');
+  final List<Widget> _issueDropdownResults = [];
+  final List<bool> _issueExpanded = [];
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +57,10 @@ class _UserProfileState extends State<UserProfile> {
     _ratings.add(widget.currentUserFactors.immigrationWeight);
     _ratings.add(widget.currentUserFactors.policingWeight);
     _ratings.add(widget.currentUserFactors.reproductiveWeight);
+    for(int i = 0; i < _ratings.length; i++) {
+      _issueExpanded.add(false);
+
+    }
     _setTopIssues(_ratings);
   }
 
@@ -105,7 +112,6 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
-  //this is just for testing purposes, to be removed later
   Future _logout(context) async {
     try {
       logoutUser();
@@ -121,6 +127,19 @@ class _UserProfileState extends State<UserProfile> {
       safePrint("Error occurred in _logout: $e");
     }
   }
+
+  final List<String> _issuesText = [
+    'GUN POLICY',
+    'CLIMATE CHANGE',
+    'EDUCATION',
+    'DRUG POLICY',
+    'HEALTHCARE',
+    'HOUSING',
+    'ECONOMY',
+    'IMMIGRATION',
+    'POLICING',
+    'REPRODUCTIVE RIGHTS'
+  ];
 
   //change profile pic
   Future<void> _changeProfilePic() async {
@@ -193,69 +212,69 @@ class _UserProfileState extends State<UserProfile> {
 
   List<Widget> _getRatingCircles() {
     List<Widget> circles = [];
-    circles.add(Column(
+    circles.add(Row(
       children: [
-        _ratingCircles('Education\n', widget.currentUserFactors.educationScore),
-        _ratingCircles('Care', widget.currentUserFactors.educationWeight)
+        _ratingCircles('Alignment', widget.currentUserFactors.educationScore),
+        _ratingCircles('Concern', widget.currentUserFactors.educationWeight)
       ],
     ));
-    circles.add(Column(
+    circles.add(Row(
       children: [
-        _ratingCircles('Climate\n', widget.currentUserFactors.climateScore),
-        _ratingCircles('Care', widget.currentUserFactors.climateWeight)
+        _ratingCircles('Alignment', widget.currentUserFactors.climateScore),
+        _ratingCircles('Concern', widget.currentUserFactors.climateWeight)
       ],
     ));
-    circles.add(Column(
+    circles.add(Row(
       children: [
         _ratingCircles(
-            'Drug Policy\n', widget.currentUserFactors.drugPolicyScore),
-        _ratingCircles('Care', widget.currentUserFactors.drugPolicyWeight)
+            'Alignment', widget.currentUserFactors.drugPolicyScore),
+        _ratingCircles('Concern', widget.currentUserFactors.drugPolicyWeight)
       ],
     ));
-    circles.add(Column(
+    circles.add(Row(
       children: [
-        _ratingCircles('Economy\n', widget.currentUserFactors.economyScore),
-        _ratingCircles('Care', widget.currentUserFactors.economyWeight)
+        _ratingCircles('Alignment', widget.currentUserFactors.economyScore),
+        _ratingCircles('Concern', widget.currentUserFactors.economyWeight)
       ],
     ));
-    circles.add(Column(
-      children: [
-        _ratingCircles(
-            'Healthcare\n', widget.currentUserFactors.healthcareScore),
-        _ratingCircles('Care', widget.currentUserFactors.healthcareWeight)
-      ],
-    ));
-    circles.add(Column(
+    circles.add(Row(
       children: [
         _ratingCircles(
-            'Immigration\n', widget.currentUserFactors.immigrationScore),
-        _ratingCircles('Care', widget.currentUserFactors.immigrationWeight)
+            'Alignment', widget.currentUserFactors.healthcareScore),
+        _ratingCircles('Concern', widget.currentUserFactors.healthcareWeight)
       ],
     ));
-    circles.add(Column(
+    circles.add(Row(
       children: [
-        _ratingCircles('Policing\n', widget.currentUserFactors.policingScore),
-        _ratingCircles('Care', widget.currentUserFactors.policingWeight)
+        _ratingCircles(
+            'Alignment', widget.currentUserFactors.immigrationScore),
+        _ratingCircles('Concern', widget.currentUserFactors.immigrationWeight)
       ],
     ));
-    circles.add(Column(
+    circles.add(Row(
       children: [
-        _ratingCircles('Reproductive\nHealth',
+        _ratingCircles('Alignment', widget.currentUserFactors.policingScore),
+        _ratingCircles('Concern', widget.currentUserFactors.policingWeight)
+      ],
+    ));
+    circles.add(Row(
+      children: [
+        _ratingCircles('Alignment',
             widget.currentUserFactors.reproductiveScore),
-        _ratingCircles('Care', widget.currentUserFactors.reproductiveWeight)
+        _ratingCircles('Concern', widget.currentUserFactors.reproductiveWeight)
       ],
     ));
-    circles.add(Column(
+    circles.add(Row(
       children: [
         _ratingCircles(
-            'Gun Control\n', widget.currentUserFactors.gunPolicyScore),
-        _ratingCircles('Care', widget.currentUserFactors.gunPolicyWeight)
+            'Alignment', widget.currentUserFactors.gunPolicyScore),
+        _ratingCircles('Concern', widget.currentUserFactors.gunPolicyWeight)
       ],
     ));
-    circles.add(Column(
+    circles.add(Row(
       children: [
-        _ratingCircles('Housing\n', widget.currentUserFactors.housingScore),
-        _ratingCircles('Care', widget.currentUserFactors.housingWeight)
+        _ratingCircles('Alignment', widget.currentUserFactors.housingScore),
+        _ratingCircles('Concern', widget.currentUserFactors.housingWeight)
       ],
     ));
     return circles;
@@ -289,81 +308,597 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  String _checkRegistered(bool voterRegistrationStatus) {
-    if (voterRegistrationStatus) {
-      return 'Registered to Vote';
-    } else {
-      return 'Not registered to Vote';
+  _showAlert(context) {
+    //function below is used to collapse all other dropdowns when another is clicked
+    void expandTap(bool expanded, int index) {
+      if (expanded) {
+        switch (index) {
+          case 0:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 0) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 1:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 1) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 2:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 2) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 3:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 3) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 4:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 4) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 5:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 5) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 6:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 6) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 7:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 7) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 8:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 8) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          case 9:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              if(i == 9) {
+                _issueExpanded[i] = true;
+              }
+              else {
+                _issueExpanded[i] = false;
+              }
+            }
+            break;
+          default:
+            for(int i = 0; i < _issueExpanded.length; i++) {
+              _issueExpanded[i] = false;
+            }
+            break;
+        }
+      } else {
+        setState(() {});
+      }
     }
-  }
-
-  _showAlert(BuildContext context) {
-    AlertDialog alert = AlertDialog(
-        content: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: _getRatingCircles(),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-          //overall container
-          child: Container(
-            width: MediaQuery.of(context).size.width / 3,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: const Color(0xFFF3D433),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade400,
-                  spreadRadius: 2,
-                  blurRadius: 6,
-                  offset: const Offset(3, 6),
-                ),
-              ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(15),
-                onTap: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SurveyLandingPage(),
-                    ),
-                  );
-                },
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
-                  child: Center(
-                    child: AutoSizeText(
-                      'Edit Survey',
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Inter',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ));
+    //pop up for survey results
     showDialog(
         barrierDismissible: true,
         context: context,
         builder: (BuildContext context) {
-          return alert;
+          return AlertDialog(
+            content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //issue 1 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[0],
+                          onExpansionChanged: (bool expanded) {
+                            setState(() => expandTap(expanded, 0));
+                          },
+                          title: const Text(
+                            "EDUCATION",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[0],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 4,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 2 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[1],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 1));
+                            setState;
+                          },
+                          title: const Text(
+                            "CLIMATE",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[1],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 3,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 3 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[2],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 2));
+                            setState;
+                          },
+                          title: const Text(
+                            "DRUG POLICY",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[2],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 5,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 4 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[3],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 3));
+                            setState;
+                          },
+                          title: const Text(
+                            "ECONOMY",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[3],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 8,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 5 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[4],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 4));
+                            setState;
+                          },
+                          title: const Text(
+                            "HEALTHCARE",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[4],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 6,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 6 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[5],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 5));
+                            setState;
+                          },
+                          title: const Text(
+                            "IMMIGRATION",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[5],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 9,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 7 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[6],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 6));
+                            setState;
+                          },
+                          title: const Text(
+                            "POLICING",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[6],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 10,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 8 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[7],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 7));
+                            setState;
+                          },
+                          title: const Text(
+                            "REPRODUCTIVE HEALTH",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[7],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 11,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 9 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[8],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 8));
+                            setState;
+                          },
+                          title: const Text(
+                            "GUN POLICY",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[8],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 2,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        //issue 10 dropdown
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          initiallyExpanded: _issueExpanded[9],
+                          onExpansionChanged: (bool expanded){
+                            setState(() => expandTap(expanded, 9));
+                            setState;
+                          },
+                          title: const Text(
+                            "HOUSING",
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _getRatingCircles()[9],
+                                GestureDetector(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SurveyLandingPage(pageSelect: 7,),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }
+            ),);
         });
   }
 
@@ -377,9 +912,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   String getUserExperience(int polls) {
-    //TODO: move to homeloadingpage when data is in db
     //this function will be used to determine the level of the user, e.g 0 polls - beginner
-    //strings are placeholder for now
     switch (polls) {
       case 0:
         return 'Beginner';

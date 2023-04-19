@@ -53,7 +53,7 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SurveyLandingPage(),
+              builder: (context) => SurveyLandingPage(pageSelect: 0,),
             ),
           );
         }

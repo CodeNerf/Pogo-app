@@ -271,7 +271,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SurveyLandingPage()));
+                          builder: (context) => SurveyLandingPage(pageSelect: 0,)));
                 },
                 child: Text(
                   'Skip',

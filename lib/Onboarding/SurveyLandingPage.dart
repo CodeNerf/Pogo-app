@@ -1,6 +1,7 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/Onboarding/AddressAutocomplete.dart';
+import 'package:pogo/Onboarding/Issues.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
@@ -8,12 +9,14 @@ import '../amplifyFunctions.dart';
 import 'Demographics.dart';
 import '../SignInSignUpPage.dart';
 import 'Demographics2.dart';
+import 'VoterInfo2.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
   UserDemographics answers = UserDemographics(id: '');
   UserIssueFactorValues ratings = UserIssueFactorValues(userId: '');
-  SurveyLandingPage({Key? key}) : super(key: key);
+  final int pageSelect;
+  SurveyLandingPage({Key? key, required this.pageSelect}) : super(key: key);
 
   @override
   State<SurveyLandingPage> createState() => _SurveyLandingPageState();
@@ -48,14 +51,150 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
           setState(() {
             widget.ratings = values[0];
             widget.answers = values[1];
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Demographics2(
-                      ratings: widget.ratings,
-                      answers: widget.answers,
-                      issuesIndex: 0,
-                    )));
+            switch (widget.pageSelect) {
+              case 0:
+                //route to demographics
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Demographics2(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 0,
+                        )));
+                break;
+              case 1:
+                //route to voter info
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VoterInfo2(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 0,
+                        )));
+                break;
+              case 2:
+              //route to issue 1
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 0,
+                        )));
+                break;
+              case 3:
+              //route to issue 2
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 1,
+                        )));
+                break;
+              case 4:
+              //route to issue 3
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 2,
+                        )));
+                break;
+              case 5:
+              //route to issue 4
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 3,
+                        )));
+                break;
+              case 6:
+              //route to issue 5
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 4,
+                        )));
+                break;
+              case 7:
+              //route to issue 6
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 5,
+                        )));
+                break;
+              case 8:
+              //route to issue 7
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 6,
+                        )));
+                break;
+              case 9:
+              //route to issue 8
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 7,
+                        )));
+                break;
+              case 10:
+              //route to issue 9
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 8,
+                        )));
+                break;
+              case 11:
+              //route to issue 10
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 9,
+                        )));
+                break;
+              default:
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Demographics2(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 0,
+                        )));
+                break;
+            }
           });
         });
         retry = false;
