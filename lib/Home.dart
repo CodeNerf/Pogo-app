@@ -51,6 +51,7 @@ class _HomeState extends State<Home> {
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
   List<CandidateDemographics> _filteredCandidateStack = [];
+  bool _filtering = false;
 
   _updateBallot(CandidateDemographics candidate,
       List<CandidateDemographics> podiumStack) {
@@ -95,9 +96,10 @@ class _HomeState extends State<Home> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CandidateProfile(
-            candidate: searchCandidate, candidateValues: searchCandidateValues),
-      ),
+          builder: (context) => CandidateProfile(
+              candidate: searchCandidate,
+              candidateValues: searchCandidateValues,
+              candidateStackFactors: _candidateStackFactors)),
     );
   }
 
@@ -116,6 +118,15 @@ class _HomeState extends State<Home> {
         }
       }
       setState(() {
+        _widgetOptions[1] = Podium(
+          candidateStack: _candidateStack,
+          userBallot: _userBallot,
+          updateBallot: _updateBallot,
+          candidateStackFactors: _candidateStackFactors,
+          unFilterPodiumCandidates: _unFilterPodiumCandidates,
+          loadCandidateProfile: _loadCandidateProfile,
+          filter: true,
+        );
         _selectedIndex = 1;
         _candidateStack = _candidateStack;
         _filteredCandidateStack = _filteredCandidateStack;
@@ -131,6 +142,15 @@ class _HomeState extends State<Home> {
       _filteredCandidateStack.remove(_filteredCandidateStack[0]);
     }
     setState(() {
+      _widgetOptions[1] = Podium(
+        candidateStack: _candidateStack,
+        userBallot: _userBallot,
+        updateBallot: _updateBallot,
+        candidateStackFactors: _candidateStackFactors,
+        unFilterPodiumCandidates: _unFilterPodiumCandidates,
+        loadCandidateProfile: _loadCandidateProfile,
+        filter: false,
+      );
       _selectedIndex = 1;
       _candidateStack = _candidateStack;
       _filteredCandidateStack = _filteredCandidateStack;
@@ -165,6 +185,7 @@ class _HomeState extends State<Home> {
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
           loadCandidateProfile: _loadCandidateProfile,
+          filter: _filtering,
         ),
         BallotPage(
           userBallot: _userBallot,
@@ -172,6 +193,7 @@ class _HomeState extends State<Home> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
+          loadCandidateProfile: _loadCandidateProfile,
         ),
         UserProfile(
           currentUserFactors: _currentUserFactors,

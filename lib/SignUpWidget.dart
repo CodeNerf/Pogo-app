@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
+import 'package:intl/intl.dart';
 import 'UserConfirmationPage.dart';
 import 'amplifyFunctions.dart';
 import 'awsFunctions.dart';
+import 'dynamoModels/Demographics/UserDemographics.dart';
 
 class SignUp extends StatefulWidget {
   final Function(int) switchPage;
@@ -51,9 +52,11 @@ class _SignUpState extends State<SignUp> {
         _fnameController.text)) {
       UserDemographics userDemographics = UserDemographics(
           id: _emailController.text, firstName: _fnameController.text);
-      putUserDemographics(userDemographics);
-      putUserBallot(_emailController.text, [], [], []);
-      //TODO: create blank ballot then push to db
+      userDemographics.lastLogin =
+          DateFormat('yyyy-MM-dd').format(DateTime.now());
+      userDemographics.loginStreak = 1;
+      await putUserDemographics(userDemographics);
+      await putUserBallot(_emailController.text, [], [], []);
       await Navigator.push(
           context,
           MaterialPageRoute(

@@ -490,3 +490,38 @@ Future<void> matchCandidatesToUser(String userId) async {
     client.close();
   }
 }
+
+Future<Map<String, dynamic>> matchCandidatesToUserTest(
+    UserIssueFactorValues userIssueFactorValues) async {
+  var client = http.Client();
+  try {
+    var response = await client.post(
+        Uri.https(
+            'i4tti59faj.execute-api.us-east-1.amazonaws.com', '/matching/test'),
+        headers: {
+          "content-type": "application/json",
+        },
+        body: jsonEncode(userIssueFactorValues.toJson()));
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+    List<CandidateDemographics> demographicsList = [];
+    List<CandidateIssueFactorValues> issueList = [];
+    List<MatchingStatistics> statisticsList = [];
+    for (var candidate in decodedResponse["body"]) {
+      demographicsList
+          .add(CandidateDemographics.fromJson(candidate["Demographics"]));
+      issueList.add(CandidateIssueFactorValues.fromJson(
+          candidate["Issue Factor Values"]));
+      statisticsList.add(MatchingStatistics.fromJson(candidate["Statistics"]));
+    }
+    return {
+      "Demographics": demographicsList,
+      "Issues": issueList,
+      "Statistics": statisticsList
+    };
+  } catch (e) {
+    safePrint("An error occurred in matchCandidatesToUserTest: $e");
+    return {};
+  } finally {
+    client.close();
+  }
+}
