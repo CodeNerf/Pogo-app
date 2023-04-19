@@ -302,6 +302,7 @@ class _UserProfileState extends State<UserProfile> {
         content: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
