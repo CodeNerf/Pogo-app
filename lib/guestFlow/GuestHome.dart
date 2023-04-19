@@ -80,8 +80,22 @@ class _GuestHomeState extends State<GuestHome> {
     });
   }
 
-  Future<void> _loadCandidateProfile(String fullName) async {
+  Future<void> _loadCandidateProfileFromPodium(String fullName) async {
     CandidateDemographics searchCandidate = _candidateStack
+        .firstWhere((element) => element.candidateName == fullName);
+    CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
+        .firstWhere((element) => element.candidateId == searchCandidate.id);
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CandidateProfile(
+            candidate: searchCandidate, candidateValues: searchCandidateValues),
+      ),
+    );
+  }
+
+  Future<void> _loadCandidateProfileFromBallot(String fullName) async {
+    CandidateDemographics searchCandidate = _ballotStack
         .firstWhere((element) => element.candidateName == fullName);
     CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
         .firstWhere((element) => element.candidateId == searchCandidate.id);
@@ -115,7 +129,7 @@ class _GuestHomeState extends State<GuestHome> {
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
+          loadCandidateProfile: _loadCandidateProfileFromPodium,
           filter: true,
         );
         _selectedIndex = 1;
@@ -139,7 +153,7 @@ class _GuestHomeState extends State<GuestHome> {
         updateBallot: _updateBallot,
         candidateStackFactors: _candidateStackFactors,
         unFilterPodiumCandidates: _unFilterPodiumCandidates,
-        loadCandidateProfile: _loadCandidateProfile,
+        loadCandidateProfile: _loadCandidateProfileFromPodium,
         filter: false,
       );
       _selectedIndex = 1;
@@ -170,7 +184,7 @@ class _GuestHomeState extends State<GuestHome> {
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
+          loadCandidateProfile: _loadCandidateProfileFromPodium,
           filter: false,
         ),
         BallotPage(
@@ -179,7 +193,7 @@ class _GuestHomeState extends State<GuestHome> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
+          loadCandidateProfile: _loadCandidateProfileFromBallot,
         ),
         lockedPage('Profile'),
       ];

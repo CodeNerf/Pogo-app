@@ -246,6 +246,7 @@ class _PodiumState extends State<Podium> {
 
   void _addCandidate(CandidateDemographics candidate) async {
     _stack.remove(candidate);
+
     widget.updateBallot(candidate, _stack);
   }
 
@@ -558,10 +559,7 @@ class _PodiumState extends State<Podium> {
                           cardController: _cardController,
                           context: context,
                           items: _initialCards(),
-                          cardWidthMiddleMul: 0.9,
-                          cardHeightMiddleMul: 0.6,
-                          cardWidthBottomMul: 0.9,
-                          cardHeightBottomMul: 0.6,
+
                           onCardSwiped: (dir, index, widget) {
                             if (_stackLength > 3 && _stack.isNotEmpty) {
                               //if the three buffer cards are not yet reached

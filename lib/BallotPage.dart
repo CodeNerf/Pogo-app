@@ -43,6 +43,7 @@ class _BallotPageState extends State<BallotPage> {
   int _publicWorksCommission = 1;
   int _commissionerOfRevenue = 1;
   int _countyCommissioners = 1;
+  int _governor = 1;
   final List<String> _mayorPics = [];
   final List<String> _cityClerkPics = [];
   final List<String> _cityCouncilPics = [];
@@ -56,6 +57,7 @@ class _BallotPageState extends State<BallotPage> {
   final List<String> _publicWorksCommissionPics = [];
   final List<String> _commissionerOfRevenuePics = [];
   final List<String> _countyCommissionersPics = [];
+  final List<String> _governorPics = [];
 
   @override
   void initState() {
@@ -64,6 +66,7 @@ class _BallotPageState extends State<BallotPage> {
   }
 
   void _initializeBallot() {
+    //local init
     if (widget.userBallot.localCandidateIds.isNotEmpty) {
       for (int i = 0; i < widget.userBallot.localCandidateIds.length; i++) {
         CandidateDemographics current = widget.ballotStack[i];
@@ -117,6 +120,10 @@ class _BallotPageState extends State<BallotPage> {
             _publicWorksCommission++;
             _publicWorksCommissionPics.add(current.profileImageURL);
             break;
+          case 'Governor':
+            _governor++;
+            _governorPics.add(current.profileImageURL);
+            break;
           default:
             break;
         }
@@ -135,6 +142,7 @@ class _BallotPageState extends State<BallotPage> {
     _publicWorksCommissionPics.add('');
     _commissionerOfRevenuePics.add('');
     _countyCommissionersPics.add('');
+    _governorPics.add('');
   }
 
   void _removeCandidate(String candidatePic, String title) {
@@ -177,6 +185,9 @@ class _BallotPageState extends State<BallotPage> {
         break;
       case 'Commissioner':
         _countyCommissionersPics.remove(candidatePic);
+        break;
+      case 'Governor':
+        _governorPics.remove(candidatePic);
         break;
     }
     widget.removeFromBallot(candidatePic);
@@ -312,7 +323,21 @@ class _BallotPageState extends State<BallotPage> {
             expanded: _expandedGlobal,
             title: 'STATE',
             child: [
-              SizedBox(height: 10),
+              SizedBox(height: 6),
+              Container(
+                height: 330,
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  children: [
+                    _buildRow(context, 'Governor', _governor, _governorPics, (count) {
+                      setState(() {
+                        _governor = count;
+                      });
+                    }, 0),
+                  ],
+                ),
+              ),
             ],
           ),
           SizedBox(height: 10),
