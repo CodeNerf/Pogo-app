@@ -92,9 +92,10 @@ class _HomeState extends State<Home> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CandidateProfile(
-            candidate: searchCandidate, candidateValues: searchCandidateValues),
-      ),
+          builder: (context) => CandidateProfile(
+              candidate: searchCandidate,
+              candidateValues: searchCandidateValues,
+              candidateStackFactors: _candidateStackFactors)),
     );
   }
 
