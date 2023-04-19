@@ -72,6 +72,9 @@ class _IssuesState extends State<Issues> {
   late bool _forwardVisibility;
   final Color _ratingBarColor = Colors.black;
   bool _submitVisibility = false;
+  late String _submitButtonText;
+  late double _submitButtonTextSize;
+
   final List<String> _leftAlignText = [
     'Gun Control',
     'Acceptance',
@@ -135,6 +138,14 @@ class _IssuesState extends State<Issues> {
   @override
   void initState() {
     super.initState();
+    if(widget.answers.surveyCompletion) {
+      _submitButtonText = "Save Changes";
+      _submitButtonTextSize = 25;
+    }
+    else {
+      _submitButtonText = "PoGo";
+      _submitButtonTextSize = 35;
+    }
     _issueIndex = widget.issuesIndex;
     _alignRating = widget.ratings.gunPolicyScore.toDouble();
     _valueRating = widget.ratings.gunPolicyWeight.toDouble();
@@ -845,7 +856,7 @@ class _IssuesState extends State<Issues> {
                 ),
               ],
             ),
-            //pogo button
+            //pogo/save changes button
             const Spacer(),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 5, 20),
@@ -876,16 +887,16 @@ class _IssuesState extends State<Issues> {
                           onTap: () {
                             _endSurvey(context);
                           },
-                          child: const Center(
+                          child: Center(
                             child: FittedBox(
                               fit: BoxFit.contain,
                               child: Text(
-                                'PoGo',
+                                _submitButtonText,
                                 style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w700,
-                                  color: Color(0xFF0E0E0E),
-                                  fontSize: 35,
+                                  color: const Color(0xFF0E0E0E),
+                                  fontSize: _submitButtonTextSize,
                                 ),
                               ),
                             ),

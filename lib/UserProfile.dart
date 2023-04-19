@@ -453,30 +453,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[0],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 4,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[0],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 4,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -499,30 +502,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[1],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 3,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[1],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 3,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -545,30 +551,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[2],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 5,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[2],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 5,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -591,30 +600,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[3],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 8,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[3],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 8,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -637,30 +649,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[4],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 6,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[4],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 6,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -683,30 +698,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[5],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 9,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[5],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 9,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -729,30 +747,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[6],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 10,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[6],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 10,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -775,30 +796,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[7],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 11,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[7],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 11,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -821,30 +845,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[8],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 2,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[8],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 2,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -867,30 +894,33 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                           ),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _getRatingCircles()[9],
-                                GestureDetector(
-                                  onTap: () async {
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SurveyLandingPage(pageSelect: 7,),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _getRatingCircles()[9],
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SurveyLandingPage(pageSelect: 7,),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
