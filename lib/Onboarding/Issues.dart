@@ -64,13 +64,14 @@ class _IssuesState extends State<Issues> {
     'POLICING',
     'REPRODUCTIVE RIGHTS'
   ];
-  int _nextButtonColor = 0xFF808080;
+  int _nextButtonColor = 0xFFF3D433;
   final int _backgroundColor = 0xFFE1E1E1;
   double _alignRating = 0;
   double _valueRating = 0;
   late bool _backVisibility;
   late bool _forwardVisibility;
   final Color _ratingBarColor = Colors.black;
+  bool _submitVisibility = false;
   final List<String> _leftAlignText = [
     'Gun Control',
     'Acceptance',
@@ -151,7 +152,7 @@ class _IssuesState extends State<Issues> {
       widget.ratings.housingScore
     ];
     if (!scores.contains(0)) {
-      _nextButtonColor = 0xFFF3D433;
+      _submitVisibility = true;
     }
     if (_issueIndex > 0 && _issueIndex < 9) {
       _backVisibility = true;
@@ -286,7 +287,7 @@ class _IssuesState extends State<Issues> {
 
   void _updateButton() {
     if (widget.ratings.reproductiveScore != 0 || _issueIndex == 9) {
-      _nextButtonColor = 0xFFF3D433;
+      _submitVisibility = true;
     }
     if (_issueIndex > 0 && _issueIndex < 9) {
       _backVisibility = true;
@@ -848,38 +849,41 @@ class _IssuesState extends State<Issues> {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 5, 20),
-              child: Container(
-                width: MediaQuery.of(context).size.width / 2,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Color(_nextButtonColor),
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade600,
-                      spreadRadius: 3,
-                      blurRadius: 7,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
+              child: Visibility(
+                visible: _submitVisibility,
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 2,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Color(_nextButtonColor),
                     borderRadius: BorderRadius.circular(25),
-                    onTap: () {
-                      _endSurvey(context);
-                    },
-                    child: const Center(
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(
-                          'PoGo',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF0E0E0E),
-                            fontSize: 35,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade600,
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(25),
+                      onTap: () {
+                        _endSurvey(context);
+                      },
+                      child: const Center(
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            'PoGo',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF0E0E0E),
+                              fontSize: 35,
+                            ),
                           ),
                         ),
                       ),
