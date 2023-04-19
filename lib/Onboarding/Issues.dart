@@ -849,47 +849,52 @@ class _IssuesState extends State<Issues> {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 5, 20),
-              child: Visibility(
-                visible: _submitVisibility,
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Color(_nextButtonColor),
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: 3,
-                        blurRadius: 7,
-                        offset: const Offset(0, 6),
+              child: Row(
+                children: [
+                  const Spacer(),
+                  Visibility(
+                    visible: _submitVisibility,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Color(_nextButtonColor),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade600,
+                            spreadRadius: 3,
+                            blurRadius: 7,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(25),
-                      onTap: () {
-                        _endSurvey(context);
-                      },
-                      child: const Center(
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            'PoGo',
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF0E0E0E),
-                              fontSize: 35,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(25),
+                          onTap: () {
+                            _endSurvey(context);
+                          },
+                          child: const Center(
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                'PoGo',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF0E0E0E),
+                                  fontSize: 35,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],
