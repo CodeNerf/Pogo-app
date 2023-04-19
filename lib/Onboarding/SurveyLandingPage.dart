@@ -137,9 +137,10 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AddressAutocomplete(
-                                        userIssueFactorValues: widget.ratings,
-                                        userDemographics: widget.answers,
+                                  builder: (context) => Demographics2(
+                                    ratings: widget.ratings,
+                                    answers: widget.answers,
+                                    issuesIndex: 0,
                                       )));
                         },
                         child: const Center(

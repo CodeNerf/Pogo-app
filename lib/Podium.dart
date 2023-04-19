@@ -100,7 +100,7 @@ class _PodiumState extends State<Podium> {
   //card banner color
   Color _candidateColor(String party) {
     switch (party) {
-      case 'Democrat':
+      case 'Democratic':
         return const Color(0xFF3456CF);
       case 'Republican':
         return const Color(0xFFDE0100);
@@ -366,17 +366,31 @@ class _PodiumState extends State<Podium> {
                 ),
               ),
             ),
-
+            /*
             Expanded(
-              flex: 7,
-              child: Text(
-                "${((stats.rSquared) * 100).round()}% Match",
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                ),
+              flex: 8,
+              child: Stack(
+                children: [
+                  const FittedBox(
+                    fit: BoxFit.cover,
+                    child: Image(
+                      width: 30,
+                      height: 30,
+                      image: AssetImage('assets/flame.png'),
+                    ),
+                  ),
+                  Text(
+                    "${((stats.rSquared) * 100).round()}%",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
               ),
             ),
+
+             */
           ],
         ),
       ),
