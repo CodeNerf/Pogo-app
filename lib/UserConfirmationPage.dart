@@ -140,23 +140,26 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                   ),
                 ),
 
-                //ERROR TEXT
+                //enter new password error text
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                  padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
                   child: Text(
                     _errorText,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
                       color: Colors.red,
+                      fontSize: 18,
+                      fontFamily: 'Inter',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                      height: 1.2,
                     ),
                   ),
                 ),
 
                 //code
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                  padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[90],

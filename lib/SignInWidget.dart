@@ -23,7 +23,6 @@ class _SignInState extends State<SignIn> {
   bool _obscure = true;
   Icon _eye = const Icon(Icons.remove_red_eye);
   String _errorText = '';
-  double _errorSizeBoxSize = 0;
 
   Future _signIn(context) async {
     if (await signInUser(
@@ -85,12 +84,12 @@ class _SignInState extends State<SignIn> {
         */
       } else {
         setState(() {
-          _errorText = 'Could not log in.';
+          _errorText = "Could not sign in. Please try again.";
         });
       }
     } else {
       setState(() {
-        _errorText = 'Could not log in.';
+        _errorText = "Could not sign in. Please try again.";
       });
     }
   }
@@ -172,9 +171,25 @@ class _SignInState extends State<SignIn> {
             ),
           ),
         ),
+        //sign in error text
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
+          child: Text(
+            _errorText,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 18,
+              fontFamily: 'Inter',
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w500,
+              height: 1.2,
+            ),
+          ),
+        ),
         //EMAIL
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
+          padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],

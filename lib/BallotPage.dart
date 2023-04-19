@@ -44,6 +44,20 @@ class _BallotPageState extends State<BallotPage> {
   int _commissionerOfRevenue = 1;
   int _countyCommissioners = 1;
   int _governor = 1;
+  int _secretaryOfState = 1;
+  int _attorneyGeneral = 1;
+  int _supremeCourtJustice = 1;
+  int _comptroller = 1;
+  int _treasurer = 1;
+  int _representative = 1;
+  int _senator = 1;
+  int _legislator = 1;
+  int _educationCommissioner = 1;
+  int _boardOfEducation = 1;
+  int _publicServiceCommissioner = 1;
+  int _agricultureCommissioner = 1;
+  int _president = 1;
+
   final List<String> _mayorPics = [];
   final List<String> _cityClerkPics = [];
   final List<String> _cityCouncilPics = [];
@@ -58,6 +72,19 @@ class _BallotPageState extends State<BallotPage> {
   final List<String> _commissionerOfRevenuePics = [];
   final List<String> _countyCommissionersPics = [];
   final List<String> _governorPics = [];
+  final List<String> _secretaryOfStatePics = [];
+  final List<String> _attorneyGeneralPics = [];
+  final List<String> _supremeCourtJusticePics = [];
+  final List<String> _comptrollerPics = [];
+  final List<String> _treasurerPics = [];
+  final List<String> _representativePics = [];
+  final List<String> _senatorPics = [];
+  final List<String> _legislatorPics = [];
+  final List<String> _educationCommissionerPics = [];
+  final List<String> _boardOfEducationPics = [];
+  final List<String> _publicServiceCommissionerPics = [];
+  final List<String> _agricultureCommissionerPics = [];
+  final List<String> _presidentPics = [];
 
   @override
   void initState() {
@@ -124,6 +151,58 @@ class _BallotPageState extends State<BallotPage> {
             _governor++;
             _governorPics.add(current.profileImageURL);
             break;
+          case 'Secretary of State':
+            _secretaryOfState++;
+            _secretaryOfStatePics.add(current.profileImageURL);
+            break;
+          case 'Attorney General':
+            _attorneyGeneral++;
+            _attorneyGeneralPics.add(current.profileImageURL);
+            break;
+          case 'Supreme Court Justice':
+            _supremeCourtJustice++;
+            _supremeCourtJusticePics.add(current.profileImageURL);
+            break;
+          case 'Comptroller':
+            _comptroller++;
+            _comptrollerPics.add(current.profileImageURL);
+            break;
+          case 'Treasurer':
+            _treasurer++;
+            _treasurerPics.add(current.profileImageURL);
+            break;
+          case 'Representative':
+            _representative++;
+            _representativePics.add(current.profileImageURL);
+            break;
+          case 'Senator':
+            _senator++;
+            _senatorPics.add(current.profileImageURL);
+            break;
+          case 'Legislator':
+            _legislator++;
+            _legislatorPics.add(current.profileImageURL);
+            break;
+          case 'Education Commissioner':
+            _educationCommissioner++;
+            _educationCommissionerPics.add(current.profileImageURL);
+            break;
+          case 'Board of Education':
+            _boardOfEducation++;
+            _boardOfEducationPics.add(current.profileImageURL);
+            break;
+          case 'Public Service Commissioner':
+            _publicServiceCommissioner++;
+            _publicServiceCommissionerPics.add(current.profileImageURL);
+            break;
+          case 'Agriculture Commissioner':
+            _agricultureCommissioner++;
+            _agricultureCommissionerPics.add(current.profileImageURL);
+            break;
+          case 'President':
+            _president++;
+            _presidentPics.add(current.profileImageURL);
+            break;
           default:
             break;
         }
@@ -143,6 +222,19 @@ class _BallotPageState extends State<BallotPage> {
     _commissionerOfRevenuePics.add('');
     _countyCommissionersPics.add('');
     _governorPics.add('');
+    _secretaryOfStatePics.add('');
+    _attorneyGeneralPics.add('');
+    _supremeCourtJusticePics.add('');
+    _comptrollerPics.add('');
+    _treasurerPics.add('');
+    _representativePics.add('');
+    _senatorPics.add('');
+    _legislatorPics.add('');
+    _educationCommissionerPics.add('');
+    _boardOfEducationPics.add('');
+    _publicServiceCommissionerPics.add('');
+    _agricultureCommissionerPics.add('');
+    _presidentPics.add('');
   }
 
   void _removeCandidate(String candidatePic, String title) {
@@ -188,6 +280,47 @@ class _BallotPageState extends State<BallotPage> {
         break;
       case 'Governor':
         _governorPics.remove(candidatePic);
+        break;
+      case 'Secretary of State':
+        _secretaryOfStatePics.remove(candidatePic);
+        break;
+      case 'Attorney General':
+        _attorneyGeneralPics.remove(candidatePic);
+        break;
+      case 'Supreme Court Justice':
+        _supremeCourtJusticePics.remove(candidatePic);
+        break;
+      case 'Comptroller':
+        _comptrollerPics.remove(candidatePic);
+        break;
+      case 'Treasurer':
+        _treasurerPics.remove(candidatePic);
+        break;
+      case 'Representative':
+        _representativePics.remove(candidatePic);
+        break;
+      case 'Senator':
+        _senatorPics.remove(candidatePic);
+        break;
+      case 'Legislator':
+        _legislatorPics.remove(candidatePic);
+        break;
+      case 'Education Commissioner':
+        _educationCommissionerPics.remove(candidatePic);
+        break;
+      case 'Board of Education':
+        _boardOfEducationPics.remove(candidatePic);
+        break;
+      case 'Public Service Commissioner':
+        _publicServiceCommissionerPics.remove(candidatePic);
+        break;
+      case 'Agriculture Commissioner':
+        _agricultureCommissionerPics.remove(candidatePic);
+        break;
+      case 'President':
+        _presidentPics.remove(candidatePic);
+        break;
+      default:
         break;
     }
     widget.removeFromBallot(candidatePic);
@@ -333,6 +466,66 @@ class _BallotPageState extends State<BallotPage> {
                         _governor = count;
                       });
                     }, 0),
+                    _buildRow(context, 'Secretary of State', _secretaryOfState, _secretaryOfStatePics, (count) {
+                      setState(() {
+                        _secretaryOfState = count;
+                      });
+                    }, 1),
+                    _buildRow(context, 'Attorney General', _attorneyGeneral, _attorneyGeneralPics, (count) {
+                      setState(() {
+                        _attorneyGeneral = count;
+                      });
+                    }, 2),
+                    _buildRow(context, 'Supreme Court Justice', _supremeCourtJustice, _supremeCourtJusticePics, (count) {
+                      setState(() {
+                        _supremeCourtJustice = count;
+                      });
+                    }, 3),
+                    _buildRow(context, 'Comptroller', _comptroller, _comptrollerPics, (count) {
+                      setState(() {
+                        _comptroller = count;
+                      });
+                    }, 4),
+                    _buildRow(context, 'Treasurer', _treasurer, _treasurerPics, (count) {
+                      setState(() {
+                        _treasurer = count;
+                      });
+                    }, 5),
+                    _buildRow(context, 'Representative', _representative, _representativePics, (count) {
+                      setState(() {
+                        _representative = count;
+                      });
+                    }, 6),
+                    _buildRow(context, 'Senator', _senator, _senatorPics, (count) {
+                      setState(() {
+                        _senator = count;
+                      });
+                    }, 7),
+                    _buildRow(context, 'Legislator', _legislator, _legislatorPics, (count) {
+                      setState(() {
+                        _legislator = count;
+                      });
+                    }, 8),
+                    _buildRow(context, 'Education Commissioner', _educationCommissioner, _educationCommissionerPics, (count) {
+                      setState(() {
+                        _educationCommissioner = count;
+                      });
+                    }, 9),
+                    _buildRow(context, 'Board of Education', _boardOfEducation, _boardOfEducationPics, (count) {
+                      setState(() {
+                        _boardOfEducation = count;
+                      });
+                    }, 10),
+                    _buildRow(context, 'Public Service Commissioner', _publicServiceCommissioner, _publicServiceCommissionerPics, (count) {
+                      setState(() {
+                        _publicServiceCommissioner = count;
+                      });
+                    }, 11),
+                    _buildRow(context, 'Agriculture Commissioner', _agricultureCommissioner, _agricultureCommissionerPics, (count) {
+                      setState(() {
+                        _agricultureCommissioner = count;
+                      });
+                    }, 12),
                   ],
                 ),
               ),
@@ -346,7 +539,23 @@ class _BallotPageState extends State<BallotPage> {
             },
             expanded: _expandedOther,
             title: 'FEDERAL',
-            child: [],
+            child: [
+              SizedBox(height: 6),
+              Container(
+                height: 330,
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  shrinkWrap: true,
+                  children: [
+                    _buildRow(context, 'President', _president, _presidentPics, (count) {
+                      setState(() {
+                        _president = count;
+                      });
+                    }, 0),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

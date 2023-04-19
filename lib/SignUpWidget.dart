@@ -20,33 +20,69 @@ class _SignUpState extends State<SignUp> {
   bool _obscure = true;
   Icon _eye = const Icon(Icons.remove_red_eye);
   String _errorText = '';
-  double _errorSizeBoxSize = 0;
 
   // Regular expression for validating email address
   final _emailRegex = RegExp(
     r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
   );
 
+  Map<String, dynamic> hasRequiredCharacters(String input) {
+    bool hasUppercase = false;
+    bool hasLowercase = false;
+    bool hasNumber = false;
+    bool hasSpecialChar = false;
+    String errorString =
+        'Password must contain at least: 1 uppercase, 1 lowercase, 1 number, 1 special character';
+
+    final uppercasePattern = RegExp(r'[A-Z]');
+    final lowercasePattern = RegExp(r'[a-z]');
+    final numberPattern = RegExp(r'[0-9]');
+    final specialCharPattern = RegExp(r'[!@#\$%^&*(),.?":{}|<>]');
+
+    for (int i = 0; i < input.length; i++) {
+      if (uppercasePattern.hasMatch(input[i])) {
+        hasUppercase = true;
+      } else if (lowercasePattern.hasMatch(input[i])) {
+        hasLowercase = true;
+      } else if (numberPattern.hasMatch(input[i])) {
+        hasNumber = true;
+      } else if (specialCharPattern.hasMatch(input[i])) {
+        hasSpecialChar = true;
+      }
+    }
+
+    bool result = hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
+
+    if (result) {
+      errorString = '';
+    }
+
+    return {'result': result, 'message': errorString};
+  }
+
   Future _signUp(context) async {
+    Map<String, dynamic> hasPasswordRequirements =
+        hasRequiredCharacters(_passwordController.text);
     if (_fnameController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter your name.';
-        _errorSizeBoxSize = 10;
       });
     } else if (_emailController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter your email.';
-        _errorSizeBoxSize = 10;
       });
     } else if (!_emailRegex.hasMatch(_emailController.text)) {
       setState(() {
         _errorText = 'Invalid email address.';
-        _errorSizeBoxSize = 10;
       });
     } else if (_passwordController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter a password.';
-        _errorSizeBoxSize = 10;
+      });
+      //Checks if password has uppercase lowercase and special character
+    } else if (!hasPasswordRequirements['result']) {
+      setState(() {
+        _errorText = hasPasswordRequirements['message'];
       });
     } else if (await signUpUser(_emailController.text, _passwordController.text,
         _fnameController.text)) {
@@ -144,9 +180,25 @@ class _SignUpState extends State<SignUp> {
             ),
           ),
         ),
+        //sign up error text
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
+          child: Text(
+            _errorText,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 18,
+              fontFamily: 'Inter',
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w500,
+              height: 1.2,
+            ),
+          ),
+        ),
         //FIRST NAME
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
+          padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],

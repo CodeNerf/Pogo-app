@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/CandidateProfile.dart';
 import 'package:pogo/SignInSignUpPage.dart';
+import '../LandingPage.dart';
 import '../awsFunctions.dart';
 import '../dynamoModels/Ballot.dart';
 import '../UserProfile.dart';
@@ -248,14 +249,9 @@ class _GuestHomeState extends State<GuestHome> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(15),
                 onTap: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignInSignUpPage(
-                        index: 0,
-                      ),
-                    ),
-                  );
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
+                    return const LandingPage();
+                  }));
                 },
                 child: const Padding(
                   padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
