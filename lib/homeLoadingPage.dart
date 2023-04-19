@@ -119,6 +119,7 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
           currentUserDemographics: widget.user,
           userBallot: _userBallot,
           candidateStackFactors: _candidateStackFactors,
+          candidateStackStatistics: _candidateStackStatistics,
         ),
       ),
     );

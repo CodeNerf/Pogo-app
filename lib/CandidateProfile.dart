@@ -470,51 +470,52 @@ class _CandidateProfileState extends State<CandidateProfile>
       shadowColor: Colors.black.withOpacity(0.95),
       color: Color(0xFFD9D9D9),
       child: SizedBox(
-        height: 90,
-        width: cardWidth,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: Text(
-                        placeOfEducation,
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
+          height: 90,
+          width: cardWidth,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 3.0),
+                        child: Text(
+                          placeOfEducation,
+                          style: TextStyle(
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            degreeInformation,
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 10,
-                              color: Color(0xFF57636C),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              degreeInformation,
+                              style: TextStyle(
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 10,
+                                color: Color(0xFF57636C),
+                              ),
+                              textAlign: TextAlign.left,
                             ),
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            yearOfGraduation,
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 10,
-                              color: Color(0xFF57636C),
+                            Text(
+                              yearOfGraduation,
+                              style: TextStyle(
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 10,
+                                color: Color(0xFF57636C),
+                              ),
                             ),
                           ],
                         ),

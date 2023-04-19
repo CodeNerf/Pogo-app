@@ -46,7 +46,7 @@ class _GuestHomeState extends State<GuestHome> {
   late List<CandidateDemographics> _candidateStack;
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
-
+  late List<MatchingStatistics> _guestMatchingStatistics;
   List<CandidateDemographics> _filteredCandidateStack = [];
 
   _updateBallot(CandidateDemographics candidate,
@@ -129,6 +129,7 @@ class _GuestHomeState extends State<GuestHome> {
       setState(() {
         _widgetOptions[1] = Podium(
           candidateStack: _candidateStack,
+          candidateStackStatistics: _guestMatchingStatistics,
           userBallot: _userBallot,
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
@@ -153,6 +154,7 @@ class _GuestHomeState extends State<GuestHome> {
     setState(() {
       _widgetOptions[1] = Podium(
         candidateStack: _candidateStack,
+        candidateStackStatistics: _guestMatchingStatistics,
         userBallot: _userBallot,
         updateBallot: _updateBallot,
         candidateStackFactors: _candidateStackFactors,
@@ -173,6 +175,7 @@ class _GuestHomeState extends State<GuestHome> {
     _candidateStackFactors = widget._guestCandidateStackFactors;
     _candidateStack = widget._guestCandidateStack;
     _userBallot = widget._guestBallot;
+    _guestMatchingStatistics = widget._guestMatchingStatistics;
     if (_userBallot.localCandidateIds.isNotEmpty) {
       for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
         _ballotStack.add(_candidateStack.firstWhere(
@@ -184,6 +187,7 @@ class _GuestHomeState extends State<GuestHome> {
         lockedPage('Voter Guide'),
         Podium(
           candidateStack: _candidateStack,
+          candidateStackStatistics: _guestMatchingStatistics,
           userBallot: _userBallot,
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,

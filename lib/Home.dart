@@ -13,6 +13,7 @@ import 'BallotPage.dart';
 import 'Podium.dart';
 import 'dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
+import 'dynamoModels/MatchingStatistics.dart';
 
 class Home extends StatefulWidget {
   final UserDemographics _currentUserDemographics;
@@ -20,18 +21,21 @@ class Home extends StatefulWidget {
   final List<CandidateDemographics> _candidateStack;
   final Ballot _userBallot;
   final List<CandidateIssueFactorValues> _candidateStackFactors;
+  final List<MatchingStatistics> _candidateStackStatistics;
   const Home(
       {Key? key,
       required UserIssueFactorValues currentUserFactors,
       required List<CandidateDemographics> candidateStack,
       required UserDemographics currentUserDemographics,
       required Ballot userBallot,
-      required List<CandidateIssueFactorValues> candidateStackFactors})
+      required List<CandidateIssueFactorValues> candidateStackFactors,
+      required List<MatchingStatistics> candidateStackStatistics})
       : _candidateStackFactors = candidateStackFactors,
         _userBallot = userBallot,
         _candidateStack = candidateStack,
         _currentUserFactors = currentUserFactors,
         _currentUserDemographics = currentUserDemographics,
+        _candidateStackStatistics = candidateStackStatistics,
         super(key: key);
 
   @override
@@ -50,6 +54,7 @@ class _HomeState extends State<Home> {
   late UserDemographics _currentUserDemographics;
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
+  late List<MatchingStatistics> _candidateStackStatistics;
   List<CandidateDemographics> _filteredCandidateStack = [];
   bool _filtering = false;
 
@@ -119,6 +124,7 @@ class _HomeState extends State<Home> {
       }
       setState(() {
         _widgetOptions[1] = Podium(
+          candidateStackStatistics: _candidateStackStatistics,
           candidateStack: _candidateStack,
           userBallot: _userBallot,
           updateBallot: _updateBallot,
@@ -144,6 +150,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _widgetOptions[1] = Podium(
         candidateStack: _candidateStack,
+        candidateStackStatistics: _candidateStackStatistics,
         userBallot: _userBallot,
         updateBallot: _updateBallot,
         candidateStackFactors: _candidateStackFactors,
@@ -166,6 +173,7 @@ class _HomeState extends State<Home> {
     _candidateStack = widget._candidateStack;
     _currentUserDemographics = widget._currentUserDemographics;
     _userBallot = widget._userBallot;
+    _candidateStackStatistics = widget._candidateStackStatistics;
     if (_userBallot.localCandidateIds.isNotEmpty) {
       for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
         _ballotStack.add(_candidateStack.firstWhere(
@@ -180,6 +188,7 @@ class _HomeState extends State<Home> {
         ),
         Podium(
           candidateStack: _candidateStack,
+          candidateStackStatistics: _candidateStackStatistics,
           userBallot: _userBallot,
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,

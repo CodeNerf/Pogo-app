@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pogo/Onboarding/Demographics.dart';
 import 'package:pogo/UserConfirmationPage.dart';
 import 'package:validators/validators.dart';
+import '../googleFunctions/APIKey.dart';
 import 'SurveyLandingPage.dart';
 import '../amplifyFunctions.dart';
 import 'dart:async';
@@ -32,7 +33,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
   double errorSizeBoxSize = 0;
   bool isAddressSelected = false;
 
-  final _placesApiClient = GoogleMapsPlaces(apiKey: '');
+  final _placesApiClient = GoogleMapsPlaces(apiKey: googlePlacesApiKey);
 
   // Regular expression for validating US addresses
   final addressRegex = RegExp(
@@ -45,8 +46,6 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
       language: 'en',
       components: [Component(Component.country, 'us')],
     );
-
-    print(result.errorMessage);
 
     if (result.isOkay) {
       return result.predictions;

@@ -250,7 +250,7 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF0E0E0E),
-                              fontSize: 30,
+                              fontSize: 15,
                             ),
                           ),
                         ),
