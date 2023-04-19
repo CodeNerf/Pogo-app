@@ -33,9 +33,6 @@ class _SignInState extends State<SignIn> {
         //check if survey is completed
         UserDemographics user =
             await getUserDemographics(_emailSignInController.text);
-        user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
-        safePrint(user.lastLogin);
-        await putUserDemographics(user);
         if (user.surveyCompletion == true) {
           await Navigator.push(
             context,
@@ -241,7 +238,7 @@ class _SignInState extends State<SignIn> {
 
         //forgot password text button
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+          padding: const EdgeInsets.fromLTRB(0, 20, 25, 0),
           child: Align(
             alignment: Alignment.bottomRight,
             child: GestureDetector(
@@ -262,7 +259,7 @@ class _SignInState extends State<SignIn> {
 
         //sign in button
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 20),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
           child: Container(
             width: double.infinity,
             height: 50,

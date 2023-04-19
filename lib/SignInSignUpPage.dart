@@ -14,6 +14,8 @@ import 'dynamoModels/Demographics/UserDemographics.dart';
 //import 'SignUpAddress.dart';
 import 'package:intl/intl.dart';
 
+import 'guestFlow/GuestIssues.dart';
+
 class SignInSignUpPage extends StatefulWidget {
   final int index;
   const SignInSignUpPage({Key? key, required this.index}) : super(key: key);
@@ -93,6 +95,53 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
           persistentFooterButtons: [
             Column(
               children: [
+                //continue as guest button
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(65, 0, 65, 10),
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF9b9c98),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade600,
+                          spreadRadius: 3,
+                          blurRadius: 7,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(25),
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const GuestIssues(),
+                            ),
+                          );
+                        },
+                        child: const Center(
+                          child: Text(
+                            'Continue as Guest',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF0E0E0E),
+                              fontSize: 25,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                //TODO: commenting out social media buttons as implementing functionality for those is not currently possible
+                /*
                 //or continue with
                 const Align(
                   alignment: Alignment.centerLeft,
@@ -207,6 +256,7 @@ class _SignInSignUpPageState extends State<SignInSignUpPage> {
                     ),
                   ],
                 ),
+                 */
               ],
             ),
           ],

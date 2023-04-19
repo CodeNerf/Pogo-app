@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
+import 'package:intl/intl.dart';
 import 'UserConfirmationPage.dart';
 import 'amplifyFunctions.dart';
 import 'awsFunctions.dart';
+import 'dynamoModels/Demographics/UserDemographics.dart';
 
 class SignUp extends StatefulWidget {
   final Function(int) switchPage;
@@ -49,29 +50,13 @@ class _SignUpState extends State<SignUp> {
       });
     } else if (await signUpUser(_emailController.text, _passwordController.text,
         _fnameController.text)) {
-      UserDemographics userDemographics = UserDemographics(
-          id: _emailController.text,
-          phoneNumber: '',
-          registrationState: '',
-          addressLine1: '',
-          pollingLocation: '',
-          voterRegistrationStatus: false,
-          firstName: _fnameController.text,
-          lastName: '',
-          dateOfBirth: '',
-          zipCode: '',
-          profileImageURL: '',
-          gender: '',
-          racialIdentity: '',
-          politicalAffiliation: '',
-          surveyCompletion: false,
-          polls: 0,
-          loginStreak: 0,
-          loginStreakRecord: 0,
-          lastLogin: '');
-      putUserDemographics(userDemographics);
-      putUserBallot(_emailController.text, [], [], []);
-      //TODO: create blank ballot then push to db
+      UserDemographics userDemographics =
+          UserDemographics(id: _emailController.text);
+      userDemographics.lastLogin =
+          DateFormat('yyyy-MM-dd').format(DateTime.now());
+      userDemographics.loginStreak = 1;
+      await putUserDemographics(userDemographics);
+      await putUserBallot(_emailController.text, [], [], []);
       await Navigator.push(
           context,
           MaterialPageRoute(
