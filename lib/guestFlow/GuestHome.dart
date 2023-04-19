@@ -89,21 +89,25 @@ class _GuestHomeState extends State<GuestHome> {
       context,
       MaterialPageRoute(
         builder: (context) => CandidateProfile(
-            candidate: searchCandidate, candidateValues: searchCandidateValues),
+            candidate: searchCandidate,
+            candidateValues: searchCandidateValues,
+            candidateStackFactors: _candidateStackFactors),
       ),
     );
   }
 
   Future<void> _loadCandidateProfileFromBallot(String fullName) async {
-    CandidateDemographics searchCandidate = _ballotStack
-        .firstWhere((element) => element.candidateName == fullName);
+    CandidateDemographics searchCandidate =
+        _ballotStack.firstWhere((element) => element.candidateName == fullName);
     CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
         .firstWhere((element) => element.candidateId == searchCandidate.id);
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CandidateProfile(
-            candidate: searchCandidate, candidateValues: searchCandidateValues),
+            candidate: searchCandidate,
+            candidateValues: searchCandidateValues,
+            candidateStackFactors: _candidateStackFactors),
       ),
     );
   }
