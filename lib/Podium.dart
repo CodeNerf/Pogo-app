@@ -277,7 +277,7 @@ class _PodiumState extends State<Podium> {
             Expanded(
               flex: 7,
               child: Text(
-                "${candidate.candidateName}",
+                candidate.candidateName,
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
@@ -383,85 +383,6 @@ class _PodiumState extends State<Podium> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            /*
-            //local, state, federal bar
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      _updateStack(0);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width / 3,
-                      decoration: BoxDecoration(
-                        color: _local,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: const Center(
-                          child: Text(
-                        'Local',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      )),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      _updateStack(1);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width / 3,
-                      decoration: BoxDecoration(
-                        color: _state,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: const Center(
-                          child: Text(
-                        'State',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      )),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      _updateStack(2);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      width: MediaQuery.of(context).size.width / 3,
-                      decoration: BoxDecoration(
-                        color: _federal,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: const Center(
-                          child: Text(
-                        'Federal',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      )),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-             */
             Expanded(
               flex: 13,
               //podium background
@@ -679,55 +600,62 @@ class _PodiumState extends State<Podium> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  _showAlert(context);
-                                },
-                                child: const Icon(
-                                  CupertinoIcons.question_circle,
-                                  size: 25,
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _showAlert(context);
+                                  },
+                                  child: const Icon(
+                                    CupertinoIcons.question_circle,
+                                    size: 25,
+                                  ),
                                 ),
                               ),
+                              const Spacer(),
                               Visibility(
                                 visible: _filtering,
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width / 3,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF3D433),
-                                    borderRadius: BorderRadius.circular(25),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade600,
-                                        spreadRadius: 3,
-                                        blurRadius: 7,
-                                        offset: const Offset(0, 6),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 15, 5),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width / 3,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF3D433),
                                       borderRadius: BorderRadius.circular(25),
-                                      onTap: () async {
-                                        await widget.unFilterPodiumCandidates();
-                                        setState(() {
-                                          _stack = widget.candidateStack;
-                                          _stackLength = _stack.length;
-                                          _filtering = false;
-                                        });
-                                        _initializeSearchResults();
-                                      },
-                                      child: const Center(
-                                        child: FittedBox(
-                                          fit: BoxFit.contain,
-                                          child: Text(
-                                            'Remove Filter',
-                                            style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xFF0E0E0E),
-                                              fontSize: 25,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade600,
+                                          spreadRadius: 3,
+                                          blurRadius: 7,
+                                          offset: const Offset(0, 6),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(25),
+                                        onTap: () async {
+                                          await widget.unFilterPodiumCandidates();
+                                          setState(() {
+                                            _stack = widget.candidateStack;
+                                            _stackLength = _stack.length;
+                                            _filtering = false;
+                                          });
+                                          _initializeSearchResults();
+                                        },
+                                        child: const Center(
+                                          child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: Text(
+                                              'Remove Filter',
+                                              style: TextStyle(
+                                                fontFamily: 'Inter',
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xFF0E0E0E),
+                                                fontSize: 25,
+                                              ),
                                             ),
                                           ),
                                         ),

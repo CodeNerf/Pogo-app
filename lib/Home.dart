@@ -159,10 +159,7 @@ class _HomeState extends State<Home> {
         filter: false,
       );
       _selectedIndex = 1;
-      _candidateStack = _candidateStack;
-      _filteredCandidateStack = _filteredCandidateStack;
     });
-    _candidateStack.shuffle();
   }
 
   @override
