@@ -1,60 +1,58 @@
 import 'package:amplify_core/amplify_core.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/CandidateProfile.dart';
-import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
-import 'awsFunctions.dart';
-import 'dynamoModels/Ballot.dart';
-import 'dynamoModels/Demographics/CandidateDemographics.dart';
-import 'UserProfile.dart';
-import 'VoterGuide.dart';
-import 'BallotPage.dart';
-import 'Podium.dart';
-import 'dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
-import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
+import 'package:pogo/SignInSignUpPage.dart';
+import '../awsFunctions.dart';
+import '../dynamoModels/Ballot.dart';
+import '../UserProfile.dart';
+import '../VoterGuide.dart';
+import '../BallotPage.dart';
+import '../Podium.dart';
+import '../dynamoModels/Demographics/CandidateDemographics.dart';
+import '../dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
+import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
+import '../dynamoModels/MatchingStatistics.dart';
 
-class Home extends StatefulWidget {
-  final UserDemographics _currentUserDemographics;
-  final UserIssueFactorValues _currentUserFactors;
-  final List<CandidateDemographics> _candidateStack;
-  final Ballot _userBallot;
-  final List<CandidateIssueFactorValues> _candidateStackFactors;
-  const Home(
+class GuestHome extends StatefulWidget {
+  final UserIssueFactorValues _guestFactors;
+  final List<CandidateDemographics> _guestCandidateStack;
+  final Ballot _guestBallot;
+  final List<CandidateIssueFactorValues> _guestCandidateStackFactors;
+  final List<MatchingStatistics> _guestMatchingStatistics;
+  const GuestHome(
       {Key? key,
-      required UserIssueFactorValues currentUserFactors,
-      required List<CandidateDemographics> candidateStack,
-      required UserDemographics currentUserDemographics,
-      required Ballot userBallot,
-      required List<CandidateIssueFactorValues> candidateStackFactors})
-      : _candidateStackFactors = candidateStackFactors,
-        _userBallot = userBallot,
-        _candidateStack = candidateStack,
-        _currentUserFactors = currentUserFactors,
-        _currentUserDemographics = currentUserDemographics,
+      required UserIssueFactorValues guestFactors,
+      required List<CandidateDemographics> guestCandidateStack,
+      required Ballot guestBallot,
+      required List<CandidateIssueFactorValues> guestCandidateStackFactors,
+      required List<MatchingStatistics> guestMatchingStatistics})
+      : _guestCandidateStackFactors = guestCandidateStackFactors,
+        _guestBallot = guestBallot,
+        _guestCandidateStack = guestCandidateStack,
+        _guestFactors = guestFactors,
+        _guestMatchingStatistics = guestMatchingStatistics,
         super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<GuestHome> createState() => _GuestHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _GuestHomeState extends State<GuestHome> {
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   int _selectedIndex = 0;
   List<CandidateDemographics> _ballotStack = [];
   late Ballot _userBallot;
-  late UserIssueFactorValues _currentUserFactors;
   late List<CandidateDemographics> _candidateStack;
-  late UserDemographics _currentUserDemographics;
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
+
   List<CandidateDemographics> _filteredCandidateStack = [];
-  bool _filtering = false;
 
   _updateBallot(CandidateDemographics candidate,
       List<CandidateDemographics> podiumStack) {
     _userBallot.localCandidateIds.add(candidate.id);
     _ballotStack.add(candidate);
-    putUserBallot(_currentUserDemographics.id, _userBallot.localCandidateIds,
-        _userBallot.stateCandidateIds, _userBallot.federalCandidateIds);
     setState(() {
       _candidateStack = podiumStack;
     });
@@ -65,8 +63,6 @@ class _HomeState extends State<Home> {
         .firstWhere((element) => element.profileImageURL == candidatePic);
     _userBallot.localCandidateIds.remove(candidate.id);
     _ballotStack.remove(candidate);
-    putUserBallot(_currentUserDemographics.id, _userBallot.localCandidateIds,
-        _userBallot.stateCandidateIds, _userBallot.federalCandidateIds);
     if (_filteredCandidateStack.isNotEmpty) {
       if (candidate.runningPosition != _candidateStack[0].runningPosition) {
         _filteredCandidateStack.add(candidate);
@@ -84,7 +80,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> _loadCandidateProfile(String fullName) async {
+  Future<void> _loadCandidateProfileFromPodium(String fullName) async {
     CandidateDemographics searchCandidate = _candidateStack
         .firstWhere((element) => element.candidateName == fullName);
     CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
@@ -93,11 +89,21 @@ class _HomeState extends State<Home> {
       context,
       MaterialPageRoute(
         builder: (context) => CandidateProfile(
-  candidate: searchCandidate,
-  candidateValues: searchCandidateValues,
-  candidateStackFactors: _candidateStackFactors,
-  descriptionText: "",
-)
+            candidate: searchCandidate, candidateValues: searchCandidateValues),
+      ),
+    );
+  }
+
+  Future<void> _loadCandidateProfileFromBallot(String fullName) async {
+    CandidateDemographics searchCandidate = _ballotStack
+        .firstWhere((element) => element.candidateName == fullName);
+    CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
+        .firstWhere((element) => element.candidateId == searchCandidate.id);
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CandidateProfile(
+            candidate: searchCandidate, candidateValues: searchCandidateValues),
       ),
     );
   }
@@ -123,7 +129,7 @@ class _HomeState extends State<Home> {
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
+          loadCandidateProfile: _loadCandidateProfileFromPodium,
           filter: true,
         );
         _selectedIndex = 1;
@@ -147,7 +153,7 @@ class _HomeState extends State<Home> {
         updateBallot: _updateBallot,
         candidateStackFactors: _candidateStackFactors,
         unFilterPodiumCandidates: _unFilterPodiumCandidates,
-        loadCandidateProfile: _loadCandidateProfile,
+        loadCandidateProfile: _loadCandidateProfileFromPodium,
         filter: false,
       );
       _selectedIndex = 1;
@@ -160,11 +166,9 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _candidateStackFactors = widget._candidateStackFactors;
-    _currentUserFactors = widget._currentUserFactors;
-    _candidateStack = widget._candidateStack;
-    _currentUserDemographics = widget._currentUserDemographics;
-    _userBallot = widget._userBallot;
+    _candidateStackFactors = widget._guestCandidateStackFactors;
+    _candidateStack = widget._guestCandidateStack;
+    _userBallot = widget._guestBallot;
     if (_userBallot.localCandidateIds.isNotEmpty) {
       for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
         _ballotStack.add(_candidateStack.firstWhere(
@@ -173,19 +177,15 @@ class _HomeState extends State<Home> {
     }
     setState(() {
       _widgetOptions = <Widget>[
-        VoterGuide(
-          currentUserDemographics:
-              _currentUserDemographics, // provide required argument
-          user: _currentUserDemographics,
-        ),
+        lockedPage('Voter Guide'),
         Podium(
           candidateStack: _candidateStack,
           userBallot: _userBallot,
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
-          filter: _filtering,
+          loadCandidateProfile: _loadCandidateProfileFromPodium,
+          filter: false,
         ),
         BallotPage(
           userBallot: _userBallot,
@@ -193,15 +193,82 @@ class _HomeState extends State<Home> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
+          loadCandidateProfile: _loadCandidateProfileFromBallot,
         ),
-        UserProfile(
-          currentUserFactors: _currentUserFactors,
-          currentUserDemographics: _currentUserDemographics,
-          currentUserBallotCandidates: _ballotStack,
-        ),
+        lockedPage('Profile'),
       ];
     });
+  }
+
+  Widget lockedPage(String pageName) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Text(
+            'You must have a PoGo account to access the $pageName',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        //sign up button
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+          //overall container
+          child: Container(
+            width: 100,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFFF3D433),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400,
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(3, 6),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15),
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SignInSignUpPage(
+                        index: 0,
+                      ),
+                    ),
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                  child: Center(
+                    child: AutoSizeText(
+                      'Sign Up',
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override

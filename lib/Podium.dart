@@ -1,15 +1,16 @@
 import 'dart:math';
+import 'package:amplify_core/amplify_core.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'dynamoModels/Ballot.dart';
-import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
-import 'dynamoModels/Demographics/CandidateDemographics.dart';
 import 'package:swipeable_card_stack/swipeable_card_stack.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
+import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 
 class Podium extends StatefulWidget {
   final List<CandidateDemographics> candidateStack;
@@ -19,6 +20,7 @@ class Podium extends StatefulWidget {
   final List<CandidateIssueFactorValues> candidateStackFactors;
   final Function() unFilterPodiumCandidates;
   final Function(String) loadCandidateProfile;
+  final bool filter;
   const Podium(
       {Key? key,
       required this.candidateStack,
@@ -26,7 +28,8 @@ class Podium extends StatefulWidget {
       required this.userBallot,
       required this.updateBallot,
       required this.unFilterPodiumCandidates,
-      required this.loadCandidateProfile})
+      required this.loadCandidateProfile,
+      required this.filter})
       : super(key: key);
 
   @override
@@ -58,6 +61,9 @@ class _PodiumState extends State<Podium> {
   //static List<String> candidateList = <String>[];
   static List<String> _candidateList = [];
 
+  //filtering
+  late bool _filtering;
+
   @override
   void initState() {
     setState(() {
@@ -65,6 +71,7 @@ class _PodiumState extends State<Podium> {
       _stack = widget.candidateStack;
       _stackLength = _stack.length;
       _candidateList = [];
+      _filtering = widget.filter;
     });
     _initializeSearchResults();
     super.initState();
@@ -72,7 +79,7 @@ class _PodiumState extends State<Podium> {
 
   void _initializeSearchResults() {
     for (int i = 0; i < _stackLength; i++) {
-      _candidateList.add('${_stack[i].candidateName}');
+      _candidateList.add(_stack[i].candidateName);
     }
   }
 
@@ -239,6 +246,7 @@ class _PodiumState extends State<Podium> {
 
   void _addCandidate(CandidateDemographics candidate) async {
     _stack.remove(candidate);
+
     widget.updateBallot(candidate, _stack);
   }
 
@@ -369,6 +377,7 @@ class _PodiumState extends State<Podium> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
+            /*
             //local, state, federal bar
             Expanded(
               flex: 1,
@@ -445,10 +454,11 @@ class _PodiumState extends State<Podium> {
                 ],
               ),
             ),
+
+             */
             Expanded(
               flex: 13,
               //podium background
-              //TODO: add x icon to left of page and + icon to right of page
               child: Container(
                 decoration: const BoxDecoration(
                   color: Color(0xFFF9F9F9),
@@ -464,10 +474,10 @@ class _PodiumState extends State<Podium> {
                       child: Row(
                         children: const [
                           Padding(
-                            padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                             child: SizedBox(
-                              height: 50,
-                              width: 50,
+                              height: 25,
+                              width: 25,
                               child: FittedBox(
                                 fit: BoxFit.contain,
                                 child: Image(
@@ -478,10 +488,10 @@ class _PodiumState extends State<Podium> {
                           ),
                           Spacer(),
                           Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                            padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
                             child: SizedBox(
-                              height: 50,
-                              width: 50,
+                              height: 25,
+                              width: 25,
                               child: FittedBox(
                                 fit: BoxFit.contain,
                                 child: Image(
@@ -552,10 +562,7 @@ class _PodiumState extends State<Podium> {
                           cardController: _cardController,
                           context: context,
                           items: _initialCards(),
-                          cardWidthMiddleMul: 0.9,
-                          cardHeightMiddleMul: 0.6,
-                          cardWidthBottomMul: 0.9,
-                          cardHeightBottomMul: 0.6,
+
                           onCardSwiped: (dir, index, widget) {
                             if (_stackLength > 3 && _stack.isNotEmpty) {
                               //if the three buffer cards are not yet reached
@@ -659,7 +666,7 @@ class _PodiumState extends State<Podium> {
                           enableSwipeUp: false,
                           enableSwipeDown: false,
                         ),
-                        //alert
+                        //alert and remove filter button
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Row(
@@ -674,30 +681,50 @@ class _PodiumState extends State<Podium> {
                                   size: 25,
                                 ),
                               ),
-                              Material(
-                                color: const Color(0xFFF3D433),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: InkWell(
-                                  splashColor: const Color(0xFF000000),
-                                  splashFactory: InkRipple.splashFactory,
-                                  borderRadius: BorderRadius.circular(10),
-                                  onTap: () async {
-                                    await widget.unFilterPodiumCandidates();
-                                    setState(() {
-                                      _stack = widget.candidateStack;
-                                      _stackLength = _stack.length;
-                                    });
-                                    _initializeSearchResults();
-                                  },
-                                  child: const Text(
-                                    'Remove Filter',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                              Visibility(
+                                visible: _filtering,
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF3D433),
+                                    borderRadius: BorderRadius.circular(25),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade600,
+                                        spreadRadius: 3,
+                                        blurRadius: 7,
+                                        offset: const Offset(0, 6),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(25),
+                                      onTap: () async {
+                                        await widget.unFilterPodiumCandidates();
+                                        setState(() {
+                                          _stack = widget.candidateStack;
+                                          _stackLength = _stack.length;
+                                          _filtering = false;
+                                        });
+                                        _initializeSearchResults();
+                                      },
+                                      child: const Center(
+                                        child: FittedBox(
+                                          fit: BoxFit.contain,
+                                          child: Text(
+                                            'Remove Filter',
+                                            style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFF0E0E0E),
+                                              fontSize: 25,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

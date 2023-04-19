@@ -9,14 +9,14 @@ class UserDemographics extends Demographics {
   int loginStreak;
   int loginStreakRecord;
   String lastLogin;
+  bool liveInRegisteredState;
+  String partyVoting;
   String firstName;
   String lastName;
 
   UserDemographics({
     required super.id,
-    super.phoneNumber = "",
     this.registrationState = "",
-    super.addressLine1 = "",
     this.pollingLocation = "",
     this.voterRegistrationStatus = false,
     this.surveyCompletion = false,
@@ -24,6 +24,8 @@ class UserDemographics extends Demographics {
     this.loginStreak = 0,
     this.loginStreakRecord = 0,
     this.lastLogin = "",
+    this.liveInRegisteredState = false,
+    this.partyVoting = "",
     this.firstName = "",
     this.lastName = "",
     super.dateOfBirth = "",
@@ -32,7 +34,9 @@ class UserDemographics extends Demographics {
     super.gender = "",
     super.racialIdentity = "",
     super.politicalAffiliation = "",
+    super.addressLine1 = "",
     super.city = "",
+    super.phoneNumber = "",
     super.email = "",
   });
 
@@ -58,30 +62,38 @@ class UserDemographics extends Demographics {
       loginStreak: json['loginStreak'],
       loginStreakRecord: json['loginStreakRecord'],
       lastLogin: json['lastLogin'],
+      liveInRegisteredState: json['liveInRegisteredState'],
+      partyVoting: json['partyVoting'],
+      city: json['city'],
+      email: json['email'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'userId': id,
-      'phoneNumber': phoneNumber,
-      'registrationState': registrationState,
-      'addressLine1': addressLine1,
-      'pollingLocation': pollingLocation,
-      'voterRegistrationStatus': voterRegistrationStatus,
-      'firstName': firstName,
-      'lastName': lastName,
-      'dateOfBirth': dateOfBirth,
-      'zipCode': zipCode,
-      'profileImageURL': profileImageURL,
-      'gender': gender,
-      'racialIdentity': racialIdentity,
-      'politicalAffiliation': politicalAffiliation,
-      'surveyCompletion': surveyCompletion,
-      'polls': polls,
-      'loginStreak': loginStreak,
-      'loginStreakRecord': loginStreakRecord,
-      'lastLogin': lastLogin
+      "userId": id,
+      "phoneNumber": phoneNumber,
+      "registrationState": registrationState,
+      "addressLine1": addressLine1,
+      "pollingLocation": pollingLocation,
+      "voterRegistrationStatus": voterRegistrationStatus,
+      "firstName": firstName,
+      "lastName": lastName,
+      "dateOfBirth": dateOfBirth,
+      "zipCode": zipCode,
+      "profileImageURL": profileImageURL,
+      "gender": gender,
+      "racialIdentity": racialIdentity,
+      "politicalAffiliation": politicalAffiliation,
+      "surveyCompletion": surveyCompletion,
+      "polls": polls,
+      "loginStreak": loginStreak,
+      "loginStreakRecord": loginStreakRecord,
+      "lastLogin": lastLogin,
+      "liveInRegisteredState": liveInRegisteredState,
+      "partyVoting": partyVoting,
+      "city": city,
+      "email": email,
     };
   }
 }

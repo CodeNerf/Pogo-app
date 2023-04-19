@@ -1,45 +1,23 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pogo/SignInSignUpPage.dart';
 import 'package:pogo/amplifyFunctions.dart';
-import '../HomeLoadingPage.dart';
-import '../dynamoModels/Demographics/UserDemographics.dart';
-import '../awsFunctions.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
-import 'VoterInfo.dart';
+import 'GuestLoadingPage.dart';
+import '../awsFunctions.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-class Issues extends StatefulWidget {
-  final UserIssueFactorValues ratings;
-  final UserDemographics answers;
-  final int issuesIndex;
-  late final Widget nextPage = HomeLoadingPage(
-    user: answers,
-  );
-  late final Widget lastPage = VoterInfo(
-    ratings: ratings,
-    answers: answers,
-    issuesIndex: issuesIndex,
-  );
-  Issues(
-      {Key? key,
-      required this.ratings,
-      required this.answers,
-      required this.issuesIndex})
-      : super(key: key);
+class GuestIssues extends StatefulWidget {
+  const GuestIssues({Key? key}) : super(key: key);
 
   @override
-  State<Issues> createState() => _IssuesState();
+  State<GuestIssues> createState() => _GuestIssuesState();
 }
 
-class _IssuesState extends State<Issues> {
-  //TODO: fix text align/size in card
-
-  FixedExtentScrollController _extentScrollController =
-      FixedExtentScrollController();
-
+class _GuestIssuesState extends State<GuestIssues> {
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
-  late int _issueIndex;
+  int _issueIndex = 0;
   final List<String> _issuesLogo = [
     'assets/gunPolicyPogo.jpeg',
     'assets/climatePogo.jpg',
@@ -65,23 +43,21 @@ class _IssuesState extends State<Issues> {
     'REPRODUCTIVE RIGHTS'
   ];
   int _nextButtonColor = 0xFF808080;
-  final int _backgroundColor = 0xFFE1E1E1;
   double _alignRating = 0;
   double _valueRating = 0;
   late bool _backVisibility;
   late bool _forwardVisibility;
-  final Color _ratingBarColor = Colors.black;
   final List<String> _leftAlignText = [
     'Gun Control',
     'Acceptance',
-    'Public',
+    'Public Education',
     'Legalization',
     'Government Funded',
     'Affordable Housing',
     'Market Regulation',
     'Inclusive',
     'Divestment & Reallocation',
-    'Abortion & Contraceptive Rights'
+    'Pro-Choice'
   ];
   final List<String> _rightAlignText = [
     'Gun Rights',
@@ -93,7 +69,7 @@ class _IssuesState extends State<Issues> {
     'Market Deregulation',
     'Exclusive',
     'Investment',
-    'Abortion & Contraceptive Restrictions'
+    'Abortion & Contraceptive Criminalization'
   ];
   final List<String> _issuesGeneralDefinitions = [
     'Gun policy refers to the laws and protections in place around firearms. Concerning the possession, transfer, or sale of firearms or the expansion of background checks for firearm purchases.',
@@ -131,28 +107,13 @@ class _IssuesState extends State<Issues> {
     'People in favor of Investment advocate for more funding for training, weaponry, and local policing infrastructure.',
     'People in favor of abortion and contraceptive criminalization believe that people shouldn’t get abortions or use contraceptives no matter what. They believe that a baby is alive at the moment of conception. Abortions/abortion relation surgeries and contraceptives should be criminalized.',
   ];
+  UserIssueFactorValues ratings = UserIssueFactorValues(userId: '');
+
   @override
   void initState() {
     super.initState();
-    _issueIndex = widget.issuesIndex;
-    _alignRating = widget.ratings.gunPolicyScore.toDouble();
-    _valueRating = widget.ratings.gunPolicyWeight.toDouble();
-    //check if any values are 0 (0 means user never completed survey yet) if not make button yellow
-    List<num> scores = [
-      widget.ratings.gunPolicyScore,
-      widget.ratings.policingScore,
-      widget.ratings.reproductiveScore,
-      widget.ratings.climateScore,
-      widget.ratings.educationScore,
-      widget.ratings.drugPolicyScore,
-      widget.ratings.immigrationScore,
-      widget.ratings.economyScore,
-      widget.ratings.healthcareScore,
-      widget.ratings.housingScore
-    ];
-    if (!scores.contains(0)) {
-      _nextButtonColor = 0xFFF3D433;
-    }
+    _alignRating = ratings.gunPolicyScore.toDouble();
+    _valueRating = ratings.gunPolicyWeight.toDouble();
     if (_issueIndex > 0 && _issueIndex < 9) {
       _backVisibility = true;
       _forwardVisibility = true;
@@ -168,44 +129,44 @@ class _IssuesState extends State<Issues> {
   void _setRatings() {
     switch (_issueIndex) {
       case 0:
-        _alignRating = widget.ratings.gunPolicyScore.toDouble();
-        _valueRating = widget.ratings.gunPolicyWeight.toDouble();
+        _alignRating = ratings.gunPolicyScore.toDouble();
+        _valueRating = ratings.gunPolicyWeight.toDouble();
         break;
       case 1:
-        _alignRating = widget.ratings.climateScore.toDouble();
-        _valueRating = widget.ratings.climateWeight.toDouble();
+        _alignRating = ratings.climateScore.toDouble();
+        _valueRating = ratings.climateWeight.toDouble();
         break;
       case 2:
-        _alignRating = widget.ratings.educationScore.toDouble();
-        _valueRating = widget.ratings.educationWeight.toDouble();
+        _alignRating = ratings.educationScore.toDouble();
+        _valueRating = ratings.educationWeight.toDouble();
         break;
       case 3:
-        _alignRating = widget.ratings.drugPolicyScore.toDouble();
-        _valueRating = widget.ratings.drugPolicyWeight.toDouble();
+        _alignRating = ratings.drugPolicyScore.toDouble();
+        _valueRating = ratings.drugPolicyWeight.toDouble();
         break;
       case 4:
-        _alignRating = widget.ratings.healthcareScore.toDouble();
-        _valueRating = widget.ratings.healthcareWeight.toDouble();
+        _alignRating = ratings.healthcareScore.toDouble();
+        _valueRating = ratings.healthcareWeight.toDouble();
         break;
       case 5:
-        _alignRating = widget.ratings.housingScore.toDouble();
-        _valueRating = widget.ratings.housingWeight.toDouble();
+        _alignRating = ratings.housingScore.toDouble();
+        _valueRating = ratings.housingWeight.toDouble();
         break;
       case 6:
-        _alignRating = widget.ratings.economyScore.toDouble();
-        _valueRating = widget.ratings.economyWeight.toDouble();
+        _alignRating = ratings.economyScore.toDouble();
+        _valueRating = ratings.economyWeight.toDouble();
         break;
       case 7:
-        _alignRating = widget.ratings.immigrationScore.toDouble();
-        _valueRating = widget.ratings.immigrationWeight.toDouble();
+        _alignRating = ratings.immigrationScore.toDouble();
+        _valueRating = ratings.immigrationWeight.toDouble();
         break;
       case 8:
-        _alignRating = widget.ratings.policingScore.toDouble();
-        _valueRating = widget.ratings.policingWeight.toDouble();
+        _alignRating = ratings.policingScore.toDouble();
+        _valueRating = ratings.policingWeight.toDouble();
         break;
       case 9:
-        _alignRating = widget.ratings.reproductiveScore.toDouble();
-        _valueRating = widget.ratings.reproductiveWeight.toDouble();
+        _alignRating = ratings.reproductiveScore.toDouble();
+        _valueRating = ratings.reproductiveWeight.toDouble();
         break;
     }
   }
@@ -213,34 +174,34 @@ class _IssuesState extends State<Issues> {
   void _updateAlignRating(double rating) {
     switch (_issueIndex) {
       case 0:
-        widget.ratings.gunPolicyScore = rating;
+        ratings.gunPolicyScore = rating;
         break;
       case 1:
-        widget.ratings.climateScore = rating;
+        ratings.climateScore = rating;
         break;
       case 2:
-        widget.ratings.educationScore = rating;
+        ratings.educationScore = rating;
         break;
       case 3:
-        widget.ratings.drugPolicyScore = rating;
+        ratings.drugPolicyScore = rating;
         break;
       case 4:
-        widget.ratings.healthcareScore = rating;
+        ratings.healthcareScore = rating;
         break;
       case 5:
-        widget.ratings.housingScore = rating;
+        ratings.housingScore = rating;
         break;
       case 6:
-        widget.ratings.economyScore = rating;
+        ratings.economyScore = rating;
         break;
       case 7:
-        widget.ratings.immigrationScore = rating;
+        ratings.immigrationScore = rating;
         break;
       case 8:
-        widget.ratings.policingScore = rating;
+        ratings.policingScore = rating;
         break;
       case 9:
-        widget.ratings.reproductiveScore = rating;
+        ratings.reproductiveScore = rating;
         break;
     }
     _alignRating = rating;
@@ -250,34 +211,34 @@ class _IssuesState extends State<Issues> {
   void _updateValueRating(double rating) {
     switch (_issueIndex) {
       case 0:
-        widget.ratings.gunPolicyWeight = rating;
+        ratings.gunPolicyWeight = rating;
         break;
       case 1:
-        widget.ratings.climateWeight = rating;
+        ratings.climateWeight = rating;
         break;
       case 2:
-        widget.ratings.educationWeight = rating;
+        ratings.educationWeight = rating;
         break;
       case 3:
-        widget.ratings.drugPolicyWeight = rating;
+        ratings.drugPolicyWeight = rating;
         break;
       case 4:
-        widget.ratings.healthcareWeight = rating;
+        ratings.healthcareWeight = rating;
         break;
       case 5:
-        widget.ratings.housingWeight = rating;
+        ratings.housingWeight = rating;
         break;
       case 6:
-        widget.ratings.economyWeight = rating;
+        ratings.economyWeight = rating;
         break;
       case 7:
-        widget.ratings.immigrationWeight = rating;
+        ratings.immigrationWeight = rating;
         break;
       case 8:
-        widget.ratings.policingWeight = rating;
+        ratings.policingWeight = rating;
         break;
       case 9:
-        widget.ratings.reproductiveWeight = rating;
+        ratings.reproductiveWeight = rating;
         break;
     }
     _valueRating = rating;
@@ -285,7 +246,7 @@ class _IssuesState extends State<Issues> {
   }
 
   void _updateButton() {
-    if (widget.ratings.reproductiveScore != 0 || _issueIndex == 9) {
+    if (ratings.reproductiveScore != 0 || _issueIndex == 9) {
       _nextButtonColor = 0xFFF3D433;
     }
     if (_issueIndex > 0 && _issueIndex < 9) {
@@ -321,29 +282,17 @@ class _IssuesState extends State<Issues> {
       }
     }
     if (_issueIndex == 9) {
-      widget.ratings.reproductiveScore = 1;
-      widget.ratings.reproductiveWeight = 1;
+      ratings.reproductiveScore = 1;
+      ratings.reproductiveWeight = 1;
     }
   }
 
   void _endSurvey(context) async {
-    if (widget.ratings.reproductiveScore != 0) {
-      widget.answers.surveyCompletion = true;
-      try {
-        await Future.wait([
-          putUserDemographics(widget.answers),
-          putUserIssueFactorValues(widget.ratings),
-          matchCandidatesToUser(widget.answers.id)
-        ]).then((List<dynamic> values) {
-          safePrint("UserDemographics and UserIssueFactorValues updated");
-        });
-      } catch (e) {
-        safePrint("Issues.dart: $e");
-      }
+    if (ratings.reproductiveScore != 0) {
       await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeLoadingPage(user: widget.answers),
+          builder: (context) => GuestLoadingPage(ratings: ratings),
         ),
       );
     }
@@ -353,10 +302,8 @@ class _IssuesState extends State<Issues> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => VoterInfo(
-          ratings: widget.ratings,
-          answers: widget.answers,
-          issuesIndex: _issueIndex,
+        builder: (context) => const SignInSignUpPage(
+          index: 0,
         ),
       ),
     );
@@ -472,9 +419,11 @@ class _IssuesState extends State<Issues> {
                                 //image
                                 Container(
                                   clipBehavior: Clip.hardEdge,
-                                  height:
-                                  MediaQuery.of(context).size.height * 0.60 / 3,
-                                  width: MediaQuery.of(context).size.width * 0.65,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.60 /
+                                      3,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.65,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     boxShadow: [
@@ -510,95 +459,165 @@ class _IssuesState extends State<Issues> {
                                             ),
                                           ),
                                           isScrollControlled: true,
-                                          backgroundColor: const Color(0xFFD9D9D9),
+                                          backgroundColor:
+                                              const Color(0xFFD9D9D9),
                                           builder: (BuildContext context) {
                                             return SizedBox(
-                                              width: MediaQuery.of(context).size.width,
-                                              height: MediaQuery.of(context).size.height * 0.9,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.9,
                                               child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   //white bar to indicate pulling up/down
                                                   Padding(
-                                                    padding: const EdgeInsets.only(top: 13.0),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 13.0),
                                                     child: Container(
                                                       height: 7,
                                                       width: 80,
                                                       decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(20),
-                                                        color: const Color(0xFFFFFFFF),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        color: const Color(
+                                                            0xFFFFFFFF),
                                                       ),
                                                     ),
                                                   ),
                                                   //issue name
                                                   Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 10, 0, 0),
                                                     child: Text(
                                                       _issuesText[_issueIndex],
                                                       style: const TextStyle(
                                                         fontFamily: 'Inter',
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Color(0xFF0E0E0E),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color:
+                                                            Color(0xFF0E0E0E),
                                                         fontSize: 30,
                                                       ),
                                                     ),
                                                   ),
                                                   Expanded(
-                                                    child: SingleChildScrollView(
-                                                      physics: const BouncingScrollPhysics(),
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      physics:
+                                                          const BouncingScrollPhysics(),
                                                       child: Column(
                                                         children: [
                                                           //issue pic
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    10,
+                                                                    0,
+                                                                    0),
                                                             child: Container(
-                                                              clipBehavior: Clip.hardEdge,
-                                                              height:
-                                                              MediaQuery.of(context).size.height * 0.60 / 2.5,
-                                                              width: MediaQuery.of(context).size.width * 0.65,
-                                                              decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.circular(20),
+                                                              clipBehavior:
+                                                                  Clip.hardEdge,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.60 /
+                                                                  2.5,
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.65,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
                                                                 boxShadow: [
                                                                   BoxShadow(
-                                                                    color: Colors.grey.shade600,
-                                                                    spreadRadius: 3,
-                                                                    blurRadius: 7,
-                                                                    offset: const Offset(3, 3),
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade600,
+                                                                    spreadRadius:
+                                                                        3,
+                                                                    blurRadius:
+                                                                        7,
+                                                                    offset:
+                                                                        const Offset(
+                                                                            3,
+                                                                            3),
                                                                   ),
                                                                 ],
                                                               ),
                                                               child: Image(
-                                                                image: AssetImage(
-                                                                  _issuesLogo[_issueIndex],
+                                                                image:
+                                                                    AssetImage(
+                                                                  _issuesLogo[
+                                                                      _issueIndex],
                                                                 ),
-                                                                fit: BoxFit.fill,
+                                                                fit:
+                                                                    BoxFit.fill,
                                                               ),
                                                             ),
                                                           ),
                                                           //issue definition
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    20,
+                                                                    10,
+                                                                    20,
+                                                                    0),
                                                             child: Text(
-                                                              _issuesGeneralDefinitions[_issueIndex],
-                                                              style: const TextStyle(
-                                                                fontFamily: 'Inter',
-                                                                fontWeight: FontWeight.w500,
-                                                                color: Color(0xFF121212),
+                                                              _issuesGeneralDefinitions[
+                                                                  _issueIndex],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color(
+                                                                    0xFF121212),
                                                                 fontSize: 15,
                                                               ),
                                                             ),
                                                           ),
                                                           //left align text
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(25, 10, 20, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    25,
+                                                                    10,
+                                                                    20,
+                                                                    0),
                                                             child: Align(
-                                                              alignment: Alignment.centerLeft,
+                                                              alignment: Alignment
+                                                                  .centerLeft,
                                                               child: Text(
                                                                 '• ${_leftAlignText[_issueIndex]}',
-                                                                style: const TextStyle(
-                                                                  fontFamily: 'Inter',
-                                                                  fontWeight: FontWeight.w500,
-                                                                  color: Color(0xFF121212),
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Color(
+                                                                      0xFF121212),
                                                                   fontSize: 15,
                                                                 ),
                                                               ),
@@ -606,28 +625,51 @@ class _IssuesState extends State<Issues> {
                                                           ),
                                                           //left definition
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(35, 10, 35, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    35,
+                                                                    10,
+                                                                    35,
+                                                                    0),
                                                             child: Text(
                                                               '▪ ${_issuesLeftDefinitions[_issueIndex]}',
-                                                              style: const TextStyle(
-                                                                fontFamily: 'Inter',
-                                                                fontWeight: FontWeight.w500,
-                                                                color: Color(0xFF121212),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color(
+                                                                    0xFF121212),
                                                                 fontSize: 15,
                                                               ),
                                                             ),
                                                           ),
                                                           //right align text
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(25, 10, 20, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    25,
+                                                                    10,
+                                                                    20,
+                                                                    0),
                                                             child: Align(
-                                                              alignment: Alignment.centerLeft,
+                                                              alignment: Alignment
+                                                                  .centerLeft,
                                                               child: Text(
                                                                 '• ${_rightAlignText[_issueIndex]}',
-                                                                style: const TextStyle(
-                                                                  fontFamily: 'Inter',
-                                                                  fontWeight: FontWeight.w500,
-                                                                  color: Color(0xFF121212),
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Color(
+                                                                      0xFF121212),
                                                                   fontSize: 15,
                                                                 ),
                                                               ),
@@ -635,13 +677,24 @@ class _IssuesState extends State<Issues> {
                                                           ),
                                                           //right definition
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(35, 10, 35, 20),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    35,
+                                                                    10,
+                                                                    35,
+                                                                    20),
                                                             child: Text(
                                                               '▪ ${_issuesRightDefinitions[_issueIndex]}',
-                                                              style: const TextStyle(
-                                                                fontFamily: 'Inter',
-                                                                fontWeight: FontWeight.w500,
-                                                                color: Color(0xFF121212),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color(
+                                                                    0xFF121212),
                                                                 fontSize: 15,
                                                               ),
                                                             ),
@@ -653,8 +706,7 @@ class _IssuesState extends State<Issues> {
                                                 ],
                                               ),
                                             );
-                                          }
-                                      );
+                                          });
                                     },
                                   ),
                                 ),
