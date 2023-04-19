@@ -403,8 +403,8 @@ class _PodiumState extends State<Podium> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                             child: SizedBox(
-                              height: 25,
-                              width: 25,
+                              height: 22,
+                              width: 22,
                               child: FittedBox(
                                 fit: BoxFit.contain,
                                 child: Image(
