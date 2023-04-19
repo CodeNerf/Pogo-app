@@ -689,7 +689,7 @@ class _BallotPageState extends State<BallotPage> {
             },
           );
         },
-        onDoubleTap: () {
+        onTap: () {
           widget.loadCandidateProfile(candidate.candidateName);
         },
         child: CircularProfileAvatar(
