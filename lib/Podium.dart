@@ -112,31 +112,6 @@ class _PodiumState extends State<Podium> {
     return const Color(0xFFF9F9F9);
   }
 
-  void _updateStack(int check) async {
-    if (check == 0) {
-      setState(() {
-        _state = _empty;
-        _federal = _empty;
-        _local = _full;
-      });
-      //pull local candidate stack
-    } else if (check == 1) {
-      setState(() {
-        _local = _empty;
-        _federal = _empty;
-        _state = _full;
-      });
-      //pull state candidate stack
-    } else {
-      setState(() {
-        _local = _empty;
-        _state = _empty;
-        _federal = _full;
-      });
-      //pull federal candidate stack
-    }
-  }
-
   List<Widget> _initialCards() {
     List<Widget> initial = [];
     if (_stackLength == 1) {
