@@ -26,7 +26,43 @@ class _SignUpState extends State<SignUp> {
     r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
   );
 
+  Map<String, dynamic> hasRequiredCharacters(String input) {
+    bool hasUppercase = false;
+    bool hasLowercase = false;
+    bool hasNumber = false;
+    bool hasSpecialChar = false;
+    String errorString =
+        'Password must contain at least: 1 uppercase, 1 lowercase, 1 number, 1 special character';
+
+    final uppercasePattern = RegExp(r'[A-Z]');
+    final lowercasePattern = RegExp(r'[a-z]');
+    final numberPattern = RegExp(r'[0-9]');
+    final specialCharPattern = RegExp(r'[!@#\$%^&*(),.?":{}|<>]');
+
+    for (int i = 0; i < input.length; i++) {
+      if (uppercasePattern.hasMatch(input[i])) {
+        hasUppercase = true;
+      } else if (lowercasePattern.hasMatch(input[i])) {
+        hasLowercase = true;
+      } else if (numberPattern.hasMatch(input[i])) {
+        hasNumber = true;
+      } else if (specialCharPattern.hasMatch(input[i])) {
+        hasSpecialChar = true;
+      }
+    }
+
+    bool result = hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
+
+    if (result) {
+      errorString = '';
+    }
+
+    return {'result': result, 'message': errorString};
+  }
+
   Future _signUp(context) async {
+    Map<String, dynamic> hasPasswordRequirements =
+        hasRequiredCharacters(_passwordController.text);
     if (_fnameController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter your name.';
@@ -42,6 +78,11 @@ class _SignUpState extends State<SignUp> {
     } else if (_passwordController.text.isEmpty) {
       setState(() {
         _errorText = 'Must enter a password.';
+      });
+      //Checks if password has uppercase lowercase and special character
+    } else if (!hasPasswordRequirements['result']) {
+      setState(() {
+        _errorText = hasPasswordRequirements['message'];
       });
     } else if (await signUpUser(_emailController.text, _passwordController.text,
         _fnameController.text)) {
