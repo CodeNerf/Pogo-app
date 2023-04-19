@@ -1,4 +1,5 @@
 import 'package:amplify_core/amplify_core.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
@@ -575,6 +576,7 @@ class _BallotPageState extends State<BallotPage> {
       List<String> candidatePics,
       Function(int) updateCircleCount,
       int rowIndex) {
+    List<String> titleSplit = title.split(' ');
     return Container(
       height: 140, // set a fixed height
       margin: EdgeInsets.only(bottom: 10.0, top: 10, left: 30),
@@ -606,15 +608,20 @@ class _BallotPageState extends State<BallotPage> {
                       children: [
                         SizedBox(
                           height: 100, // set a fixed height for the text widget
-                          child: Center(
-                            child: Text(
-                              title.replaceAll(" ", "\n"),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              for(int i = 0; i < titleSplit.length; i++)
+                                AutoSizeText(
+                                  titleSplit[i],
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                       ],
