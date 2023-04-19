@@ -335,6 +335,8 @@ class _BallotPageState extends State<BallotPage> {
           _buildExpandableButton(
             onPressed: () {
               setState(() {
+                _expandedOther = false;
+                _expandedGlobal = false;
                 _expandedLocal = !_expandedLocal;
               });
             },
@@ -448,6 +450,8 @@ class _BallotPageState extends State<BallotPage> {
           _buildExpandableButton(
             onPressed: () {
               setState(() {
+                _expandedLocal = false;
+                _expandedOther = false;
                 _expandedGlobal = !_expandedGlobal;
               });
             },
@@ -534,6 +538,8 @@ class _BallotPageState extends State<BallotPage> {
           _buildExpandableButton(
             onPressed: () {
               setState(() {
+                _expandedLocal = false;
+                _expandedGlobal = false;
                 _expandedOther = !_expandedOther;
               });
             },
