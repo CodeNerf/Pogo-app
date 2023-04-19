@@ -377,6 +377,7 @@ class _PodiumState extends State<Podium> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
+            /*
             //local, state, federal bar
             Expanded(
               flex: 1,
@@ -453,6 +454,8 @@ class _PodiumState extends State<Podium> {
                 ],
               ),
             ),
+
+             */
             Expanded(
               flex: 13,
               //podium background
