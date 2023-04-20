@@ -137,14 +137,14 @@ class _HomeState extends State<Home> {
         }
       }
       setState(() {
-        _widgetOptions[1] = Podium(
-          candidateStackStatistics: _candidateStackStatistics,
-          candidateStack: _candidateStack,
+        _widgetOptions[2] = BallotPage(
           userBallot: _userBallot,
-          updateBallot: _updateBallot,
-          candidateStackFactors: _candidateStackFactors,
+          candidateStack: _candidateStack,
+          ballotStack: _ballotStack,
+          removeFromBallot: _removeFromBallot,
+          loadCustomCandidatesInPodium: _filterPodiumCandidates,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfileFromPodium,
+          loadCandidateProfile: _loadCandidateProfileFromBallot,
           filter: true,
         );
         _selectedIndex = 1;
@@ -159,18 +159,18 @@ class _HomeState extends State<Home> {
       _candidateStack.add(_filteredCandidateStack[0]);
       _filteredCandidateStack.remove(_filteredCandidateStack[0]);
     }
-    _widgetOptions[1] = Podium(
-      candidateStack: _candidateStack,
-      candidateStackStatistics: _candidateStackStatistics,
-      userBallot: _userBallot,
-      updateBallot: _updateBallot,
-      candidateStackFactors: _candidateStackFactors,
-      unFilterPodiumCandidates: _unFilterPodiumCandidates,
-      loadCandidateProfile: _loadCandidateProfileFromPodium,
-      filter: false,
-    );
     setState(() {
-
+      _widgetOptions[2] = BallotPage(
+        userBallot: _userBallot,
+        candidateStack: _candidateStack,
+        ballotStack: _ballotStack,
+        removeFromBallot: _removeFromBallot,
+        loadCustomCandidatesInPodium: _filterPodiumCandidates,
+        unFilterPodiumCandidates: _unFilterPodiumCandidates,
+        loadCandidateProfile: _loadCandidateProfileFromBallot,
+        filter: false,
+      );
+      _selectedIndex = 1;
     });
   }
 
@@ -201,9 +201,7 @@ class _HomeState extends State<Home> {
           userBallot: _userBallot,
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
-          unFilterPodiumCandidates: _unFilterPodiumCandidates,
           loadCandidateProfile: _loadCandidateProfileFromPodium,
-          filter: _filtering,
         ),
         BallotPage(
           userBallot: _userBallot,
@@ -211,7 +209,9 @@ class _HomeState extends State<Home> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
+          unFilterPodiumCandidates: _unFilterPodiumCandidates,
           loadCandidateProfile: _loadCandidateProfileFromBallot,
+          filter: _filtering,
         ),
         UserProfile(
           currentUserFactors: _currentUserFactors,
@@ -228,193 +228,195 @@ class _HomeState extends State<Home> {
       onWillPop: () async {
         return false;
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: const Color(0xFFF1F4F8),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-            size: 40,
-          ),
-          title: Container(
-            padding: const EdgeInsets.only(left: 50),
-            alignment: Alignment.center,
-            child: Image(
-              image: AssetImage(_pogoLogo),
-              width: 150,
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: const Color(0xFFF1F4F8),
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            iconTheme: const IconThemeData(
+              color: Colors.black,
+              size: 40,
+            ),
+            title: Container(
+              padding: const EdgeInsets.only(left: 50),
+              alignment: Alignment.center,
+              child: Image(
+                image: AssetImage(_pogoLogo),
+                width: 150,
+              ),
             ),
           ),
-        ),
-        endDrawer: Drawer(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-            children: <Widget>[
-              SizedBox(
-                height: 100,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.only(right: 300),
-                  leading: const Icon(
-                    Icons.clear,
-                    size: 32,
-                    color: Colors.black,
+          endDrawer: Drawer(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+              children: <Widget>[
+                SizedBox(
+                  height: 100,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.only(right: 300),
+                    leading: const Icon(
+                      Icons.clear,
+                      size: 32,
+                      color: Colors.black,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
                 ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () =>
+                          HamburgerMenuFunctions.registerToVote(stateInitial),
+                      child: const Text(
+                        'Register to Vote',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          height: 1.24,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const Divider(
+                      color: Color(0xFFDBE2E7),
+                      thickness: 2,
+                    ),
+                    const SizedBox(height: 50),
+                    InkWell(
+                      onTap: () => HamburgerMenuFunctions.requestAbsenteeBallot(
+                          stateInitial),
+                      child: const Text(
+                        'Request an Absentee Ballot',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          height: 1.24,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const Divider(
+                      color: Color(0xFFDBE2E7),
+                      thickness: 2,
+                    ),
+                    const SizedBox(height: 50),
+                    InkWell(
+                      onTap: () =>
+                          HamburgerMenuFunctions.voteByMail(stateInitial),
+                      child: const Text(
+                        'Vote by mail',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          height: 1.24,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const Divider(
+                      color: Color(0xFFDBE2E7),
+                      thickness: 2,
+                    ),
+                    const SizedBox(height: 50),
+                    InkWell(
+                      onTap: () =>
+                          HamburgerMenuFunctions.updateRegistration(stateInitial),
+                      child: const Text(
+                        'Update registration',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          height: 1.24,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const Divider(
+                      color: Color(0xFFDBE2E7),
+                      thickness: 2,
+                    ),
+                    const SizedBox(height: 50),
+                    const Text(
+                      'Data & Privacy policy',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        height: 1.24,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const Divider(
+                      color: Color(0xFFDBE2E7),
+                      thickness: 2,
+                    ),
+                    const SizedBox(height: 50),
+                    const Text(
+                      'Accessible voting',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        height: 1.24,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                // Add other menu items here
+              ],
+            ),
+          ),
+          body: _widgetOptions.elementAt(_selectedIndex),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            elevation: 0,
+            showUnselectedLabels: true,
+            showSelectedLabels: true,
+            backgroundColor: Colors.transparent,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: Colors.grey[650],
+            unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            type: BottomNavigationBarType.fixed,
+            items: const [
+              BottomNavigationBarItem(
+                icon: ImageIcon(
+                  AssetImage('assets/briefcase.png'),
+                ),
+                label: 'Voter Guide',
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () =>
-                        HamburgerMenuFunctions.registerToVote(stateInitial),
-                    child: const Text(
-                      'Register to Vote',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                        height: 1.24,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    color: Color(0xFFDBE2E7),
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 50),
-                  InkWell(
-                    onTap: () => HamburgerMenuFunctions.requestAbsenteeBallot(
-                        stateInitial),
-                    child: const Text(
-                      'Request an Absentee Ballot',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                        height: 1.24,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    color: Color(0xFFDBE2E7),
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 50),
-                  InkWell(
-                    onTap: () =>
-                        HamburgerMenuFunctions.voteByMail(stateInitial),
-                    child: const Text(
-                      'Vote by mail',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                        height: 1.24,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    color: Color(0xFFDBE2E7),
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 50),
-                  InkWell(
-                    onTap: () =>
-                        HamburgerMenuFunctions.updateRegistration(stateInitial),
-                    child: const Text(
-                      'Update registration',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                        height: 1.24,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    color: Color(0xFFDBE2E7),
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 50),
-                  const Text(
-                    'Data & Privacy policy',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                      height: 1.24,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const Divider(
-                    color: Color(0xFFDBE2E7),
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 50),
-                  const Text(
-                    'Accessible voting',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                      height: 1.24,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
+              BottomNavigationBarItem(
+                icon: ImageIcon(
+                  AssetImage('assets/speech.png'),
+                ),
+                label: 'Podium',
               ),
-              // Add other menu items here
+              BottomNavigationBarItem(
+                icon: ImageIcon(
+                  AssetImage('assets/vote.png'),
+                ),
+                label: 'Ballot',
+              ),
+              BottomNavigationBarItem(
+                icon: ImageIcon(
+                  AssetImage('assets/user.png'),
+                ),
+                label: 'Profile',
+              ),
             ],
           ),
-        ),
-        body: _widgetOptions.elementAt(_selectedIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          elevation: 0,
-          showUnselectedLabels: true,
-          showSelectedLabels: true,
-          backgroundColor: Colors.transparent,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey[650],
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-              icon: ImageIcon(
-                AssetImage('assets/briefcase.png'),
-              ),
-              label: 'Voter Guide',
-            ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(
-                AssetImage('assets/speech.png'),
-              ),
-              label: 'Podium',
-            ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(
-                AssetImage('assets/vote.png'),
-              ),
-              label: 'Ballot',
-            ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(
-                AssetImage('assets/user.png'),
-              ),
-              label: 'Profile',
-            ),
-          ],
         ),
       ),
     );

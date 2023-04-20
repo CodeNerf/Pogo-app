@@ -20,9 +20,7 @@ class Podium extends StatefulWidget {
       updateBallot;
   final Ballot userBallot;
   final List<CandidateIssueFactorValues> candidateStackFactors;
-  final Function() unFilterPodiumCandidates;
   final Function(String) loadCandidateProfile;
-  final bool filter;
   final List<MatchingStatistics> candidateStackStatistics;
   const Podium(
       {Key? key,
@@ -31,9 +29,7 @@ class Podium extends StatefulWidget {
       required this.candidateStackStatistics,
       required this.userBallot,
       required this.updateBallot,
-      required this.unFilterPodiumCandidates,
-      required this.loadCandidateProfile,
-      required this.filter})
+      required this.loadCandidateProfile})
       : super(key: key);
 
   @override
@@ -67,7 +63,6 @@ class _PodiumState extends State<Podium> {
   static List<String> _candidateList = [];
 
   //filtering
-  late bool _filtering;
 
   @override
   void initState() {
@@ -77,7 +72,6 @@ class _PodiumState extends State<Podium> {
       _stackStatistics = widget.candidateStackStatistics;
       _stackLength = _stack.length;
       _candidateList = [];
-      _filtering = widget.filter;
     });
     _initializeSearchResults();
     super.initState();
@@ -366,310 +360,252 @@ class _PodiumState extends State<Podium> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return true;
-      },
-      child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              flex: 13,
-              //podium background
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF9F9F9),
-                  image: DecorationImage(
-                    image: AssetImage('assets/podiumPageBackgroundImage.png'),
-                    fit: BoxFit.fitWidth,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          flex: 13,
+          //podium background
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFFF9F9F9),
+              image: DecorationImage(
+                image: AssetImage('assets/podiumPageBackgroundImage.png'),
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                        child: SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage('assets/podium x.png'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+                        child: SizedBox(
+                          height: 25,
+                          width: 25,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage('assets/podium plus.png'),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Stack(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Align(
-                      alignment: Alignment.center,
+                    //search bar
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFD9D9D9),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: TypeAheadField(
+                            textFieldConfiguration: TextFieldConfiguration(
+                              controller: _searchController,
+                              decoration: const InputDecoration(
+                                labelText: 'Search',
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                            suggestionsCallback: (query) async {
+                              return _candidateSearchOptions(query);
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(
+                                title: Text(suggestion),
+                              );
+                            },
+                            noItemsFoundBuilder: (context) => const Text(
+                              'No Candidates Found',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            transitionBuilder:
+                                (context, suggestionsBox, controller) {
+                              return suggestionsBox;
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              _goToCandidateProfile(suggestion);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    //candidate cards
+                    SwipeableCardsSection(
+                      cardController: _cardController,
+                      context: context,
+                      items: _initialCards(),
+                      onCardSwiped: (dir, index, widget) {
+                        if (_stackLength > 3 && _stack.isNotEmpty) {
+                          //if the three buffer cards are not yet reached
+                          if (_count < _stackLength) {
+                            _cardController.addItem(_newCard(
+                                _stack[_count], _stackStatistics[_count]));
+                          }
+                          if (dir == Direction.right) {
+                            _addCandidate(_stack[_stackIterator]);
+                            _stackLength--;
+                          }
+                          else {
+                            if (_count < _stackLength) {
+                              if (_count == _stackLength - 1) {
+                                _count = 0;
+                              } else {
+                                _count++;
+                              }
+                            } else {
+                              _count = 0;
+                            }
+                            if (_stackIterator >= _stackLength - 1) {
+                              _stackIterator = 0;
+                            } else {
+                              _stackIterator++;
+                            }
+                          }
+                        } else if (_stack.isNotEmpty && _stackLength == 3) {
+                          //edge of buffer
+                          int temp = _stackIterator;
+                          if (dir == Direction.right) {
+                            _stackLength = 2;
+                            _addCandidate(_stack[temp]);
+                          } else {
+                            if (_count == 2) {
+                              _count = 0;
+                              if (_stackIterator == 2) {
+                                _stackIterator = 0;
+                                _cardController.addItem(_newCard(
+                                    _stack[2], _stackStatistics[2]));
+                              } else {
+                                _stackIterator = 2;
+                                _cardController.addItem(_newCard(
+                                    _stack[0], _stackStatistics[0]));
+                              }
+                            } else if (_count == 1) {
+                              _count = 2;
+                              if (_stackIterator == 1) {
+                                _stackIterator = 2;
+                                _cardController.addItem(_newCard(
+                                    _stack[1], _stackStatistics[1]));
+                              } else {
+                                _stackIterator = 1;
+                                _cardController.addItem(_newCard(
+                                    _stack[2], _stackStatistics[2]));
+                              }
+                            } else if (_count == 0) {
+                              _count = 1;
+                              if (_stackIterator == 0) {
+                                _stackIterator = 1;
+                                _cardController.addItem(_newCard(
+                                    _stack[0], _stackStatistics[0]));
+                              } else {
+                                _stackIterator = 0;
+                                _cardController.addItem(_newCard(
+                                    _stack[1], _stackStatistics[1]));
+                              }
+                            } else {
+                              _count = 1;
+                              _stackIterator = 1;
+                              _cardController.addItem(
+                                  _newCard(_stack[0], _stackStatistics[0]));
+                            }
+                          }
+                        } else if (_stack.isNotEmpty && _stackLength == 2) {
+                          if (widget != null) {
+                            if (dir == Direction.right) {
+                              _stackLength = 1;
+                              _addCandidate(_stack[_stackIterator]);
+                            } else {
+                              if (_stackIterator == 0) {
+                                _stackIterator = 1;
+                                _cardController.addItem(_newCard(
+                                    _stack[0], _stackStatistics[0]));
+                              } else {
+                                _stackIterator = 0;
+                                _cardController.addItem(_newCard(
+                                    _stack[1], _stackStatistics[1]));
+                              }
+                            }
+                          }
+                        } else if (_stack.isNotEmpty && _stackLength == 1) {
+                          if (widget != null) {
+                            if (dir == Direction.left) {
+                              _cardController.addItem(
+                                  _newCard(_stack[0], _stackStatistics[0]));
+                            } else {
+                              _stackLength = 0;
+                              _addCandidate(_stack[0]);
+                            }
+                          }
+                        }
+                      },
+                      enableSwipeUp: false,
+                      enableSwipeDown: false,
+                    ),
+                    //alert and remove filter button
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: Row(
-                        children: const [
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
                           Padding(
-                            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                            child: SizedBox(
-                              height: 22,
-                              width: 22,
-                              child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: Image(
-                                  image: AssetImage('assets/podium x.png'),
-                                ),
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
+                            child: GestureDetector(
+                              onTap: () {
+                                _showAlert(context);
+                              },
+                              child: const Icon(
+                                CupertinoIcons.question_circle,
+                                size: 25,
                               ),
                             ),
                           ),
-                          Spacer(),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
-                            child: SizedBox(
-                              height: 25,
-                              width: 25,
-                              child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: Image(
-                                  image: AssetImage('assets/podium plus.png'),
-                                ),
-                              ),
-                            ),
-                          ),
+                          const Spacer(),
+
                         ],
                       ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //search bar
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFD9D9D9),
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: TypeAheadField(
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  controller: _searchController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Search',
-                                    labelStyle: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                                suggestionsCallback: (query) async {
-                                  return _candidateSearchOptions(query);
-                                },
-                                itemBuilder: (context, suggestion) {
-                                  return ListTile(
-                                    title: Text(suggestion),
-                                  );
-                                },
-                                noItemsFoundBuilder: (context) => const Text(
-                                  'No Candidates Found',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                transitionBuilder:
-                                    (context, suggestionsBox, controller) {
-                                  return suggestionsBox;
-                                },
-                                onSuggestionSelected: (suggestion) {
-                                  _goToCandidateProfile(suggestion);
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        //candidate cards
-                        SwipeableCardsSection(
-                          cardController: _cardController,
-                          context: context,
-                          items: _initialCards(),
-                          onCardSwiped: (dir, index, widget) {
-                            if (_stackLength > 3 && _stack.isNotEmpty) {
-                              //if the three buffer cards are not yet reached
-                              if (_count < _stackLength) {
-                                _cardController.addItem(_newCard(
-                                    _stack[_count], _stackStatistics[_count]));
-                              }
-                              if (dir == Direction.right) {
-                                _addCandidate(_stack[_stackIterator]);
-                                _stackLength--;
-                              }
-                              else {
-                                if (_count < _stackLength) {
-                                  if (_count == _stackLength - 1) {
-                                    _count = 0;
-                                  } else {
-                                    _count++;
-                                  }
-                                } else {
-                                  _count = 0;
-                                }
-                                if (_stackIterator >= _stackLength - 1) {
-                                  _stackIterator = 0;
-                                } else {
-                                  _stackIterator++;
-                                }
-                              }
-                            } else if (_stack.isNotEmpty && _stackLength == 3) {
-                              //edge of buffer
-                              int temp = _stackIterator;
-                              if (dir == Direction.right) {
-                                _stackLength = 2;
-                                _addCandidate(_stack[temp]);
-                              } else {
-                                if (_count == 2) {
-                                  _count = 0;
-                                  if (_stackIterator == 2) {
-                                    _stackIterator = 0;
-                                    _cardController.addItem(_newCard(
-                                        _stack[2], _stackStatistics[2]));
-                                  } else {
-                                    _stackIterator = 2;
-                                    _cardController.addItem(_newCard(
-                                        _stack[0], _stackStatistics[0]));
-                                  }
-                                } else if (_count == 1) {
-                                  _count = 2;
-                                  if (_stackIterator == 1) {
-                                    _stackIterator = 2;
-                                    _cardController.addItem(_newCard(
-                                        _stack[1], _stackStatistics[1]));
-                                  } else {
-                                    _stackIterator = 1;
-                                    _cardController.addItem(_newCard(
-                                        _stack[2], _stackStatistics[2]));
-                                  }
-                                } else if (_count == 0) {
-                                  _count = 1;
-                                  if (_stackIterator == 0) {
-                                    _stackIterator = 1;
-                                    _cardController.addItem(_newCard(
-                                        _stack[0], _stackStatistics[0]));
-                                  } else {
-                                    _stackIterator = 0;
-                                    _cardController.addItem(_newCard(
-                                        _stack[1], _stackStatistics[1]));
-                                  }
-                                } else {
-                                  _count = 1;
-                                  _stackIterator = 1;
-                                  _cardController.addItem(
-                                      _newCard(_stack[0], _stackStatistics[0]));
-                                }
-                              }
-                            } else if (_stack.isNotEmpty && _stackLength == 2) {
-                              if (widget != null) {
-                                if (dir == Direction.right) {
-                                  _stackLength = 1;
-                                  _addCandidate(_stack[_stackIterator]);
-                                } else {
-                                  if (_stackIterator == 0) {
-                                    _stackIterator = 1;
-                                    _cardController.addItem(_newCard(
-                                        _stack[0], _stackStatistics[0]));
-                                  } else {
-                                    _stackIterator = 0;
-                                    _cardController.addItem(_newCard(
-                                        _stack[1], _stackStatistics[1]));
-                                  }
-                                }
-                              }
-                            } else if (_stack.isNotEmpty && _stackLength == 1) {
-                              if (widget != null) {
-                                if (dir == Direction.left) {
-                                  _cardController.addItem(
-                                      _newCard(_stack[0], _stackStatistics[0]));
-                                } else {
-                                  _stackLength = 0;
-                                  _addCandidate(_stack[0]);
-                                }
-                              }
-                            }
-                          },
-                          enableSwipeUp: false,
-                          enableSwipeDown: false,
-                        ),
-                        //alert and remove filter button
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(15, 0, 0, 5),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _showAlert(context);
-                                  },
-                                  child: const Icon(
-                                    CupertinoIcons.question_circle,
-                                    size: 25,
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              Visibility(
-                                visible: _filtering,
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 15, 5),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width / 3,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFF3D433),
-                                      borderRadius: BorderRadius.circular(25),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade600,
-                                          spreadRadius: 3,
-                                          blurRadius: 7,
-                                          offset: const Offset(0, 6),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        borderRadius: BorderRadius.circular(25),
-                                        onTap: () async {
-                                          await widget.unFilterPodiumCandidates();
-                                          setState(() {
-                                            _stackFactors = widget.candidateStackFactors;
-                                            _stack = widget.candidateStack;
-                                            _stackStatistics = widget.candidateStackStatistics;
-                                            _stackLength = _stack.length;
-                                            _filtering = false;
-                                          });
-                                        },
-                                        child: const Center(
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text(
-                                              'Remove Filter',
-                                              style: TextStyle(
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xFF0E0E0E),
-                                                fontSize: 25,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 

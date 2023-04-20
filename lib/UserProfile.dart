@@ -1139,749 +1139,756 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: SingleChildScrollView(
+    return SingleChildScrollView(
       child: Container(
-        color: const Color(0xFFF1F4F8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            //hello name
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: Text(
-                'Hello ${widget.currentUserDemographics.firstName}',
-                style: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                ),
+    color: const Color(0xFFF1F4F8),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        //hello name
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          child: Text(
+            'Hello ${widget.currentUserDemographics.firstName}',
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+
+        //profile picture
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+          child: GestureDetector(
+            onTap: () {
+              _changeProfilePic();
+            },
+            child: CircularProfileAvatar(
+              '',
+              radius: 40,
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: _profilePic(),
               ),
             ),
+          ),
+        ),
 
-            //profile picture
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: GestureDetector(
-                onTap: () {
-                  _changeProfilePic();
-                },
-                child: CircularProfileAvatar(
-                  '',
-                  radius: 40,
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: _profilePic(),
-                  ),
+        //user profile level and streak container
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          //overall container
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFFFFFFFF),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400,
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(3, 6),
                 ),
-              ),
+              ],
             ),
-
-            //user profile level and streak container
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              //overall container
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFFFFFFFF),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade400,
-                      spreadRadius: 2,
-                      blurRadius: 6,
-                      offset: const Offset(3, 6),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                  //row of contents
-                  child: Row(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+              //row of contents
+              child: Row(
+                children: [
+                  //user level and polls
+                  Row(
                     children: [
-                      //user level and polls
-                      Row(
-                        children: [
-                          //star circle
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: const Color(0xFFD9D9D9),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade400,
-                                  spreadRadius: 0.1,
-                                  blurRadius: 4,
-                                  offset: const Offset(-3, 6),
+                      //star circle
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: const Color(0xFFD9D9D9),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade400,
+                              spreadRadius: 0.1,
+                              blurRadius: 4,
+                              offset: const Offset(-3, 6),
+                            ),
+                          ],
+                        ),
+                        child: const FittedBox(
+                          fit: BoxFit.cover,
+                          child: Icon(
+                            Icons.star_rate,
+                            color: Color(0xFF8CC461),
+                          ),
+                        ),
+                      ),
+                      //experience level and polls
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: SizedBox(
+                          width: 80,
+                          height: 50,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AutoSizeText(
+                                  getUserExperience(
+                                      widget.currentUserDemographics.polls),
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF0E0E0E),
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                AutoSizeText(
+                                  '${widget.currentUserDemographics.polls} Polls',
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF57636C),
+                                    fontSize: 13,
+                                  ),
                                 ),
                               ],
                             ),
-                            child: const FittedBox(
-                              fit: BoxFit.cover,
-                              child: Icon(
-                                Icons.star_rate,
-                                color: Color(0xFF8CC461),
-                              ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  //user streak
+                  Row(
+                    children: [
+                      //star circle
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: const Color(0xFFD9D9D9),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade400,
+                              spreadRadius: 0.1,
+                              blurRadius: 4,
+                              offset: const Offset(-3, 6),
+                            ),
+                          ],
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
+                          child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: Image(
+                              image: AssetImage('assets/flame.png'),
                             ),
                           ),
-                          //experience level and polls
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: SizedBox(
-                              width: 80,
-                              height: 50,
-                              child: FittedBox(
-                                fit: BoxFit.contain,
-                                alignment: Alignment.centerLeft,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AutoSizeText(
-                                      getUserExperience(
-                                          widget.currentUserDemographics.polls),
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF0E0E0E),
-                                        fontSize: 17,
-                                      ),
-                                    ),
-                                    AutoSizeText(
-                                      '${widget.currentUserDemographics.polls} Polls',
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xFF57636C),
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ],
+                        ),
+                      ),
+                      //experience level and polls
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: SizedBox(
+                          width: 100,
+                          height: 50,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AutoSizeText(
+                                  '${widget.currentUserDemographics.loginStreak} day streak',
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF0E0E0E),
+                                    fontSize: 22,
+                                  ),
                                 ),
-                              ),
+                                AutoSizeText(
+                                  getLoginStreakText(),
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF57636C),
+                                    fontSize: 17,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        // InkWell(
+        //   onTap: () {
+        //     // Navigator.push(
+        //     //   context,
+        //     //   MaterialPageRoute(
+        //     //       builder: (context) => AddressAutocomplete(
+        //     //           userDemographics: userDemographics)),
+        //     // );
+        //   },
+        //   child: Center(
+        //     child: Text(
+        //       'Click here to go to Address Autocomplete Page',
+        //       style: TextStyle(
+        //         decoration: TextDecoration.underline,
+        //         color: Colors.blue,
+        //         fontSize: 18.0,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+
+        //your top issues, top issues icons
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //your top issues
+              const Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Your top issues',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Color(0xFF0E0E0E),
+                  ),
+                ),
+              ),
+              //top issues icons
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF9F9F9),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade400,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_firstIssue[0]),
+                              height: 60,
+                              width: 60,
+                            ),
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                issueDefinitionToaster(_firstIssue[1]);
+                              },
                             ),
                           ),
                         ],
                       ),
-                      const Spacer(),
-                      //user streak
-                      Row(
+                    ),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF9F9F9),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade400,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
                         children: [
-                          //star circle
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: const Color(0xFFD9D9D9),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade400,
-                                  spreadRadius: 0.1,
-                                  blurRadius: 4,
-                                  offset: const Offset(-3, 6),
-                                ),
-                              ],
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                              child: FittedBox(
-                                fit: BoxFit.cover,
-                                child: Image(
-                                  image: AssetImage('assets/flame.png'),
-                                ),
-                              ),
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_secondIssue[0],),
+                              height: 60,
+                              width: 60,
                             ),
                           ),
-                          //experience level and polls
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5),
-                            child: SizedBox(
-                              width: 100,
-                              height: 50,
-                              child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    AutoSizeText(
-                                      '${widget.currentUserDemographics.loginStreak} day streak',
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF0E0E0E),
-                                        fontSize: 22,
-                                      ),
-                                    ),
-                                    AutoSizeText(
-                                      getLoginStreakText(),
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xFF57636C),
-                                        fontSize: 17,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                issueDefinitionToaster(_secondIssue[1]);
+                              },
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF9F9F9),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade400,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_thirdIssue[0]),
+                              height: 60,
+                              width: 60,
+                            ),
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                issueDefinitionToaster(_thirdIssue[1]);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF9F9F9),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade400,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Image(
+                              image: AssetImage(_fourthIssue[0]),
+                              height: 60,
+                              width: 60,
+                            ),
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                issueDefinitionToaster(_fourthIssue[1]);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        //invite friends and share your ballot
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          //overall container
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFFFFFFFF),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400,
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(3, 6),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15),
+                onTap: () {
+                  //toaster pull up
+                  showModalBottomSheet(
+                      context: context,
+                      clipBehavior: Clip.antiAlias,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                        ),
+                      ),
+                      backgroundColor: const Color(0xFFFFFFFF),
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.75,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 13.0),
+                                child: Container(
+                                  height: 7,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: const Color(0xFFD9D9D9),
+                                  ),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 30.0),
+                                child: Text(
+                                  "Invite Friends",
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 25,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Share.share(
+                                        pogoLinkMessage(),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xFFD9D9D9),
+                                      ),
+                                      child: const FittedBox(
+                                        fit: BoxFit.cover,
+                                        child:
+                                            Icon(Icons.ios_share_rounded),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 30.0),
+                                child: Text(
+                                  "Share your ballot!",
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 25,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (widget.currentUserBallotCandidates
+                                          .isNotEmpty) {
+                                        Share.share(
+                                          ballotMessage(),
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0xFFD9D9D9),
+                                      ),
+                                      child: const FittedBox(
+                                        fit: BoxFit.cover,
+                                        child:
+                                            Icon(Icons.ios_share_rounded),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                  //row of contents
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      AutoSizeText(
+                        'Invite Friends & Share Your Ballot!',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Color(0xFF0E0E0E),
+                        ),
+                      ),
+                      Divider(
+                        color: Color(0xFFDBE2E7),
+                        height: 10,
+                        thickness: 1,
+                      ),
+                      AutoSizeText(
+                        'Help your friends vote informed',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          color: Color(0xFF57636C),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-            // InkWell(
-            //   onTap: () {
-            //     // Navigator.push(
-            //     //   context,
-            //     //   MaterialPageRoute(
-            //     //       builder: (context) => AddressAutocomplete(
-            //     //           userDemographics: userDemographics)),
-            //     // );
-            //   },
-            //   child: Center(
-            //     child: Text(
-            //       'Click here to go to Address Autocomplete Page',
-            //       style: TextStyle(
-            //         decoration: TextDecoration.underline,
-            //         color: Colors.blue,
-            //         fontSize: 18.0,
-            //       ),
-            //     ),
-            //   ),
-            // ),
-
-            //your top issues, top issues icons
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //your top issues
-                  const Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Your top issues',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                        color: Color(0xFF0E0E0E),
-                      ),
-                    ),
-                  ),
-                  //top issues icons
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF9F9F9),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: Image(
-                                  image: AssetImage(_firstIssue[0]),
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  onTap: () {
-                                    issueDefinitionToaster(_firstIssue[1]);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF9F9F9),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: Image(
-                                  image: AssetImage(_secondIssue[0]),
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  onTap: () {
-                                    issueDefinitionToaster(_secondIssue[1]);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF9F9F9),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: Image(
-                                  image: AssetImage(_thirdIssue[0]),
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  onTap: () {
-                                    issueDefinitionToaster(_thirdIssue[1]);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF9F9F9),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade400,
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.contain,
-                                child: Image(
-                                  image: AssetImage(_fourthIssue[0]),
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(20),
-                                  onTap: () {
-                                    issueDefinitionToaster(_fourthIssue[1]);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            //invite friends and share your ballot
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              //overall container
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFFFFFFFF),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade400,
-                      spreadRadius: 2,
-                      blurRadius: 6,
-                      offset: const Offset(3, 6),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(15),
-                    onTap: () {
-                      //toaster pull up
-                      showModalBottomSheet(
-                          context: context,
-                          clipBehavior: Clip.antiAlias,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            ),
-                          ),
-                          backgroundColor: const Color(0xFFFFFFFF),
-                          builder: (BuildContext context) {
-                            return SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.75,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 13.0),
-                                    child: Container(
-                                      height: 7,
-                                      width: 80,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: const Color(0xFFD9D9D9),
-                                      ),
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 30.0),
-                                    child: Text(
-                                      "Invite Friends",
-                                      style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 25,
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Share.share(
-                                            pogoLinkMessage(),
-                                          );
-                                        },
-                                        child: Container(
-                                          height: 50,
-                                          width: 50,
-                                          clipBehavior: Clip.hardEdge,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Color(0xFFD9D9D9),
-                                          ),
-                                          child: const FittedBox(
-                                            fit: BoxFit.cover,
-                                            child:
-                                                Icon(Icons.ios_share_rounded),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 30.0),
-                                    child: Text(
-                                      "Share your ballot!",
-                                      style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 25,
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          if (widget.currentUserBallotCandidates
-                                              .isNotEmpty) {
-                                            Share.share(
-                                              ballotMessage(),
-                                            );
-                                          }
-                                        },
-                                        child: Container(
-                                          height: 50,
-                                          width: 50,
-                                          clipBehavior: Clip.hardEdge,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Color(0xFFD9D9D9),
-                                          ),
-                                          child: const FittedBox(
-                                            fit: BoxFit.cover,
-                                            child:
-                                                Icon(Icons.ios_share_rounded),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                      //row of contents
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          AutoSizeText(
-                            'Invite Friends & Share Your Ballot!',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: Color(0xFF0E0E0E),
-                            ),
-                          ),
-                          Divider(
-                            color: Color(0xFFDBE2E7),
-                            height: 10,
-                            thickness: 1,
-                          ),
-                          AutoSizeText(
-                            'Help your friends vote informed',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                              color: Color(0xFF57636C),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            //personal info
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              //overall container
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFFFFFFFF),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade400,
-                      spreadRadius: 2,
-                      blurRadius: 6,
-                      offset: const Offset(3, 6),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(15),
-                    onTap: () {
-                      _editPersonalInfo(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                      //row of contents
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          AutoSizeText(
-                            'Personal Info',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: Color(0xFF0E0E0E),
-                            ),
-                          ),
-                          Divider(
-                            color: Color(0xFFDBE2E7),
-                            height: 10,
-                            thickness: 1,
-                          ),
-                          AutoSizeText(
-                            'Edit your personal info',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                              color: Color(0xFF57636C),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            //survey results
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              //overall container
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: const Color(0xFFFFFFFF),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade400,
-                      spreadRadius: 2,
-                      blurRadius: 6,
-                      offset: const Offset(3, 6),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(15),
-                    onTap: () {
-                      _showAlert(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
-                      //row of contents
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          AutoSizeText(
-                            'Survey Results',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: Color(0xFF0E0E0E),
-                            ),
-                          ),
-                          Divider(
-                            color: Color(0xFFDBE2E7),
-                            height: 10,
-                            thickness: 1,
-                          ),
-                          AutoSizeText(
-                            'View and edit your stance on popular issues',
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                              color: Color(0xFF57636C),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            //logout button
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF3D433),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.35),
-                      blurRadius: 4,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: MaterialButton(
-                  minWidth: double.infinity,
-                  height: 60,
-                  onPressed: () {
-                    _logout(context);
-                  },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: const Text(
-                    "Logout",
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
+
+        //personal info
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          //overall container
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFFFFFFFF),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400,
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(3, 6),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15),
+                onTap: () {
+                  _editPersonalInfo(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                  //row of contents
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      AutoSizeText(
+                        'Personal Info',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Color(0xFF0E0E0E),
+                        ),
+                      ),
+                      Divider(
+                        color: Color(0xFFDBE2E7),
+                        height: 10,
+                        thickness: 1,
+                      ),
+                      AutoSizeText(
+                        'Edit your personal info',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          color: Color(0xFF57636C),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        //survey results
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          //overall container
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color(0xFFFFFFFF),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade400,
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(3, 6),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15),
+                onTap: () {
+                  _showAlert(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                  //row of contents
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      AutoSizeText(
+                        'Survey Results',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Color(0xFF0E0E0E),
+                        ),
+                      ),
+                      Divider(
+                        color: Color(0xFFDBE2E7),
+                        height: 10,
+                        thickness: 1,
+                      ),
+                      AutoSizeText(
+                        'View and edit your stance on popular issues',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          color: Color(0xFF57636C),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        //logout button
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3D433),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.35),
+                  blurRadius: 4,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: MaterialButton(
+              minWidth: double.infinity,
+              height: 60,
+              onPressed: () {
+                _logout(context);
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: const Text(
+                "Logout",
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
       ),
-    ));
+    );
   }
 }
