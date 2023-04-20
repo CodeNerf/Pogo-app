@@ -41,9 +41,6 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
       if (check) {
         String email = await fetchCurrentUserEmail();
         UserDemographics user = await getUserDemographics(email);
-        user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
-        safePrint(user.lastLogin);
-        await putUserDemographics(user);
         if (user.surveyCompletion == true) {
           await Navigator.push(
             context,
@@ -51,11 +48,12 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
               builder: (context) => HomeLoadingPage(user: user),
             ),
           );
-        } else {
+        }
+        else {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SurveyLandingPage(),
+              builder: (context) => SurveyLandingPage(pageSelect: 0,),
             ),
           );
         }

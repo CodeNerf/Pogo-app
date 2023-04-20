@@ -1,10 +1,15 @@
 import 'dart:io';
-
+import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:pogo/dynamoModels/Demographics/Education.dart';
+import 'package:pogo/dynamoModels/Demographics/Position.dart';
 import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'IssuesDefinitions.dart';
 import 'dynamoModels/Demographics/CandidateDemographics.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
@@ -13,9 +18,14 @@ import 'package:share_plus/share_plus.dart';
 class CandidateProfile extends StatefulWidget {
   final CandidateDemographics candidate;
   final CandidateIssueFactorValues candidateValues;
-  const CandidateProfile(
-      {Key? key, required this.candidate, required this.candidateValues})
-      : super(key: key);
+  final List<CandidateIssueFactorValues> candidateStackFactors;
+  // final String descriptionText;
+  const CandidateProfile({
+    Key? key,
+    required this.candidate,
+    required this.candidateValues,
+    required this.candidateStackFactors,
+  }) : super(key: key);
 
   @override
   State<CandidateProfile> createState() => _CandidateProfileState();
@@ -28,11 +38,19 @@ class _CandidateProfileState extends State<CandidateProfile>
   bool _isCardVisible = false;
   bool _showAllCardsEducation = false;
   bool _showAllCardsPreviousPositions = false;
+  late List<CandidateIssueFactorValues> _stackFactors;
   bool _showAllCardsOtherExperience = false;
   var contactInfo = [];
   var socialMediaList = [];
+  bool _isViewAllVisible = false;
+  bool isExpanded = false;
+  final IssuesDefinitions _issueDefs = IssuesDefinitions();
+
   @override
   void initState() {
+    setState(() {
+      _stackFactors = widget.candidateStackFactors;
+    });
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     mapData();
@@ -106,146 +124,302 @@ class _CandidateProfileState extends State<CandidateProfile>
   }
 
   //returns the candidate's experience
-  String _candidateExperience(String careerStart) {
-    print(careerStart);
+  String _candidateExperience(String careerStartYear) {
     String experience = '';
-    DateTime start = DateTime.parse(careerStart);
+    DateTime start = DateTime.parse(careerStartYear);
     DateTime currentDate = DateTime.now();
     int days = currentDate.difference(start).inDays;
     if (days > 364) {
       int years = days ~/ 365;
       //years
-      experience = '$years years of experience';
+      experience = '$years';
     } else if (days > 29) {
       //months
       int months = days ~/ 30;
-      experience = '$months months of experience';
+      experience = '$months';
     } else {
-      experience = '$days days of experience';
+      experience = "$days";
     }
     return experience;
   }
 
-  Widget getLogoForAffiliation(String party,
-      {double width = 33, double height = 33}) {
-    switch (party) {
-      case 'Democrat':
-        return Image.asset(
-          'assets/democratLogo.png',
-          width: width,
-          height: height,
-        );
-      case 'Republican':
-        return Image.asset(
-          'assets/republicanLogo.png',
-          width: width,
-          height: height,
-        );
-      case 'Green':
-        return Image.asset(
-          'assets/greenLogo.png',
-          width: width,
-          height: height,
-        );
-      case 'Libertarian':
-        return Image.asset(
-          'assets/libertarianLogo.png',
-          width: width,
-          height: height,
-        );
-      default:
-        return Image.asset(
-          'assets/independentLogo.png',
-          width: width,
-          height: height,
-        );
+  //returns the candidate's current age
+  String calculateAge(String dateOfBirth) {
+    DateTime birthDate = DateTime.parse(dateOfBirth);
+    DateTime currentDate = DateTime.now();
+    int days = currentDate.difference(birthDate).inDays;
+    if (days > 364) {
+      int years = days ~/ 365;
+      return '$years';
+    } else if (days > 29) {
+      int months = days ~/ 30;
+      return '$months';
+    } else {
+      return "$days";
     }
   }
 
-  Widget _ratingCircles(num rating) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-        child: CircularPercentIndicator(
-          radius: 25,
-          lineWidth: 6,
-          progressColor: const Color(0xFFF3D433),
-          backgroundColor: const Color(0xFF8B9DDE),
-          percent: rating / 5,
-          center: Text(
-            '$rating/5',
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+  String getBudgetString(String campaignBudgetString) {
+    int campaignBudget = int.tryParse(campaignBudgetString) ?? 0;
+    if (campaignBudget < 1000) {
+      return '$campaignBudget';
+    } else if (campaignBudget < 1000000) {
+      return '${(campaignBudget / 1000).toStringAsFixed(1).replaceAll('.0', '')} Thousand';
+    } else if (campaignBudget < 1000000000) {
+      return '${(campaignBudget / 1000000).toStringAsFixed(1).replaceAll('.0', '')} Million';
+    } else {
+      return '${(campaignBudget / 1000000000).toStringAsFixed(1).replaceAll('.0', '')} Billion';
+    }
+  }
+
+  String getDonorsString(String countOfDonorsString) {
+    int countOfDonors = int.tryParse(countOfDonorsString) ?? 0;
+    if (countOfDonors < 1000) {
+      return '$countOfDonors';
+    } else if (countOfDonors < 1000000) {
+      return '${(countOfDonors / 1000).toStringAsFixed(1).replaceAll('.0', '')} Thousand';
+    } else if (countOfDonors < 1000000000) {
+      return '${(countOfDonors / 1000000).toStringAsFixed(1).replaceAll('.0', '')} Million';
+    } else {
+      return '${(countOfDonors / 1000000000).toStringAsFixed(1).replaceAll('.0', '')} Billion';
+    }
+  }
+
+  Widget _ratingCircles(double rating) {
+    return CircularPercentIndicator(
+      radius: 25,
+      lineWidth: 6,
+      progressColor: const Color(0xFFF3D433),
+      backgroundColor: const Color(0xFF8B9DDE),
+      percent: rating / 5,
+      center: Text(
+        '$rating',
+        style: const TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
   }
 
-  Widget createIsssueCard(
-    String titleText,
-    String descriptionText,
-    List<Widget> ratingCircles,
-  ) {
-    final double screenWidth = MediaQuery.of(context).size.width;
+  void issueDefinitionToaster(int index) {
+    showModalBottomSheet(
+        context: context,
+        clipBehavior: Clip.antiAlias,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        isScrollControlled: true,
+        backgroundColor: const Color(0xFFD9D9D9),
+        builder: (BuildContext context) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                //white bar to indicate pulling up/down
+                Padding(
+                  padding: const EdgeInsets.only(top: 13.0),
+                  child: Container(
+                    height: 7,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xFFFFFFFF),
+                    ),
+                  ),
+                ),
+                //issue name
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(
+                    _issueDefs.issuesText[index],
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF0E0E0E),
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        //issue pic
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: Container(
+                            clipBehavior: Clip.hardEdge,
+                            height:
+                            MediaQuery.of(context).size.height * 0.60 / 2.5,
+                            width: MediaQuery.of(context).size.width * 0.65,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade600,
+                                  spreadRadius: 3,
+                                  blurRadius: 7,
+                                  offset: const Offset(3, 3),
+                                ),
+                              ],
+                            ),
+                            child: Image(
+                              image: AssetImage(
+                                _issueDefs.issuesLogo[index],
+                              ),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        //issue definition
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: Text(
+                            _issueDefs.issuesGeneralDefinitions[index],
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF121212),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        //left align text
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(25, 10, 20, 0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '• ${_issueDefs.leftAlignText[index]}',
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF121212),
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //left definition
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(35, 10, 35, 0),
+                          child: Text(
+                            '▪ ${_issueDefs.issuesLeftDefinitions[index]}',
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF121212),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        //right align text
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(25, 10, 20, 0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '• ${_issueDefs.rightAlignText[index]}',
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF121212),
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //right definition
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(35, 10, 35, 20),
+                          child: Text(
+                            '▪ ${_issueDefs.issuesRightDefinitions[index]}',
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF121212),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+    );
+  }
 
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
-      child: SizedBox(
-        height: 115,
-        width: 400,
+  Widget createIssueCard(
+      String titleText,
+      String descriptionText,
+      Widget concernCircle,
+      int index,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        issueDefinitionToaster(index);
+      },
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        shadowColor: Colors.black.withOpacity(0.95),
+        color: const Color(0xFFD9D9D9),
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: screenWidth < 400 ? 10 : 20,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
             vertical: 20,
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 3.0),
-                    child: Text(
-                      titleText,
-                      style: TextStyle(
-                        fontFamily: "Inter",
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                        color: Colors.black,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AutoSizeText(
+                        titleText,
+                        maxLines: 1,
+                        minFontSize: 20,
+                        maxFontSize: 25,
+                        style: const TextStyle(
+                          fontFamily: "Inter",
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.left,
                       ),
-                      textAlign: TextAlign.left,
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
+                    AutoSizeText(
                       descriptionText,
-                      style: TextStyle(
+                      maxLines: 10,
+                      minFontSize: 10,
+                      maxFontSize: 25,
+                      style: const TextStyle(
                         fontFamily: "Inter",
                         fontWeight: FontWeight.w600,
-                        fontSize: 10,
                         color: Color(0xFF57636C),
                       ),
                       textAlign: TextAlign.left,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              Row(
-                children: ratingCircles,
-              ),
+              concernCircle,
             ],
           ),
         ),
@@ -253,10 +427,206 @@ class _CandidateProfileState extends State<CandidateProfile>
     );
   }
 
+  List<Widget> _getIssueCards(String candidateId) {
+    CandidateIssueFactorValues current = _stackFactors
+        .firstWhere((element) => element.candidateId == candidateId);
+    List<num> candidateWeights = [
+      current.climateWeight,
+      current.drugPolicyWeight,
+      current.economyWeight,
+      current.educationWeight,
+      current.gunPolicyWeight,
+      current.healthcareWeight,
+      current.housingWeight,
+      current.immigrationWeight,
+      current.policingWeight,
+      current.reproductiveWeight
+    ];
+    List<Widget> issueCards = [];
+    while (issueCards.length < 10) {
+      num maxWeight = candidateWeights.reduce(max);
+      if (maxWeight == 0) {
+        break;
+      }
+      int indexMaxWeight = candidateWeights.indexOf(maxWeight);
+      String title = "";
+      String description = "";
+      double ratingScore = 0;
+      int index = 0;
+      switch (indexMaxWeight) {
+        case 0:
+          title = current.climateScore == 3
+              ? 'Climate'
+              : (current.climateScore < 3 ? 'Doubt' : 'Acceptance');
+          description = current.climateScore == 3
+              ? ''
+              : (current.climateScore < 3
+                  ? 'People who doubt climate policy don’t believe the climate is a threat to our environment. They are more permissive when weighing the economic impact of environmental regulation. People who doubt climate change believe the free market will find its own solution to environmental issues.'
+                  : 'People in favor of climate policy are generally conservative in this area, preferring to ban economic activity that may create jobs but harm the environment.');
+          ratingScore = current.climateScore.toDouble();
+          index = 1;
+          break;
+        case 1:
+          title = current.drugPolicyScore == 3
+              ? 'Drug Policy'
+              : (current.drugPolicyScore < 3
+                  ? 'Drug Criminalization'
+                  : 'Drug Legalization');
+          description = current.drugPolicyScore == 3
+              ? ''
+              : (current.drugPolicyScore < 3
+                  ? 'People who favor the criminalization of drugs believe that drug policy should be stricter including increasing the penalties or punishments associated with the drug.'
+                  : 'People who favor legalization believe that drug policy should be less strict including decreasing the penalties or punishments associated with the drug. Many people believe in the decriminalization of marijuana.');
+          ratingScore = current.drugPolicyScore.toDouble();
+          index = 3;
+          break;
+        case 2:
+          title = current.economyScore == 3
+              ? 'Economy'
+              : (current.economyScore < 3
+                  ? 'Market Deregulation'
+                  : 'Market Regulation');
+          description = current.economyScore == 3
+              ? ''
+              : (current.economyScore < 3
+                  ? 'People in favor of market deregulation desire for the economy to be left to the devices of competing individuals and organizations. '
+                  : 'People in favor of market regulation desire for the economy to be run by a cooperative collective agency, which can mean the state but also a network of communes.');
+          ratingScore = current.economyScore.toDouble();
+          index = 6;
+          break;
+        case 3:
+          title = current.educationScore == 3
+              ? 'Education'
+              : (current.educationScore < 3
+                  ? 'School Choice'
+                  : 'Public Education');
+          description = current.educationScore == 3
+              ? ''
+              : (current.educationScore > 3
+                  ? 'People in favor of school choice believe academic performance, free speech, and federal and state separation are essential to a good education. They believe “keeping Washington out of education” to ensure parents are in control of what their kids are learning in their districts.'
+                  : 'People in favor of public education believe every child in America, regardless of family income or place of residence, deserves access to a quality education. Including: expanded, free, public education including free college; student-loan forgiveness, teacher-pay raises, and universal pre-kindergarten.');
+          ratingScore = current.educationScore.toDouble();
+          index = 2;
+          break;
+        case 4:
+          title = current.gunPolicyScore == 3
+              ? 'Gun Policy'
+              : (current.gunPolicyScore < 3 ? 'Gun Rights' : 'Gun Control');
+          description = current.gunPolicyScore == 3
+              ? ''
+              : (current.gunPolicyScore < 3
+                  ? 'People in favor of gun rights are strongly opposed to gun laws. Many are strong advocates of the second amendment [the right to bear arms], including “freedom to carry” for self-protection and relying on the state at little as possible.'
+                  : 'People in favor of gun control desire laws to be put in place such as background checks, wait times before buying a gun, banning automatic weapons, and disallowing concealed weapons.');
+          ratingScore = current.gunPolicyScore.toDouble();
+          index = 0;
+          break;
+        case 5:
+          title = current.healthcareScore == 3
+              ? 'Health Care'
+              : (current.healthcareScore < 3 ? 'Private Healthcare' : 'Government Funded Healthcare');
+          description = current.healthcareScore == 3
+              ? ''
+              : (current.healthcareScore < 3
+                  ? 'People in favor of private healthcare believe there should be competition with Medicare from private insurance companies. They oppose “Universal Healthcare”, “The Affordable Care Act”, and Medicare expansion. '
+                  : 'People in favor of government-funded healthcare believe that access to healthcare is a fundamental right for all people. They support “Universal Healthcare”, “The Affordable Care Act”, and the expansion of Medicare and Medicaid.');
+          ratingScore = current.healthcareScore.toDouble();
+          index = 4;
+          break;
+        case 6:
+          title = current.housingScore == 3
+              ? 'Housing'
+              : (current.housingScore < 3
+                  ? 'Market Rate Housing'
+                  : 'Affordable Housing');
+          description = current.housingScore == 3
+              ? ''
+              : (current.housingScore < 3
+                  ? 'People in favor of Market rate housing believe that people should live where they can afford to and the government shouldn’t give tax breaks to support affordable housing.'
+                  : 'People in favor of Affordable housing believe that the government should support the creation of affordable housing and how it affects urban planning.');
+          ratingScore = current.housingScore.toDouble();
+          index = 5;
+          break;
+        case 7:
+          title = current.immigrationScore == 3
+              ? 'Immigration'
+              : (current.immigrationScore < 3 ? 'Immigration - Exclusive' : 'Immigration - Inclusive');
+          description = current.immigrationScore == 3
+              ? ''
+              : (current.immigrationScore < 3
+                  ? 'No “amnesty” for undocumented immigrants; stronger border patrol, etc. There’s a strong belief that illegal immigration is lowering the wages for citizens and documented immigrants. '
+                  : 'People in favor of inclusive immigration believe there should be pathways to citizenship for undocumented immigrants. Delay in deportations or prosecutions of undocumented immigrants who are young adults and have no criminal record.');
+          ratingScore = current.immigrationScore.toDouble();
+          index = 7;
+          break;
+        case 8:
+          title = current.policingScore == 3
+              ? 'Policing'
+              : (current.policingScore < 3
+                  ? 'Invest in Policing'
+                  : 'Divestment & Reallocation of Police Funding');
+          description = current.policingScore == 3
+              ? ''
+              : (current.policingScore < 3
+                  ? 'People in favor of abolishing the police desire to reform the entire policing policy. They demand an entirely new public safety system based on social and economic equity, supported by a network of nonviolent emergency responders.'
+                  : 'People in favor of Divestment and Reallocation advocate for investments made in supportive services and divestment from policing institutions. They believe that money is invested into minority communities to criminalize them instead of supporting them systematically.');
+          ratingScore = current.policingScore.toDouble();
+          index = 8;
+          break;
+        case 9:
+          title = current.reproductiveScore == 3
+              ? 'Reproductive Rights'
+              : (current.reproductiveScore < 3
+                  ? 'Abortion & Contraceptive Criminalization'
+                  : 'Pro-choice');
+          description = current.reproductiveScore == 3
+              ? ''
+              : (current.reproductiveScore < 3
+                  ? 'People in favor of abortion and contraceptive criminalization believe that people shouldn’t get abortions or use contraceptives no matter what. They believe that a baby is alive at the moment of conception.'
+                  : 'People in favor of “Pro-choice” generally believe in unpenalized access to abortion and both adult and embryonic stem cell research. They believe in “my body, my choice”.');
+          ratingScore = current.reproductiveScore.toDouble();
+          index = 9;
+          break;
+      }
+      if (description.isNotEmpty) {
+        issueCards.add(
+            createIssueCard(title, description, _ratingCircles(ratingScore), index));
+      }
+      candidateWeights[indexMaxWeight] = 0;
+    }
+    // Wrap the issue cards in a Visibility widget
+    return [
+      ...issueCards.take(3),
+      Visibility(
+        visible: _isViewAllVisible,
+        child: Column(
+          children: issueCards.skip(3).toList(),
+        ),
+      ),
+      GestureDetector(
+        onTap: () {
+          setState(() {
+            _isViewAllVisible = !_isViewAllVisible;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          alignment: Alignment.center,
+          child: Text(
+            _isViewAllVisible ? 'View Less' : 'View All',
+            style: const TextStyle(
+              color: Color(0xFF57636C),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    ];
+  }
+
   Widget createEducationCard(
-    String title,
-    String subtitle1,
-    String subtitle2,
+    String placeOfEducation,
+    String degreeInformation,
+    String yearOfGraduation,
   ) {
     double screenWidth = MediaQuery.of(context).size.width;
     double cardWidth = screenWidth <= 330 ? screenWidth * 0.8 : 180.0;
@@ -267,70 +637,80 @@ class _CandidateProfileState extends State<CandidateProfile>
         borderRadius: BorderRadius.circular(20.0),
       ),
       shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
+      color: const Color(0xFFD9D9D9),
       child: SizedBox(
-        height: 90,
-        width: cardWidth,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                          color: Colors.black,
+          height: 90,
+          width: cardWidth,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 3.0),
+                        child: Text(
+                          placeOfEducation,
+                          style: const TextStyle(
+                            fontFamily: "Inter",
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                            color: Colors.black,
+                          ),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.left,
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            subtitle1,
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 10,
-                              color: Color(0xFF57636C),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              degreeInformation,
+                              style: const TextStyle(
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 10,
+                                color: Color(0xFF57636C),
+                              ),
+                              textAlign: TextAlign.left,
                             ),
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            subtitle2,
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 10,
-                              color: Color(0xFF57636C),
+                            Text(
+                              yearOfGraduation,
+                              style: const TextStyle(
+                                fontFamily: "Inter",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 10,
+                                color: Color(0xFF57636C),
+                              ),
                             ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          )
           ),
-        ),
-      ),
     );
+  }
+
+  List<Widget> createEducationCards(List<Education> educationList) {
+    List<Widget> cards = [];
+    for (int i = 0; i < educationList.length; i++) {
+      Education education = educationList[i];
+      String title = education.placeOfEducation;
+      String subtitle1 = education.degreeInformation;
+      String subtitle2 = education.yearOfGraduation;
+
+      Widget card = createEducationCard(title, subtitle1, subtitle2);
+      cards.add(card);
+    }
+    return cards;
   }
 
   Widget createExperienceCard(
@@ -346,12 +726,12 @@ class _CandidateProfileState extends State<CandidateProfile>
         borderRadius: BorderRadius.circular(20.0),
       ),
       shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
+      color: const Color(0xFFD9D9D9),
       child: SizedBox(
         height: 90,
         width: 150,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -360,10 +740,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
+                      padding: const EdgeInsets.symmetric(vertical: 3.0),
                       child: Text(
                         title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: "Inter",
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
@@ -375,13 +755,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4.0),
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             subtitle1,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w600,
                               fontSize: 10,
@@ -391,7 +771,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                           ),
                           Text(
                             subtitle2,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w600,
                               fontSize: 10,
@@ -412,22 +792,49 @@ class _CandidateProfileState extends State<CandidateProfile>
     );
   }
 
+  List<Widget> createPositionCards(List<Position> positionList) {
+    List<Widget> cards = [];
+    for (int i = 0; i < positionList.length; i++) {
+      Position prevPositions = positionList[i];
+      String title = prevPositions.title;
+      String subtitle1 = prevPositions.organization;
+      String subtitle2 = prevPositions.years;
+
+      Widget card = createExperienceCard(title, subtitle1, subtitle2);
+      cards.add(card);
+    }
+    return cards;
+  }
+
+  List<Widget> createPrePositionCards(List<Position> prevpositionList) {
+    List<Widget> cards = [];
+    for (int i = 0; i < prevpositionList.length; i++) {
+      Position otherExperience = prevpositionList[i];
+      String title = otherExperience.title;
+      String subtitle1 = otherExperience.organization;
+      String subtitle2 = otherExperience.years;
+
+      Widget card = createExperienceCard(title, subtitle1, subtitle2);
+      cards.add(card);
+    }
+    return cards;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFF1F4F8),
+        backgroundColor: const Color(0xFFF1F4F8),
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: 16.0), // adjust the horizontal padding as needed
+            padding: const EdgeInsets.symmetric(vertical: 0.0),
             child: Stack(
               children: [
                 Container(
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.50,
+                  height: MediaQuery.of(context).size.height * 0.45,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/candidateImage.png'),
+                      image: NetworkImage(widget.candidate.profileImageURL),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -439,11 +846,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                     height: 40,
                     width: 45,
                     decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
+                      color: const Color(0xFFD9D9D9),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: const Icon(Icons.arrow_back),
                       iconSize: 25,
                       onPressed: () {
                         Navigator.pop(context);
@@ -458,7 +865,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                     height: 40,
                     width: 45,
                     decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
+                      color: const Color(0xFFD9D9D9),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: GestureDetector(
@@ -466,7 +873,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                         await Share.share(
                           'Check out ${widget.candidate.candidateName}\'s profile on the PoGo app! Visit ${'https://www.politicsonthego.info/'} for more information.',
                           subject: 'Share Profile',
-                          sharePositionOrigin: Rect.fromLTWH(0, 0, 0, 0),
+                          sharePositionOrigin: const Rect.fromLTWH(0, 0, 0, 0),
                         );
                       },
                       child: Image.asset(
@@ -482,9 +889,12 @@ class _CandidateProfileState extends State<CandidateProfile>
           ),
           Expanded(
               child: Column(children: [
+            const SizedBox(
+              height: 10,
+            ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 25),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+              decoration: const BoxDecoration(
                 color: Color(0xFfF1F4F8),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
@@ -505,9 +915,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                             fontSize: 25,
                           ),
                         ),
-                        const SizedBox(height: 10),
                         Text(
-                          '${widget.candidate.runningPosition}  •  Michigan',
+                          '${widget.candidate.runningPosition}  •  ${widget.candidate.city}',
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16,
@@ -517,7 +926,6 @@ class _CandidateProfileState extends State<CandidateProfile>
                       ],
                     ),
                   ),
-                  const SizedBox(width: 10),
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -533,9 +941,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                               fontSize: 16,
                             ),
                           ),
-                          const SizedBox(width: 40),
-                          getLogoForAffiliation(
-                              widget.candidate.politicalAffiliation),
+                          const SizedBox(width: 20),
                         ],
                       ),
                     ),
@@ -545,10 +951,9 @@ class _CandidateProfileState extends State<CandidateProfile>
             ),
             Container(
               padding: EdgeInsets.only(
-                left: 10,
                 right: MediaQuery.of(context).size.width > 600 ? 20 : 10,
               ),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFfF1F4F8),
                 borderRadius: BorderRadius.only(),
               ),
@@ -557,11 +962,12 @@ class _CandidateProfileState extends State<CandidateProfile>
                 indicatorSize: TabBarIndicatorSize.label,
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.grey,
-                indicatorColor: Color(0xFFF3D433),
-                tabs: [
+                indicatorColor: const Color(0xFFF3D433),
+                tabs: const [
                   Tab(
-                    child: Text(
+                    child: AutoSizeText(
                       'Summary',
+                      maxLines: 1,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 19.0,
@@ -569,8 +975,9 @@ class _CandidateProfileState extends State<CandidateProfile>
                     ),
                   ),
                   Tab(
-                    child: Text(
+                    child: AutoSizeText(
                       'Views',
+                      maxLines: 1,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 19.0,
@@ -578,8 +985,9 @@ class _CandidateProfileState extends State<CandidateProfile>
                     ),
                   ),
                   Tab(
-                    child: Text(
+                    child: AutoSizeText(
                       'Experience',
+                      maxLines: 1,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 19.0,
@@ -597,14 +1005,14 @@ class _CandidateProfileState extends State<CandidateProfile>
                 // First tab content
                 SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Column(
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
                           child: Column(children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 260, top: 20),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 250),
                               child: Text(
                                 "Contact Info",
                                 style: TextStyle(
@@ -615,10 +1023,9 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 textAlign: TextAlign.left,
                               ),
                             ),
-
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             Padding(
-                              padding: EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.only(left: 20),
                               child: Column(
                                 children: contactInfo
                                     .map((info) => Row(
@@ -628,10 +1035,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                                               width: 20,
                                               height: 25,
                                             ),
-                                            SizedBox(width: 20),
+                                            const SizedBox(width: 20),
                                             Text(
                                               info['text'],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 15,
@@ -644,15 +1051,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                                     .toList(),
                               ),
                             ),
-
-                            SizedBox(height: 15),
-
-                            //social media icons
+                            const SizedBox(height: 15),
                             Padding(
                               padding: EdgeInsets.only(
-                                right: Platform.isIOS
-                                    ? 130
-                                    : 0, // add padding only for iOS devices
+                                right: Platform.isIOS ? 10 : 10,
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -662,9 +1064,9 @@ class _CandidateProfileState extends State<CandidateProfile>
                                       padding:
                                           const EdgeInsets.only(right: 10.0),
                                       child: Container(
-                                        width: 30,
-                                        height: 30,
-                                        decoration: BoxDecoration(
+                                        width: 35,
+                                        height: 35,
+                                        decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Color(0xFFD9D9D9),
                                         ),
@@ -672,54 +1074,17 @@ class _CandidateProfileState extends State<CandidateProfile>
                                           icon: Image.asset(
                                             socialMedia['icon'] ??
                                                 'assets/default.png',
-                                            width: 15,
-                                            height: 15,
+                                            width: 25,
+                                            height: 25,
                                           ),
-                                          onPressed: () {
-                                            switch (socialMedia['name']) {
-                                              case 'LinkedIn':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.linkedin.android',
-                                                  iosUrlScheme:
-                                                      'https://www.linkedin.com/',
-                                                );
-                                                break;
-                                              case 'Facebook':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.facebook.katana',
-                                                  iosUrlScheme:
-                                                      'https://www.facebook.com/GovGretchenWhitmer',
-                                                );
-                                                break;
-                                              case 'Twitter':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.twitter.android',
-                                                  iosUrlScheme:
-                                                      'https://twitter.com/GovWhitmer?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor',
-                                                );
-                                                break;
-                                              case 'Instagram':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.instagram.android',
-                                                  iosUrlScheme:
-                                                      'https://www.instagram.com/whitmermi/channel/',
-                                                );
-                                                break;
-                                              case 'TikTok':
-                                                LaunchApp.openApp(
-                                                  androidPackageName:
-                                                      'com.zhiliaoapp.musically',
-                                                  iosUrlScheme:
-                                                      'https://www.tiktok.com/@biggretchwhitmer?lang=en',
-                                                );
-                                                break;
-                                              default:
-                                                // Handle unsupported social media platforms
-                                                break;
+                                          onPressed: () async {
+                                            final url = socialMedia['url'];
+                                            if (url != null) {
+                                              await launch(url,
+                                                  forceWebView: true,
+                                                  enableJavaScript: true);
+                                            } else {
+                                              // Handle unsupported social media platforms
                                             }
                                           },
                                         ),
@@ -728,8 +1093,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 ],
                               ),
                             ),
-
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(right: 260, top: 30),
                               child: Text(
                                 "Biography",
@@ -745,28 +1109,29 @@ class _CandidateProfileState extends State<CandidateProfile>
                               children: [
                                 Expanded(
                                   child: Container(
-                                    height: 40,
-                                    margin: EdgeInsets.only(
+                                    height: 50,
+                                    margin: const EdgeInsets.only(
                                         top: 10, left: 30, right: 20),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
-                                      color: Color(0xFFD9D9D9),
+                                      color: const Color(0xFFD9D9D9),
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "61",
-                                          style: TextStyle(
+                                          calculateAge(
+                                              widget.candidate.dateOfBirth),
+                                          style: const TextStyle(
                                             fontFamily: "Inter",
                                             fontWeight: FontWeight.bold,
                                             fontSize: 25,
                                             color: Colors.black,
                                           ),
                                         ),
-                                        SizedBox(width: 10),
-                                        Text(
+                                        const SizedBox(width: 10),
+                                        const Text(
                                           "years old",
                                           style: TextStyle(
                                             fontFamily: "Inter",
@@ -781,29 +1146,30 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 ),
                                 Expanded(
                                   child: Container(
-                                    height: 40,
+                                    height: 50,
                                     width: 40,
-                                    margin: EdgeInsets.only(
+                                    margin: const EdgeInsets.only(
                                         top: 10, left: 30, right: 20),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
-                                      color: Color(0xFFD9D9D9),
+                                      color: const Color(0xFFD9D9D9),
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "20",
-                                          style: TextStyle(
+                                          _candidateExperience(
+                                              widget.candidate.careerStartYear),
+                                          style: const TextStyle(
                                             fontFamily: "Inter",
                                             fontWeight: FontWeight.bold,
                                             fontSize: 25,
                                             color: Colors.black,
                                           ),
                                         ),
-                                        SizedBox(width: 10),
-                                        Text(
+                                        const SizedBox(width: 10),
+                                        const Text(
                                           "years of \nexperience",
                                           style: TextStyle(
                                             fontFamily: "Inter",
@@ -819,11 +1185,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 30),
                               child: Text(
                                 widget.candidate.bodySummary,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.black,
                                 ),
@@ -839,13 +1205,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                 SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 265),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 260),
                           child: Text(
-                            "Top 3 Issues",
+                            "Top Issues",
                             style: TextStyle(
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w600,
@@ -865,7 +1231,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                           ),
                           textAlign: TextAlign.left,
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -873,121 +1239,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  createIsssueCard(
-                                    "Gun Control",
-                                    "Proponents of public education believe every child in \nAmerica, regardless of family income or place of \nresidence, deserves access to a quality education.",
-                                    [
-                                      _ratingCircles(widget
-                                          .candidateValues.educationScore),
-                                    ],
-                                  ),
                                   Column(
-                                    children: [
-                                      Center(
-                                        child: TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              _isCardVisible = !_isCardVisible;
-                                            });
-                                          },
-                                          child: Text(
-                                            _isCardVisible
-                                                ? "View less"
-                                                : "View more",
-                                            style: TextStyle(
-                                                color: Color(0xFF57636C)),
-                                          ),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: _isCardVisible,
-                                        child: Column(
-                                          children: [],
-                                        ),
-                                      ),
-                                    ],
+                                    children:
+                                        _getIssueCards((widget.candidate.id)),
                                   ),
                                   const SizedBox(height: 25),
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 265),
-                                    child: Text(
-                                      "Top Stories",
-                                      style: TextStyle(
-                                        fontFamily: "Inter",
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15,
-                                      ),
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                '“Gov. Whitmer signs bill expanding Michigan civil rights law to include LGBTQ protections”',
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF57636C),
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                ),
-                                              ),
-                                              Text(
-                                                '~ Detroit Free Press',
-                                                style: TextStyle(
-                                                  fontSize: 10.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Inter',
-                                                  color: Colors.black,
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                '“How the repeal of Michigans right-to-work laws could impact Michiganders”',
-                                                style: TextStyle(
-                                                  fontSize: 12.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Inter',
-                                                  color: Color(0xFF57636C),
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                ),
-                                              ),
-                                              Text(
-                                                '~ Detroit Free Press',
-                                                style: TextStyle(
-                                                  fontSize: 10.0,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Inter',
-                                                  color: Colors.black,
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 85),
                                 ],
                               ),
                             ),
@@ -998,15 +1254,14 @@ class _CandidateProfileState extends State<CandidateProfile>
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Row(
                           children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  right: 20, top: 20, bottom: 10),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20, bottom: 10),
                               child: Text(
                                 "Education",
                                 style: TextStyle(
@@ -1025,11 +1280,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 });
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: 220, top: 20, bottom: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 240, top: 20, bottom: 10),
                                 child: Text(
                                   _showAllCardsEducation ? "Hide" : "View all",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: "Inter",
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12,
@@ -1042,37 +1297,20 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           child: Row(
-                            children: [
-                              createEducationCard(
-                                "Michigan State University College of Law",
-                                "Doctor of Law - JD, Law",
-                                "1998",
-                              ),
-                              SizedBox(width: 15),
-                              createEducationCard(
-                                "Michigan State University",
-                                "Bachelors of Art, Marketing/Communications",
-                                "1989-93",
-                              ),
-                              SizedBox(width: 15),
-                              if (_showAllCardsEducation)
-                                Row(
-                                  children: [
-                                    createEducationCard(
-                                      "More",
-                                      "More",
-                                      "More",
-                                    ),
-                                  ],
-                                ),
-                            ],
+                            children: _showAllCardsEducation
+                                ? createEducationCards(
+                                    widget.candidate.education)
+                                : createEducationCards(widget
+                                    .candidate.education
+                                    .take(3)
+                                    .toList()),
                           ),
                         ),
                         Row(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(
                                   right: 0, top: 20, bottom: 10),
                               child: Text(
@@ -1093,16 +1331,16 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 });
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: 180, top: 20, bottom: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 183, top: 20, bottom: 10),
                                 child: Text(
                                   _showAllCardsPreviousPositions
                                       ? "Hide"
                                       : "View all",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: "Inter",
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 12,
+                                    fontSize: 11,
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
@@ -1112,39 +1350,20 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           child: Row(
-                            children: [
-                              createExperienceCard(
-                                "Governor",
-                                "State of Michigan",
-                                "2019 - Present",
-                              ),
-                              SizedBox(width: 5),
-                              createExperienceCard(
-                                "Senate Democratic Leader",
-                                "Michigan State Senate",
-                                "2010 - 2014",
-                              ),
-                              SizedBox(width: 5),
-                              createExperienceCard(
-                                "Senator",
-                                "Michigan State Senate",
-                                "2006 - 2014",
-                              ),
-                              SizedBox(width: 5),
-                              if (_showAllCardsPreviousPositions)
-                                createExperienceCard(
-                                  "More",
-                                  "More",
-                                  "More",
-                                ),
-                            ],
+                            children: _showAllCardsPreviousPositions
+                                ? createPositionCards(
+                                    widget.candidate.prevPositions)
+                                : createPositionCards(widget
+                                    .candidate.prevPositions
+                                    .take(3)
+                                    .toList()),
                           ),
                         ),
                         Row(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(
                                   right: 0, top: 20, bottom: 10),
                               child: Text(
@@ -1165,16 +1384,16 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 });
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(
-                                    left: 190, top: 20, bottom: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 183, top: 20, bottom: 10),
                                 child: Text(
                                   _showAllCardsOtherExperience
                                       ? "Hide"
                                       : "View all",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: "Inter",
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 12,
+                                    fontSize: 11,
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
@@ -1184,147 +1403,136 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           child: Row(
-                            children: [
-                              createExperienceCard(
-                                "Ingham County Prosecutor",
-                                "Ingham County",
-                                "2016",
-                              ),
-                              SizedBox(width: 5),
-                              createExperienceCard(
-                                "Towsley Policy Maker in Residence",
-                                "University of Michigan",
-                                "2015 - 2016",
-                              ),
-                              SizedBox(width: 5),
-                              createExperienceCard(
-                                "Of Counsel",
-                                "Dickinson Wright PLLC",
-                                "2015 - 2016",
-                              ),
-                              SizedBox(width: 5),
-                              if (_showAllCardsOtherExperience)
-                                createExperienceCard(
-                                  "More",
-                                  "More",
-                                  "More",
-                                ),
-                            ],
+                            children: _showAllCardsOtherExperience
+                                ? createPositionCards(
+                                    widget.candidate.prevPositions)
+                                : createPositionCards(widget
+                                    .candidate.prevPositions
+                                    .take(3)
+                                    .toList()),
                           ),
                         ),
                         Padding(
-                          padding:
-                              EdgeInsets.only(right: 255, top: 20, bottom: 10),
-                          child: Text(
-                            "Their campaign",
-                            style: TextStyle(
-                              fontFamily: "Inter",
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                            ),
-                            textAlign: TextAlign.left,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20.0,
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Image(
-                                    image: AssetImage('assets/budget.png'),
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    '\$14 Million',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "Inter",
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    'Contributors',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                      fontFamily: "Inter",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 20.0),
-                              Column(
-                                children: [
-                                  Image(
-                                    image:
-                                        AssetImage('assets/contributers.png'),
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    '32',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: "Inter",
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    'Staff members',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                      fontFamily: "Inter",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(width: 20.0),
-                              Column(
-                                children: [
-                                  Image(
-                                    image: AssetImage('assets/marketing.png'),
-                                    width: 35,
-                                    height: 35,
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    '\$14 Million',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "Inter",
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                  Text(
-                                    'Campaign Budget',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontFamily: "Inter",
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(left: 20, top: 40, bottom: 40),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
+                                "Their campaign",
+                                style: TextStyle(
+                                  fontFamily: "Inter",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              const SizedBox(height: 20.0),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    children: [
+                                      const Image(
+                                        image: AssetImage('assets/budget.png'),
+                                        width: 35,
+                                        height: 35,
+                                      ),
+                                      const SizedBox(height: 5.0),
+                                      Text(
+                                        '\$' +
+                                            getDonorsString(
+                                                widget.candidate.countOfDonors),
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Inter",
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5.0),
+                                      const Text(
+                                        'Contributors',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey,
+                                          fontFamily: "Inter",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      const Image(
+                                        image: AssetImage(
+                                            'assets/contributers.png'),
+                                        width: 35,
+                                        height: 35,
+                                      ),
+                                      const SizedBox(height: 5.0),
+                                      Text(
+                                        widget.candidate.countOfStaff,
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "Inter",
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5.0),
+                                      const Text(
+                                        'Staff members',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey,
+                                          fontFamily: "Inter",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      const Image(
+                                        image:
+                                            AssetImage('assets/marketing.png'),
+                                        width: 35,
+                                        height: 35,
+                                      ),
+                                      const SizedBox(height: 5.0),
+                                      Text(
+                                        '\$' +
+                                            getBudgetString(widget
+                                                .candidate.campaignBudget),
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: "Inter",
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5.0),
+                                      const Text(
+                                        'Campaign Budget',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontFamily: "Inter",
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 20, right: 155),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
                                 "Additional donations include:",
                                 style: TextStyle(
                                   fontFamily: "Inter",
@@ -1334,10 +1542,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 textAlign: TextAlign.left,
                               ),
                               Text(
-                                "Service Employees International Union, Iron Workers Local 25 PAC, and General Motors PAC",
-                                style: TextStyle(
+                                "${widget.candidate.donors.join(', ')}",
+                                style: const TextStyle(
                                   fontFamily: "Inter",
-                                  fontSize: 10,
+                                  fontSize: 12,
                                 ),
                                 textAlign: TextAlign.left,
                               ),

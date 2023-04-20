@@ -1,7 +1,6 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import '../dynamoModels/Demographics/UserDemographics.dart';
-import 'VoterInfo.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import 'VoterInfo2.dart';
 
@@ -25,6 +24,10 @@ class _Demographics2State extends State<Demographics2> {
   bool ageExpand = false;
   bool ethnicityExpand = false;
   bool genderExpand = false;
+  Color _nextButtonColor = Color(0xFF808080);
+  bool _ageCheckmarkVisibility = false;
+  bool _ethnicityCheckmarkVisibility = false;
+  bool _genderCheckmarkVisibility = false;
 
   void _nextPage() async {
     Navigator.push(
@@ -73,6 +76,40 @@ class _Demographics2State extends State<Demographics2> {
       fontSize: 15.0,
       color: Color(0xFF57636C),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.answers.racialIdentity != "") {
+      _nextButtonColor = const Color(0xFFF3D433);
+      _ageCheckmarkVisibility = true;
+      _ethnicityCheckmarkVisibility = true;
+      _genderCheckmarkVisibility = true;
+    }
+  }
+
+  void radioButtonSelected(int tileIndex, String selection) {
+    if (tileIndex == 0) {
+      //set age range
+      widget.answers.dateOfBirth = selection;
+      _ageCheckmarkVisibility = true;
+    } else if (tileIndex == 1) {
+      //set race/ethnicity
+      widget.answers.racialIdentity = selection;
+      _ethnicityCheckmarkVisibility = true;
+    } else {
+      //set gender
+      widget.answers.gender = selection;
+      _genderCheckmarkVisibility = true;
+    }
+    //check if all options are filled, changed button to yellow if so
+    if (widget.answers.racialIdentity != "" &&
+        widget.answers.dateOfBirth != "" &&
+        widget.answers.gender != "") {
+      _nextButtonColor = const Color(0xFFF3D433);
+    }
+    setState(() {});
   }
 
   @override
@@ -131,15 +168,26 @@ class _Demographics2State extends State<Demographics2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 0);
                       },
-                      title: const Text(
-                        'your age',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'your age',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _ageCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Text(
@@ -152,62 +200,46 @@ class _Demographics2State extends State<Demographics2> {
                             color: Color(0xFF57636C),
                           ),
                         ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('16-25', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "16-25",
-                              groupValue: widget.answers.dateOfBirth,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.dateOfBirth = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('26-35', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "26-35",
-                              groupValue: widget.answers.dateOfBirth,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.dateOfBirth = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('36-55', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "36-55",
-                              groupValue: widget.answers.dateOfBirth,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.dateOfBirth = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('56+', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "56+",
-                              groupValue: widget.answers.dateOfBirth,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.dateOfBirth = s!;
-                                });
-                              }),
-                        ),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('18-25', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "18-25",
+                            groupValue: widget.answers.dateOfBirth,
+                            onChanged: (String? s) {
+                              radioButtonSelected(0, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('26-35', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "26-35",
+                            groupValue: widget.answers.dateOfBirth,
+                            onChanged: (String? s) {
+                              radioButtonSelected(0, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('36-55', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "36-55",
+                            groupValue: widget.answers.dateOfBirth,
+                            onChanged: (String? s) {
+                              radioButtonSelected(0, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('56+', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "56+",
+                            groupValue: widget.answers.dateOfBirth,
+                            onChanged: (String? s) {
+                              radioButtonSelected(0, s!);
+                            }),
                       ],
                     ),
                   ),
@@ -215,7 +247,7 @@ class _Demographics2State extends State<Demographics2> {
 
                 //ethnicity dropdown
                 Padding(
-                  padding: EdgeInsets.fromLTRB(30, 0, 30, 20),
+                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
                   child: Card(
                     color: Colors.transparent,
                     elevation: 0,
@@ -230,15 +262,26 @@ class _Demographics2State extends State<Demographics2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 1);
                       },
-                      title: const Text(
-                        'race/ethnicity',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'race/ethnicity',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _ethnicityCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Text(
@@ -251,93 +294,69 @@ class _Demographics2State extends State<Demographics2> {
                             color: Color(0xFF57636C),
                           ),
                         ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Black', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Black",
-                              groupValue: widget.answers.racialIdentity,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.racialIdentity = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('White', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "White",
-                              groupValue: widget.answers.racialIdentity,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.racialIdentity = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Asian', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Asian",
-                              groupValue: widget.answers.racialIdentity,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.racialIdentity = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('American Indian/Alaska Native',
-                              style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "American Indian/Alaska Native",
-                              groupValue: widget.answers.racialIdentity,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.racialIdentity = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Native Hawaiian/Pacific Islander',
-                              style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Native Hawaiian/Pacific Islander",
-                              groupValue: widget.answers.racialIdentity,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.racialIdentity = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Hispanic/Latino',
-                              style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Hispanic/Latino",
-                              groupValue: widget.answers.racialIdentity,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.racialIdentity = s!;
-                                });
-                              }),
-                        ),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Black', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Black",
+                            groupValue: widget.answers.racialIdentity,
+                            onChanged: (String? s) {
+                              radioButtonSelected(1, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('White', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "White",
+                            groupValue: widget.answers.racialIdentity,
+                            onChanged: (String? s) {
+                              radioButtonSelected(1, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Asian', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Asian",
+                            groupValue: widget.answers.racialIdentity,
+                            onChanged: (String? s) {
+                              radioButtonSelected(1, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('American Indian/Alaska Native',
+                                style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "American Indian/Alaska Native",
+                            groupValue: widget.answers.racialIdentity,
+                            onChanged: (String? s) {
+                              radioButtonSelected(1, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Native Hawaiian/Pacific Islander',
+                                style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Native Hawaiian/Pacific Islander",
+                            groupValue: widget.answers.racialIdentity,
+                            onChanged: (String? s) {
+                              radioButtonSelected(1, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Hispanic/Latino',
+                                style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Hispanic/Latino",
+                            groupValue: widget.answers.racialIdentity,
+                            onChanged: (String? s) {
+                              radioButtonSelected(1, s!);
+                            }),
                       ],
                     ),
                   ),
@@ -360,15 +379,26 @@ class _Demographics2State extends State<Demographics2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 2);
                       },
-                      title: Text(
-                        'gender',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'gender',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _genderCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Text(
@@ -381,63 +411,48 @@ class _Demographics2State extends State<Demographics2> {
                             color: Color(0xFF57636C),
                           ),
                         ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Female', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Female",
-                              groupValue: widget.answers.gender,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.gender = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Male', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Male",
-                              groupValue: widget.answers.gender,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.gender = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Non-binary', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Non-binary",
-                              groupValue: widget.answers.gender,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.gender = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Gender Non-conforming',
-                              style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Gender Non-conforming",
-                              groupValue: widget.answers.gender,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.gender = s!;
-                                });
-                              }),
-                        ),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Female', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Female",
+                            groupValue: widget.answers.gender,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Male', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Male",
+                            groupValue: widget.answers.gender,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Non-binary', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Non-binary",
+                            groupValue: widget.answers.gender,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Gender Non-conforming',
+                                style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Gender Non-conforming",
+                            groupValue: widget.answers.gender,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!);
+                            }),
                       ],
                     ),
                   ),
@@ -455,7 +470,7 @@ class _Demographics2State extends State<Demographics2> {
                         onPressed: () {
                           _nextPage();
                         },
-                        color: const Color(0xFFF3D433),
+                        color: _nextButtonColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

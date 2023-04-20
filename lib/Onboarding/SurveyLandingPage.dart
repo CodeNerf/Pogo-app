@@ -1,25 +1,27 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pogo/Onboarding/AddressAutocomplete.dart';
+import 'package:pogo/Onboarding/Issues.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import '../amplifyFunctions.dart';
-import 'Demographics.dart';
 import '../SignInSignUpPage.dart';
 import 'Demographics2.dart';
+import 'VoterInfo2.dart';
 
 class SurveyLandingPage extends StatefulWidget {
   //check for survey completion, if completed then create ratings object with database values
   UserDemographics answers = UserDemographics(id: '');
   UserIssueFactorValues ratings = UserIssueFactorValues(userId: '');
-  SurveyLandingPage({Key? key}) : super(key: key);
+  final int pageSelect;
+  SurveyLandingPage({Key? key, required this.pageSelect}) : super(key: key);
 
   @override
   State<SurveyLandingPage> createState() => _SurveyLandingPageState();
 }
 
 class _SurveyLandingPageState extends State<SurveyLandingPage> {
-  bool _buttonVisible = false;
   @override
   void initState() {
     _getUserFactors();
@@ -37,7 +39,7 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const SignInSignUpPage(index: 1)));
+              builder: (context) => const SignInSignUpPage(index: 0)));
     }
     // Need to push associated user factors to the database before running this function.
     while (retry) {
@@ -48,7 +50,150 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
           setState(() {
             widget.ratings = values[0];
             widget.answers = values[1];
-            _buttonVisible = true;
+            switch (widget.pageSelect) {
+              case 0:
+                //route to demographics
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Demographics2(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 0,
+                        )));
+                break;
+              case 1:
+                //route to voter info
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VoterInfo2(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 0,
+                        )));
+                break;
+              case 2:
+              //route to issue 1
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 0,
+                        )));
+                break;
+              case 3:
+              //route to issue 2
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 1,
+                        )));
+                break;
+              case 4:
+              //route to issue 3
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 2,
+                        )));
+                break;
+              case 5:
+              //route to issue 4
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 3,
+                        )));
+                break;
+              case 6:
+              //route to issue 5
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 4,
+                        )));
+                break;
+              case 7:
+              //route to issue 6
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 5,
+                        )));
+                break;
+              case 8:
+              //route to issue 7
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 6,
+                        )));
+                break;
+              case 9:
+              //route to issue 8
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 7,
+                        )));
+                break;
+              case 10:
+              //route to issue 9
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 8,
+                        )));
+                break;
+              case 11:
+              //route to issue 10
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Issues(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 9,
+                        )));
+                break;
+              default:
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Demographics2(
+                          ratings: widget.ratings,
+                          answers: widget.answers,
+                          issuesIndex: 0,
+                        )));
+                break;
+            }
           });
         });
         retry = false;
@@ -64,103 +209,22 @@ class _SurveyLandingPageState extends State<SurveyLandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF1F4F8),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height / 3,
-                  width: MediaQuery.of(context).size.width,
-                  child: const FittedBox(
-                    fit: BoxFit.contain,
-                    child: Text(
-                      "PERSONALIZE\nYOUR\nSEARCH",
-                      style: TextStyle(
-                        shadows: <Shadow>[
-                          Shadow(
-                            blurRadius: 10.0,
-                            offset: Offset(0, 2),
-                            color: Colors.black38,
-                          ),
-                        ],
-                        fontWeight: FontWeight.w900,
-                        fontSize: 34,
-                      ),
-                    ),
-                  ),
-                ),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: const Scaffold(
+        backgroundColor: Color(0xFFE1E1E1),
+        body: Center(
+          child: SizedBox(
+            width: 30,
+            height: 30,
+            child: FittedBox(
+              fit: BoxFit.fill,
+              child: CircularProgressIndicator(
+                backgroundColor: Color(0xFFE1E1E1),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height / 4,
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Image.asset(
-                      "assets/surveyLanding.png",
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 50, 10, 10),
-                child: Visibility(
-                  visible: _buttonVisible,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 75,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF3D433),
-                      borderRadius: BorderRadius.circular(25),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade600,
-                          spreadRadius: 3,
-                          blurRadius: 7,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(25),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Demographics2(
-                                        ratings: widget.ratings,
-                                        answers: widget.answers,
-                                        issuesIndex: 0,
-                                      )));
-                        },
-                        child: const Center(
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              'PoGo',
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF0E0E0E),
-                                fontSize: 35,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

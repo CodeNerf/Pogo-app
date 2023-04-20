@@ -1,9 +1,7 @@
-import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'Demographics2.dart';
 import 'Issues.dart';
-import 'VoterInfo.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 
 class VoterInfo2 extends StatefulWidget {
@@ -27,6 +25,11 @@ class _VoterInfo2State extends State<VoterInfo2> {
   bool _partyExpand = false;
   bool _preferenceExpand = false;
   bool _residencyExpand = false;
+  Color _nextButtonColor = const Color(0xFF808080);
+  bool _regStatusCheckmarkVisibility = false;
+  bool _regStateCheckmarkVisibility = false;
+  bool _partyCheckmarkVisibility = false;
+  bool _voteCheckmarkVisibility = false;
 
   void _nextPage() async {
     Navigator.push(
@@ -44,35 +47,35 @@ class _VoterInfo2State extends State<VoterInfo2> {
       switch (index) {
         case 0:
           _regStatusExpand = true;
+          _residencyExpand = false;
           _partyExpand = false;
           _preferenceExpand = false;
-          _residencyExpand = false;
           break;
         case 1:
           _regStatusExpand = false;
-          _partyExpand = true;
+          _residencyExpand = true;
+          _partyExpand = false;
           _preferenceExpand = false;
-          _residencyExpand = false;
           break;
         case 2:
           _regStatusExpand = false;
-          _partyExpand = false;
-          _preferenceExpand = true;
           _residencyExpand = false;
+          _partyExpand = true;
+          _preferenceExpand = false;
           break;
         case 3:
           _regStatusExpand = false;
+          _residencyExpand = false;
           _partyExpand = false;
-          _preferenceExpand = false;
-          _residencyExpand = true;
+          _preferenceExpand = true;
           break;
       }
       setState(() {});
     } else {
       _regStatusExpand = false;
+      _residencyExpand = false;
       _partyExpand = false;
       _preferenceExpand = false;
-      _residencyExpand = false;
       setState(() {});
     }
   }
@@ -98,6 +101,44 @@ class _VoterInfo2State extends State<VoterInfo2> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.answers.politicalAffiliation != "") {
+      _nextButtonColor = const Color(0xFFF3D433);
+      _regStatusCheckmarkVisibility = true;
+      _regStateCheckmarkVisibility = true;
+      _partyCheckmarkVisibility = true;
+      _voteCheckmarkVisibility = true;
+    }
+  }
+
+  void radioButtonSelected(int tileIndex, String selection, bool status) {
+    if (tileIndex == 0) {
+      //set registration status
+      widget.answers.voterRegistrationStatus = status;
+      _regStatusCheckmarkVisibility = true;
+    } else if (tileIndex == 1) {
+      //set registered state status
+      widget.answers.liveInRegisteredState = status;
+      _regStateCheckmarkVisibility = true;
+    } else if (tileIndex == 2) {
+      //set political party affiliation
+      widget.answers.politicalAffiliation = selection;
+      _partyCheckmarkVisibility = true;
+    } else {
+      //set how do you vote
+      widget.answers.partyVoting = selection;
+      _voteCheckmarkVisibility = true;
+    }
+    //check if all options are filled, changed button to yellow if so
+    if (widget.answers.partyVoting != "" &&
+        widget.answers.politicalAffiliation != "") {
+      _nextButtonColor = const Color(0xFFF3D433);
+    }
+    setState(() {});
   }
 
   @override
@@ -159,15 +200,26 @@ class _VoterInfo2State extends State<VoterInfo2> {
                       onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 0);
                       },
-                      title: const Text(
-                        'registration status',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'registration status',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _regStatusCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Padding(
@@ -184,37 +236,104 @@ class _VoterInfo2State extends State<VoterInfo2> {
                             ),
                           ),
                         ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Yes', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: true,
-                              groupValue:
-                                  widget.answers.voterRegistrationStatus,
-                              onChanged: (Object? o) {
-                                setState(() {
-                                  widget.answers.voterRegistrationStatus = true;
-                                });
-                              }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Yes', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: true,
+                            groupValue: widget.answers.voterRegistrationStatus,
+                            onChanged: (Object? o) {
+                              radioButtonSelected(0, "", true);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('No', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: false,
+                            groupValue: widget.answers.voterRegistrationStatus,
+                            onChanged: (Object? o) {
+                              radioButtonSelected(0, "", false);
+                            }),
+                      ],
+                    ),
+                  ),
+                ),
+
+                //do you live in registered state dropdown
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
+                  child: Card(
+                    color: Colors.transparent,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: const BorderSide(color: Colors.black, width: 1),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: ExpansionTile(
+                      key: GlobalKey(),
+                      initiallyExpanded: _residencyExpand,
+                      onExpansionChanged: (bool expanded) {
+                        _expandTap(expanded, 1);
+                      },
+                      title: Row(
+                        children: [
+                          const Text(
+                            'registered state',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _regStateCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            'Do you currently live in the state that you are registered to vote in?',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
                         ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('No', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: false,
-                              groupValue:
-                                  widget.answers.voterRegistrationStatus,
-                              onChanged: (Object? o) {
-                                setState(() {
-                                  widget.answers.voterRegistrationStatus =
-                                      false;
-                                });
-                              }),
-                        ),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Yes', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: true,
+                            groupValue: widget.answers.liveInRegisteredState,
+                            onChanged: (Object? o) {
+                              radioButtonSelected(1, "", true);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('No', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: false,
+                            groupValue: widget.answers.liveInRegisteredState,
+                            onChanged: (Object? o) {
+                              radioButtonSelected(1, "", false);
+                            }),
                       ],
                     ),
                   ),
@@ -235,17 +354,28 @@ class _VoterInfo2State extends State<VoterInfo2> {
                       key: GlobalKey(),
                       initiallyExpanded: _partyExpand,
                       onExpansionChanged: (bool expanded) {
-                        _expandTap(expanded, 1);
+                        _expandTap(expanded, 2);
                       },
-                      title: const Text(
-                        'political party',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'political party',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _partyCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Padding(
@@ -262,83 +392,66 @@ class _VoterInfo2State extends State<VoterInfo2> {
                             ),
                           ),
                         ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Republican', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Republican",
-                              groupValue: widget.answers.politicalAffiliation,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.politicalAffiliation = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Democratic', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Democratic",
-                              groupValue: widget.answers.politicalAffiliation,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.politicalAffiliation = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Libertarian', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Libertarian",
-                              groupValue: widget.answers.politicalAffiliation,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.politicalAffiliation = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Green', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Green",
-                              groupValue: widget.answers.politicalAffiliation,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.politicalAffiliation = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Independent', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Independent",
-                              groupValue: widget.answers.politicalAffiliation,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.politicalAffiliation = s!;
-                                });
-                              }),
-                        ),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Republican', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Republican",
+                            groupValue: widget.answers.politicalAffiliation,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!, false);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Democratic', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Democratic",
+                            groupValue: widget.answers.politicalAffiliation,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!, false);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Libertarian', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Libertarian",
+                            groupValue: widget.answers.politicalAffiliation,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!, false);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Green', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Green",
+                            groupValue: widget.answers.politicalAffiliation,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!, false);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Independent', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Independent",
+                            groupValue: widget.answers.politicalAffiliation,
+                            onChanged: (String? s) {
+                              radioButtonSelected(2, s!, false);
+                            }),
                       ],
                     ),
                   ),
                 ),
 
-                /*
-                //voting preference dropdown, there is not currently a value for this in db
+                //how do you vote dropdown
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
                   child: Card(
@@ -353,81 +466,34 @@ class _VoterInfo2State extends State<VoterInfo2> {
                       key: GlobalKey(),
                       initiallyExpanded: _preferenceExpand,
                       onExpansionChanged: (bool expanded) {
-                        _expandTap(expanded, 2);
-                      },
-                      title: const Text(
-                        'how do you vote?',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
-                      ),
-                      children: [
-                        const Text(
-                          'Which party do you vote for?',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15.0,
-                            color: Color(0xFF57636C),
-                          ),
-                        ),
-                        ListTile(
-                          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Female', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Female",
-                              groupValue: widget.answers.gender,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.gender = s!;
-                                });
-                              }
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                 */
-
-                //do you live in registered state dropdown
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: const BorderSide(color: Colors.black, width: 1),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: ExpansionTile(
-                      key: GlobalKey(),
-                      initiallyExpanded: _residencyExpand,
-                      onExpansionChanged: (bool expanded) {
                         _expandTap(expanded, 3);
                       },
-                      title: const Text(
-                        'registered state',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                          color: Color(0xFF57636C),
-                        ),
+                      title: Row(
+                        children: [
+                          const Text(
+                            'how do you vote?',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15.0,
+                              color: Color(0xFF57636C),
+                            ),
+                          ),
+                          Visibility(
+                            visible: _voteCheckmarkVisibility,
+                            child: const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
                       ),
                       children: [
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
-                            'Do you currently live in the state that you are registered to vote in?',
+                            'Which political party do you vote for?',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'Inter',
@@ -438,34 +504,60 @@ class _VoterInfo2State extends State<VoterInfo2> {
                             ),
                           ),
                         ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('Yes', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "Yes",
-                              groupValue: widget.answers.registrationState,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.registrationState = s!;
-                                });
-                              }),
-                        ),
-                        ListTile(
-                          visualDensity:
-                              const VisualDensity(horizontal: -4, vertical: -4),
-                          title: Text('No', style: optionsTextStyle()),
-                          leading: Radio(
-                              activeColor: Colors.black,
-                              value: "No",
-                              groupValue: widget.answers.registrationState,
-                              onChanged: (String? s) {
-                                setState(() {
-                                  widget.answers.registrationState = s!;
-                                });
-                              }),
-                        ),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Republican', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Republican",
+                            groupValue: widget.answers.partyVoting,
+                            onChanged: (String? s) {
+                              radioButtonSelected(3, s!, false);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Democratic', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Democratic",
+                            groupValue: widget.answers.partyVoting,
+                            onChanged: (String? s) {
+                              radioButtonSelected(3, s!, false);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Libertarian', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Libertarian",
+                            groupValue: widget.answers.partyVoting,
+                            onChanged: (String? s) {
+                              radioButtonSelected(3, s!, false);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title: Text('Green', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Green",
+                            groupValue: widget.answers.partyVoting,
+                            onChanged: (String? s) {
+                              radioButtonSelected(3, s!, false);
+                            }),
+                        RadioListTile(
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            title:
+                                Text('Independent', style: optionsTextStyle()),
+                            activeColor: Colors.black,
+                            value: "Independent",
+                            groupValue: widget.answers.partyVoting,
+                            onChanged: (String? s) {
+                              radioButtonSelected(3, s!, false);
+                            }),
                       ],
                     ),
                   ),
@@ -483,7 +575,7 @@ class _VoterInfo2State extends State<VoterInfo2> {
                         onPressed: () {
                           _nextPage();
                         },
-                        color: const Color(0xFFF3D433),
+                        color: _nextButtonColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

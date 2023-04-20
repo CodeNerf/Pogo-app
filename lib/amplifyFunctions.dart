@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
@@ -20,11 +22,10 @@ Future<bool> configureAmplify() async {
 Future<bool> isUserSignedIn() async {
   try {
     final result = await Amplify.Auth.fetchAuthSession();
-    if(result.isSignedIn) {
+    if (result.isSignedIn) {
       safePrint('USER IS SIGNED IN');
       return true;
-    }
-    else {
+    } else {
       safePrint('USER IS SIGNED OUT');
       return false;
     }

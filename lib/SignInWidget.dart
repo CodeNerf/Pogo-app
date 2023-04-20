@@ -23,7 +23,6 @@ class _SignInState extends State<SignIn> {
   bool _obscure = true;
   Icon _eye = const Icon(Icons.remove_red_eye);
   String _errorText = '';
-  double _errorSizeBoxSize = 0;
 
   Future _signIn(context) async {
     if (await signInUser(
@@ -33,9 +32,6 @@ class _SignInState extends State<SignIn> {
         //check if survey is completed
         UserDemographics user =
             await getUserDemographics(_emailSignInController.text);
-        user.lastLogin = DateFormat('yyyy-MM-dd').format(DateTime.now());
-        safePrint(user.lastLogin);
-        await putUserDemographics(user);
         if (user.surveyCompletion == true) {
           await Navigator.push(
             context,
@@ -47,7 +43,7 @@ class _SignInState extends State<SignIn> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SurveyLandingPage(),
+              builder: (context) => SurveyLandingPage(pageSelect: 0,),
             ),
           );
         }
@@ -88,12 +84,12 @@ class _SignInState extends State<SignIn> {
         */
       } else {
         setState(() {
-          _errorText = 'Could not log in.';
+          _errorText = "Could not sign in. Please try again.";
         });
       }
     } else {
       setState(() {
-        _errorText = 'Could not log in.';
+        _errorText = "Could not sign in. Please try again.";
       });
     }
   }
@@ -175,9 +171,25 @@ class _SignInState extends State<SignIn> {
             ),
           ),
         ),
+        //sign in error text
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 40, 30, 0),
+          child: Text(
+            _errorText,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 18,
+              fontFamily: 'Inter',
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w500,
+              height: 1.2,
+            ),
+          ),
+        ),
         //EMAIL
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
+          padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
@@ -241,7 +253,7 @@ class _SignInState extends State<SignIn> {
 
         //forgot password text button
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+          padding: const EdgeInsets.fromLTRB(0, 20, 25, 0),
           child: Align(
             alignment: Alignment.bottomRight,
             child: GestureDetector(
@@ -262,7 +274,7 @@ class _SignInState extends State<SignIn> {
 
         //sign in button
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 40, 25, 20),
+          padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
           child: Container(
             width: double.infinity,
             height: 50,
