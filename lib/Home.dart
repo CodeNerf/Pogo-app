@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
 
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   int _selectedIndex = 0;
-  List<CandidateDemographics> _ballotStack = [];
+  final List<CandidateDemographics> _ballotStack = [];
   late Ballot _userBallot;
   late UserIssueFactorValues _currentUserFactors;
   late List<CandidateDemographics> _candidateStack;
@@ -55,8 +55,8 @@ class _HomeState extends State<Home> {
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
   late List<MatchingStatistics> _candidateStackStatistics;
-  List<CandidateDemographics> _filteredCandidateStack = [];
-  bool _filtering = false;
+  final List<CandidateDemographics> _filteredCandidateStack = [];
+  final bool _filtering = false;
 
   _updateBallot(CandidateDemographics candidate,
       List<CandidateDemographics> podiumStack) {
@@ -144,7 +144,7 @@ class _HomeState extends State<Home> {
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfileFromBallot,
+          loadCandidateProfile: _loadCandidateProfileFromPodium,
           filter: true,
         );
         _selectedIndex = 1;
@@ -166,7 +166,7 @@ class _HomeState extends State<Home> {
       updateBallot: _updateBallot,
       candidateStackFactors: _candidateStackFactors,
       unFilterPodiumCandidates: _unFilterPodiumCandidates,
-      loadCandidateProfile: _loadCandidateProfileFromBallot,
+      loadCandidateProfile: _loadCandidateProfileFromPodium,
       filter: false,
     );
     setState(() {
@@ -202,7 +202,7 @@ class _HomeState extends State<Home> {
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfileFromBallot,
+          loadCandidateProfile: _loadCandidateProfileFromPodium,
           filter: _filtering,
         ),
         BallotPage(
@@ -211,7 +211,7 @@ class _HomeState extends State<Home> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfileFromPodium,
+          loadCandidateProfile: _loadCandidateProfileFromBallot,
         ),
         UserProfile(
           currentUserFactors: _currentUserFactors,

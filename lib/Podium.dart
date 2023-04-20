@@ -242,7 +242,7 @@ class _PodiumState extends State<Podium> {
       ),
       child: InkWell(
         onTap: () async {
-          _goToCandidateProfile('${candidate.candidateName}');
+          _goToCandidateProfile(candidate.candidateName);
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
