@@ -9,6 +9,7 @@ import 'package:pogo/dynamoModels/userBallots.dart';
 import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 
+// Puts specific users issue factor values into the UserIssueFactorValues table in DynamoDB
 Future<void> putUserIssueFactorValues(
     UserIssueFactorValues userIssueFactorValues) async {
   var client = http.Client();
@@ -29,6 +30,7 @@ Future<void> putUserIssueFactorValues(
   }
 }
 
+// Gets specific users issue factor values from the UserIssueFactorValues table in DynamoDB
 Future<UserIssueFactorValues> getUserIssueFactorValues(String userId) async {
   var client = http.Client();
   try {
@@ -48,6 +50,7 @@ Future<UserIssueFactorValues> getUserIssueFactorValues(String userId) async {
   }
 }
 
+// Puts specific candidates issue factor values into the candidate issue factor values table in DynamoDB
 Future<void> putCandidateIssueFactorValues(
     CandidateIssueFactorValues candidateIssueFactorValues) async {
   var client = http.Client();
@@ -67,6 +70,7 @@ Future<void> putCandidateIssueFactorValues(
   }
 }
 
+// Gets specific candidates issue factor values from the candidate issue factor values table in DynamoDB
 Future<CandidateIssueFactorValues> getCandidateIssueFactorValues(
     String candidateId) async {
   var client = http.Client();
@@ -87,6 +91,7 @@ Future<CandidateIssueFactorValues> getCandidateIssueFactorValues(
   }
 }
 
+// Puts specific users demographics into the UserDemographics table in DynamoDB
 Future<void> putUserDemographics(UserDemographics userDemographics) async {
   var client = http.Client();
   try {
@@ -105,6 +110,7 @@ Future<void> putUserDemographics(UserDemographics userDemographics) async {
   }
 }
 
+// Gets specific users demographics from the UserDemographics table in DynamoDB
 Future<UserDemographics> getUserDemographics(String userId) async {
   var client = http.Client();
   try {
@@ -124,6 +130,7 @@ Future<UserDemographics> getUserDemographics(String userId) async {
   }
 }
 
+// Puts specific candidates demographics into the OLD CandidateDemographics table in DynamoDB
 Future<void> putCandidateDemographics(
     CandidateDemographics candidateDemographics) async {
   var client = http.Client();
@@ -143,6 +150,7 @@ Future<void> putCandidateDemographics(
   }
 }
 
+// Gets specific candidates demographics from the CandidateDemographics table in DynamoDB
 Future<CandidateDemographics> getCandidateDemographics(
     String candidateId) async {
   var client = http.Client();
@@ -163,6 +171,7 @@ Future<CandidateDemographics> getCandidateDemographics(
   }
 }
 
+// Gets all candidates demographics from the CandidateDemographics table in DynamoDB
 Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
   var client = http.Client();
   var candidateDemographicsList = <CandidateDemographics>[];
@@ -187,6 +196,7 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
   }
 }
 
+// Puts specific users national ballot into the UserNationalBallot table in DynamoDB
 Future<void> putUserNationalBallot(UserNationalBallot userBallot) async {
   final client = http.Client();
   try {
@@ -204,6 +214,7 @@ Future<void> putUserNationalBallot(UserNationalBallot userBallot) async {
   }
 }
 
+// Gets specific users national ballot from the UserNationalBallot table in DynamoDB
 Future<UserNationalBallot> getUserNationalBallot(String userId) async {
   final client = http.Client();
   try {
@@ -220,6 +231,7 @@ Future<UserNationalBallot> getUserNationalBallot(String userId) async {
   }
 }
 
+// Puts specific users state ballot into the UserStateBallot table in DynamoDB
 Future<void> putUserStateBallot(UserStateBallot userBallot) async {
   final client = http.Client();
   try {
@@ -236,6 +248,7 @@ Future<void> putUserStateBallot(UserStateBallot userBallot) async {
   }
 }
 
+// Gets specific users state ballot from the UserStateBallot table in DynamoDB
 Future<UserStateBallot> getUserStateBallot(String userId) async {
   final client = http.Client();
   try {
@@ -252,6 +265,7 @@ Future<UserStateBallot> getUserStateBallot(String userId) async {
   }
 }
 
+// Puts specific users local ballot into the UserLocalBallot table in DynamoDB
 Future<void> putUserLocalBallot(UserLocalBallot userBallot) async {
   final client = http.Client();
   try {
@@ -268,6 +282,7 @@ Future<void> putUserLocalBallot(UserLocalBallot userBallot) async {
   }
 }
 
+// Gets specific users local ballot from the UserLocalBallot table in DynamoDB
 Future<UserLocalBallot> getUserLocalBallot(String userId) async {
   final client = http.Client();
   try {
@@ -284,6 +299,7 @@ Future<UserLocalBallot> getUserLocalBallot(String userId) async {
   }
 }
 
+// Puts specific users ballot into the UserBallot table in DynamoDB
 Future<void> putUserBallot(String userId, List<String> localBallot,
     List<String> stateBallot, List<String> nationalBallot) async {
   final client = http.Client();
@@ -306,6 +322,7 @@ Future<void> putUserBallot(String userId, List<String> localBallot,
   }
 }
 
+// Gets specific users ballot from the UserBallot table in DynamoDB
 Future<List<String>> getUserBallot(String userId) async {
   final client = http.Client();
   try {
@@ -328,6 +345,7 @@ Future<List<String>> getUserBallot(String userId) async {
   }
 }
 
+// Updates specific users ballot into the UserBallot table in DynamoDB
 Future<void> updateUserBallot(String userId, String candidateId) async {
   final allCandidates =
       await getAllCandidateDemographics(); //get a list of all available candidate (current one is mutated throughout executuion)
@@ -368,6 +386,7 @@ Future<void> updateUserBallot(String userId, String candidateId) async {
   }
 }
 
+// Gets all candidates from the CandidateIssueFactorValues table in DynamoDB
 Future<List<CandidateIssueFactorValues>>
     getAllCandidateIssueFactorValues() async {
   var client = http.Client();
@@ -393,6 +412,7 @@ Future<List<CandidateIssueFactorValues>>
   }
 }
 
+// Gets all candidates issues int the users candidate stack from the CandidateIssueFactorValues table in DynamoDB
 Future<List<CandidateIssueFactorValues>> getUserCandidateStackIssueFactorValues(
     String userId) async {
   var client = http.Client();
@@ -420,6 +440,7 @@ Future<List<CandidateIssueFactorValues>> getUserCandidateStackIssueFactorValues(
   }
 }
 
+// Gets all candidates demographics in the users candidate stack from the CandidateDemographics table in DynamoDB
 Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
     String userId) async {
   var client = http.Client();
@@ -446,6 +467,7 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
   }
 }
 
+// Gets all candidates the user deferred from the UserCandidateStack table in DynamoDB
 Future<List<CandidateDemographics>> getUserCandidatesWithDeferred(
     String userId) async {
   final deferredIDs = await getDeferred(userId);
@@ -464,6 +486,7 @@ Future<List<CandidateDemographics>> getUserCandidatesWithDeferred(
   return startingStack;
 }
 
+// Gets all candidates matching statistics for all candidates in user candidate stack from the MatchingStatistics table in DynamoDB
 Future<List<MatchingStatistics>> getUserCandidateStackStatistics(
     String userId) async {
   var client = http.Client();
@@ -489,6 +512,7 @@ Future<List<MatchingStatistics>> getUserCandidateStackStatistics(
   }
 }
 
+// Matches candidates to user and puts them in the UserCandidateStack table in DynamoDB
 Future<void> matchCandidatesToUser(String userId) async {
   var client = http.Client();
   try {
@@ -508,6 +532,7 @@ Future<void> matchCandidatesToUser(String userId) async {
   }
 }
 
+// Gets all candidates that were deferred by the user from the UserCandidateStack table in DynamoDB
 Future<List<String>> getDeferred(String userId) async {
   final client = http.Client();
   try {
@@ -530,6 +555,7 @@ Future<List<String>> getDeferred(String userId) async {
   }
 }
 
+// Puts deferred candidates that was deferred by the user from the UserCandidateStack table in DynamoDB
 Future<void> putDeferred(String deferred) async {
   final user = await getCurrentUser();
   final client = http.Client();
@@ -552,6 +578,7 @@ Future<void> putDeferred(String deferred) async {
   }
 }
 
+// Matches candidates to user and puts them in the UserCandidateStack and returns the stack from table in DynamoDB
 Future<Map<String, dynamic>> matchCandidatesToUserTest(
     UserIssueFactorValues userIssueFactorValues) async {
   var client = http.Client();

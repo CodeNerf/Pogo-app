@@ -14,12 +14,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/candidateDemographics",
+							"raw": "{{baseURL}}/candidateDemographics/test",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
-								"candidateDemographics"
+								"candidateDemographics",
+								"test"
 							]
 						}
 					},
@@ -31,13 +32,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/candidateDemographics/{{testCandidateId}}",
+							"raw": "{{baseURL}}/candidateDemographics/test/id-id-id-id",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"candidateDemographics",
-								"{{testCandidateId}}"
+								"test",
+								"id-id-id-id"
 							]
 						}
 					},
@@ -72,12 +74,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/candidateDemographics",
+							"raw": "{{baseURL}}/candidateDemographics/test",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
-								"candidateDemographics"
+								"candidateDemographics",
+								"test"
 							]
 						}
 					},
@@ -89,12 +92,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/candidateDemographics/{{testCandidateId}}",
+							"raw": "{{baseURL}}/candidateDemographics/test/{{testCandidateId}}",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"candidateDemographics",
+								"test",
 								"{{testCandidateId}}"
 							]
 						}
@@ -229,13 +233,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseURL}}/userissuefactorvalues/{{testUserId}}",
+							"raw": "{{baseURL}}/userissuefactorvalues/email@icloud.com",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"userissuefactorvalues",
-								"{{testUserId}}"
+								"email@icloud.com"
 							]
 						}
 					},
@@ -285,7 +289,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"userId\": \"{{testUserId}}\",\n    \"reproductiveWeight\": {{testIssue1}},\n    \"policingScore\": {{testIssue2}},\n    \"housingScore\": {{testIssue3}},\n    \"reproductiveScore\": {{testIssue4}},\n    \"healthcareScore\": {{testIssue5}},\n    \"drugPolicyScore\": {{testIssue6}},\n    \"immigrationScore\": {{testIssue7}},\n    \"educationScore\": {{testIssue8}},\n    \"drugPolicyWeight\": {{testIssue9}},\n    \"policingWeight\": {{testIssue10}},\n    \"gunPolicyWeight\": {{testIssue11}},\n    \"climateWeight\": {{testIssue12}},\n    \"immigrationWeight\": {{testIssue13}},\n    \"housingWeight\": {{testIssue14}},\n    \"economyWeight\": {{testIssue15}},\n    \"economyScore\": {{testIssue16}},\n    \"climateScore\": {{testIssue17}},\n    \"healthcareWeight\": {{testIssue18}},\n    \"gunPolicyScore\": {{testIssue19}},\n    \"educationWeight\": {{testIssue0}}\n}",
+							"raw": "{\n    \"userId\": \"dguecciagb@gmail.com\",\n    \"reproductiveWeight\": {{testIssue1}},\n    \"policingScore\": {{testIssue2}},\n    \"housingScore\": {{testIssue3}},\n    \"reproductiveScore\": {{testIssue4}},\n    \"healthcareScore\": {{testIssue5}},\n    \"drugPolicyScore\": {{testIssue6}},\n    \"immigrationScore\": {{testIssue7}},\n    \"educationScore\": {{testIssue8}},\n    \"drugPolicyWeight\": {{testIssue9}},\n    \"policingWeight\": {{testIssue10}},\n    \"gunPolicyWeight\": {{testIssue11}},\n    \"climateWeight\": {{testIssue12}},\n    \"immigrationWeight\": {{testIssue13}},\n    \"housingWeight\": {{testIssue14}},\n    \"economyWeight\": {{testIssue15}},\n    \"economyScore\": {{testIssue16}},\n    \"climateScore\": {{testIssue17}},\n    \"healthcareWeight\": {{testIssue18}},\n    \"gunPolicyScore\": {{testIssue19}},\n    \"educationWeight\": {{testIssue0}}\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -445,6 +449,437 @@
 							""
 						]
 					}
+				}
+			]
+		},
+		{
+			"name": "CreateNewUser",
+			"item": [
+				{
+					"name": "Step1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// UserId",
+									"let userId = pm.variables.replaceIn(\"{{$randomEmail}}\");",
+									"",
+									"pm.environment.set(\"testUserId\",userId);",
+									"",
+									"// DateOfBirth",
+									"let month = Math.floor((Math.random() * 12))+1;",
+									"let day = Math.floor((Math.random() * 28))+1;",
+									"let year = 1990 + Math.floor((Math.random() * 12))+1;",
+									"",
+									"function stringFormat(num){",
+									"    if(num < 10){",
+									"        return '0'+num.toString()",
+									"    }",
+									"    else{",
+									"        return num.toString()",
+									"    }",
+									"}",
+									"",
+									"pm.environment.set(\"testUserDateOfBirth\",year+'-'+stringFormat(month)+'-'+stringFormat(day));",
+									"",
+									"// Race",
+									"let raceOptions = [",
+									"    'Black',",
+									"    'White',",
+									"    'Asian',",
+									"    'American Indian/Alaska Native',",
+									"    'Native Hawaiian/Pacific Islander',",
+									"    'Hispanic/Latino'",
+									"  ];",
+									"",
+									"pm.environment.set(\"testUserRace\",raceOptions[Math.floor(Math.random() * raceOptions.length)]);",
+									"",
+									"// Gender",
+									"let gendersList = [",
+									"    'Female',",
+									"    'Male',",
+									"    'Non-binary',",
+									"    'Gender Non-conforming',",
+									"    'Other',",
+									"  ];",
+									"",
+									"pm.environment.set(\"testUserGender\",gendersList[Math.floor(Math.random() * gendersList.length)]);",
+									"",
+									"// Political Affilaition",
+									"let affilaitionList = ['Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'];",
+									"",
+									"pm.environment.set(\"testUserAffilaition\",affilaitionList[Math.floor(Math.random() * affilaitionList.length)]);",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{testUserId}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"dateOfBirth\": \"{{testUserDateOfBirth}}\",\n    \"racialIdentity\": \"{{testUserRace}}\",\n    \"gender\": \"{{testUserGender}}\",\n    \"politicalAffiliation\": \"{{testUserAffilaition}}\",\n    \"zipCode\": \"48201\",\n    \"addressLine1\": \"{{$randomStreetAddress}}\",\n    \"pollingLocation\": \"{{$randomStreetAddress}}\",\n    \"voterRegistrationStatus\": {{$randomBoolean}},\n    \"registrationState\": \"MI\",\n    \"phoneNumber\": \"{{$randomPhoneNumber}}\",\n    \"profileImageURL\": \"{{$randomAnimalsImage}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/userDemographics",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userDemographics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let randomValues = Array.from({length: 20}, () => Math.floor((Math.random() * 5))+1);",
+									"pm.environment.set(\"var1\", randomValues[1]);",
+									"",
+									"for(let i = 0; i < randomValues.length; i++){",
+									"    pm.environment.set(\"testIssue\"+i, randomValues[i]);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{testUserId}}\",\n    \"reproductiveWeight\": {{testIssue1}},\n    \"policingScore\": {{testIssue2}},\n    \"housingScore\": {{testIssue3}},\n    \"reproductiveScore\": {{testIssue4}},\n    \"healthcareScore\": {{testIssue5}},\n    \"drugPolicyScore\": {{testIssue6}},\n    \"immigrationScore\": {{testIssue7}},\n    \"educationScore\": {{testIssue8}},\n    \"drugPolicyWeight\": {{testIssue9}},\n    \"policingWeight\": {{testIssue10}},\n    \"gunPolicyWeight\": {{testIssue11}},\n    \"climateWeight\": {{testIssue12}},\n    \"immigrationWeight\": {{testIssue13}},\n    \"housingWeight\": {{testIssue14}},\n    \"economyWeight\": {{testIssue15}},\n    \"economyScore\": {{testIssue16}},\n    \"climateScore\": {{testIssue17}},\n    \"healthcareWeight\": {{testIssue18}},\n    \"gunPolicyScore\": {{testIssue19}},\n    \"educationWeight\": {{testIssue0}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/userissuefactorvalues",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userissuefactorvalues"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CreateNewCandidate",
+			"item": [
+				{
+					"name": "Step1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// CandidateId",
+									"let userId = pm.variables.replaceIn(\"{{$guid}}\");",
+									"",
+									"pm.environment.set(\"testCandidateId\",userId);",
+									"",
+									"function stringFormat(num){",
+									"    if(num < 10){",
+									"        return '0'+num.toString()",
+									"    }",
+									"    else{",
+									"        return num.toString()",
+									"    }",
+									"}",
+									"",
+									"// DateOfBirth",
+									"let month = Math.floor((Math.random() * 12))+1;",
+									"let day = Math.floor((Math.random() * 28))+1;",
+									"let year = 1940 + Math.floor((Math.random() * 50))+1;",
+									"",
+									"pm.environment.set(\"testCandidateDateOfBirth\",year+'-'+stringFormat(month)+'-'+stringFormat(day));",
+									"",
+									"// Career Start Date",
+									"let month1 = Math.floor((Math.random() * 12))+1;",
+									"let day1 = Math.floor((Math.random() * 28))+1;",
+									"let year1 = 2000 + Math.floor((Math.random() * 22))+1;",
+									"",
+									"pm.environment.set(\"testCandidateCareerStart\",stringFormat(year1)+'-'+stringFormat(month1)+'-'+stringFormat(day1));",
+									"",
+									"",
+									"// Race",
+									"let raceOptions = [",
+									"    'Black',",
+									"    'White',",
+									"    'Asian',",
+									"    'American Indian/Alaska Native',",
+									"    'Native Hawaiian/Pacific Islander',",
+									"    'Hispanic/Latino'",
+									"  ];",
+									"",
+									"pm.environment.set(\"testCandidateRace\",raceOptions[Math.floor(Math.random() * raceOptions.length)]);",
+									"",
+									"// Gender",
+									"let gendersList = [",
+									"    'Female',",
+									"    'Male',",
+									"    'Non-binary',",
+									"    'Gender Non-conforming',",
+									"    'Other',",
+									"  ];",
+									"",
+									"pm.environment.set(\"testCandidateGender\",gendersList[Math.floor(Math.random() * gendersList.length)]);",
+									"",
+									"// Political Affilaition",
+									"let affilaitionList = ['Republican', 'Democrat', 'Libertarian', 'Green', 'Independent'];",
+									"",
+									"pm.environment.set(\"testCandidateAffilaition\",affilaitionList[Math.floor(Math.random() * affilaitionList.length)]);",
+									"",
+									"// Seat Type",
+									"",
+									"let seatList = [",
+									"    'Mayor',",
+									"    'Clerk',",
+									"    'Commissioner',",
+									"    'Sheriff',",
+									"    'Judge',",
+									"    'Prosecutor'",
+									"];",
+									"",
+									"pm.environment.set(\"testCandidateSeat\",seatList[Math.floor(Math.random() * seatList.length)]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"candidateId\": \"{{testCandidateId}}\",\n    \"seatType\": \"{{testCandidateSeat}}\",\n    \"electionType\": \"Local\",\n    \"careerStartDate\": \"{{testCandidateCareerStart}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"dateOfBirth\": \"{{testCandidateDateOfBirth}}\",\n    \"zipCode\": \"48182\",\n    \"profileImageURL\": \"{{$randomPeopleImage}}\",\n    \"racialIdentity\": \"{{testCandidateRace}}\",\n    \"gender\": \"{{testCandidateGender}}\",\n    \"politicalAffiliation\": \"{{testCandidateAffilaition}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/candidateDemographics",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateDemographics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Step2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let randomValues = Array.from({length: 20}, () => Math.floor((Math.random() * 5))+1);",
+									"pm.environment.set(\"var1\", randomValues[1]);",
+									"",
+									"for(let i = 0; i < randomValues.length; i++){",
+									"    pm.environment.set(\"testIssue\"+i, randomValues[i]);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"candidateId\": \"{{testCandidateId}}\",\n    \"reproductiveWeight\": {{testIssue1}},\n    \"policingScore\": {{testIssue2}},\n    \"housingScore\": {{testIssue3}},\n    \"reproductiveScore\": {{testIssue4}},\n    \"healthcareScore\": {{testIssue5}},\n    \"drugPolicyScore\": {{testIssue6}},\n    \"immigrationScore\": {{testIssue7}},\n    \"educationScore\": {{testIssue8}},\n    \"drugPolicyWeight\": {{testIssue9}},\n    \"policingWeight\": {{testIssue10}},\n    \"gunPolicyWeight\": {{testIssue11}},\n    \"climateWeight\": {{testIssue12}},\n    \"immigrationWeight\": {{testIssue13}},\n    \"housingWeight\": {{testIssue14}},\n    \"economyWeight\": {{testIssue15}},\n    \"economyScore\": {{testIssue16}},\n    \"climateScore\": {{testIssue17}},\n    \"healthcareWeight\": {{testIssue18}},\n    \"gunPolicyScore\": {{testIssue19}},\n    \"educationWeight\": {{testIssue0}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/candidateissuefactorvalues",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"candidateissuefactorvalues"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserCandidateStack",
+			"item": [
+				{
+					"name": "GetUserCandidateStackDemographics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/userCandidateStack/demographics/email@gmail.com",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userCandidateStack",
+								"demographics",
+								"email@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserCandidateStackStatistics",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/userCandidateStack/email@gmail.com",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userCandidateStack",
+								"email@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserCandidateStackIssueFactorValues",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"walter7236@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/userCandidateStack/test/issues/email@gmail.com",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"userCandidateStack",
+								"test",
+								"issues",
+								"email@gmail.com"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Matching",
+			"item": [
+				{
+					"name": "MatchCandiatesToUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"email@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/matching",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"matching"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MatchingCandidatesToUserWithResponseBody",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reproductiveWeight\": 4.0,\n    \"policingScore\": 5.0,\n    \"housingScore\": 2.0,\n    \"reproductiveScore\": 2.0,\n    \"healthcareScore\": 4.0,\n    \"drugPolicyScore\": 2.0,\n    \"immigrationScore\": 4.0,\n    \"educationScore\": 4.0,\n    \"drugPolicyWeight\": 4.0,\n    \"userId\": \"\",\n    \"policingWeight\": 1.0,\n    \"gunPolicyWeight\": 2.0,\n    \"climateWeight\": 1.0,\n    \"immigrationWeight\": 4.0,\n    \"housingWeight\": 3.0,\n    \"economyWeight\": 5.0,\n    \"economyScore\": 2.0,\n    \"climateScore\": 2.0,\n    \"healthcareWeight\": 1.0,\n    \"gunPolicyScore\": 4.0,\n    \"educationWeight\": 3.0\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/matching/test",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"matching",
+								"test"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

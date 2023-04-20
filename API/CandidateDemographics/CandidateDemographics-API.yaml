@@ -12,5 +12,5 @@ Resources:
       MemorySize: 128
       Timeout: 3
       Role: 'arn:aws:iam::163651705262:role/service-role/CandidateDemographics-API'
-      RuntimePolicy:
+      RuntimeManagementConfig:
         UpdateRuntimeOn: Auto

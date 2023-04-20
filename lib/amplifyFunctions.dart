@@ -6,6 +6,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'amplifyconfiguration.dart';
 
+// Configures Amplify and returns true if successful
 Future<bool> configureAmplify() async {
   try {
     final auth = AmplifyAuthCognito();
@@ -19,6 +20,7 @@ Future<bool> configureAmplify() async {
   }
 }
 
+// Checks if user is signed in and returns true if so
 Future<bool> isUserSignedIn() async {
   try {
     final result = await Amplify.Auth.fetchAuthSession();
@@ -35,6 +37,7 @@ Future<bool> isUserSignedIn() async {
   }
 }
 
+// Returns the current user from cognito
 Future<AuthUser> getCurrentUser() async {
   try {
     final user = await Amplify.Auth.getCurrentUser();
@@ -45,6 +48,7 @@ Future<AuthUser> getCurrentUser() async {
   }
 }
 
+// Registers the current user to cognito
 Future<bool> signUpUser(String email, String password, String fname) async {
   //bool isSignUpComplete = false; //Flag used to route away from signup, possibly better as return value
   try {
@@ -65,6 +69,7 @@ Future<bool> signUpUser(String email, String password, String fname) async {
   }
 }
 
+// Signs in the current user to cognito
 Future<bool> signInUser(String email, String password) async {
   try {
     final result =
@@ -76,6 +81,7 @@ Future<bool> signInUser(String email, String password) async {
   }
 }
 
+// Signs out the current user from cognito
 Future<void> logoutUser() async {
   try {
     await Amplify.Auth.signOut();
@@ -84,6 +90,7 @@ Future<void> logoutUser() async {
   }
 }
 
+// Checks if the user is logged in and returns true if so
 Future<bool> checkLoggedIn() async {
   try {
     await Amplify.Auth.getCurrentUser();
@@ -95,6 +102,7 @@ Future<bool> checkLoggedIn() async {
   }
 }
 
+// Confirms the user with the code sent to their email
 Future<bool> confirmUser(String email, String code) async {
   try {
     await Amplify.Auth.confirmSignUp(username: email, confirmationCode: code);
@@ -105,6 +113,7 @@ Future<bool> confirmUser(String email, String code) async {
   }
 }
 
+// Resends the confirmation code to the user's email
 Future<bool> resendConfirmationCode(String email) async {
   try {
     await Amplify.Auth.resendSignUpCode(username: email);
@@ -116,6 +125,7 @@ Future<bool> resendConfirmationCode(String email) async {
   }
 }
 
+// Sends a password reset email to the user
 Future<bool> resetPassword(String username) async {
   try {
     await Amplify.Auth.resetPassword(username: username);
@@ -126,6 +136,7 @@ Future<bool> resetPassword(String username) async {
   }
 }
 
+// Confirms the password reset with the code sent to the user's email
 Future<bool> confirmResetPassword(
     String username, String password, String code) async {
   try {
@@ -138,6 +149,7 @@ Future<bool> confirmResetPassword(
   }
 }
 
+// Updates the user's password
 Future<void> updatePassword(String oldPassword, String newPassword) async {
   try {
     await Amplify.Auth.updatePassword(
@@ -147,6 +159,7 @@ Future<void> updatePassword(String oldPassword, String newPassword) async {
   }
 }
 
+// Gets the current user's email
 Future<String> fetchCurrentUserEmail() async {
   try {
     final result = await fetchUserAttributes();
@@ -158,19 +171,7 @@ Future<String> fetchCurrentUserEmail() async {
   return '';
 }
 
-// Future<String> getAttributes() async {
-//   try {
-//     final result = await Amplify.Auth.fetchUserAttributes();
-//     for (var i = 0; i < result.length; i++) {
-//       result[i].userAttributeKey + ${result[i].value}');
-//     }
-//     return result[8].value;
-//   } on AuthException catch (e) {
-//     safePrint(e.message);
-//   }
-//   return '';
-// }
-
+// Maps user attributes from Cognito to a map data structure to be used in user demographics
 Future<Map<String, String>> fetchUserAttributes() async {
   Map<String, String> userAttributes = {};
   try {
@@ -185,6 +186,7 @@ Future<Map<String, String>> fetchUserAttributes() async {
   return userAttributes;
 }
 
+// Checks if user confirmed their email
 Future<bool> isUserConfirmed() async {
   try {
     final result = await Amplify.Auth.fetchUserAttributes();
@@ -198,6 +200,7 @@ Future<bool> isUserConfirmed() async {
   return false;
 }
 
+// Checks if user has completed the survey
 Future<bool> isSurveyCompleted() async {
   try {
     final result = await Amplify.Auth.fetchUserAttributes();
@@ -214,6 +217,7 @@ Future<bool> isSurveyCompleted() async {
   }
 }
 
+// Updates the users survey completion status
 Future<bool> updateSurveyCompletion() async {
   try {
     final result = await Amplify.Auth.updateUserAttribute(

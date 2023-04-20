@@ -34,6 +34,7 @@ export const handler = async (event, context) => {
         body = `Deleted userDemographics ${event.pathParameters.candidateId}`;
         break;
       case "GET /userDemographics/{userId}":
+        console.log(`Get ${event.pathParameters.userId} demographics`);
         body = await dynamo.send(
           new GetCommand({
             TableName: tableName,
@@ -45,6 +46,7 @@ export const handler = async (event, context) => {
         body = body.Item;
         break;
       case "GET /userDemographics":
+        console.log("Get all userDemographics");
         body = await dynamo.send(
           new ScanCommand({ TableName: tableName })
         );
@@ -65,9 +67,11 @@ export const handler = async (event, context) => {
         throw new Error(`Unsupported route: "${event.routeKey}"`);
     }
   } catch (err) {
+    console.log(err.message);
     statusCode = 400;
     body = err.message;
   } finally {
+    console.log(statusCode);
     body = JSON.stringify(body);
   }
 
