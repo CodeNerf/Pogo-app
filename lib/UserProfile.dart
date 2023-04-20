@@ -1150,7 +1150,6 @@ class _UserProfileState extends State<UserProfile> {
                                 fit: BoxFit.contain,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  //TODO: placeholder streak values will need to be replaced
                                   children: [
                                     AutoSizeText(
                                       '${widget.currentUserDemographics.loginStreak} day streak',
