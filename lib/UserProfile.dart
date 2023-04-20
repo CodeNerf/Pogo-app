@@ -35,10 +35,10 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  String _firstIssue = "";
-  String _secondIssue = "";
-  String _thirdIssue = "";
-  String _fourthIssue = "";
+  final List<dynamic> _firstIssue = [];
+  final List<dynamic> _secondIssue = [];
+  final List<dynamic> _thirdIssue = [];
+  final List<dynamic> _fourthIssue = [];
   final List<num> _ratings = [];
   final TextEditingController _profilePicController = TextEditingController();
   UserDemographics userDemographics = UserDemographics(id: '');
@@ -66,50 +66,65 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   void _setTopIssues(List<num> ratings) async {
-    //will have to change strings to asset image icons
-    List<String> topIssues = [];
+    //issues index corresponds with the index of strings in IssuesDefinitions -> _issuesText
+    List<String> topIssuesPics = [];
+    List<int> topIssuesIndex = [];
     var indexMaxCare = ratings.indexOf(ratings.reduce(max));
     for (int i = 0; i < 4; i++) {
       switch (indexMaxCare) {
         case 0:
-          topIssues.add('assets/climateIcon.png');
+          topIssuesPics.add('assets/climateIcon.png');
+          topIssuesIndex.add(1);
           break;
         case 1:
-          topIssues.add('assets/drugPolicyIcon.png');
+          topIssuesPics.add('assets/drugPolicyIcon.png');
+          topIssuesIndex.add(3);
           break;
         case 2:
-          topIssues.add('assets/economyIcon.png');
+          topIssuesPics.add('assets/economyIcon.png');
+          topIssuesIndex.add(6);
           break;
         case 3:
-          topIssues.add('assets/educationIcon.png');
+          topIssuesPics.add('assets/educationIcon.png');
+          topIssuesIndex.add(2);
           break;
         case 4:
-          topIssues.add('assets/gunControlIcon.png');
+          topIssuesPics.add('assets/gunControlIcon.png');
+          topIssuesIndex.add(0);
           break;
         case 5:
-          topIssues.add('assets/healthcareIcon.png');
+          topIssuesPics.add('assets/healthcareIcon.png');
+          topIssuesIndex.add(4);
           break;
         case 6:
-          topIssues.add('assets/housingIcon.png');
+          topIssuesPics.add('assets/housingIcon.png');
+          topIssuesIndex.add(5);
           break;
         case 7:
-          topIssues.add('assets/immigrationIcon.png');
+          topIssuesPics.add('assets/immigrationIcon.png');
+          topIssuesIndex.add(7);
           break;
         case 8:
-          topIssues.add('assets/policingIcon.png');
+          topIssuesPics.add('assets/policingIcon.png');
+          topIssuesIndex.add(8);
           break;
         case 9:
-          topIssues.add('assets/reproductiveIcon.png');
+          topIssuesPics.add('assets/reproductiveIcon.png');
+          topIssuesIndex.add(9);
           break;
       }
       ratings[indexMaxCare] = 0;
       indexMaxCare = ratings.indexOf(ratings.reduce(max));
     }
     setState(() {
-      _firstIssue = topIssues[0];
-      _secondIssue = topIssues[1];
-      _thirdIssue = topIssues[2];
-      _fourthIssue = topIssues[3];
+      _firstIssue.add(topIssuesPics[0]);
+      _firstIssue.add(topIssuesIndex[0]);
+      _secondIssue.add(topIssuesPics[1]);
+      _secondIssue.add(topIssuesIndex[1]);
+      _thirdIssue.add(topIssuesPics[2]);
+      _thirdIssue.add(topIssuesIndex[2]);
+      _fourthIssue.add(topIssuesPics[3]);
+      _fourthIssue.add(topIssuesIndex[3]);
     });
   }
 
@@ -964,6 +979,165 @@ class _UserProfileState extends State<UserProfile> {
     return "Come download the PoGo app! https://www.politicsonthego.info";
   }
 
+  void toaster(int index) {
+    showModalBottomSheet(
+        context: context,
+        clipBehavior: Clip.antiAlias,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        isScrollControlled: true,
+        backgroundColor: const Color(0xFFD9D9D9),
+        builder: (BuildContext context) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                //white bar to indicate pulling up/down
+                Padding(
+                  padding: const EdgeInsets.only(top: 13.0),
+                  child: Container(
+                    height: 7,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xFFFFFFFF),
+                    ),
+                  ),
+                ),
+                //issue name
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(
+                    _issueDefs.issuesText[index],
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF0E0E0E),
+                      fontSize: 30,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        //issue pic
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          child: Container(
+                            clipBehavior: Clip.hardEdge,
+                            height:
+                            MediaQuery.of(context).size.height * 0.60 / 2.5,
+                            width: MediaQuery.of(context).size.width * 0.65,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade600,
+                                  spreadRadius: 3,
+                                  blurRadius: 7,
+                                  offset: const Offset(3, 3),
+                                ),
+                              ],
+                            ),
+                            child: Image(
+                              image: AssetImage(
+                                _issueDefs.issuesLogo[index],
+                              ),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        //issue definition
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: Text(
+                            _issueDefs.issuesGeneralDefinitions[index],
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF121212),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        //left align text
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(25, 10, 20, 0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '• ${_issueDefs.leftAlignText[index]}',
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF121212),
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //left definition
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(35, 10, 35, 0),
+                          child: Text(
+                            '▪ ${_issueDefs.issuesLeftDefinitions[index]}',
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF121212),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        //right align text
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(25, 10, 20, 0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '• ${_issueDefs.rightAlignText[index]}',
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF121212),
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //right definition
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(35, 10, 35, 20),
+                          child: Text(
+                            '▪ ${_issueDefs.issuesRightDefinitions[index]}',
+                            style: const TextStyle(
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF121212),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -1229,11 +1403,24 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Image(
-                              image: AssetImage(_firstIssue),
-                            ),
+                          child: Stack(
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Image(
+                                  image: AssetImage(_firstIssue[0]),
+                                ),
+                              ),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    toaster(_firstIssue[1]);
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Container(
@@ -1251,11 +1438,24 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Image(
-                              image: AssetImage(_secondIssue),
-                            ),
+                          child: Stack(
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Image(
+                                  image: AssetImage(_secondIssue[0]),
+                                ),
+                              ),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    toaster(_secondIssue[1]);
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Container(
@@ -1273,11 +1473,24 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Image(
-                              image: AssetImage(_thirdIssue),
-                            ),
+                          child: Stack(
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Image(
+                                  image: AssetImage(_thirdIssue[0]),
+                                ),
+                              ),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    toaster(_thirdIssue[1]);
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Container(
@@ -1295,11 +1508,24 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ],
                           ),
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Image(
-                              image: AssetImage(_fourthIssue),
-                            ),
+                          child: Stack(
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Image(
+                                  image: AssetImage(_fourthIssue[0]),
+                                ),
+                              ),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    toaster(_fourthIssue[1]);
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
