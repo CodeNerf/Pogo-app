@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
+import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/MatchingStatistics.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
+import 'package:pogo/dynamoModels/userBallots.dart';
 import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 
@@ -184,7 +186,7 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
     client.close();
   }
 }
-/*
+
 Future<void> putUserNationalBallot(UserNationalBallot userBallot) async {
   final client = http.Client();
   try {
@@ -281,7 +283,6 @@ Future<UserLocalBallot> getUserLocalBallot(String userId) async {
     client.close();
   }
 }
- */
 
 Future<void> putUserBallot(String userId, List<String> localBallot,
     List<String> stateBallot, List<String> nationalBallot) async {
@@ -326,7 +327,7 @@ Future<List<String>> getUserBallot(String userId) async {
     client.close();
   }
 }
-/*
+
 Future<void> updateUserBallot(String userId, String candidateId) async {
   final allCandidates =
       await getAllCandidateDemographics(); //get a list of all available candidate (current one is mutated throughout executuion)
@@ -340,20 +341,20 @@ Future<void> updateUserBallot(String userId, String candidateId) async {
     safePrint("initial ballot $userBallot");
     safePrint("all candidates: $allCandidates");
     final candidateObject = allCandidates.firstWhere((candidate) =>
-        candidate.candidateId ==
+        candidate.id ==
         candidateId); //Find the candidate object belonging to the candidate the user wants to add
     safePrint("candidateObject: $candidateObject");
     final candidateSeat =
-        candidateObject.seatType; //seat of candidate user wants to add
+        candidateObject.runningPosition; //seat of candidate user wants to add
     safePrint("candidate seat: $candidateSeat");
     var candidateToReplace;
     userBallot.forEach((candidateId) {
-      final candidateObject = allCandidates
-          .firstWhere((candidate) => candidate.candidateId == candidateId);
+      final candidateObject =
+          allCandidates.firstWhere((candidate) => candidate.id == candidateId);
       safePrint("found candidate: $candidateObject");
       //find current candidate object by comparing each candidate's seat type with the one the user wants to update
-      if (candidateObject.seatType == candidateSeat) {
-        candidateToReplace = candidateObject.candidateId;
+      if (candidateObject.runningPosition == candidateSeat) {
+        candidateToReplace = candidateObject.id;
         safePrint("candidate found $candidateToReplace");
       }
     });
@@ -366,8 +367,6 @@ Future<void> updateUserBallot(String userId, String candidateId) async {
     putUserBallot(userId, userBallot, [''], ['']);
   }
 }
-
- */
 
 Future<List<CandidateIssueFactorValues>>
     getAllCandidateIssueFactorValues() async {
@@ -447,6 +446,24 @@ Future<List<CandidateDemographics>> getUserCandidateStackDemographics(
   }
 }
 
+Future<List<CandidateDemographics>> getUserCandidatesWithDeferred(
+    String userId) async {
+  final deferredIDs = await getDeferred(userId);
+  var startingStack = await getUserCandidateStackDemographics(userId);
+  //making serperate array to append at the end to prevent infinite loop
+  var deferredList = <CandidateDemographics>[];
+  for (var candidate in startingStack) {
+    if (deferredIDs.contains(candidate.id)) {
+      deferredList.add(candidate);
+    }
+  }
+  //remove the deferred candidates
+  startingStack.removeWhere((candidate) => deferredList.contains(candidate));
+  //putting the deferred candidate in the back, change this to prevent candidates from showing up twice
+  startingStack.addAll(deferredList);
+  return startingStack;
+}
+
 Future<List<MatchingStatistics>> getUserCandidateStackStatistics(
     String userId) async {
   var client = http.Client();
@@ -486,6 +503,50 @@ Future<void> matchCandidatesToUser(String userId) async {
     print(decodedResponse);
   } catch (e) {
     safePrint("An error occurred in matchCandidatesToUser: $e");
+  } finally {
+    client.close();
+  }
+}
+
+Future<List<String>> getDeferred(String userId) async {
+  final client = http.Client();
+  try {
+    final response = await client.get(
+      Uri.https('i4tti59faj.execute-api.us-east-1.amazonaws.com',
+          '/userBallot/$userId'),
+      headers: {"content-type": "application/json"},
+    );
+    if (response.body.isNotEmpty) {
+      final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
+      safePrint("decoded deferred: ${decodedResponse['deferred']}");
+      return decodedResponse['deferred'].cast<String>();
+    }
+    return [];
+  } catch (e) {
+    safePrint("An error occurred in getDeferred() $e");
+    return [];
+  } finally {
+    client.close();
+  }
+}
+
+Future<void> putDeferred(String deferred) async {
+  final user = await getCurrentUser();
+  final client = http.Client();
+  try {
+    var currentList = await getDeferred(user.username);
+    currentList.add(deferred);
+    final response = await client.put(
+        Uri.https(
+            'i4tti59faj.execute-api.us-east-1.amazonaws.com', '/userBallot'),
+        headers: {"content-type": "application/json"},
+        body: jsonEncode({
+          'userId': user.username,
+          'deferred': currentList,
+        }));
+    safePrint("AWS response: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+  } catch (e) {
+    safePrint("An error occurred in putDeferred() $e");
   } finally {
     client.close();
   }

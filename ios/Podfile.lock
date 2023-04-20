@@ -47,7 +47,7 @@ PODS:
     - AWSCore (~> 2.30.1)
     - AWSPluginsCore (= 1.29.1)
     - SQLite.swift (= 0.13.2)
-  - AppSyncRealTimeClient (3.0.0):
+  - AppSyncRealTimeClient (3.1.0):
     - Starscream (~> 4.0.4)
   - AWSAuthCore (2.30.4):
     - AWSCore (= 2.30.4)
@@ -190,7 +190,7 @@ SPEC CHECKSUMS:
   amplify_datastore: 67f90ca91a272a43eb7c891a619a9646d3f5683b
   amplify_flutter_ios: b215a2d52f8beeb9d30e29a99152c71fadc6730a
   AmplifyPlugins: f8fa63aafd782a44cf48abef656e759dcab3eb71
-  AppSyncRealTimeClient: ec19a24f635611b193eb98a2da573abcf98b793b
+  AppSyncRealTimeClient: 49901c6f21e541bec09281854c5695a6c1309bf7
   AWSAuthCore: 42e2d4927d94e5e323b63b2ae885f287c51b5889
   AWSCognitoIdentityProvider: 2331f5f4c8c1775c6a228bb2dae2d353198401e8
   AWSCognitoIdentityProviderASF: d905c2acab3d2e7016b643d53ba553d5217fa929

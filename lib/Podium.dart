@@ -522,6 +522,21 @@ class _PodiumState extends State<Podium> {
                                 _cardController.addItem(_newCard(
                                     _stack[2], _stackStatistics[2]));
                               } else {
+                                putDeferred(_stack[_stackIterator].id);
+                                if (_count < _stackLength) {
+                                  if (_count == _stackLength - 1) {
+                                    _count = 0;
+                                  } else {
+                                    _count++;
+                                  }
+                                } else {
+                                  _count = 0;
+                                }
+                                if (_stackIterator >= _stackLength - 1) {
+                                  _stackIterator = 0;
+                                } else {
+                                  _stackIterator++;
+                                }
                                 _stackIterator = 2;
                                 _cardController.addItem(_newCard(
                                     _stack[0], _stackStatistics[0]));
