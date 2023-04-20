@@ -544,7 +544,11 @@ Future<List<String>> getDeferred(String userId) async {
     if (response.body.isNotEmpty) {
       final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes));
       safePrint("decoded deferred: ${decodedResponse['deferred']}");
-      return decodedResponse['deferred'].cast<String>();
+      if (decodedResponse['deferred'] != null) {
+        return decodedResponse['deferred'].cast<String>();
+      } else {
+        return [];
+      }
     }
     return [];
   } catch (e) {

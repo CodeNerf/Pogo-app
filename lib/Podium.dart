@@ -263,7 +263,8 @@ class _PodiumState extends State<Podium> {
                                 child: FittedBox(
                                   fit: BoxFit.cover,
                                   child: Image(
-                                    image: NetworkImage(candidate.profileImageURL),
+                                    image:
+                                        NetworkImage(candidate.profileImageURL),
                                   ),
                                 ),
                               ),
@@ -282,13 +283,14 @@ class _PodiumState extends State<Podium> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(10, 18, 2, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 18, 2, 0),
                                   child: Text(
                                     "${((_stackStatistics.firstWhere((element) => element.candidateId == candidate.id)).rSquared * 100).round()}%",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 17,
-                                      fontFamily:'Inter',
+                                      fontFamily: 'Inter',
                                     ),
                                   ),
                                 ),
@@ -491,9 +493,9 @@ class _PodiumState extends State<Podium> {
                           if (dir == Direction.right) {
                             _addCandidate(_stack[_stackIterator]);
                             _stackLength--;
-                          }
-                          else {
+                          } else {
                             if (_count < _stackLength) {
+                              putDeferred(_stack[_stackIterator].id);
                               if (_count == _stackLength - 1) {
                                 _count = 0;
                               } else {
@@ -519,8 +521,8 @@ class _PodiumState extends State<Podium> {
                               _count = 0;
                               if (_stackIterator == 2) {
                                 _stackIterator = 0;
-                                _cardController.addItem(_newCard(
-                                    _stack[2], _stackStatistics[2]));
+                                _cardController.addItem(
+                                    _newCard(_stack[2], _stackStatistics[2]));
                               } else {
                                 putDeferred(_stack[_stackIterator].id);
                                 if (_count < _stackLength) {
@@ -538,30 +540,30 @@ class _PodiumState extends State<Podium> {
                                   _stackIterator++;
                                 }
                                 _stackIterator = 2;
-                                _cardController.addItem(_newCard(
-                                    _stack[0], _stackStatistics[0]));
+                                _cardController.addItem(
+                                    _newCard(_stack[0], _stackStatistics[0]));
                               }
                             } else if (_count == 1) {
                               _count = 2;
                               if (_stackIterator == 1) {
                                 _stackIterator = 2;
-                                _cardController.addItem(_newCard(
-                                    _stack[1], _stackStatistics[1]));
+                                _cardController.addItem(
+                                    _newCard(_stack[1], _stackStatistics[1]));
                               } else {
                                 _stackIterator = 1;
-                                _cardController.addItem(_newCard(
-                                    _stack[2], _stackStatistics[2]));
+                                _cardController.addItem(
+                                    _newCard(_stack[2], _stackStatistics[2]));
                               }
                             } else if (_count == 0) {
                               _count = 1;
                               if (_stackIterator == 0) {
                                 _stackIterator = 1;
-                                _cardController.addItem(_newCard(
-                                    _stack[0], _stackStatistics[0]));
+                                _cardController.addItem(
+                                    _newCard(_stack[0], _stackStatistics[0]));
                               } else {
                                 _stackIterator = 0;
-                                _cardController.addItem(_newCard(
-                                    _stack[1], _stackStatistics[1]));
+                                _cardController.addItem(
+                                    _newCard(_stack[1], _stackStatistics[1]));
                               }
                             } else {
                               _count = 1;
@@ -576,20 +578,22 @@ class _PodiumState extends State<Podium> {
                               _stackLength = 1;
                               _addCandidate(_stack[_stackIterator]);
                             } else {
+                              putDeferred(_stack[_stackIterator].id);
                               if (_stackIterator == 0) {
                                 _stackIterator = 1;
-                                _cardController.addItem(_newCard(
-                                    _stack[0], _stackStatistics[0]));
+                                _cardController.addItem(
+                                    _newCard(_stack[0], _stackStatistics[0]));
                               } else {
                                 _stackIterator = 0;
-                                _cardController.addItem(_newCard(
-                                    _stack[1], _stackStatistics[1]));
+                                _cardController.addItem(
+                                    _newCard(_stack[1], _stackStatistics[1]));
                               }
                             }
                           }
                         } else if (_stack.isNotEmpty && _stackLength == 1) {
                           if (widget != null) {
                             if (dir == Direction.left) {
+                              putDeferred(_stack[_stackIterator].id);
                               _cardController.addItem(
                                   _newCard(_stack[0], _stackStatistics[0]));
                             } else {
@@ -621,7 +625,6 @@ class _PodiumState extends State<Podium> {
                             ),
                           ),
                           const Spacer(),
-
                         ],
                       ),
                     ),
