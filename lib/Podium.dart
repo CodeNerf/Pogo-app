@@ -100,7 +100,7 @@ class _PodiumState extends State<Podium> {
   //card banner color
   Color _candidateColor(String party) {
     switch (party) {
-      case 'Democratic':
+      case 'Democrat':
         return const Color(0xFF3456CF);
       case 'Republican':
         return const Color(0xFFDE0100);

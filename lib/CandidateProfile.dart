@@ -211,7 +211,7 @@ class _CandidateProfileState extends State<CandidateProfile>
         borderRadius: BorderRadius.circular(20.0),
       ),
       shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
+      color: const Color(0xFFD9D9D9),
       child: SizedBox(
         height: 155,
         width: 400,
@@ -228,10 +228,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
+                      padding: const EdgeInsets.symmetric(vertical: 3.0),
                       child: Text(
                         titleText,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: "Inter",
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
@@ -241,13 +241,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 8.0, right: 15),
+                      padding: const EdgeInsets.only(top: 8.0, right: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             descriptionText,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w600,
                               fontSize: 10,
@@ -440,11 +440,11 @@ class _CandidateProfileState extends State<CandidateProfile>
           });
         },
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
           alignment: Alignment.center,
           child: Text(
             _isViewAllVisible ? 'View Less' : 'View All',
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF57636C),
               fontWeight: FontWeight.bold,
             ),
@@ -468,12 +468,12 @@ class _CandidateProfileState extends State<CandidateProfile>
         borderRadius: BorderRadius.circular(20.0),
       ),
       shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
+      color: const Color(0xFFD9D9D9),
       child: SizedBox(
           height: 90,
           width: cardWidth,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -482,10 +482,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 3.0),
+                        padding: const EdgeInsets.symmetric(vertical: 3.0),
                         child: Text(
                           placeOfEducation,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: "Inter",
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
@@ -494,13 +494,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.0),
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               degreeInformation,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: "Inter",
                                 fontWeight: FontWeight.w600,
                                 fontSize: 10,
@@ -510,7 +510,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                             ),
                             Text(
                               yearOfGraduation,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: "Inter",
                                 fontWeight: FontWeight.w600,
                                 fontSize: 10,
@@ -577,12 +577,12 @@ class _CandidateProfileState extends State<CandidateProfile>
         borderRadius: BorderRadius.circular(20.0),
       ),
       shadowColor: Colors.black.withOpacity(0.95),
-      color: Color(0xFFD9D9D9),
+      color: const Color(0xFFD9D9D9),
       child: SizedBox(
         height: 90,
         width: 150,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -591,10 +591,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3.0),
+                      padding: const EdgeInsets.symmetric(vertical: 3.0),
                       child: Text(
                         title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: "Inter",
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
@@ -606,13 +606,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4.0),
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             subtitle1,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w600,
                               fontSize: 10,
@@ -622,7 +622,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                           ),
                           Text(
                             subtitle2,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: "Inter",
                               fontWeight: FontWeight.w600,
                               fontSize: 10,
@@ -674,10 +674,10 @@ class _CandidateProfileState extends State<CandidateProfile>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFF1F4F8),
+        backgroundColor: const Color(0xFFF1F4F8),
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 0.0),
+            padding: const EdgeInsets.symmetric(vertical: 0.0),
             child: Stack(
               children: [
                 Container(
@@ -697,11 +697,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                     height: 40,
                     width: 45,
                     decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
+                      color: const Color(0xFFD9D9D9),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: const Icon(Icons.arrow_back),
                       iconSize: 25,
                       onPressed: () {
                         Navigator.pop(context);
@@ -716,7 +716,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                     height: 40,
                     width: 45,
                     decoration: BoxDecoration(
-                      color: Color(0xFFD9D9D9),
+                      color: const Color(0xFFD9D9D9),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: GestureDetector(
@@ -724,7 +724,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                         await Share.share(
                           'Check out ${widget.candidate.candidateName}\'s profile on the PoGo app! Visit ${'https://www.politicsonthego.info/'} for more information.',
                           subject: 'Share Profile',
-                          sharePositionOrigin: Rect.fromLTWH(0, 0, 0, 0),
+                          sharePositionOrigin: const Rect.fromLTWH(0, 0, 0, 0),
                         );
                       },
                       child: Image.asset(
@@ -740,12 +740,12 @@ class _CandidateProfileState extends State<CandidateProfile>
           ),
           Expanded(
               child: Column(children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFfF1F4F8),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
@@ -804,7 +804,7 @@ class _CandidateProfileState extends State<CandidateProfile>
               padding: EdgeInsets.only(
                 right: MediaQuery.of(context).size.width > 600 ? 20 : 10,
               ),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFfF1F4F8),
                 borderRadius: BorderRadius.only(),
               ),
@@ -813,9 +813,9 @@ class _CandidateProfileState extends State<CandidateProfile>
                 indicatorSize: TabBarIndicatorSize.label,
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.grey,
-                indicatorColor: Color(0xFFF3D433),
+                indicatorColor: const Color(0xFFF3D433),
                 tabs: [
-                  Tab(
+                  const Tab(
                     child: Text(
                       'Summary',
                       style: TextStyle(
@@ -824,7 +824,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                       ),
                     ),
                   ),
-                  Tab(
+                  const Tab(
                     child: Text(
                       'Views',
                       style: TextStyle(
@@ -833,7 +833,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                       ),
                     ),
                   ),
-                  Tab(
+                  const Tab(
                     child: Text(
                       'Experience',
                       style: TextStyle(
@@ -853,13 +853,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                 // First tab content
                 SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Column(
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
                           child: Column(children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(right: 250),
                               child: Text(
                                 "Contact Info",
@@ -871,9 +871,9 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 textAlign: TextAlign.left,
                               ),
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             Padding(
-                              padding: EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.only(left: 20),
                               child: Column(
                                 children: contactInfo
                                     .map((info) => Row(
@@ -883,10 +883,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                                               width: 20,
                                               height: 25,
                                             ),
-                                            SizedBox(width: 20),
+                                            const SizedBox(width: 20),
                                             Text(
                                               info['text'],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 15,
@@ -899,7 +899,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                     .toList(),
                               ),
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             Padding(
                               padding: EdgeInsets.only(
                                 right: Platform.isIOS ? 10 : 10,
@@ -914,7 +914,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                       child: Container(
                                         width: 35,
                                         height: 35,
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Color(0xFFD9D9D9),
                                         ),
@@ -941,7 +941,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 ],
                               ),
                             ),
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(right: 260, top: 30),
                               child: Text(
                                 "Biography",
@@ -958,11 +958,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 Expanded(
                                   child: Container(
                                     height: 50,
-                                    margin: EdgeInsets.only(
+                                    margin: const EdgeInsets.only(
                                         top: 10, left: 30, right: 20),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
-                                      color: Color(0xFFD9D9D9),
+                                      color: const Color(0xFFD9D9D9),
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
@@ -971,15 +971,15 @@ class _CandidateProfileState extends State<CandidateProfile>
                                         Text(
                                           calculateAge(
                                               widget.candidate.dateOfBirth),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontFamily: "Inter",
                                             fontWeight: FontWeight.bold,
                                             fontSize: 25,
                                             color: Colors.black,
                                           ),
                                         ),
-                                        SizedBox(width: 10),
-                                        Text(
+                                        const SizedBox(width: 10),
+                                        const Text(
                                           "years old",
                                           style: TextStyle(
                                             fontFamily: "Inter",
@@ -996,11 +996,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                                   child: Container(
                                     height: 50,
                                     width: 40,
-                                    margin: EdgeInsets.only(
+                                    margin: const EdgeInsets.only(
                                         top: 10, left: 30, right: 20),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
-                                      color: Color(0xFFD9D9D9),
+                                      color: const Color(0xFFD9D9D9),
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
@@ -1009,15 +1009,15 @@ class _CandidateProfileState extends State<CandidateProfile>
                                         Text(
                                           _candidateExperience(
                                               widget.candidate.careerStartYear),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontFamily: "Inter",
                                             fontWeight: FontWeight.bold,
                                             fontSize: 25,
                                             color: Colors.black,
                                           ),
                                         ),
-                                        SizedBox(width: 10),
-                                        Text(
+                                        const SizedBox(width: 10),
+                                        const Text(
                                           "years of \nexperience",
                                           style: TextStyle(
                                             fontFamily: "Inter",
@@ -1033,11 +1033,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 30),
                               child: Text(
                                 widget.candidate.bodySummary,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.black,
                                 ),
@@ -1053,10 +1053,10 @@ class _CandidateProfileState extends State<CandidateProfile>
                 SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Column(
                       children: [
-                        Padding(
+                        const Padding(
                           padding: EdgeInsets.only(right: 260),
                           child: Text(
                             "Top 3 Issues",
@@ -1079,7 +1079,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                           ),
                           textAlign: TextAlign.left,
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -1102,13 +1102,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Row(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(top: 20, bottom: 10),
                               child: Text(
                                 "Education",
@@ -1128,11 +1128,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 });
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 240, top: 20, bottom: 10),
                                 child: Text(
                                   _showAllCardsEducation ? "Hide" : "View all",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: "Inter",
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12,
@@ -1145,7 +1145,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           child: Row(
                             children: _showAllCardsEducation
                                 ? createEducationCards(
@@ -1158,7 +1158,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         Row(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(
                                   right: 0, top: 20, bottom: 10),
                               child: Text(
@@ -1179,13 +1179,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 });
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 183, top: 20, bottom: 10),
                                 child: Text(
                                   _showAllCardsPreviousPositions
                                       ? "Hide"
                                       : "View all",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: "Inter",
                                     fontWeight: FontWeight.w600,
                                     fontSize: 11,
@@ -1198,7 +1198,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           child: Row(
                             children: _showAllCardsPreviousPositions
                                 ? createPositionCards(
@@ -1211,7 +1211,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         Row(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(
                                   right: 0, top: 20, bottom: 10),
                               child: Text(
@@ -1232,13 +1232,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 });
                               },
                               child: Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 183, top: 20, bottom: 10),
                                 child: Text(
                                   _showAllCardsOtherExperience
                                       ? "Hide"
                                       : "View all",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: "Inter",
                                     fontWeight: FontWeight.w600,
                                     fontSize: 11,
@@ -1251,7 +1251,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           child: Row(
                             children: _showAllCardsOtherExperience
                                 ? createPositionCards(
@@ -1263,13 +1263,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             vertical: 20.0,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Their campaign",
                                 style: TextStyle(
                                   fontFamily: "Inter",
@@ -1278,31 +1278,31 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 ),
                                 textAlign: TextAlign.left,
                               ),
-                              SizedBox(height: 20.0),
+                              const SizedBox(height: 20.0),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     children: [
-                                      Image(
+                                      const Image(
                                         image: AssetImage('assets/budget.png'),
                                         width: 35,
                                         height: 35,
                                       ),
-                                      SizedBox(height: 5.0),
+                                      const SizedBox(height: 5.0),
                                       Text(
                                         '\$' +
                                             getDonorsString(
                                                 widget.candidate.countOfDonors),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: "Inter",
                                         ),
                                       ),
-                                      SizedBox(height: 5.0),
-                                      Text(
+                                      const SizedBox(height: 5.0),
+                                      const Text(
                                         'Contributors',
                                         style: TextStyle(
                                           fontSize: 13,
@@ -1314,23 +1314,23 @@ class _CandidateProfileState extends State<CandidateProfile>
                                   ),
                                   Column(
                                     children: [
-                                      Image(
+                                      const Image(
                                         image: AssetImage(
                                             'assets/contributers.png'),
                                         width: 35,
                                         height: 35,
                                       ),
-                                      SizedBox(height: 5.0),
+                                      const SizedBox(height: 5.0),
                                       Text(
                                         widget.candidate.countOfStaff,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: "Inter",
                                         ),
                                       ),
-                                      SizedBox(height: 5.0),
-                                      Text(
+                                      const SizedBox(height: 5.0),
+                                      const Text(
                                         'Staff members',
                                         style: TextStyle(
                                           fontSize: 13,
@@ -1342,25 +1342,25 @@ class _CandidateProfileState extends State<CandidateProfile>
                                   ),
                                   Column(
                                     children: [
-                                      Image(
+                                      const Image(
                                         image:
                                             AssetImage('assets/marketing.png'),
                                         width: 35,
                                         height: 35,
                                       ),
-                                      SizedBox(height: 5.0),
+                                      const SizedBox(height: 5.0),
                                       Text(
                                         '\$' +
                                             getBudgetString(widget
                                                 .candidate.campaignBudget),
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 15,
                                           fontFamily: "Inter",
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(height: 5.0),
-                                      Text(
+                                      const SizedBox(height: 5.0),
+                                      const Text(
                                         'Campaign Budget',
                                         style: TextStyle(
                                           fontSize: 13,
@@ -1376,11 +1376,11 @@ class _CandidateProfileState extends State<CandidateProfile>
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(bottom: 20, right: 155),
+                          padding: const EdgeInsets.only(bottom: 20, right: 155),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Additional donations include:",
                                 style: TextStyle(
                                   fontFamily: "Inter",
@@ -1391,7 +1391,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                               ),
                               Text(
                                 "${widget.candidate.donors.join(', ')}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontFamily: "Inter",
                                   fontSize: 12,
                                 ),
