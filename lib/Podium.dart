@@ -247,18 +247,55 @@ class _PodiumState extends State<Podium> {
               child: Container(
                 color: _candidateColor(candidate.politicalAffiliation),
                 width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Stack(
                   children: [
-                    CircularProfileAvatar(
-                      '',
-                      radius: 60,
-                      elevation: 5,
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: Image(
-                          image: NetworkImage(candidate.profileImageURL),
-                        ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Stack(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProfileAvatar(
+                                '',
+                                radius: 60,
+                                elevation: 5,
+                                child: FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: Image(
+                                    image: NetworkImage(candidate.profileImageURL),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Stack(
+                              children: [
+                                const FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: Image(
+                                    width: 50,
+                                    height: 50,
+                                    image: AssetImage('assets/flame.png'),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(10, 18, 2, 0),
+                                  child: Text(
+                                    "${((stats.rSquared) * 100).round()}%",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                      fontFamily:'Inter',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -281,7 +318,6 @@ class _PodiumState extends State<Podium> {
                 ),
               ),
             ),
-
             //candidate position, city
             Expanded(
               flex: 7,
@@ -327,31 +363,6 @@ class _PodiumState extends State<Podium> {
                 ),
               ),
             ),
-            /*
-            Expanded(
-              flex: 8,
-              child: Stack(
-                children: [
-                  const FittedBox(
-                    fit: BoxFit.cover,
-                    child: Image(
-                      width: 30,
-                      height: 30,
-                      image: AssetImage('assets/flame.png'),
-                    ),
-                  ),
-                  Text(
-                    "${((stats.rSquared) * 100).round()}%",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-             */
           ],
         ),
       ),
