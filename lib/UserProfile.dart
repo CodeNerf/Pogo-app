@@ -133,7 +133,8 @@ class _UserProfileState extends State<UserProfile> {
       logoutUser();
       if (await checkLoggedIn()) {
         //successfully logged out, send to login
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) {
           return const LandingPage();
         }));
       } else {

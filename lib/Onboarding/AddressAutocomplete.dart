@@ -14,7 +14,9 @@ class AddressAutocomplete extends StatefulWidget {
   final String password;
   const AddressAutocomplete(
       {Key? key,
-      required this.userDemographics, required this.email, required this.password})
+      required this.userDemographics,
+      required this.email,
+      required this.password})
       : super(key: key);
 
   @override
@@ -35,6 +37,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
   );
 
   Future<List<Prediction>> getAddressPredictions(String query) async {
+    // Call Google Places API to get suggestions for the provided query
     final result = await _placesApiClient.autocomplete(
       query,
       language: 'en',
@@ -42,8 +45,10 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
     );
 
     if (result.isOkay) {
+      // If the API call was successful, return the list of predictions
       return result.predictions;
     } else {
+      // If the API call failed, return an empty list
       return [];
     }
   }
@@ -52,37 +57,44 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
 
   Future<void> _onAddressChanged(String value) async {
     setState(() {
+      // Reset the error text and size box
       errorText = '';
       errorSizeBoxSize = 0;
       isAddressSelected = false; // reset the flag
     });
 
     if (value.isNotEmpty) {
+      // Get address predictions for the entered value
       final predictions = await getAddressPredictions(value);
 
       if (predictions.isNotEmpty) {
         setState(() {
+          // Update the list of address predictions
           addressPredictions = predictions;
         });
       } else {
         setState(() {
+          // Show an error message if there are no predictions
           errorText = 'No results found for this address.';
           errorSizeBoxSize = 10;
         });
       }
     } else {
       setState(() {
+        // Clear the list of address predictions if the value is empty
         addressPredictions = [];
       });
     }
   }
 
   Future<void> _onAddressSelected(Prediction prediction) async {
+    // Get the details of the selected prediction from the Google Places API
     final place =
         await _placesApiClient.getDetailsByPlaceId(prediction.placeId!);
     final address = place.result.formattedAddress;
 
     setState(() {
+      // Update the address text field with the selected address
       addressController.text = address!;
       isAddressSelected = true;
     });
@@ -91,7 +103,11 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
   Future _nextPage() async {
     await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UserConfirmationPage(email: widget.email, password: widget.password,)));
+        MaterialPageRoute(
+            builder: (context) => UserConfirmationPage(
+                  email: widget.email,
+                  password: widget.password,
+                )));
   }
 
   @override
@@ -112,6 +128,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
+                            // Display a welcome message with the user's first name
                             "Welcome to PoGo, ${widget.userDemographics.firstName}",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -130,6 +147,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                         const Align(
                           alignment: Alignment.center,
                           child: Text(
+                            // Display a message asking the user to enter their address
                             "Enter your address personalize your search.",
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -148,12 +166,13 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                   const SizedBox(
                     height: 10,
                   ),
-                  //ADDRESS
+                  // ADDRESS
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Display a text input for the user to enter their address
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -173,10 +192,12 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                             children: [
                               Expanded(
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 15.0, right: 25.0),
+                                  padding: const EdgeInsets.only(
+                                      left: 15.0, right: 25.0),
                                   child: TextField(
+                                    // Use a TextEditingController to get the user's input
                                     controller: addressController,
+                                    // Call the _onAddressChanged method whenever the user types in the TextField
                                     onChanged: _onAddressChanged,
                                     decoration: const InputDecoration(
                                       border: InputBorder.none,
@@ -199,16 +220,24 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                                 width: 50.0,
                                 child: GestureDetector(
                                   onTap: () async {
+                                    // If no address has been selected from the address predictions yet
                                     if (!isAddressSelected) {
+                                      // Get the first prediction from the list of predictions
                                       final prediction =
                                           addressPredictions.first;
+                                      // Call the _onAddressSelected method with the prediction as a parameter
                                       await _onAddressSelected(prediction);
                                     }
+
+                                    // Get the address from the address controller
                                     final address = addressController.text;
+                                    // Update the address line 1 value in the user demographics object
                                     setState(() {
-                                      widget.userDemographics.addressLine1 = address;
+                                      widget.userDemographics.addressLine1 =
+                                          address;
                                     });
-                                    await putUserDemographics(widget.userDemographics);
+                                    await putUserDemographics(
+                                        widget.userDemographics);
                                     _nextPage();
                                   },
                                   child: Container(
@@ -225,7 +254,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -237,18 +266,22 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(
-                                    color: const Color.fromARGB(255, 178, 169, 169),
+                                    color: const Color.fromARGB(
+                                        255, 178, 169, 169),
                                   ),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: Column(
                                   children: [
+                                    // For each prediction in the list of address predictions display the description of the prediction
                                     for (var prediction in addressPredictions)
                                       ListTile(
                                         title: Text(prediction.description!),
                                         onTap: () {
+                                          // Set the text of the address controller to the prediction's description
                                           addressController.text =
                                               prediction.description!;
+                                          // Update the address predictions list and set the address selection flag to true
                                           setState(() {
                                             addressPredictions = [];
                                             isAddressSelected = true;

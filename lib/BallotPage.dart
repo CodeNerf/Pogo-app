@@ -17,14 +17,14 @@ class BallotPage extends StatefulWidget {
   final bool filter;
   const BallotPage(
       {Key? key,
-        required this.userBallot,
-        required this.candidateStack,
-        required this.ballotStack,
-        required this.removeFromBallot,
-        required this.loadCustomCandidatesInPodium,
-        required this.loadCandidateProfile,
-        required this.filter,
-        required this.unFilterPodiumCandidates})
+      required this.userBallot,
+      required this.candidateStack,
+      required this.ballotStack,
+      required this.removeFromBallot,
+      required this.loadCustomCandidatesInPodium,
+      required this.loadCandidateProfile,
+      required this.filter,
+      required this.unFilterPodiumCandidates})
       : super(key: key);
 
   @override
@@ -96,10 +96,9 @@ class _BallotPageState extends State<BallotPage> {
   @override
   void initState() {
     _filtering = widget.filter;
-    if(_filtering) {
+    if (_filtering) {
       _listHeight = 170;
-    }
-    else {
+    } else {
       _listHeight = 0;
     }
     super.initState();
@@ -345,50 +344,49 @@ class _BallotPageState extends State<BallotPage> {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Spacer(),
-                Visibility(
-                  visible: _filtering,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 3, 15, 5),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 3,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3D433),
+        children: [
+          Row(
+            children: [
+              const Spacer(),
+              Visibility(
+                visible: _filtering,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 3, 15, 5),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 3,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3D433),
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade600,
+                          spreadRadius: 3,
+                          blurRadius: 7,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
                         borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade600,
-                            spreadRadius: 3,
-                            blurRadius: 7,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(25),
-                          onTap: () async {
-                            await widget.unFilterPodiumCandidates();
-                            setState(() {
-                              _filtering = false;
-                            });
-                          },
-                          child: const Center(
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                'Remove Filter',
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF0E0E0E),
-                                  fontSize: 25,
-                                ),
+                        onTap: () async {
+                          await widget.unFilterPodiumCandidates();
+                          setState(() {
+                            _filtering = false;
+                          });
+                        },
+                        child: const Center(
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              'Remove Filter',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF0E0E0E),
+                                fontSize: 25,
                               ),
                             ),
                           ),
@@ -397,249 +395,287 @@ class _BallotPageState extends State<BallotPage> {
                     ),
                   ),
                 ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - _listHeight,
+            width: MediaQuery.of(context).size.width,
+            child: ListView(
+              children: [
+                const SizedBox(height: 10),
+                _buildExpandableButton(
+                  onPressed: () {
+                    setState(() {
+                      _expandedOther = false;
+                      _expandedGlobal = false;
+                      _expandedLocal = !_expandedLocal;
+                    });
+                  },
+                  expanded: _expandedLocal,
+                  title: 'LOCAL',
+                  child: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.56,
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          _buildRow(context, 'Mayor', _mayor, _mayorPics,
+                              (count) {
+                            setState(() {
+                              _mayor = count;
+                            });
+                          }, 0),
+                          _buildRow(
+                              context, 'Clerk', _cityClerk, _cityClerkPics,
+                              (count) {
+                            setState(() {
+                              _cityClerk = count;
+                            });
+                          }, 1),
+                          _buildRow(context, 'City Council', _cityCouncil,
+                              _cityCouncilPics, (count) {
+                            setState(() {
+                              _cityCouncil = count;
+                            });
+                          }, 2),
+                          _buildRow(context, 'Sheriff', _countySheriff,
+                              _countySheriffPics, (count) {
+                            setState(() {
+                              _countySheriff = count;
+                            });
+                          }, 4),
+                          _buildRow(context, 'Judge', _trialCourtJudge,
+                              _trialCourtJudgePics, (count) {
+                            setState(() {
+                              _trialCourtJudge = count;
+                            });
+                          }, 5),
+                          _buildRow(
+                              context,
+                              'County Register of Deeds',
+                              _countyRegisterOfDeeds,
+                              _countyRegisterOfDeedsPics, (count) {
+                            setState(() {
+                              _countyRegisterOfDeeds = count;
+                            });
+                          }, 6),
+                          _buildRow(context, 'School Board', _schoolBoard,
+                              _schoolBoardPics, (count) {
+                            setState(() {
+                              _schoolBoard = count;
+                            });
+                          }, 7),
+                          _buildRow(context, 'Prosecutor', _prosecutors,
+                              _prosecutorsPics, (count) {
+                            setState(() {
+                              _prosecutors = count;
+                            });
+                          }, 8),
+                          _buildRow(
+                              context, 'Coroner', _coroners, _coronersPics,
+                              (count) {
+                            setState(() {
+                              _coroners = count;
+                            });
+                          }, 9),
+                          _buildRow(
+                              context,
+                              'Planning/Zoning Commission',
+                              _planningZoningCommission,
+                              _planningZoningCommissionPics, (count) {
+                            setState(() {
+                              _planningZoningCommission = count;
+                            });
+                          }, 10),
+                          _buildRow(
+                              context,
+                              'Public Works Commission',
+                              _publicWorksCommission,
+                              _publicWorksCommissionPics, (count) {
+                            setState(() {
+                              _publicWorksCommission = count;
+                            });
+                          }, 11),
+                          _buildRow(
+                              context,
+                              'Commissioner of Revenue',
+                              _commissionerOfRevenue,
+                              _commissionerOfRevenuePics, (count) {
+                            setState(() {
+                              _commissionerOfRevenue = count;
+                            });
+                          }, 12),
+                          _buildRow(
+                              context,
+                              'Commissioner',
+                              _countyCommissioners,
+                              _countyCommissionersPics, (count) {
+                            setState(() {
+                              _countyCommissioners = count;
+                            });
+                          }, 13),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                _buildExpandableButton(
+                  onPressed: () {
+                    setState(() {
+                      _expandedLocal = false;
+                      _expandedOther = false;
+                      _expandedGlobal = !_expandedGlobal;
+                    });
+                  },
+                  expanded: _expandedGlobal,
+                  title: 'STATE',
+                  child: [
+                    const SizedBox(height: 6),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.56,
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          _buildRow(
+                              context, 'Governor', _governor, _governorPics,
+                              (count) {
+                            setState(() {
+                              _governor = count;
+                            });
+                          }, 0),
+                          _buildRow(
+                              context,
+                              'Secretary of State',
+                              _secretaryOfState,
+                              _secretaryOfStatePics, (count) {
+                            setState(() {
+                              _secretaryOfState = count;
+                            });
+                          }, 1),
+                          _buildRow(context, 'Attorney General',
+                              _attorneyGeneral, _attorneyGeneralPics, (count) {
+                            setState(() {
+                              _attorneyGeneral = count;
+                            });
+                          }, 2),
+                          _buildRow(
+                              context,
+                              'Supreme Court Justice',
+                              _supremeCourtJustice,
+                              _supremeCourtJusticePics, (count) {
+                            setState(() {
+                              _supremeCourtJustice = count;
+                            });
+                          }, 3),
+                          _buildRow(context, 'Comptroller', _comptroller,
+                              _comptrollerPics, (count) {
+                            setState(() {
+                              _comptroller = count;
+                            });
+                          }, 4),
+                          _buildRow(
+                              context, 'Treasurer', _treasurer, _treasurerPics,
+                              (count) {
+                            setState(() {
+                              _treasurer = count;
+                            });
+                          }, 5),
+                          _buildRow(context, 'Representative', _representative,
+                              _representativePics, (count) {
+                            setState(() {
+                              _representative = count;
+                            });
+                          }, 6),
+                          _buildRow(context, 'Senator', _senator, _senatorPics,
+                              (count) {
+                            setState(() {
+                              _senator = count;
+                            });
+                          }, 7),
+                          _buildRow(context, 'Legislator', _legislator,
+                              _legislatorPics, (count) {
+                            setState(() {
+                              _legislator = count;
+                            });
+                          }, 8),
+                          _buildRow(
+                              context,
+                              'Education Commissioner',
+                              _educationCommissioner,
+                              _educationCommissionerPics, (count) {
+                            setState(() {
+                              _educationCommissioner = count;
+                            });
+                          }, 9),
+                          _buildRow(
+                              context,
+                              'Board of Education',
+                              _boardOfEducation,
+                              _boardOfEducationPics, (count) {
+                            setState(() {
+                              _boardOfEducation = count;
+                            });
+                          }, 10),
+                          _buildRow(
+                              context,
+                              'Public Service Commissioner',
+                              _publicServiceCommissioner,
+                              _publicServiceCommissionerPics, (count) {
+                            setState(() {
+                              _publicServiceCommissioner = count;
+                            });
+                          }, 11),
+                          _buildRow(
+                              context,
+                              'Agriculture Commissioner',
+                              _agricultureCommissioner,
+                              _agricultureCommissionerPics, (count) {
+                            setState(() {
+                              _agricultureCommissioner = count;
+                            });
+                          }, 12),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                _buildExpandableButton(
+                  onPressed: () {
+                    setState(() {
+                      _expandedLocal = false;
+                      _expandedGlobal = false;
+                      _expandedOther = !_expandedOther;
+                    });
+                  },
+                  expanded: _expandedOther,
+                  title: 'FEDERAL',
+                  child: [
+                    const SizedBox(height: 6),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.56,
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          _buildRow(
+                              context, 'President', _president, _presidentPics,
+                              (count) {
+                            setState(() {
+                              _president = count;
+                            });
+                          }, 0),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - _listHeight,
-              width: MediaQuery.of(context).size.width,
-              child: ListView(
-                children: [
-                  const SizedBox(height: 10),
-                  _buildExpandableButton(
-                    onPressed: () {
-                      setState(() {
-                        _expandedOther = false;
-                        _expandedGlobal = false;
-                        _expandedLocal = !_expandedLocal;
-                      });
-                    },
-                    expanded: _expandedLocal,
-                    title: 'LOCAL',
-                    child: [
-                      Container(
-                        height:  MediaQuery.of(context).size.height * 0.56,
-                        child: ListView(
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          children: [
-                            _buildRow(context, 'Mayor', _mayor, _mayorPics, (count) {
-                              setState(() {
-                                _mayor = count;
-                              });
-                            }, 0),
-                            _buildRow(context, 'Clerk', _cityClerk, _cityClerkPics,
-                                    (count) {
-                                  setState(() {
-                                    _cityClerk = count;
-                                  });
-                                }, 1),
-                            _buildRow(
-                                context, 'City Council', _cityCouncil, _cityCouncilPics,
-                                    (count) {
-                                  setState(() {
-                                    _cityCouncil = count;
-                                  });
-                                }, 2),
-                            _buildRow(
-                                context, 'Sheriff', _countySheriff, _countySheriffPics,
-                                    (count) {
-                                  setState(() {
-                                    _countySheriff = count;
-                                  });
-                                }, 4),
-                            _buildRow(context, 'Judge', _trialCourtJudge,
-                                _trialCourtJudgePics, (count) {
-                                  setState(() {
-                                    _trialCourtJudge = count;
-                                  });
-                                }, 5),
-                            _buildRow(
-                                context,
-                                'County Register of Deeds',
-                                _countyRegisterOfDeeds,
-                                _countyRegisterOfDeedsPics, (count) {
-                              setState(() {
-                                _countyRegisterOfDeeds = count;
-                              });
-                            }, 6),
-                            _buildRow(
-                                context, 'School Board', _schoolBoard, _schoolBoardPics,
-                                    (count) {
-                                  setState(() {
-                                    _schoolBoard = count;
-                                  });
-                                }, 7),
-                            _buildRow(
-                                context, 'Prosecutor', _prosecutors, _prosecutorsPics,
-                                    (count) {
-                                  setState(() {
-                                    _prosecutors = count;
-                                  });
-                                }, 8),
-                            _buildRow(context, 'Coroner', _coroners, _coronersPics,
-                                    (count) {
-                                  setState(() {
-                                    _coroners = count;
-                                  });
-                                }, 9),
-                            _buildRow(
-                                context,
-                                'Planning/Zoning Commission',
-                                _planningZoningCommission,
-                                _planningZoningCommissionPics, (count) {
-                              setState(() {
-                                _planningZoningCommission = count;
-                              });
-                            }, 10),
-                            _buildRow(
-                                context,
-                                'Public Works Commission',
-                                _publicWorksCommission,
-                                _publicWorksCommissionPics, (count) {
-                              setState(() {
-                                _publicWorksCommission = count;
-                              });
-                            }, 11),
-                            _buildRow(
-                                context,
-                                'Commissioner of Revenue',
-                                _commissionerOfRevenue,
-                                _commissionerOfRevenuePics, (count) {
-                              setState(() {
-                                _commissionerOfRevenue = count;
-                              });
-                            }, 12),
-                            _buildRow(context, 'Commissioner', _countyCommissioners,
-                                _countyCommissionersPics, (count) {
-                                  setState(() {
-                                    _countyCommissioners = count;
-                                  });
-                                }, 13),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  _buildExpandableButton(
-                    onPressed: () {
-                      setState(() {
-                        _expandedLocal = false;
-                        _expandedOther = false;
-                        _expandedGlobal = !_expandedGlobal;
-                      });
-                    },
-                    expanded: _expandedGlobal,
-                    title: 'STATE',
-                    child: [
-                      const SizedBox(height: 6),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.56,
-                        child: ListView(
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          children: [
-                            _buildRow(context, 'Governor', _governor, _governorPics, (count) {
-                              setState(() {
-                                _governor = count;
-                              });
-                            }, 0),
-                            _buildRow(context, 'Secretary of State', _secretaryOfState, _secretaryOfStatePics, (count) {
-                              setState(() {
-                                _secretaryOfState = count;
-                              });
-                            }, 1),
-                            _buildRow(context, 'Attorney General', _attorneyGeneral, _attorneyGeneralPics, (count) {
-                              setState(() {
-                                _attorneyGeneral = count;
-                              });
-                            }, 2),
-                            _buildRow(context, 'Supreme Court Justice', _supremeCourtJustice, _supremeCourtJusticePics, (count) {
-                              setState(() {
-                                _supremeCourtJustice = count;
-                              });
-                            }, 3),
-                            _buildRow(context, 'Comptroller', _comptroller, _comptrollerPics, (count) {
-                              setState(() {
-                                _comptroller = count;
-                              });
-                            }, 4),
-                            _buildRow(context, 'Treasurer', _treasurer, _treasurerPics, (count) {
-                              setState(() {
-                                _treasurer = count;
-                              });
-                            }, 5),
-                            _buildRow(context, 'Representative', _representative, _representativePics, (count) {
-                              setState(() {
-                                _representative = count;
-                              });
-                            }, 6),
-                            _buildRow(context, 'Senator', _senator, _senatorPics, (count) {
-                              setState(() {
-                                _senator = count;
-                              });
-                            }, 7),
-                            _buildRow(context, 'Legislator', _legislator, _legislatorPics, (count) {
-                              setState(() {
-                                _legislator = count;
-                              });
-                            }, 8),
-                            _buildRow(context, 'Education Commissioner', _educationCommissioner, _educationCommissionerPics, (count) {
-                              setState(() {
-                                _educationCommissioner = count;
-                              });
-                            }, 9),
-                            _buildRow(context, 'Board of Education', _boardOfEducation, _boardOfEducationPics, (count) {
-                              setState(() {
-                                _boardOfEducation = count;
-                              });
-                            }, 10),
-                            _buildRow(context, 'Public Service Commissioner', _publicServiceCommissioner, _publicServiceCommissionerPics, (count) {
-                              setState(() {
-                                _publicServiceCommissioner = count;
-                              });
-                            }, 11),
-                            _buildRow(context, 'Agriculture Commissioner', _agricultureCommissioner, _agricultureCommissionerPics, (count) {
-                              setState(() {
-                                _agricultureCommissioner = count;
-                              });
-                            }, 12),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  _buildExpandableButton(
-                    onPressed: () {
-                      setState(() {
-                        _expandedLocal = false;
-                        _expandedGlobal = false;
-                        _expandedOther = !_expandedOther;
-                      });
-                    },
-                    expanded: _expandedOther,
-                    title: 'FEDERAL',
-                    child: [
-                      const SizedBox(height: 6),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.56,
-                        child: ListView(
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          children: [
-                            _buildRow(context, 'President', _president, _presidentPics, (count) {
-                              setState(() {
-                                _president = count;
-                              });
-                            }, 0),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
+        ],
       ),
     );
   }
@@ -686,7 +722,7 @@ class _BallotPageState extends State<BallotPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              for(int i = 0; i < titleSplit.length; i++)
+                              for (int i = 0; i < titleSplit.length; i++)
                                 AutoSizeText(
                                   titleSplit[i],
                                   textAlign: TextAlign.center,
