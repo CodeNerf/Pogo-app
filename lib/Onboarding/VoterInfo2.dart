@@ -32,14 +32,17 @@ class _VoterInfo2State extends State<VoterInfo2> {
   bool _voteCheckmarkVisibility = false;
 
   void _nextPage() async {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Issues(
-                  ratings: widget.ratings,
-                  answers: widget.answers,
-                  issuesIndex: widget.issuesIndex,
-                )));
+    if(widget.answers.partyVoting == '' || widget.answers.politicalAffiliation == '') {}
+    else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Issues(
+                ratings: widget.ratings,
+                answers: widget.answers,
+                issuesIndex: widget.issuesIndex,
+              )));
+    }
   }
 
   void _expandTap(bool expanded, int index) {

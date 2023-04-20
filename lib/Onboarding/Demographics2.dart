@@ -30,14 +30,17 @@ class _Demographics2State extends State<Demographics2> {
   bool _genderCheckmarkVisibility = false;
 
   void _nextPage() async {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => VoterInfo2(
-                  ratings: widget.ratings,
-                  answers: widget.answers,
-                  issuesIndex: widget.issuesIndex,
-                )));
+    if(widget.answers.gender == '' || widget.answers.racialIdentity == '' || widget.answers.dateOfBirth == '') {}
+    else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => VoterInfo2(
+                ratings: widget.ratings,
+                answers: widget.answers,
+                issuesIndex: widget.issuesIndex,
+              )));
+    }
   }
 
   void _expandTap(bool expanded, int index) {
