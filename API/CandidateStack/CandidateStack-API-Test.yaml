@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An AWS Serverless Specification template describing your function.
 Resources:
-  UserBallotAPI:
+  CandidateStackAPITest:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: index.handler
@@ -11,6 +11,6 @@ Resources:
       Description: ''
       MemorySize: 128
       Timeout: 3
-      Role: 'arn:aws:iam::163651705262:role/service-role/UserBallot-API'
+      Role: 'arn:aws:iam::163651705262:role/service-role/CandidateStack-API-Test'
       RuntimeManagementConfig:
         UpdateRuntimeOn: Auto

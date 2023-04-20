@@ -11,7 +11,7 @@ const client = new DynamoDBClient({});
 
 const dynamo = DynamoDBDocumentClient.from(client);
 
-const tableName = "UserIssueFactorValues";
+const tableName = "UserBallot";
 
 export const handler = async (event, context) => {
   let body;
@@ -22,7 +22,7 @@ export const handler = async (event, context) => {
 
   try {
     switch (event.routeKey) {
-      case "DELETE /userissuefactorvalues/{userId}":
+      case "DELETE /userBallot/{userId}":
         await dynamo.send(
           new DeleteCommand({
             TableName: tableName,
@@ -31,9 +31,9 @@ export const handler = async (event, context) => {
             },
           })
         );
-        body = `Deleted userissuefactorvalue ${event.pathParameters.userId}`;
+        body = `Deleted userBallot ${event.pathParameters.userId}`;
         break;
-      case "GET /userissuefactorvalues/{userId}":
+      case "GET /userBallot/{userId}":
         body = await dynamo.send(
           new GetCommand({
             TableName: tableName,
@@ -44,13 +44,13 @@ export const handler = async (event, context) => {
         );
         body = body.Item;
         break;
-      case "GET /userissuefactorvalues":
+      case "GET /userBallot":
         body = await dynamo.send(
           new ScanCommand({ TableName: tableName })
         );
         body = body.Items;
         break;
-      case "PUT /userissuefactorvalues":
+      case "PUT /userBallot":
         let requestJSON = JSON.parse(event.body);
   
         await dynamo.send(
@@ -59,7 +59,7 @@ export const handler = async (event, context) => {
             Item: requestJSON,
           })
         );
-        body = `Put userissuefactorvalue ${requestJSON.userId}`;
+        body = `Put userBallot ${requestJSON.userId}`;
         break;
       default:
         throw new Error(`Unsupported route: "${event.routeKey}"`);

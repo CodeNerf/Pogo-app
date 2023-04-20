@@ -1,6 +1,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
+  ScanCommand,
   PutCommand,
   GetCommand,
   DeleteCommand,
@@ -10,7 +11,7 @@ const client = new DynamoDBClient({});
 
 const dynamo = DynamoDBDocumentClient.from(client);
 
-const tableName = "UserBallot";
+const tableName = "CandidateIssueFactorValues";
 
 export const handler = async (event, context) => {
   let body;
@@ -18,48 +19,61 @@ export const handler = async (event, context) => {
   const headers = {
     "Content-Type": "application/json",
   };
+
   try {
     switch (event.routeKey) {
-      case "DELETE /UserBallot/{userId}":
+      case "DELETE /candidateissuefactorvalues/{candidateId}":
         await dynamo.send(
           new DeleteCommand({
             TableName: tableName,
             Key: {
-              userId: event.pathParameters.userId,
+              candidateId: event.pathParameters.candidateId,
             },
           })
         );
-        body = `Deleted User Ballot ${event.pathParameters.userId}`;
+        body = `Deleted candidateissuefactorvalue ${event.pathParameters.candidateId}`;
         break;
-      case "GET /UserBallot/{userId}":
-        await dynamo.send(
+      case "GET /candidateissuefactorvalues/{candidateId}":
+        console.log(`Get ${event.pathParameters.candidateId} issues`);
+        body = await dynamo.send(
           new GetCommand({
             TableName: tableName,
-            Key: { userId: event.pathParameters.userId },
+            Key: {
+              candidateId: event.pathParameters.candidateId,
+            },
           })
+        );
+        body = body.Item;
+        break;
+      case "GET /candidateissuefactorvalues":
+        console.log(`Get all candidate issues`);
+        body = await dynamo.send(
+          new ScanCommand({ TableName: tableName })
         );
         body = body.Items;
         break;
-      case "PUT /UserBallot":
+      case "PUT /candidateissuefactorvalues":
         let requestJSON = JSON.parse(event.body);
-
         await dynamo.send(
           new PutCommand({
             TableName: tableName,
             Item: requestJSON,
           })
         );
-        body = `Put UserBallot ${requestJSON.userId}`;
+        body = `Put candidateissuefactorvalue ${requestJSON.candidateId}`;
         break;
       default:
         throw new Error(`Unsupported route: "${event.routeKey}"`);
     }
   } catch (err) {
+    console.log(err.message);
     statusCode = 400;
     body = err.message;
   } finally {
+    console.log(200);
     body = JSON.stringify(body);
   }
+
   return {
     statusCode,
     body,

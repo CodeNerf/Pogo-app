@@ -4,10 +4,11 @@ import 'package:amplify_core/amplify_core.dart';
 import 'package:http/http.dart' as http;
 //import 'package:pogo/googleFunctions/APIKey.dart';
 import 'CivicModels.dart';
+import 'APIKey.dart';
 
-/*
+// Get the election information from the Google Civic API
 Future<List<Election>> getElection() async {
-  final queryParams = {'key': "theKey"};
+  final queryParams = {'key': googleAPIKey};
   final url =
       Uri.https("www.googleapis.com", "/civicinfo/v2/elections", queryParams);
   final response = await http.get(url);
@@ -24,10 +25,8 @@ Future<List<Election>> getElection() async {
     return <Election>[];
   }
 }
-*/
 
-String googleAPIKey = '';
-
+// Get the polling location from the Google Civic API
 Future<List<PollingLocation>> getPollingLocation(String address) async {
   final queryParams = {
     'key': googleAPIKey,
@@ -59,10 +58,10 @@ Future<List<PollingLocation>> getPollingLocation(String address) async {
   }
 }
 
-/*
+// Get the candidates from the Google Civic API
 Future<List<Candidate>> getCandidates(String Address, String electionId) async {
   final queryParams = {
-    'key': "theKey",
+    'key': googleAPIKey,
     'address': Address,
     'electionId': electionId,
   };
@@ -86,4 +85,3 @@ Future<List<Candidate>> getCandidates(String Address, String electionId) async {
     return <Candidate>[];
   }
 }
- */

@@ -13,5 +13,5 @@ Resources:
       Timeout: 3
       Role: >-
         arn:aws:iam::163651705262:role/service-role/CandidateIssueFactorValues-API-2
-      RuntimePolicy:
+      RuntimeManagementConfig:
         UpdateRuntimeOn: Auto

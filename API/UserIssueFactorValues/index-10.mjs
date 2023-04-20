@@ -11,7 +11,7 @@ const client = new DynamoDBClient({});
 
 const dynamo = DynamoDBDocumentClient.from(client);
 
-const tableName = "CandidateIssueFactorValues";
+const tableName = "UserIssueFactorValues";
 
 export const handler = async (event, context) => {
   let body;
@@ -22,51 +22,56 @@ export const handler = async (event, context) => {
 
   try {
     switch (event.routeKey) {
-      case "DELETE /candidateissuefactorvalues/{candidateId}":
+      case "DELETE /userissuefactorvalues/{userId}":
         await dynamo.send(
           new DeleteCommand({
             TableName: tableName,
             Key: {
-              candidateId: event.pathParameters.candidateId,
+              userId: event.pathParameters.userId,
             },
           })
         );
-        body = `Deleted candidateissuefactorvalue ${event.pathParameters.candidateId}`;
+        body = `Deleted userissuefactorvalue ${event.pathParameters.userId}`;
         break;
-      case "GET /candidateissuefactorvalues/{candidateId}":
+      case "GET /userissuefactorvalues/{userId}":
+        console.log(`Get ${event.pathParameters.userId} issues`);
         body = await dynamo.send(
           new GetCommand({
             TableName: tableName,
             Key: {
-              candidateId: event.pathParameters.candidateId,
+              userId: event.pathParameters.userId,
             },
           })
         );
         body = body.Item;
         break;
-      case "GET /candidateissuefactorvalues":
+      case "GET /userissuefactorvalues":
+        console.log(`Get all user issues`);
         body = await dynamo.send(
           new ScanCommand({ TableName: tableName })
         );
         body = body.Items;
         break;
-      case "PUT /candidateissuefactorvalues":
+      case "PUT /userissuefactorvalues":
         let requestJSON = JSON.parse(event.body);
+  
         await dynamo.send(
           new PutCommand({
             TableName: tableName,
             Item: requestJSON,
           })
         );
-        body = `Put candidateissuefactorvalue ${requestJSON.candidateId}`;
+        body = `Put userissuefactorvalue ${requestJSON.userId}`;
         break;
       default:
         throw new Error(`Unsupported route: "${event.routeKey}"`);
     }
   } catch (err) {
+    console.log(err.message);
     statusCode = 400;
     body = err.message;
   } finally {
+    console.log(200);
     body = JSON.stringify(body);
   }
 
