@@ -996,7 +996,7 @@ class _UserProfileState extends State<UserProfile> {
                 'Hello ${widget.currentUserDemographics.firstName}',
                 style: const TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 20,
+                  fontSize: 25,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1075,10 +1075,11 @@ class _UserProfileState extends State<UserProfile> {
                           Padding(
                             padding: const EdgeInsets.only(left: 5),
                             child: Container(
-                              width: 100,
+                              width: 80,
                               height: 50,
                               child: FittedBox(
                                 fit: BoxFit.contain,
+                                alignment: Alignment.centerLeft,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -1090,7 +1091,7 @@ class _UserProfileState extends State<UserProfile> {
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w600,
                                         color: Color(0xFF0E0E0E),
-                                        fontSize: 22,
+                                        fontSize: 17,
                                       ),
                                     ),
                                     AutoSizeText(
@@ -1100,7 +1101,7 @@ class _UserProfileState extends State<UserProfile> {
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
                                         color: Color(0xFF57636C),
-                                        fontSize: 17,
+                                        fontSize: 13,
                                       ),
                                     ),
                                   ],
