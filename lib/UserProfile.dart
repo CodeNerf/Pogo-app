@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:pogo/SignInSignUpPage.dart';
 import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
+import 'IssuesDefinitions.dart';
 import 'LandingPage.dart';
 import 'Onboarding/SurveyLandingPage.dart';
 import 'dynamoModels/Ballot.dart';
@@ -43,6 +44,7 @@ class _UserProfileState extends State<UserProfile> {
   UserDemographics userDemographics = UserDemographics(id: '');
   final List<Widget> _issueDropdownResults = [];
   final List<bool> _issueExpanded = [];
+  final IssuesDefinitions _issueDefs = IssuesDefinitions();
 
   @override
   void initState() {
@@ -59,7 +61,6 @@ class _UserProfileState extends State<UserProfile> {
     _ratings.add(widget.currentUserFactors.reproductiveWeight);
     for(int i = 0; i < _ratings.length; i++) {
       _issueExpanded.add(false);
-
     }
     _setTopIssues(_ratings);
   }
@@ -128,19 +129,6 @@ class _UserProfileState extends State<UserProfile> {
     }
   }
 
-  final List<String> _issuesText = [
-    'GUN POLICY',
-    'CLIMATE CHANGE',
-    'EDUCATION',
-    'DRUG POLICY',
-    'HEALTHCARE',
-    'HOUSING',
-    'ECONOMY',
-    'IMMIGRATION',
-    'POLICING',
-    'REPRODUCTIVE RIGHTS'
-  ];
-
   //change profile pic
   Future<void> _changeProfilePic() async {
     return showDialog<void>(
@@ -177,7 +165,7 @@ class _UserProfileState extends State<UserProfile> {
                 foregroundColor: Colors.white,
                 backgroundColor: const Color(0xFFF3D433),
                 elevation: 0,
-                minimumSize: Size(double.infinity, 48),
+                minimumSize: const Size(double.infinity, 48),
               ),
               child: const Text(
                 'Save New Picture',
@@ -310,117 +298,113 @@ class _UserProfileState extends State<UserProfile> {
 
   _showAlert(context) {
     //function below is used to collapse all other dropdowns when another is clicked
-    void expandTap(bool expanded, int index) {
-      if (expanded) {
-        switch (index) {
-          case 0:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 0) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
+    void expandTap(int index) {
+      switch (index) {
+        case 0:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 0) {
+              _issueExpanded[i] = !_issueExpanded[i];
             }
-            break;
-          case 1:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 1) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          case 2:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 2) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          case 3:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 3) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          case 4:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 4) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          case 5:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 5) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          case 6:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 6) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          case 7:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 7) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          case 8:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 8) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          case 9:
-            for(int i = 0; i < _issueExpanded.length; i++) {
-              if(i == 9) {
-                _issueExpanded[i] = true;
-              }
-              else {
-                _issueExpanded[i] = false;
-              }
-            }
-            break;
-          default:
-            for(int i = 0; i < _issueExpanded.length; i++) {
+            else {
               _issueExpanded[i] = false;
             }
-            break;
-        }
-      } else {
-        setState(() {});
+          }
+          break;
+        case 1:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 1) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        case 2:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 2) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        case 3:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 3) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        case 4:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 4) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        case 5:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 5) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        case 6:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 6) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        case 7:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 7) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        case 8:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 8) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        case 9:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            if(i == 9) {
+              _issueExpanded[i] = !_issueExpanded[i];
+            }
+            else {
+              _issueExpanded[i] = false;
+            }
+          }
+          break;
+        default:
+          for(int i = 0; i < _issueExpanded.length; i++) {
+            _issueExpanded[i] = false;
+          }
+          break;
       }
     }
     //pop up for survey results
@@ -440,7 +424,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[0],
                           onExpansionChanged: (bool expanded) {
-                            setState(() => expandTap(expanded, 0));
+                            setState(() => expandTap(0));
                           },
                           title: const Text(
                             "EDUCATION",
@@ -488,7 +472,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[1],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 1));
+                            setState(() => expandTap(1));
                             setState;
                           },
                           title: const Text(
@@ -537,7 +521,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[2],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 2));
+                            setState(() => expandTap(2));
                             setState;
                           },
                           title: const Text(
@@ -586,7 +570,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[3],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 3));
+                            setState(() => expandTap(3));
                             setState;
                           },
                           title: const Text(
@@ -635,7 +619,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[4],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 4));
+                            setState(() => expandTap(4));
                             setState;
                           },
                           title: const Text(
@@ -684,7 +668,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[5],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 5));
+                            setState(() => expandTap(5));
                             setState;
                           },
                           title: const Text(
@@ -733,7 +717,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[6],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 6));
+                            setState(() => expandTap(6));
                             setState;
                           },
                           title: const Text(
@@ -782,7 +766,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[7],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 7));
+                            setState(() => expandTap(7));
                             setState;
                           },
                           title: const Text(
@@ -831,7 +815,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[8],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 8));
+                            setState(() => expandTap(8));
                             setState;
                           },
                           title: const Text(
@@ -880,7 +864,7 @@ class _UserProfileState extends State<UserProfile> {
                           key: GlobalKey(),
                           initiallyExpanded: _issueExpanded[9],
                           onExpansionChanged: (bool expanded){
-                            setState(() => expandTap(expanded, 9));
+                            setState(() => expandTap(9));
                             setState;
                           },
                           title: const Text(
@@ -1074,7 +1058,7 @@ class _UserProfileState extends State<UserProfile> {
                           //experience level and polls
                           Padding(
                             padding: const EdgeInsets.only(left: 5),
-                            child: Container(
+                            child: SizedBox(
                               width: 80,
                               height: 50,
                               child: FittedBox(
@@ -1144,7 +1128,7 @@ class _UserProfileState extends State<UserProfile> {
                           //experience level and polls
                           Padding(
                             padding: const EdgeInsets.only(left: 5),
-                            child: Container(
+                            child: SizedBox(
                               width: 100,
                               height: 50,
                               child: FittedBox(
@@ -1234,7 +1218,7 @@ class _UserProfileState extends State<UserProfile> {
                           width: 60,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF9F9F9),
+                            color: const Color(0xFFF9F9F9),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -1256,7 +1240,7 @@ class _UserProfileState extends State<UserProfile> {
                           width: 60,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF9F9F9),
+                            color: const Color(0xFFF9F9F9),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -1278,7 +1262,7 @@ class _UserProfileState extends State<UserProfile> {
                           width: 60,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF9F9F9),
+                            color: const Color(0xFFF9F9F9),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -1300,7 +1284,7 @@ class _UserProfileState extends State<UserProfile> {
                           width: 60,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: Color(0xFFF9F9F9),
+                            color: const Color(0xFFF9F9F9),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -1639,13 +1623,13 @@ class _UserProfileState extends State<UserProfile> {
               padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFF3D433),
+                  color: const Color(0xFFF3D433),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.35),
                       blurRadius: 4,
-                      offset: Offset(0, 4),
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -1657,7 +1641,7 @@ class _UserProfileState extends State<UserProfile> {
                   },
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
-                  child: Text(
+                  child: const Text(
                     "Logout",
                     style: TextStyle(
                       fontFamily: 'Inter',
