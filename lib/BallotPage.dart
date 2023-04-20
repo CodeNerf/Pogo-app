@@ -702,26 +702,28 @@ class _BallotPageState extends State<BallotPage> {
                       ],
                     ),
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: List.generate(
-                        circleCount,
-                        (index) => SizedBox(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20, top: 30),
-                            child: _buildCircleCandidate(
-                              () {
-                                updateCircleCount(circleCount - 1);
-                              },
-                              () {
-                                updateCircleCount(circleCount - 1);
-                              },
-                              candidatePics[index],
-                              context,
-                              title,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: List.generate(
+                          circleCount,
+                          (index) => SizedBox(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20, top: 30),
+                              child: _buildCircleCandidate(
+                                () {
+                                  updateCircleCount(circleCount - 1);
+                                },
+                                () {
+                                  updateCircleCount(circleCount - 1);
+                                },
+                                candidatePics[index],
+                                context,
+                                title,
+                              ),
                             ),
                           ),
                         ),
