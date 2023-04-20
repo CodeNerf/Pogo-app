@@ -1,31 +1,24 @@
-/*
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:pogo/Onboarding/Demographics.dart';
 import 'package:pogo/UserConfirmationPage.dart';
-import 'package:validators/validators.dart';
+import 'package:pogo/awsFunctions.dart';
 import '../googleFunctions/APIKey.dart';
 import 'SurveyLandingPage.dart';
-import '../amplifyFunctions.dart';
 import 'dart:async';
-import 'package:validators/validators.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'package:pogo/dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 
 class AddressAutocomplete extends StatefulWidget {
   final UserDemographics userDemographics;
-  final UserIssueFactorValues userIssueFactorValues;
+  final String email;
+  final String password;
   const AddressAutocomplete(
       {Key? key,
-      required this.userDemographics,
-      required this.userIssueFactorValues})
+      required this.userDemographics, required this.email, required this.password})
       : super(key: key);
 
   @override
-  _AddressAutocompleteState createState() => _AddressAutocompleteState();
+  State<AddressAutocomplete> createState() => _AddressAutocompleteState();
 }
 
 class _AddressAutocompleteState extends State<AddressAutocomplete> {
@@ -95,10 +88,16 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
     });
   }
 
+  Future _nextPage() async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UserConfirmationPage(email: widget.email, password: widget.password,)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF1F4F8),
+      backgroundColor: const Color(0xFFF1F4F8),
       body: SafeArea(
         child: Form(
           child: Center(
@@ -107,14 +106,14 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
                         Align(
                           alignment: Alignment.center,
                           child: Text(
                             "Welcome to PoGo, ${widget.userDemographics.firstName}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
                               color: Color(0xFF0E0E0E),
@@ -125,10 +124,10 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
-                        Align(
+                        const Align(
                           alignment: Alignment.center,
                           child: Text(
                             "Enter your address personalize your search.",
@@ -146,12 +145,12 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   //ADDRESS
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -159,10 +158,10 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(
-                              color: Color.fromARGB(255, 178, 169, 169),
+                              color: const Color.fromARGB(255, 178, 169, 169),
                             ),
                             borderRadius: BorderRadius.circular(30),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                 color: Color.fromRGBO(0, 0, 0, 0.4),
                                 blurRadius: 8.0,
@@ -175,11 +174,11 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                               Expanded(
                                 child: Padding(
                                   padding:
-                                      EdgeInsets.only(left: 15.0, right: 25.0),
+                                      const EdgeInsets.only(left: 15.0, right: 25.0),
                                   child: TextField(
                                     controller: addressController,
                                     onChanged: _onAddressChanged,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Your Address',
                                       focusColor: Colors.white,
@@ -205,31 +204,20 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                                           addressPredictions.first;
                                       await _onAddressSelected(prediction);
                                     }
-
                                     final address = addressController.text;
                                     setState(() {
-                                      widget.userDemographics.addressLine1 =
-                                          address;
+                                      widget.userDemographics.addressLine1 = address;
                                     });
-
-                                    await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Demographics(
-                                                  ratings: widget
-                                                      .userIssueFactorValues,
-                                                  answers:
-                                                      widget.userDemographics,
-                                                  issuesIndex: 0,
-                                                )));
+                                    await putUserDemographics(widget.userDemographics);
+                                    _nextPage();
                                   },
                                   child: Container(
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Color(0xFFF3D433),
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(4.0),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(4.0),
                                       child: Icon(
                                         Icons.arrow_forward,
                                         color: Colors.black,
@@ -249,7 +237,7 @@ class _AddressAutocompleteState extends State<AddressAutocomplete> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(
-                                    color: Color.fromARGB(255, 178, 169, 169),
+                                    color: const Color.fromARGB(255, 178, 169, 169),
                                   ),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
@@ -290,5 +278,3 @@ Widget build(BuildContext context) {
   // TODO: implement build
   throw UnimplementedError();
 }
-
- */

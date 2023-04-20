@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pogo/Onboarding/AddressAutocomplete.dart';
 import 'UserConfirmationPage.dart';
 import 'amplifyFunctions.dart';
 import 'awsFunctions.dart';
@@ -96,9 +97,10 @@ class _SignUpState extends State<SignUp> {
       await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => UserConfirmationPage(
+              builder: (context) => AddressAutocomplete(
                   email: _emailController.text,
-                  password: _passwordController.text)));
+                  password: _passwordController.text,
+                userDemographics: userDemographics,)));
     }
   }
 
