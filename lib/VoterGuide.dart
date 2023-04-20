@@ -20,18 +20,20 @@ class _VoterGuideState extends State<VoterGuide> {
   @override
   void initState() {
     super.initState();
+    // Splits the addressLine1 string of the widget's user object into parts by the comma (',') separator.
     List<String> addressParts = widget.user.addressLine1.split(',');
     if (addressParts.length > 1) {
-      // String stateZip = addressParts[addressParts.length - 1].trim();
       stateInitial = addressParts[addressParts.length - 2].trim();
     }
     _getPollingLocations();
   }
 
+  // Asynchronously fetches the polling location for the provided address.
   void _getPollingLocations() async {
     try {
       _pollingLocations = await getPollingLocation(widget.user.addressLine1);
     } catch (e) {
+      // If any errors occur during the fetch, catches them and prints them using the safePrint() function.
       safePrint("Error occurred in _getPollingLocations(): $e");
     }
   }
@@ -65,6 +67,8 @@ class _VoterGuideState extends State<VoterGuide> {
                   ),
                 ],
               ),
+
+              //Displays user's name
               Positioned(
                 top: 20.0,
                 left: 20.0,
@@ -90,6 +94,8 @@ class _VoterGuideState extends State<VoterGuide> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
+
+                      //Displays user's registered state
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -111,19 +117,12 @@ class _VoterGuideState extends State<VoterGuide> {
                               color: Colors.black,
                             ),
                           ),
-                          // Text(
-                          //   'Since 2015',
-                          //   style: TextStyle(
-                          //     fontSize: 15.0,
-                          //     fontWeight: FontWeight.w600,
-                          //     fontFamily: 'Inter',
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
                   ),
+
+                  //Displays user's nearest polling location
                   Container(
                     width: 180.0,
                     height: 320.0,
@@ -188,7 +187,7 @@ class _VoterGuideState extends State<VoterGuide> {
                   ),
                 ],
               ),
-              const SizedBox(height: 50.0), // Adds white space below cards
+              const SizedBox(height: 50.0),
             ]),
             const SizedBox(height: 16.0),
             const Text(
@@ -431,8 +430,8 @@ class _VoterGuideState extends State<VoterGuide> {
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
-                        const Divider(color: Colors.grey),
-                        const Text('',
+                        Divider(color: Colors.grey),
+                        Text('Latest Activity Mon, 24, 10:30pm',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
@@ -459,8 +458,8 @@ class _VoterGuideState extends State<VoterGuide> {
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
-                        const Divider(color: Colors.grey),
-                        const Text('',
+                        Divider(color: Colors.grey),
+                        Text('Latest Activity Mon, 24, 10:30pm',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
@@ -489,8 +488,8 @@ class _VoterGuideState extends State<VoterGuide> {
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
-                        const Divider(color: Colors.grey),
-                        const Text('',
+                        Divider(color: Colors.grey),
+                        Text('Latest Activity Mon, 24, 10:30pm',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
@@ -519,8 +518,8 @@ class _VoterGuideState extends State<VoterGuide> {
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
-                        const Divider(color: Colors.grey),
-                        const Text('',
+                        Divider(color: Colors.grey),
+                        Text('Latest Activity Mon, 24, 10:30pm',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),

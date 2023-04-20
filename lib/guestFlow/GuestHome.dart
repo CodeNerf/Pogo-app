@@ -245,7 +245,8 @@ class _GuestHomeState extends State<GuestHome> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(15),
                 onTap: () async {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
                     return const LandingPage();
                   }));
                 },

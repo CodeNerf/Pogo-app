@@ -51,11 +51,10 @@ class _IssuesState extends State<Issues> {
   @override
   void initState() {
     super.initState();
-    if(widget.answers.surveyCompletion) {
+    if (widget.answers.surveyCompletion) {
       _submitButtonText = "Save Changes";
       _submitButtonTextSize = 25;
-    }
-    else {
+    } else {
       _submitButtonText = "PoGo";
       _submitButtonTextSize = 35;
     }
@@ -397,9 +396,11 @@ class _IssuesState extends State<Issues> {
                                 //image
                                 Container(
                                   clipBehavior: Clip.hardEdge,
-                                  height:
-                                  MediaQuery.of(context).size.height * 0.60 / 3,
-                                  width: MediaQuery.of(context).size.width * 0.65,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.60 /
+                                      3,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.65,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     boxShadow: [
@@ -435,95 +436,168 @@ class _IssuesState extends State<Issues> {
                                             ),
                                           ),
                                           isScrollControlled: true,
-                                          backgroundColor: const Color(0xFFD9D9D9),
+                                          backgroundColor:
+                                              const Color(0xFFD9D9D9),
                                           builder: (BuildContext context) {
                                             return SizedBox(
-                                              width: MediaQuery.of(context).size.width,
-                                              height: MediaQuery.of(context).size.height * 0.9,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.9,
                                               child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   //white bar to indicate pulling up/down
                                                   Padding(
-                                                    padding: const EdgeInsets.only(top: 13.0),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 13.0),
                                                     child: Container(
                                                       height: 7,
                                                       width: 80,
                                                       decoration: BoxDecoration(
-                                                        borderRadius: BorderRadius.circular(20),
-                                                        color: const Color(0xFFFFFFFF),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        color: const Color(
+                                                            0xFFFFFFFF),
                                                       ),
                                                     ),
                                                   ),
                                                   //issue name
                                                   Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 10, 0, 0),
                                                     child: Text(
-                                                      _issueDefs.issuesText[_issueIndex],
+                                                      _issueDefs.issuesText[
+                                                          _issueIndex],
                                                       style: const TextStyle(
                                                         fontFamily: 'Inter',
-                                                        fontWeight: FontWeight.w600,
-                                                        color: Color(0xFF0E0E0E),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color:
+                                                            Color(0xFF0E0E0E),
                                                         fontSize: 30,
                                                       ),
                                                     ),
                                                   ),
                                                   Expanded(
-                                                    child: SingleChildScrollView(
-                                                      physics: const BouncingScrollPhysics(),
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      physics:
+                                                          const BouncingScrollPhysics(),
                                                       child: Column(
                                                         children: [
                                                           //issue pic
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    10,
+                                                                    0,
+                                                                    0),
                                                             child: Container(
-                                                              clipBehavior: Clip.hardEdge,
-                                                              height:
-                                                              MediaQuery.of(context).size.height * 0.60 / 2.5,
-                                                              width: MediaQuery.of(context).size.width * 0.65,
-                                                              decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.circular(20),
+                                                              clipBehavior:
+                                                                  Clip.hardEdge,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.60 /
+                                                                  2.5,
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.65,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
                                                                 boxShadow: [
                                                                   BoxShadow(
-                                                                    color: Colors.grey.shade600,
-                                                                    spreadRadius: 3,
-                                                                    blurRadius: 7,
-                                                                    offset: const Offset(3, 3),
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade600,
+                                                                    spreadRadius:
+                                                                        3,
+                                                                    blurRadius:
+                                                                        7,
+                                                                    offset:
+                                                                        const Offset(
+                                                                            3,
+                                                                            3),
                                                                   ),
                                                                 ],
                                                               ),
                                                               child: Image(
-                                                                image: AssetImage(
-                                                                  _issueDefs.issuesLogo[_issueIndex],
+                                                                image:
+                                                                    AssetImage(
+                                                                  _issueDefs
+                                                                          .issuesLogo[
+                                                                      _issueIndex],
                                                                 ),
-                                                                fit: BoxFit.fill,
+                                                                fit:
+                                                                    BoxFit.fill,
                                                               ),
                                                             ),
                                                           ),
                                                           //issue definition
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    20,
+                                                                    10,
+                                                                    20,
+                                                                    0),
                                                             child: Text(
-                                                              _issueDefs.issuesGeneralDefinitions[_issueIndex],
-                                                              style: const TextStyle(
-                                                                fontFamily: 'Inter',
-                                                                fontWeight: FontWeight.w500,
-                                                                color: Color(0xFF121212),
+                                                              _issueDefs
+                                                                      .issuesGeneralDefinitions[
+                                                                  _issueIndex],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color(
+                                                                    0xFF121212),
                                                                 fontSize: 15,
                                                               ),
                                                             ),
                                                           ),
                                                           //left align text
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(25, 10, 20, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    25,
+                                                                    10,
+                                                                    20,
+                                                                    0),
                                                             child: Align(
-                                                              alignment: Alignment.centerLeft,
+                                                              alignment: Alignment
+                                                                  .centerLeft,
                                                               child: Text(
                                                                 '• ${_issueDefs.leftAlignText[_issueIndex]}',
-                                                                style: const TextStyle(
-                                                                  fontFamily: 'Inter',
-                                                                  fontWeight: FontWeight.w500,
-                                                                  color: Color(0xFF121212),
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Color(
+                                                                      0xFF121212),
                                                                   fontSize: 15,
                                                                 ),
                                                               ),
@@ -531,28 +605,51 @@ class _IssuesState extends State<Issues> {
                                                           ),
                                                           //left definition
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(35, 10, 35, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    35,
+                                                                    10,
+                                                                    35,
+                                                                    0),
                                                             child: Text(
                                                               '▪ ${_issueDefs.issuesLeftDefinitions[_issueIndex]}',
-                                                              style: const TextStyle(
-                                                                fontFamily: 'Inter',
-                                                                fontWeight: FontWeight.w500,
-                                                                color: Color(0xFF121212),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color(
+                                                                    0xFF121212),
                                                                 fontSize: 15,
                                                               ),
                                                             ),
                                                           ),
                                                           //right align text
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(25, 10, 20, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    25,
+                                                                    10,
+                                                                    20,
+                                                                    0),
                                                             child: Align(
-                                                              alignment: Alignment.centerLeft,
+                                                              alignment: Alignment
+                                                                  .centerLeft,
                                                               child: Text(
                                                                 '• ${_issueDefs.rightAlignText[_issueIndex]}',
-                                                                style: const TextStyle(
-                                                                  fontFamily: 'Inter',
-                                                                  fontWeight: FontWeight.w500,
-                                                                  color: Color(0xFF121212),
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Color(
+                                                                      0xFF121212),
                                                                   fontSize: 15,
                                                                 ),
                                                               ),
@@ -560,13 +657,24 @@ class _IssuesState extends State<Issues> {
                                                           ),
                                                           //right definition
                                                           Padding(
-                                                            padding: const EdgeInsets.fromLTRB(35, 10, 35, 20),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    35,
+                                                                    10,
+                                                                    35,
+                                                                    20),
                                                             child: Text(
                                                               '▪ ${_issueDefs.issuesRightDefinitions[_issueIndex]}',
-                                                              style: const TextStyle(
-                                                                fontFamily: 'Inter',
-                                                                fontWeight: FontWeight.w500,
-                                                                color: Color(0xFF121212),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color(
+                                                                    0xFF121212),
                                                                 fontSize: 15,
                                                               ),
                                                             ),
@@ -578,8 +686,7 @@ class _IssuesState extends State<Issues> {
                                                 ],
                                               ),
                                             );
-                                          }
-                                      );
+                                          });
                                     },
                                   ),
                                 ),

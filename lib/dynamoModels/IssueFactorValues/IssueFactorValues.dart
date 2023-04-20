@@ -41,6 +41,4 @@ class IssueFactorValues {
       required this.policingWeight,
       required this.reproductiveScore,
       required this.reproductiveWeight});
-
-
 }

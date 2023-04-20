@@ -3,8 +3,10 @@ class Ballot {
   List<String> stateCandidateIds = [];
   List<String> federalCandidateIds = [];
 
-  Ballot.candidateIds({required this.localCandidateIds, required stateCandidateIds, required federalCandidateIds /*, required this.stateCandidateIds, required this.federalCandidateIds */});
-
+  Ballot.candidateIds(
+      {required this.localCandidateIds,
+      required stateCandidateIds,
+      required federalCandidateIds /*, required this.stateCandidateIds, required this.federalCandidateIds */});
 
   Ballot.empty();
 

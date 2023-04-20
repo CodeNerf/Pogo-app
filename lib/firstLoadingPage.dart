@@ -48,8 +48,7 @@ class _FirstLoadingPageState extends State<FirstLoadingPage> {
               builder: (context) => HomeLoadingPage(user: user),
             ),
           );
-        }
-        else {
+        } else {
           await Navigator.push(
             context,
             MaterialPageRoute(

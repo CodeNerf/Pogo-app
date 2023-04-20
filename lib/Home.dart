@@ -109,15 +109,18 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _loadCandidateProfileFromBallot(String fullName) async {
-    CandidateDemographics searchCandidate = _ballotStack
-        .firstWhere((element) => element.candidateName == fullName);
+    CandidateDemographics searchCandidate =
+        _ballotStack.firstWhere((element) => element.candidateName == fullName);
     CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
         .firstWhere((element) => element.candidateId == searchCandidate.id);
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CandidateProfile(
-            candidate: searchCandidate, candidateValues: searchCandidateValues, candidateStackFactors: _candidateStackFactors,),
+          candidate: searchCandidate,
+          candidateValues: searchCandidateValues,
+          candidateStackFactors: _candidateStackFactors,
+        ),
       ),
     );
   }
@@ -187,7 +190,8 @@ class _HomeState extends State<Home> {
       for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
         _ballotStack.add(_candidateStack.firstWhere(
             (element) => element.id == _userBallot.localCandidateIds[i]));
-        _candidateStack.removeWhere((element) => element.id == _userBallot.localCandidateIds[i]);
+        _candidateStack.removeWhere(
+            (element) => element.id == _userBallot.localCandidateIds[i]);
       }
     }
     setState(() {
@@ -329,8 +333,8 @@ class _HomeState extends State<Home> {
                     ),
                     const SizedBox(height: 50),
                     InkWell(
-                      onTap: () =>
-                          HamburgerMenuFunctions.updateRegistration(stateInitial),
+                      onTap: () => HamburgerMenuFunctions.updateRegistration(
+                          stateInitial),
                       child: const Text(
                         'Update registration',
                         style: TextStyle(

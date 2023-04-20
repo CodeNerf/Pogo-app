@@ -6,7 +6,8 @@ import 'SignInSignUpPage.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   final Function(String) resetPasswordPage;
-  const ForgotPasswordPage({Key? key, required this.resetPasswordPage}) : super(key: key);
+  const ForgotPasswordPage({Key? key, required this.resetPasswordPage})
+      : super(key: key);
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -48,9 +49,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           child: FittedBox(
               fit: BoxFit.contain,
               child: Image(
-                  image: AssetImage('assets/forgotPasswordImage.png'),
-              )
-          ),
+                image: AssetImage('assets/forgotPasswordImage.png'),
+              )),
         ),
 
         //forgot password text
@@ -105,8 +105,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
-              border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0)),
+              border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(

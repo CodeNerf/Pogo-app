@@ -70,6 +70,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     });
   }
 
+//This function initializes two lists containing the candidate's contact information and social media links
   void mapData() {
     contactInfo = [
       {
@@ -123,7 +124,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     ];
   }
 
-  //returns the candidate's experience
+  //This function takes the candidate's career start year and returns their experience
   String _candidateExperience(String careerStartYear) {
     String experience = '';
     DateTime start = DateTime.parse(careerStartYear);
@@ -143,7 +144,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     return experience;
   }
 
-  //returns the candidate's current age
+  //This function takes the candidate's date of birth and returns
   String calculateAge(String dateOfBirth) {
     DateTime birthDate = DateTime.parse(dateOfBirth);
     DateTime currentDate = DateTime.now();
@@ -159,6 +160,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     }
   }
 
+//This function takes the candidate's campaign budget (in string format) and returns it in a readable format (in thousands, millions, or billions).
   String getBudgetString(String campaignBudgetString) {
     int campaignBudget = int.tryParse(campaignBudgetString) ?? 0;
     if (campaignBudget < 1000) {
@@ -172,6 +174,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     }
   }
 
+  //This function takes the candidate's number of campaign contributors (in string format) and returns it in a readable format (in thousands, millions, or billions).
   String getDonorsString(String countOfDonorsString) {
     int countOfDonors = int.tryParse(countOfDonorsString) ?? 0;
     if (countOfDonors < 1000) {
@@ -185,6 +188,8 @@ class _CandidateProfileState extends State<CandidateProfile>
     }
   }
 
+  // The function _ratingCircles() returns a CircularPercentIndicator widget that displays a
+  //rating score in the form of a circular progress bar with a center text. The rating is calculated as a percentage of the total score, which is 5
   Widget _ratingCircles(double rating) {
     return CircularPercentIndicator(
       radius: 25,
@@ -257,7 +262,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                           child: Container(
                             clipBehavior: Clip.hardEdge,
                             height:
-                            MediaQuery.of(context).size.height * 0.60 / 2.5,
+                                MediaQuery.of(context).size.height * 0.60 / 2.5,
                             width: MediaQuery.of(context).size.width * 0.65,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
@@ -356,16 +361,16 @@ class _CandidateProfileState extends State<CandidateProfile>
               ],
             ),
           );
-        }
-    );
+        });
   }
 
+//Returns a Card widget that displays an issue card. The issue card includes a title, side description, and a rating circle that represents the candidate's score on an issue.
   Widget createIssueCard(
-      String titleText,
-      String descriptionText,
-      Widget concernCircle,
-      int index,
-      ) {
+    String titleText,
+    String descriptionText,
+    Widget concernCircle,
+    int index,
+  ) {
     return GestureDetector(
       onTap: () {
         issueDefinitionToaster(index);
@@ -428,8 +433,10 @@ class _CandidateProfileState extends State<CandidateProfile>
   }
 
   List<Widget> _getIssueCards(String candidateId) {
+    // Get the current candidate's issue factor values
     CandidateIssueFactorValues current = _stackFactors
         .firstWhere((element) => element.candidateId == candidateId);
+    // Create a list of the candidate's weights for each issue
     List<num> candidateWeights = [
       current.climateWeight,
       current.drugPolicyWeight,
@@ -442,17 +449,23 @@ class _CandidateProfileState extends State<CandidateProfile>
       current.policingWeight,
       current.reproductiveWeight
     ];
+    // Initialize an empty list to hold the issue cards
     List<Widget> issueCards = [];
+    // Loop until we have 10 issue cards or run out of issues to display
     while (issueCards.length < 10) {
+      // Find the max weight for the candidate's issues
       num maxWeight = candidateWeights.reduce(max);
+      // If there are no more issues to display, break out of the loop
       if (maxWeight == 0) {
         break;
       }
       int indexMaxWeight = candidateWeights.indexOf(maxWeight);
+      // Initialize variables for the issue card's title, description, and rating score
       String title = "";
       String description = "";
       double ratingScore = 0;
       int index = 0;
+      // Generate the content for the issue card based on the index of the issue with the highest weight
       switch (indexMaxWeight) {
         case 0:
           title = current.climateScore == 3
@@ -523,7 +536,9 @@ class _CandidateProfileState extends State<CandidateProfile>
         case 5:
           title = current.healthcareScore == 3
               ? 'Health Care'
-              : (current.healthcareScore < 3 ? 'Private Healthcare' : 'Government Funded Healthcare');
+              : (current.healthcareScore < 3
+                  ? 'Private Healthcare'
+                  : 'Government Funded Healthcare');
           description = current.healthcareScore == 3
               ? ''
               : (current.healthcareScore < 3
@@ -549,7 +564,9 @@ class _CandidateProfileState extends State<CandidateProfile>
         case 7:
           title = current.immigrationScore == 3
               ? 'Immigration'
-              : (current.immigrationScore < 3 ? 'Immigration - Exclusive' : 'Immigration - Inclusive');
+              : (current.immigrationScore < 3
+                  ? 'Immigration - Exclusive'
+                  : 'Immigration - Inclusive');
           description = current.immigrationScore == 3
               ? ''
               : (current.immigrationScore < 3
@@ -588,8 +605,8 @@ class _CandidateProfileState extends State<CandidateProfile>
           break;
       }
       if (description.isNotEmpty) {
-        issueCards.add(
-            createIssueCard(title, description, _ratingCircles(ratingScore), index));
+        issueCards.add(createIssueCard(
+            title, description, _ratingCircles(ratingScore), index));
       }
       candidateWeights[indexMaxWeight] = 0;
     }
@@ -623,6 +640,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     ];
   }
 
+// Widget to create an Education card for display
   Widget createEducationCard(
     String placeOfEducation,
     String degreeInformation,
@@ -694,12 +712,13 @@ class _CandidateProfileState extends State<CandidateProfile>
                 ),
               ],
             ),
-          )
-          ),
+          )),
     );
   }
 
+// Function to create a list of Education cards
   List<Widget> createEducationCards(List<Education> educationList) {
+    // Loop through the educationList and create an Education card for each item
     List<Widget> cards = [];
     for (int i = 0; i < educationList.length; i++) {
       Education education = educationList[i];
@@ -713,6 +732,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     return cards;
   }
 
+// Widget to create an Experience card for display
   Widget createExperienceCard(
     String title,
     String subtitle1,
@@ -792,6 +812,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     );
   }
 
+// Function to create a list of postion cards
   List<Widget> createPositionCards(List<Position> positionList) {
     List<Widget> cards = [];
     for (int i = 0; i < positionList.length; i++) {
@@ -806,6 +827,7 @@ class _CandidateProfileState extends State<CandidateProfile>
     return cards;
   }
 
+// Function to create a list of other postition cards
   List<Widget> createPrePositionCards(List<Position> prevpositionList) {
     List<Widget> cards = [];
     for (int i = 0; i < prevpositionList.length; i++) {
@@ -829,6 +851,7 @@ class _CandidateProfileState extends State<CandidateProfile>
             padding: const EdgeInsets.symmetric(vertical: 0.0),
             child: Stack(
               children: [
+                //Candidates profile image
                 Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.45,
@@ -839,6 +862,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                     ),
                   ),
                 ),
+
+                //Arrow that will route back to the previous page
                 Positioned(
                   top: 30,
                   left: 30,
@@ -858,6 +883,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                     ),
                   ),
                 ),
+
+                //Share icon that can share the candidates profile to others
                 Positioned(
                   top: 30,
                   right: 30,
@@ -902,8 +929,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                 ),
               ),
               child: Row(
-                // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  //Candidate name and position they are running for
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -926,6 +953,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                       ],
                     ),
                   ),
+                  //Candidate party affiliation
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -949,6 +977,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                 ],
               ),
             ),
+            //Summary, views, experience tabs
             Container(
               padding: EdgeInsets.only(
                 right: MediaQuery.of(context).size.width > 600 ? 20 : 10,
@@ -1002,16 +1031,18 @@ class _CandidateProfileState extends State<CandidateProfile>
                 child: TabBarView(
               controller: _tabController,
               children: [
-                // First tab content
+                // Summary tab content
                 SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: Column(
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
                           child: Column(children: [
-                            const Padding(
+                            //Candidate contact infomation
+                            Padding(
                               padding: EdgeInsets.only(right: 250),
                               child: Text(
                                 "Contact Info",
@@ -1051,7 +1082,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                                     .toList(),
                               ),
                             ),
-                            const SizedBox(height: 15),
+                            SizedBox(height: 15),
+                            //Candidates social media links
                             Padding(
                               padding: EdgeInsets.only(
                                 right: Platform.isIOS ? 10 : 10,
@@ -1093,7 +1125,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 ],
                               ),
                             ),
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(right: 260, top: 30),
                               child: Text(
                                 "Biography",
@@ -1107,6 +1139,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                             ),
                             Row(
                               children: [
+                                //Candidate's age
                                 Expanded(
                                   child: Container(
                                     height: 50,
@@ -1144,6 +1177,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                     ),
                                   ),
                                 ),
+                                //Candidate's political experience in years
                                 Expanded(
                                   child: Container(
                                     height: 50,
@@ -1184,6 +1218,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 ),
                               ],
                             ),
+
+                            //Brief descriptionabout the candidate
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 30),
@@ -1201,11 +1237,12 @@ class _CandidateProfileState extends State<CandidateProfile>
                     ),
                   ),
                 ),
-                // Second tab content (Experience)
+                //Views tab content
                 SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: Column(
                       children: [
                         const Padding(
@@ -1231,7 +1268,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                           ),
                           textAlign: TextAlign.left,
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: 5),
+                        //Issue cards in a descending order of how much the candidate care about the issue, only top three gets shown, "View all" needs to be clicked to see of the issue cards
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -1253,6 +1291,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                     ),
                   ),
                 ),
+
+                //Experience tabs contents
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: SingleChildScrollView(
@@ -1260,7 +1300,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                       children: [
                         Row(
                           children: [
-                            const Padding(
+                            //Cards showing the candidate's educational history
+                            Padding(
                               padding: EdgeInsets.only(top: 20, bottom: 10),
                               child: Text(
                                 "Education",
@@ -1272,6 +1313,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 textAlign: TextAlign.left,
                               ),
                             ),
+                            // only the first three cards are shown, view all need to be clicked to see the rest
                             GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -1310,7 +1352,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         Row(
                           children: [
-                            const Padding(
+                            //Cards showing the candidate's previous positions
+                            Padding(
                               padding: EdgeInsets.only(
                                   right: 0, top: 20, bottom: 10),
                               child: Text(
@@ -1323,6 +1366,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 textAlign: TextAlign.left,
                               ),
                             ),
+
+                            // only the first three cards are shown, view all need to be clicked to see the rest
                             GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -1363,7 +1408,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                         ),
                         Row(
                           children: [
-                            const Padding(
+                            //Cards showing the candidate's other positions
+                            Padding(
                               padding: EdgeInsets.only(
                                   right: 0, top: 20, bottom: 10),
                               child: Text(
@@ -1376,6 +1422,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 textAlign: TextAlign.left,
                               ),
                             ),
+
+                            // only the first three cards are shown, view all need to be clicked to see the rest
                             GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -1435,6 +1483,7 @@ class _CandidateProfileState extends State<CandidateProfile>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
+                                  //Infomation about candidate's campaign
                                   Column(
                                     children: [
                                       const Image(
@@ -1528,7 +1577,8 @@ class _CandidateProfileState extends State<CandidateProfile>
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 20, right: 155),
+                          padding:
+                              const EdgeInsets.only(bottom: 20, right: 155),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

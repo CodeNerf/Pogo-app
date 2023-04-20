@@ -237,7 +237,9 @@ class _EditPersonalInfoPageState extends State<EditPersonalInfoPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SurveyLandingPage(pageSelect: 0,),
+                          builder: (context) => SurveyLandingPage(
+                            pageSelect: 0,
+                          ),
                         ),
                       );
                     },
@@ -278,7 +280,9 @@ class _EditPersonalInfoPageState extends State<EditPersonalInfoPage> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SurveyLandingPage(pageSelect: 1,),
+                          builder: (context) => SurveyLandingPage(
+                            pageSelect: 1,
+                          ),
                         ),
                       );
                     },

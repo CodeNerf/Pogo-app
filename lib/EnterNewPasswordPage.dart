@@ -7,7 +7,9 @@ import 'SignInSignUpPage.dart';
 class EnterNewPasswordPage extends StatefulWidget {
   final String email;
   final Function(int) switchPage;
-  const EnterNewPasswordPage({Key? key, required this.email, required this.switchPage}) : super(key: key);
+  const EnterNewPasswordPage(
+      {Key? key, required this.email, required this.switchPage})
+      : super(key: key);
 
   @override
   State<EnterNewPasswordPage> createState() => _EnterNewPasswordPageState();
@@ -58,8 +60,7 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
               fit: BoxFit.contain,
               child: Image(
                 image: AssetImage('assets/forgotPasswordImage.png'),
-              )
-          ),
+              )),
         ),
 
         //reset password text
@@ -99,8 +100,7 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[90],
-              border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0)),
+              border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Padding(
@@ -140,12 +140,14 @@ class _EnterNewPasswordPageState extends State<EnterNewPasswordPage> {
                       if (_obscure) {
                         setState(() {
                           _obscure = false;
-                          _eye = const Icon(Icons.remove_red_eye_outlined, color: Colors.grey);
+                          _eye = const Icon(Icons.remove_red_eye_outlined,
+                              color: Colors.grey);
                         });
                       } else {
                         setState(() {
                           _obscure = true;
-                          _eye = const Icon(Icons.remove_red_eye, color: Colors.grey);
+                          _eye = const Icon(Icons.remove_red_eye,
+                              color: Colors.grey);
                         });
                       }
                     },
