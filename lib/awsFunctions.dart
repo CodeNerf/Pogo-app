@@ -5,6 +5,7 @@ import 'package:pogo/amplifyFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/MatchingStatistics.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
+import 'package:pogo/dynamoModels/userBallots.dart';
 import 'dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
 
@@ -185,7 +186,7 @@ Future<List<CandidateDemographics>> getAllCandidateDemographics() async {
     client.close();
   }
 }
-/*
+
 Future<void> putUserNationalBallot(UserNationalBallot userBallot) async {
   final client = http.Client();
   try {
@@ -282,7 +283,6 @@ Future<UserLocalBallot> getUserLocalBallot(String userId) async {
     client.close();
   }
 }
- */
 
 Future<void> putUserBallot(String userId, List<String> localBallot,
     List<String> stateBallot, List<String> nationalBallot) async {
@@ -327,7 +327,7 @@ Future<List<String>> getUserBallot(String userId) async {
     client.close();
   }
 }
-/*
+
 Future<void> updateUserBallot(String userId, String candidateId) async {
   final allCandidates =
       await getAllCandidateDemographics(); //get a list of all available candidate (current one is mutated throughout executuion)
@@ -341,20 +341,20 @@ Future<void> updateUserBallot(String userId, String candidateId) async {
     safePrint("initial ballot $userBallot");
     safePrint("all candidates: $allCandidates");
     final candidateObject = allCandidates.firstWhere((candidate) =>
-        candidate.candidateId ==
+        candidate.id ==
         candidateId); //Find the candidate object belonging to the candidate the user wants to add
     safePrint("candidateObject: $candidateObject");
     final candidateSeat =
-        candidateObject.seatType; //seat of candidate user wants to add
+        candidateObject.runningPosition; //seat of candidate user wants to add
     safePrint("candidate seat: $candidateSeat");
     var candidateToReplace;
     userBallot.forEach((candidateId) {
-      final candidateObject = allCandidates
-          .firstWhere((candidate) => candidate.candidateId == candidateId);
+      final candidateObject =
+          allCandidates.firstWhere((candidate) => candidate.id == candidateId);
       safePrint("found candidate: $candidateObject");
       //find current candidate object by comparing each candidate's seat type with the one the user wants to update
-      if (candidateObject.seatType == candidateSeat) {
-        candidateToReplace = candidateObject.candidateId;
+      if (candidateObject.runningPosition == candidateSeat) {
+        candidateToReplace = candidateObject.id;
         safePrint("candidate found $candidateToReplace");
       }
     });
@@ -367,8 +367,6 @@ Future<void> updateUserBallot(String userId, String candidateId) async {
     putUserBallot(userId, userBallot, [''], ['']);
   }
 }
-
- */
 
 Future<List<CandidateIssueFactorValues>>
     getAllCandidateIssueFactorValues() async {

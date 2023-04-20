@@ -95,8 +95,7 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     if (daysBetween == 1) {
       //increment loginStreak
       widget.user.loginStreak = widget.user.loginStreak + 1;
-    }
-    else if (daysBetween > 1) {
+    } else if (daysBetween > 1) {
       //reset login streak
       widget.user.loginStreak = 1;
     } else {

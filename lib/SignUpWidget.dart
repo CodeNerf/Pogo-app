@@ -98,9 +98,10 @@ class _SignUpState extends State<SignUp> {
           context,
           MaterialPageRoute(
               builder: (context) => AddressAutocomplete(
-                  email: _emailController.text,
-                  password: _passwordController.text,
-                userDemographics: userDemographics,)));
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    userDemographics: userDemographics,
+                  )));
     }
   }
 
