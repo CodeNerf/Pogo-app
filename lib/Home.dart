@@ -134,8 +134,6 @@ class _HomeState extends State<Home> {
           filter: true,
         );
         _selectedIndex = 1;
-        _candidateStack = _candidateStack;
-        _filteredCandidateStack = _filteredCandidateStack;
       });
     } catch (e) {
       safePrint("An error occurred in _filterPodiumCandidates() $e");
@@ -218,17 +216,17 @@ class _HomeState extends State<Home> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Color(0xFFF1F4F8),
+        backgroundColor: const Color(0xFFF1F4F8),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: false,
-          iconTheme: IconThemeData(
+          iconTheme: const IconThemeData(
             color: Colors.black,
             size: 40,
           ),
           title: Container(
-            padding: EdgeInsets.only(left: 50),
+            padding: const EdgeInsets.only(left: 50),
             alignment: Alignment.center,
             child: Image(
               image: AssetImage(_pogoLogo),
@@ -238,13 +236,13 @@ class _HomeState extends State<Home> {
         ),
         endDrawer: Drawer(
           child: ListView(
-            padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
+            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
             children: <Widget>[
-              Container(
+              SizedBox(
                 height: 100,
                 child: ListTile(
-                  contentPadding: EdgeInsets.only(right: 300),
-                  leading: Icon(
+                  contentPadding: const EdgeInsets.only(right: 300),
+                  leading: const Icon(
                     Icons.clear,
                     size: 32,
                     color: Colors.black,
@@ -260,7 +258,7 @@ class _HomeState extends State<Home> {
                   InkWell(
                     onTap: () =>
                         HamburgerMenuFunctions.registerToVote(stateInitial),
-                    child: Text(
+                    child: const Text(
                       'Register to Vote',
                       style: TextStyle(
                         fontFamily: 'Inter',
@@ -271,15 +269,15 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: Color(0xFFDBE2E7),
                     thickness: 2,
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   InkWell(
                     onTap: () => HamburgerMenuFunctions.requestAbsenteeBallot(
                         stateInitial),
-                    child: Text(
+                    child: const Text(
                       'Request an Absentee Ballot',
                       style: TextStyle(
                         fontFamily: 'Inter',
@@ -290,15 +288,15 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: Color(0xFFDBE2E7),
                     thickness: 2,
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   InkWell(
                     onTap: () =>
                         HamburgerMenuFunctions.voteByMail(stateInitial),
-                    child: Text(
+                    child: const Text(
                       'Vote by mail',
                       style: TextStyle(
                         fontFamily: 'Inter',
@@ -309,15 +307,15 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: Color(0xFFDBE2E7),
                     thickness: 2,
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   InkWell(
                     onTap: () =>
                         HamburgerMenuFunctions.updateRegistration(stateInitial),
-                    child: Text(
+                    child: const Text(
                       'Update registration',
                       style: TextStyle(
                         fontFamily: 'Inter',
@@ -328,12 +326,12 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: Color(0xFFDBE2E7),
                     thickness: 2,
                   ),
-                  SizedBox(height: 50),
-                  Text(
+                  const SizedBox(height: 50),
+                  const Text(
                     'Data & Privacy policy',
                     style: TextStyle(
                       fontFamily: 'Inter',
@@ -343,12 +341,12 @@ class _HomeState extends State<Home> {
                       color: Colors.black,
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     color: Color(0xFFDBE2E7),
                     thickness: 2,
                   ),
-                  SizedBox(height: 50),
-                  Text(
+                  const SizedBox(height: 50),
+                  const Text(
                     'Accessible voting',
                     style: TextStyle(
                       fontFamily: 'Inter',

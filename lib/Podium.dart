@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -276,25 +277,32 @@ class _PodiumState extends State<Podium> {
             //candidate name
             Expanded(
               flex: 7,
-              child: Text(
-                candidate.candidateName,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: AutoSizeText(
+                  candidate.candidateName,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
                 ),
               ),
             ),
 
-            //candidate position, state
-            //TODO: add state to db, pull state here
+            //candidate position, city
             Expanded(
               flex: 7,
-              child: Text(
-                '${candidate.runningPosition}  •  ${candidate.city}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 17,
-                  color: Color(0xFF57636C),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: AutoSizeText(
+                  '${candidate.runningPosition}  •  ${candidate.city}',
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17,
+                    color: Color(0xFF57636C),
+                  ),
                 ),
               ),
             ),
@@ -302,30 +310,16 @@ class _PodiumState extends State<Podium> {
             //party, experience
             Expanded(
               flex: 7,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    //party
-                    Text(
-                      candidate.politicalAffiliation,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    //party
-                    Text(
-                      _candidateExperience(candidate.careerStartYear),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: AutoSizeText(
+                  '${candidate.politicalAffiliation}  •  ${_candidateExperience(candidate.careerStartYear)}',
+                  maxLines: 1,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17,
+                    color: Color(0xFF57636C),
+                  ),
                 ),
               ),
             ),
