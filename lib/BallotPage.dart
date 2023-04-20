@@ -654,7 +654,7 @@ class _BallotPageState extends State<BallotPage> {
     List<String> titleSplit = title.split(' ');
     return Container(
       height: 140, // set a fixed height
-      margin: const EdgeInsets.only(bottom: 10.0, top: 10, left: 30),
+      margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
       child: Container(
         padding: const EdgeInsets.all(3.0),
         decoration: BoxDecoration(
