@@ -979,7 +979,7 @@ class _UserProfileState extends State<UserProfile> {
     return "Come download the PoGo app! https://www.politicsonthego.info";
   }
 
-  void toaster(int index) {
+  void issueDefinitionToaster(int index) {
     showModalBottomSheet(
         context: context,
         clipBehavior: Clip.antiAlias,
@@ -1136,7 +1136,6 @@ class _UserProfileState extends State<UserProfile> {
         }
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -1416,7 +1415,7 @@ class _UserProfileState extends State<UserProfile> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: () {
-                                    toaster(_firstIssue[1]);
+                                    issueDefinitionToaster(_firstIssue[1]);
                                   },
                                 ),
                               ),
@@ -1451,7 +1450,7 @@ class _UserProfileState extends State<UserProfile> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: () {
-                                    toaster(_secondIssue[1]);
+                                    issueDefinitionToaster(_secondIssue[1]);
                                   },
                                 ),
                               ),
@@ -1486,7 +1485,7 @@ class _UserProfileState extends State<UserProfile> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: () {
-                                    toaster(_thirdIssue[1]);
+                                    issueDefinitionToaster(_thirdIssue[1]);
                                   },
                                 ),
                               ),
@@ -1521,7 +1520,7 @@ class _UserProfileState extends State<UserProfile> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: () {
-                                    toaster(_fourthIssue[1]);
+                                    issueDefinitionToaster(_fourthIssue[1]);
                                   },
                                 ),
                               ),
