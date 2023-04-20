@@ -1,7 +1,6 @@
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/material.dart';
 import '../dynamoModels/Demographics/UserDemographics.dart';
-import 'VoterInfo.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import 'VoterInfo2.dart';
 

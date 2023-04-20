@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import 'Demographics2.dart';
 import 'Issues.dart';
-import 'VoterInfo.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 
 class VoterInfo2 extends StatefulWidget {

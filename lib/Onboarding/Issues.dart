@@ -7,8 +7,9 @@ import '../HomeLoadingPage.dart';
 import '../dynamoModels/Demographics/UserDemographics.dart';
 import '../awsFunctions.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
-import 'VoterInfo.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+
+import 'VoterInfo2.dart';
 
 class Issues extends StatefulWidget {
   final UserIssueFactorValues ratings;
@@ -17,7 +18,7 @@ class Issues extends StatefulWidget {
   late final Widget nextPage = HomeLoadingPage(
     user: answers,
   );
-  late final Widget lastPage = VoterInfo(
+  late final Widget lastPage = VoterInfo2(
     ratings: ratings,
     answers: answers,
     issuesIndex: issuesIndex,
@@ -277,7 +278,7 @@ class _IssuesState extends State<Issues> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => VoterInfo(
+        builder: (context) => VoterInfo2(
           ratings: widget.ratings,
           answers: widget.answers,
           issuesIndex: _issueIndex,

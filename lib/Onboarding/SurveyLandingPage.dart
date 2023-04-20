@@ -6,7 +6,6 @@ import 'package:pogo/awsFunctions.dart';
 import 'package:pogo/dynamoModels/Demographics/UserDemographics.dart';
 import '../dynamoModels/IssueFactorValues/UserIssueFactorValues.dart';
 import '../amplifyFunctions.dart';
-import 'Demographics.dart';
 import '../SignInSignUpPage.dart';
 import 'Demographics2.dart';
 import 'VoterInfo2.dart';
