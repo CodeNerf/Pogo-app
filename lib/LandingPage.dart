@@ -140,7 +140,7 @@ class _LandingPageState extends State<LandingPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const SignInSignUpPage(index: 1)));
+                                    AppWalkThrough()));
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
