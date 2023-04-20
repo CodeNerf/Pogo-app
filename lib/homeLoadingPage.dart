@@ -95,15 +95,16 @@ class _HomeLoadingPageState extends State<HomeLoadingPage> {
     if (daysBetween == 1) {
       //increment loginStreak
       widget.user.loginStreak = widget.user.loginStreak + 1;
-      //determine if new record
-      if (widget.user.loginStreak > widget.user.loginStreakRecord) {
-        widget.user.loginStreakRecord = widget.user.loginStreak;
-      }
-    } else if (daysBetween > 1) {
+    }
+    else if (daysBetween > 1) {
       //reset login streak
       widget.user.loginStreak = 1;
     } else {
       //login same day as last login, do nothing
+    }
+    //determine if new record
+    if (widget.user.loginStreak > widget.user.loginStreakRecord) {
+      widget.user.loginStreakRecord = widget.user.loginStreak;
     }
     await putUserDemographics(widget.user);
     _goHome();

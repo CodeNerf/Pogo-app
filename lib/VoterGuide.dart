@@ -6,14 +6,14 @@ import 'package:pogo/googleFunctions/CivicModels.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class VoterGuide extends StatefulWidget {
-  UserDemographics user;
-  VoterGuide({Key? key, required this.user}) : super(key: key);
+  final UserDemographics user;
+  const VoterGuide({Key? key, required this.user}) : super(key: key);
   @override
   State<VoterGuide> createState() => _VoterGuideState();
 }
 
 class _VoterGuideState extends State<VoterGuide> {
-  List<bool> _isChecked = [false, false, false, false];
+  final List<bool> _isChecked = [false, false, false, false];
   late List<PollingLocation> _pollingLocations;
   late String stateInitial = "MI";
 
@@ -42,11 +42,9 @@ class _VoterGuideState extends State<VoterGuide> {
     });
   }
 
-//nypepawy@mailo.icu
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
+    return Container(
       padding: const EdgeInsets.only(top: 20.0),
       child: SingleChildScrollView(
         child: Column(
@@ -57,10 +55,10 @@ class _VoterGuideState extends State<VoterGuide> {
               style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16.0),
-            new Stack(children: <Widget>[
-              new Column(
+            Stack(children: <Widget>[
+              Column(
                 children: <Widget>[
-                  new Container(
+                  Container(
                     padding: const EdgeInsets.only(top: 50),
                     height: MediaQuery.of(context).size.height * .20,
                     color: const Color(0xFFF3D433),
@@ -72,7 +70,7 @@ class _VoterGuideState extends State<VoterGuide> {
                 left: 20.0,
                 child: Text(
                   '${widget.user.firstName} ${widget.user.lastName}',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
@@ -95,7 +93,7 @@ class _VoterGuideState extends State<VoterGuide> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'REGISTERED',
                             style: TextStyle(
                               fontSize: 15.0,
@@ -106,7 +104,7 @@ class _VoterGuideState extends State<VoterGuide> {
                           ),
                           Text(
                             stateInitial,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 50.0,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',
@@ -407,7 +405,7 @@ class _VoterGuideState extends State<VoterGuide> {
               },
               child: Text(
                 'Request an absentee ballot in $stateInitial?',
-                style: TextStyle(
+                style: const TextStyle(
                     decoration: TextDecoration.underline, color: Colors.grey),
               ),
             ),
@@ -416,7 +414,7 @@ class _VoterGuideState extends State<VoterGuide> {
               children: [
                 Card(
                   elevation: 3,
-                  margin: EdgeInsets.only(right: 15.0, left: 15),
+                  margin: const EdgeInsets.only(right: 15.0, left: 15),
                   child: CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     title: const Text(
@@ -429,12 +427,12 @@ class _VoterGuideState extends State<VoterGuide> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('4 Positions',
+                        const Text('4 Positions',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
-                        Divider(color: Colors.grey),
-                        Text('',
+                        const Divider(color: Colors.grey),
+                        const Text('',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
@@ -446,7 +444,7 @@ class _VoterGuideState extends State<VoterGuide> {
                 const SizedBox(height: 20.0),
                 Card(
                   elevation: 3,
-                  margin: EdgeInsets.only(right: 15.0, left: 15),
+                  margin: const EdgeInsets.only(right: 15.0, left: 15),
                   child: CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     title: const Text(
@@ -457,12 +455,12 @@ class _VoterGuideState extends State<VoterGuide> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('3 Easy Steps',
+                        const Text('3 Easy Steps',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
-                        Divider(color: Colors.grey),
-                        Text('',
+                        const Divider(color: Colors.grey),
+                        const Text('',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
@@ -476,7 +474,7 @@ class _VoterGuideState extends State<VoterGuide> {
                 const SizedBox(height: 20.0),
                 Card(
                   elevation: 3,
-                  margin: EdgeInsets.only(right: 15.0, left: 15),
+                  margin: const EdgeInsets.only(right: 15.0, left: 15),
                   child: CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     title: const Text(
@@ -487,12 +485,12 @@ class _VoterGuideState extends State<VoterGuide> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('2 Quick Steps',
+                        const Text('2 Quick Steps',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
-                        Divider(color: Colors.grey),
-                        Text('',
+                        const Divider(color: Colors.grey),
+                        const Text('',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
@@ -506,7 +504,7 @@ class _VoterGuideState extends State<VoterGuide> {
                 const SizedBox(height: 20.0),
                 Card(
                   elevation: 3,
-                  margin: EdgeInsets.only(right: 15.0, left: 15),
+                  margin: const EdgeInsets.only(right: 15.0, left: 15),
                   child: CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     title: const Text(
@@ -517,12 +515,12 @@ class _VoterGuideState extends State<VoterGuide> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Vote Informed',
+                        const Text('Vote Informed',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
-                        Divider(color: Colors.grey),
-                        Text('',
+                        const Divider(color: Colors.grey),
+                        const Text('',
                             style: TextStyle(
                               fontSize: 12.0,
                             )),
@@ -539,6 +537,6 @@ class _VoterGuideState extends State<VoterGuide> {
           ],
         ),
       ),
-    ));
+    );
   }
 }

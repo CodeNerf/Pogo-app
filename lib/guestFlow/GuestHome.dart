@@ -42,13 +42,14 @@ class GuestHome extends StatefulWidget {
 class _GuestHomeState extends State<GuestHome> {
   final String _pogoLogo = 'assets/Pogo_logo_horizontal.png';
   int _selectedIndex = 0;
-  List<CandidateDemographics> _ballotStack = [];
+  final List<CandidateDemographics> _ballotStack = [];
   late Ballot _userBallot;
   late List<CandidateDemographics> _candidateStack;
   late List<Widget> _widgetOptions;
   late List<CandidateIssueFactorValues> _candidateStackFactors;
   late List<MatchingStatistics> _guestMatchingStatistics;
-  List<CandidateDemographics> _filteredCandidateStack = [];
+  final List<CandidateDemographics> _filteredCandidateStack = [];
+  final bool _filtering = false;
 
   _updateBallot(CandidateDemographics candidate,
       List<CandidateDemographics> podiumStack) {
@@ -128,19 +129,17 @@ class _GuestHomeState extends State<GuestHome> {
         }
       }
       setState(() {
-        _widgetOptions[1] = Podium(
-          candidateStack: _candidateStack,
-          candidateStackStatistics: _guestMatchingStatistics,
+        _widgetOptions[2] = BallotPage(
           userBallot: _userBallot,
-          updateBallot: _updateBallot,
-          candidateStackFactors: _candidateStackFactors,
+          candidateStack: _candidateStack,
+          ballotStack: _ballotStack,
+          removeFromBallot: _removeFromBallot,
+          loadCustomCandidatesInPodium: _filterPodiumCandidates,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfileFromPodium,
+          loadCandidateProfile: _loadCandidateProfileFromBallot,
           filter: true,
         );
         _selectedIndex = 1;
-        _candidateStack = _candidateStack;
-        _filteredCandidateStack = _filteredCandidateStack;
       });
     } catch (e) {
       safePrint("An error occurred in _filterPodiumCandidates() $e");
@@ -153,21 +152,18 @@ class _GuestHomeState extends State<GuestHome> {
       _filteredCandidateStack.remove(_filteredCandidateStack[0]);
     }
     setState(() {
-      _widgetOptions[1] = Podium(
-        candidateStack: _candidateStack,
-        candidateStackStatistics: _guestMatchingStatistics,
+      _widgetOptions[2] = BallotPage(
         userBallot: _userBallot,
-        updateBallot: _updateBallot,
-        candidateStackFactors: _candidateStackFactors,
+        candidateStack: _candidateStack,
+        ballotStack: _ballotStack,
+        removeFromBallot: _removeFromBallot,
+        loadCustomCandidatesInPodium: _filterPodiumCandidates,
         unFilterPodiumCandidates: _unFilterPodiumCandidates,
-        loadCandidateProfile: _loadCandidateProfileFromPodium,
+        loadCandidateProfile: _loadCandidateProfileFromBallot,
         filter: false,
       );
       _selectedIndex = 1;
-      _candidateStack = _candidateStack;
-      _filteredCandidateStack = _filteredCandidateStack;
     });
-    _candidateStack.shuffle();
   }
 
   @override
@@ -192,9 +188,7 @@ class _GuestHomeState extends State<GuestHome> {
           userBallot: _userBallot,
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
-          unFilterPodiumCandidates: _unFilterPodiumCandidates,
           loadCandidateProfile: _loadCandidateProfileFromPodium,
-          filter: false,
         ),
         BallotPage(
           userBallot: _userBallot,
@@ -202,7 +196,9 @@ class _GuestHomeState extends State<GuestHome> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
+          unFilterPodiumCandidates: _unFilterPodiumCandidates,
           loadCandidateProfile: _loadCandidateProfileFromBallot,
+          filter: _filtering,
         ),
         lockedPage('Profile'),
       ];

@@ -42,11 +42,12 @@ class _GuestIssuesState extends State<GuestIssues> {
     'POLICING',
     'REPRODUCTIVE RIGHTS'
   ];
-  int _nextButtonColor = 0xFF808080;
+  int _nextButtonColor = 0xFFF3D433;
   double _alignRating = 0;
   double _valueRating = 0;
   late bool _backVisibility;
   late bool _forwardVisibility;
+  bool _submitVisibility = false;
   final List<String> _leftAlignText = [
     'Gun Control',
     'Acceptance',
@@ -247,7 +248,7 @@ class _GuestIssuesState extends State<GuestIssues> {
 
   void _updateButton() {
     if (ratings.reproductiveScore != 0 || _issueIndex == 9) {
-      _nextButtonColor = 0xFFF3D433;
+      _submitVisibility = true;
     }
     if (_issueIndex > 0 && _issueIndex < 9) {
       _backVisibility = true;
@@ -900,44 +901,52 @@ class _GuestIssuesState extends State<GuestIssues> {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 5, 20),
-              child: Container(
-                width: MediaQuery.of(context).size.width / 2,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Color(_nextButtonColor),
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade600,
-                      spreadRadius: 3,
-                      blurRadius: 7,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(25),
-                    onTap: () {
-                      _endSurvey(context);
-                    },
-                    child: const Center(
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(
-                          'PoGo',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF0E0E0E),
-                            fontSize: 35,
+              child: Row(
+                children: [
+                  const Spacer(),
+                  Visibility(
+                    visible: _submitVisibility,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Color(_nextButtonColor),
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade600,
+                            spreadRadius: 3,
+                            blurRadius: 7,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(25),
+                          onTap: () {
+                            _endSurvey(context);
+                          },
+                          child: const Center(
+                            child: FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                'PoGo',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF0E0E0E),
+                                  fontSize: 35,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],

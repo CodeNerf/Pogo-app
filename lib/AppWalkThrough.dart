@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pogo/Onboarding/SurveyLandingPage.dart';
 import 'package:pogo/SignInSignUpPage.dart';
 
 class AppWalkThrough extends StatefulWidget {
+  const AppWalkThrough({super.key});
+
   @override
   State<AppWalkThrough> createState() => _AppWalkThroughState();
 }
@@ -22,7 +23,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
 
   Widget _indicator(bool isActive) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       width: 15.0,
       height: 15.0,
       decoration: BoxDecoration(
@@ -31,7 +32,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
           color: isActive ? Colors.black : Colors.black,
           width: 2.0,
         ),
-        color: isActive ? Colors.black : Color(0xE5E5E5),
+        color: isActive ? Colors.black : const Color(0xFFE5E5E5),
       ),
     );
   }
@@ -39,18 +40,18 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF1F4F8),
+      backgroundColor: const Color(0xFFF1F4F8),
       body: SafeArea(
         child: Stack(
           children: [
             Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
                     child: PageView(
-                      physics: ClampingScrollPhysics(),
+                      physics: const ClampingScrollPhysics(),
                       controller: _pageController,
                       onPageChanged: (int page) {
                         setState(() {
@@ -63,7 +64,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 30),
+                              const SizedBox(height: 30),
                               Center(
                                 child: Image.asset(
                                   'assets/appWalkThrough1.png',
@@ -71,8 +72,8 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              SizedBox(height: 10.0),
-                              Text(
+                              const SizedBox(height: 10.0),
+                              const Text(
                                 "No more scrambling before elections",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -85,10 +86,10 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                                   height: 1.2,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
-                              Text(
+                              const Text(
                                 "Take Politics on the Go with an all-in-one hub for your voting info. Research candidates and personalize your ballot. Get started in three easy steps!",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -108,7 +109,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 30),
+                              const SizedBox(height: 30),
                               Center(
                                 child: Image.asset(
                                   'assets/appWalkThrough2.png',
@@ -116,8 +117,8 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              SizedBox(height: 10.0),
-                              Text(
+                              const SizedBox(height: 10.0),
+                              const Text(
                                 "Create an account & tell us about yourself",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -130,10 +131,10 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                                   height: 1.2,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
-                              Text(
+                              const Text(
                                 "Sign up for FREE to store your voting decisions. Help us create the best personalized experience for you. With your input PoGo will ensure your election research is a breeze.",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -153,7 +154,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 30),
+                              const SizedBox(height: 30),
                               Center(
                                 child: Image.asset(
                                   'assets/appWalkThrough3.png',
@@ -161,7 +162,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              Text(
+                              const Text(
                                 "Take a stance on popular issues",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -174,10 +175,10 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                                   height: 1.2,
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
-                              Text(
+                              const Text(
                                 "What topics matter to you? Let us know how much you care. Using your results we will match you with candidates on your ballot that most closely align.",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -198,7 +199,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 30),
+                              const SizedBox(height: 30),
                               Center(
                                 child: Image.asset(
                                   'assets/appWalkThrough4.png',
@@ -206,8 +207,8 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              SizedBox(height: 10.0),
-                              Center(
+                              const SizedBox(height: 10.0),
+                              const Center(
                                   child: Text(
                                 "Start Swiping!",
                                 textAlign: TextAlign.center,
@@ -221,12 +222,12 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                                   height: 1.2,
                                 ),
                               )),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               RichText(
                                 textAlign: TextAlign.center,
-                                text: TextSpan(
+                                text: const TextSpan(
                                   style: TextStyle(
                                     color: Color(0xFF57636C),
                                     fontSize: 20,
@@ -259,7 +260,7 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: _buildPageIndicator(),
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                 ],
               ),
             ),
@@ -271,9 +272,10 @@ class _AppWalkThroughState extends State<AppWalkThrough> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SurveyLandingPage()));
+                          builder: (context) =>
+                          const SignInSignUpPage(index: 1)));
                 },
-                child: Text(
+                child: const Text(
                   'Skip',
                   style: TextStyle(
                     color: Color(0xFF57636C),

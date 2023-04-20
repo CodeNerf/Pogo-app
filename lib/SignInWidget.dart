@@ -43,7 +43,7 @@ class _SignInState extends State<SignIn> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SurveyLandingPage(),
+              builder: (context) => SurveyLandingPage(pageSelect: 0,),
             ),
           );
         }
