@@ -963,28 +963,31 @@ class _CandidateProfileState extends State<CandidateProfile>
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.grey,
                 indicatorColor: const Color(0xFFF3D433),
-                tabs: [
-                  const Tab(
-                    child: Text(
+                tabs: const [
+                  Tab(
+                    child: AutoSizeText(
                       'Summary',
+                      maxLines: 1,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 19.0,
                       ),
                     ),
                   ),
-                  const Tab(
-                    child: Text(
+                  Tab(
+                    child: AutoSizeText(
                       'Views',
+                      maxLines: 1,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 19.0,
                       ),
                     ),
                   ),
-                  const Tab(
-                    child: Text(
+                  Tab(
+                    child: AutoSizeText(
                       'Experience',
+                      maxLines: 1,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 19.0,
