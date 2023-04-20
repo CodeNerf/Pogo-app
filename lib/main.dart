@@ -3,6 +3,10 @@ import 'package:pogo/firstLoadingPage.dart';
 
 void main() {
   runApp(const MyApp());
+  FlutterError.onError = (FlutterErrorDetails details) {
+    print('flutter error hidden from console');
+    // FlutterError.dumpErrorToConsole(details, forceReport: false);
+  };
 }
 
 class MyApp extends StatefulWidget {
