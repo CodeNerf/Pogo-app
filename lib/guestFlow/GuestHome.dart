@@ -129,6 +129,16 @@ class _GuestHomeState extends State<GuestHome> {
         }
       }
       setState(() {
+        _widgetOptions[2] = BallotPage(
+          userBallot: _userBallot,
+          candidateStack: _candidateStack,
+          ballotStack: _ballotStack,
+          removeFromBallot: _removeFromBallot,
+          loadCustomCandidatesInPodium: _filterPodiumCandidates,
+          unFilterPodiumCandidates: _unFilterPodiumCandidates,
+          loadCandidateProfile: _loadCandidateProfileFromBallot,
+          filter: true,
+        );
         _selectedIndex = 1;
       });
     } catch (e) {
@@ -142,6 +152,16 @@ class _GuestHomeState extends State<GuestHome> {
       _filteredCandidateStack.remove(_filteredCandidateStack[0]);
     }
     setState(() {
+      _widgetOptions[2] = BallotPage(
+        userBallot: _userBallot,
+        candidateStack: _candidateStack,
+        ballotStack: _ballotStack,
+        removeFromBallot: _removeFromBallot,
+        loadCustomCandidatesInPodium: _filterPodiumCandidates,
+        unFilterPodiumCandidates: _unFilterPodiumCandidates,
+        loadCandidateProfile: _loadCandidateProfileFromBallot,
+        filter: false,
+      );
       _selectedIndex = 1;
     });
   }
