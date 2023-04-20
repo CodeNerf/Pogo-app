@@ -187,6 +187,7 @@ class _HomeState extends State<Home> {
       for (int i = 0; i < _userBallot.localCandidateIds.length; i++) {
         _ballotStack.add(_candidateStack.firstWhere(
             (element) => element.id == _userBallot.localCandidateIds[i]));
+        _candidateStack.removeWhere((element) => element.id == _userBallot.localCandidateIds[i]);
       }
     }
     setState(() {
