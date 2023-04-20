@@ -93,7 +93,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> _loadCandidateProfile(String fullName) async {
+  Future<void> _loadCandidateProfileFromPodium(String fullName) async {
     CandidateDemographics searchCandidate = _candidateStack
         .firstWhere((element) => element.candidateName == fullName);
     CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
@@ -105,6 +105,20 @@ class _HomeState extends State<Home> {
               candidate: searchCandidate,
               candidateValues: searchCandidateValues,
               candidateStackFactors: _candidateStackFactors)),
+    );
+  }
+
+  Future<void> _loadCandidateProfileFromBallot(String fullName) async {
+    CandidateDemographics searchCandidate = _ballotStack
+        .firstWhere((element) => element.candidateName == fullName);
+    CandidateIssueFactorValues searchCandidateValues = _candidateStackFactors
+        .firstWhere((element) => element.candidateId == searchCandidate.id);
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CandidateProfile(
+            candidate: searchCandidate, candidateValues: searchCandidateValues, candidateStackFactors: [],),
+      ),
     );
   }
 
@@ -130,7 +144,7 @@ class _HomeState extends State<Home> {
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
+          loadCandidateProfile: _loadCandidateProfileFromBallot,
           filter: true,
         );
         _selectedIndex = 1;
@@ -145,18 +159,18 @@ class _HomeState extends State<Home> {
       _candidateStack.add(_filteredCandidateStack[0]);
       _filteredCandidateStack.remove(_filteredCandidateStack[0]);
     }
+    _widgetOptions[1] = Podium(
+      candidateStack: _candidateStack,
+      candidateStackStatistics: _candidateStackStatistics,
+      userBallot: _userBallot,
+      updateBallot: _updateBallot,
+      candidateStackFactors: _candidateStackFactors,
+      unFilterPodiumCandidates: _unFilterPodiumCandidates,
+      loadCandidateProfile: _loadCandidateProfileFromBallot,
+      filter: false,
+    );
     setState(() {
-      _widgetOptions[1] = Podium(
-        candidateStack: _candidateStack,
-        candidateStackStatistics: _candidateStackStatistics,
-        userBallot: _userBallot,
-        updateBallot: _updateBallot,
-        candidateStackFactors: _candidateStackFactors,
-        unFilterPodiumCandidates: _unFilterPodiumCandidates,
-        loadCandidateProfile: _loadCandidateProfile,
-        filter: false,
-      );
-      _selectedIndex = 1;
+
     });
   }
 
@@ -188,7 +202,7 @@ class _HomeState extends State<Home> {
           updateBallot: _updateBallot,
           candidateStackFactors: _candidateStackFactors,
           unFilterPodiumCandidates: _unFilterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
+          loadCandidateProfile: _loadCandidateProfileFromBallot,
           filter: _filtering,
         ),
         BallotPage(
@@ -197,7 +211,7 @@ class _HomeState extends State<Home> {
           ballotStack: _ballotStack,
           removeFromBallot: _removeFromBallot,
           loadCustomCandidatesInPodium: _filterPodiumCandidates,
-          loadCandidateProfile: _loadCandidateProfile,
+          loadCandidateProfile: _loadCandidateProfileFromPodium,
         ),
         UserProfile(
           currentUserFactors: _currentUserFactors,

@@ -12,7 +12,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:pogo/dynamoModels/Demographics/CandidateDemographics.dart';
 import 'package:pogo/dynamoModels/IssueFactorValues/CandidateIssueFactorValues.dart';
-
 import 'dynamoModels/MatchingStatistics.dart';
 
 class Podium extends StatefulWidget {
@@ -228,7 +227,6 @@ class _PodiumState extends State<Podium> {
 
   void _addCandidate(CandidateDemographics candidate) async {
     _stack.remove(candidate);
-
     widget.updateBallot(candidate, _stack);
   }
 
@@ -493,7 +491,8 @@ class _PodiumState extends State<Podium> {
                               if (dir == Direction.right) {
                                 _addCandidate(_stack[_stackIterator]);
                                 _stackLength--;
-                              } else {
+                              }
+                              else {
                                 if (_count < _stackLength) {
                                   if (_count == _stackLength - 1) {
                                     _count = 0;
@@ -633,11 +632,12 @@ class _PodiumState extends State<Podium> {
                                         onTap: () async {
                                           await widget.unFilterPodiumCandidates();
                                           setState(() {
+                                            _stackFactors = widget.candidateStackFactors;
                                             _stack = widget.candidateStack;
+                                            _stackStatistics = widget.candidateStackStatistics;
                                             _stackLength = _stack.length;
                                             _filtering = false;
                                           });
-                                          _initializeSearchResults();
                                         },
                                         child: const Center(
                                           child: FittedBox(

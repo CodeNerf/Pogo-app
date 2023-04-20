@@ -109,7 +109,7 @@ class _IssuesState extends State<Issues> {
     'Economic Policy refers to the systems for managing taxation, government budgets, the money supply and interest rates as well as the labor market, national ownership, and many other areas of government interventions into the economy.',
     'Immigration policy refers to laws that control, protect, and manage the influx of people seeking to establish residence in the USA. It is rules regarding rights of access to the territory (entry and residence), permission to participate in the labor market (work permits), the rights of asylum seekers and refugees, the rights of immigrants to bring family members (family reunification), and rules for the acquisition of citizenship by immigrants and their family members (naturalization).',
     'Policing policies refer to the foundation for all operations in law enforcement. Including training, budget management, consequences for excessive use of force, etc.',
-    '',
+    'Reproductive Health policy refers to decisions and laws made around the reproductive system, its functions, and its processes.  It’s a state of complete physical, mental, and social well-being and not merely the absence of disease or infirmity.',
   ];
   final List<String> _issuesLeftDefinitions = [
     'People in favor of gun control desire laws to be put in place such as background checks, wait times before buying a gun, banning automatic weapons, and disallowing concealed weapons',
