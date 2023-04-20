@@ -36,12 +36,12 @@ class _UserConfirmationPage extends State<UserConfirmationPage> {
         await putUserIssueFactorValues(newValues);
         if (await checkLoggedIn()) {
           await Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AppWalkThrough()));
+              MaterialPageRoute(builder: (context) => SurveyLandingPage(pageSelect: 0)));
         }
       } else if (await isUserConfirmed()) {
         if (await checkLoggedIn()) {
           await Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AppWalkThrough()));
+              MaterialPageRoute(builder: (context) => SurveyLandingPage(pageSelect: 0)));
         }
       } else {
         setState(() {
