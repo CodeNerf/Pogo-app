@@ -284,7 +284,7 @@ class _PodiumState extends State<Podium> {
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(10, 18, 2, 0),
                                   child: Text(
-                                    "${((stats.rSquared) * 100).round()}%",
+                                    "${((_stackStatistics.firstWhere((element) => element.candidateId == candidate.id)).rSquared * 100).round()}%",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 17,
