@@ -197,8 +197,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _widgetOptions = <Widget>[
         VoterGuide(
-          // provide required argument
-          user: _currentUserDemographics,
+          currentUserDemographics: widget._currentUserDemographics,
         ),
         Podium(
           candidateStack: _candidateStack,
