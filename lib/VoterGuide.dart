@@ -7,11 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class VoterGuide extends StatefulWidget {
   UserDemographics currentUserDemographics;
-  VoterGuide({
-    Key? key,
-    required this.currentUserDemographics,
-    required UserDemographics user,
-  }) : super(key: key);
+  VoterGuide({Key? key, required this.currentUserDemographics})
+      : super(key: key);
   @override
   State<VoterGuide> createState() => _VoterGuideState();
 }
@@ -27,8 +24,7 @@ class _VoterGuideState extends State<VoterGuide> {
     List<String> addressParts =
         widget.currentUserDemographics.addressLine1.split(',');
     if (addressParts.length > 1) {
-      String stateZip = addressParts[addressParts.length - 1].trim();
-      stateInitial = stateZip.split(' ')[0];
+      stateInitial = addressParts[addressParts.length - 2].trim();
     }
   }
 
@@ -49,6 +45,7 @@ class _VoterGuideState extends State<VoterGuide> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.currentUserDemographics.toJson());
     return Scaffold(
         backgroundColor: Color(0xFFF1F4F8),
         body: Container(
@@ -129,7 +126,7 @@ class _VoterGuideState extends State<VoterGuide> {
                       Container(
                         width: 180.0,
                         height: 320.0,
-                        margin: const EdgeInsets.only(right: 15, left: 15),
+                        margin: const EdgeInsets.only(right: 8, left: 5),
                         padding: const EdgeInsets.only(top: 80),
                         child: Center(
                           child: Card(
