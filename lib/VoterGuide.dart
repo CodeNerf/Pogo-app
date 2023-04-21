@@ -8,9 +8,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class VoterGuide extends StatefulWidget {
   UserDemographics currentUserDemographics;
+  final UserDemographics userDemographics;
   VoterGuide(
       {Key? key,
       required this.currentUserDemographics, required UserDemographics user,
+       required this.userDemographics,
       })
       : super(key: key);
   @override
@@ -72,7 +74,7 @@ Widget build(BuildContext context) {
                 top: 40.0,
                 left: 30.0,
                child: Text(
-  '${widget.currentUserDemographics.firstName} ${widget.currentUserDemographics.lastName}',
+  '${widget.userDemographics.firstName}',
   style: TextStyle(
     fontSize: 22.0,
     fontWeight: FontWeight.w600, 
@@ -480,13 +482,13 @@ Card(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
-          // Text(
-          //   'Latest Activity Mon, 24, 10:30pm',
-          //   style: TextStyle(
-          //     fontSize: 12.0,
-          //     color: Color(0xFF57636C),
-          //   ),
-          // ),
+          Text(
+            'Latest Activity Mon, 24, 10:30pm',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
           const SizedBox(height: 15.0),
         ],
       ),
@@ -543,13 +545,13 @@ Card(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
-          // Text(
-          //   'Latest Activity Mon, 24, 10:30pm',
-          //   style: TextStyle(
-          //     fontSize: 12.0,
-          //     color: Color(0xFF57636C),
-          //   ),
-          // ),
+          Text(
+            'Latest Activity Mon, 24, 10:30pm',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
           const SizedBox(height: 15.0),
         ],
       ),
@@ -606,13 +608,13 @@ Card(
             color: Color(0xFFDBE2E7),
             thickness: 2,
           ),
-          // Text(
-          //   'Latest Activity Mon, 24, 10:30pm',
-          //   style: TextStyle(
-          //     fontSize: 12.0,
-          //     color: Color(0xFF57636C),
-          //   ),
-          // ),
+          Text(
+            'Latest Activity Mon, 24, 10:30pm',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Color(0xFF57636C),
+            ),
+          ),
           const SizedBox(height: 15.0),
         ],
       ),
